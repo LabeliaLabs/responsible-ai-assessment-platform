@@ -43,3 +43,36 @@ Le modèle de branches dit "[git-flow](https://nvie.com/posts/a-successful-git-b
 - `develop` est la branche par défaut. Toutes les MR doivent être créées par rapport à elle. C'est une branche protégée sur laquelle on n'est pas censé commiter et pousser directement
 - `master` est l'état de ce qui est en production à l'instant t, alors que `develop` est l'état de ce qui est testé et prêt à être déployé en pré-production puis en production
 - pour déployer en production, une fois tous les tests réalisés y compris sur la pré-production, on crée une MR de `develop` sur `master` décrivant les changements principaux (note : lorsque l'historique de commits est propre et clair cela aide grandement !). Une fois la fusion réalisée, on pousse un tag de version sur `master` selon les principes du versionnage sémantique
+
+### Conteneurisation
+
+Pour faciliter le déploiement sur différents environnements (dev, pre-prod, prod) et donc assurer la portabilité de l'app, on choisit de travailler sur une infra conteneurisée avec Docker :
+
+- [Tutoriel très complet](https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/)
+- [Tutoriel léger](https://docs.docker.com/compose/django/) (de la doc Docker)
+
+### Infrastructures, tests et déploiement
+
+#### Infrastructures
+
+- Compte et ressources chez OVH : pre-prod et prod isolées l'une de l'autre
+- Par environnement :
+  - une instance s1-4 (1 vCore, 4Go RAM, 20Go SSD)
+  - le backup "Storage réplica x3"
+  - l'anti DdoS (fourni par défaut)
+
+#### Build et tests
+
+GitLab-CI pour :
+
+1. Lancer à chaque commit des tests automatiques :
+   - Unit-tests
+   - Coding standards
+
+1. Builder notre image Docker :
+   - Reverse proxy et serveur web
+   - App
+   - DB
+   - Let's Encrypt
+
+1. Pousser nos images sur les infras et les instancier
