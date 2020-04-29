@@ -77,6 +77,14 @@ GitLab-CI pour :
 
 1. Pousser nos images sur les infras et les instancier
 
+### Prototypage
+
+_WIP_
+
+Deux outils possibles :
+- Soit un outil de wireframing: Balsamiq. Prix : 9$99 par utilisateur par mois (en cours de confirmation) ($9/month or $90/year)
+- Soit un outil de mock-up (qui comprend donc plus de personnalisation sur les couleurs, la mise à la charte): moqups. Prix : 20* + 3$ par utilisateur.
+
 ### Emailings
 
 Pour les emailings transactionnels on choisit le [module Mandrill de Mailchimp](https://mailchimp.com/fr/help/mailchimp-vs-mandrill/). On élaborera et designera les templates via l'interface Mandrill directement.
