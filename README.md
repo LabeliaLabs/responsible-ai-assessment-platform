@@ -79,11 +79,8 @@ GitLab-CI pour :
 
 ### Prototypage
 
-_WIP_
+Pour le prototypage, nous utiliserons l'outil [moqups](https://moqups.com/).
 
-Deux outils possibles :
-- Soit un outil de wireframing: Balsamiq. Prix : 9$99 par utilisateur par mois (en cours de confirmation) ($9/month or $90/year)
-- Soit un outil de mock-up (qui comprend donc plus de personnalisation sur les couleurs, la mise à la charte): moqups. Prix : 20* + 3$ par utilisateur.
 
 ### Emailings
 
