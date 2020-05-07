@@ -17,6 +17,7 @@ Cette liste comprend :
 - Le statut de l'utilisateur
 - Date de création de l'utilisateur
 - Date de dernière connexion de l'utilisateur
+- Le rôle de l'utilisateur
 
 Par défault, 50 utilisateurs sont affichés.
 Il est possible de naviguer entre les utilisateurs :
@@ -41,7 +42,7 @@ Lorsque l'utilisateur est supprimé, il n'est plus présent dans la liste _(et l
 Lorsque l'utilisateur est inactif, l'adminstrateur peut :
 
 - Rendre actif un utilisateur
-- Supprimer l'utilisater.
+- Supprimer l'utilisateur.
 
 ## Différence entre inactif / suppression
 
@@ -66,6 +67,7 @@ Sur la page de liste des utilisateurs, l'administrateur peut effectuer une reche
   - Avant une date donnée
   - Après une date donnée
   - Entre deux périodes
+- Possibilité de filtrer par rôle
 
 Si l'utilisateur applique plusieurs filtres, un "ET" est appliqué entre les différents filtres.
 Si l'utilisateur sélectionne plusieurs valeurs dans un critère (exemple : sélection de deux secteurs d'activité), un "OU" est appliqué à l'interieur de ce filtre (toutes les organisation de l'un ou de l'autre secteur s'affiche).

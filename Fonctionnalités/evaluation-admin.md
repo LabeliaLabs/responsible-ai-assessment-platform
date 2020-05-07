@@ -49,6 +49,14 @@ Sur la page de liste des évaluations, l'administrateur peut effectuer une reche
     - Avant une date donnée
     - Après une date donnée
     - Entre deux périodes
+  - Possibilité de filtrer par date de création de l'évaluation :
+    - Avant une date donnée
+    - Après une date donnée
+    - Entre deux périodes
+  - Possibilité de filtrer par date de soumission de l'évaluation :
+    - Avant une date donnée
+    - Après une date donnée
+    - Entre deux périodes
 
 Si l'utilisateur applique plusieurs filtres, un "ET" est appliqué entre les différents filtres.
 Si l'utilisateur sélectionne plusieurs valeurs dans un critère (exemple : sélection de deux secteurs d'activité), un "OU" est appliqué à l'interieur de ce filtre (toutes les organisation de l'un ou de l'autre secteur s'affiche).
