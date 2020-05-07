@@ -34,7 +34,7 @@ L'administrateur peut cliquer sur une évaluation en cours ou terminé.
 Il accède alors aux réponses de l'évaluation et les justifications données.
 Si l'évaluation est terminée, il accède aux résultats par section.
 
-## Filtre de recherche
+## Filtres de recherche
 
 Sur la page de liste des évaluations, l'administrateur peut effectuer une recherche :
 
@@ -45,9 +45,16 @@ Sur la page de liste des évaluations, l'administrateur peut effectuer une reche
   - Secteur d'activité
   - Secteur géographique
   - Taille d'entreprises
+  - Possibilité de filtrer par date de création de l'utilisateur :
+    - Avant une date donnée
+    - Après une date donnée
+    - Entre deux périodes
 
 Si l'utilisateur applique plusieurs filtres, un "ET" est appliqué entre les différents filtres.
 Si l'utilisateur sélectionne plusieurs valeurs dans un critère (exemple : sélection de deux secteurs d'activité), un "OU" est appliqué à l'interieur de ce filtre (toutes les organisation de l'un ou de l'autre secteur s'affiche).
 
+## Extraction
+
+Possibilité d'extraire au format CSV la liste sur un clic, avec application des filtres indiqués.
 
 _Work in progress_
