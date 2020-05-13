@@ -36,3 +36,13 @@ Un [Story Mapping](https://www.featuremap.co/m/ddC0Rj/plateforme-dsrc) a été r
 - [Gestion des ressources](./ressources-admin.md)
 - [Gestion des pondérations](./scoring-admin.md)
 - [Consultation des statistiques / Dashboard](./dashboard-admin.md)
+
+### Priorisation
+
+L'objectif est de prioriser les développements.
+
+_Proposition à discuter_
+1) Interfaces de création d'une nouvelle évaluation
+2) Interfaces utilisateur de réponses à une évaluation : réponses aux différentes questions
+3) Interfaces de création utilisateur et organisation
+4) Interfaces back office
