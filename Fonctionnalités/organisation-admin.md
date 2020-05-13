@@ -32,7 +32,7 @@ Par défaut, le tri appliqué est par numéro d'identification.
 
 ## Action sur une organisation
 
-L'administrateur peut cliquer sur un bouton d'action pour une organisation pour la supprimer
+L'administrateur peut cliquer sur un bouton d'action pour une organisation pour la supprimer. Une popin s'ouvre pour demander confirmation.
 Lorsque l'organisation est supprimée, les évaluations rattachées à l'organisation sont supprimées.
 
 ## Accès aux utilisateurs

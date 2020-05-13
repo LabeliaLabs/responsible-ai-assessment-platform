@@ -37,6 +37,7 @@ Lorsque l'utilisateur est actif, il peut :
 - Rendre inactif un utilisateur
 - Supprimer un utilisateur
 
+Une popin s'ouvre pour demander confirmation de la suppression.
 Lorsque l'utilisateur est supprimé, il n'est plus présent dans la liste _(et les évaluations sont supprimées ? - a priori non car liées à une organisation)_.
 
 Lorsque l'utilisateur est inactif, l'adminstrateur peut :

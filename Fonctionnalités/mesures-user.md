@@ -24,7 +24,7 @@ Lorsque l'utilisateur a complété toutes les questions, il peut alors cliquer s
 Une popin apparait pour lui demander de valider.
 L'utilisateur arrive alors sur la page de [consultation des résultats](./results-user.md).
 
-## Répondre à une évaluation
+## Répondre à une question
 
 Pour chaque section, une liste de questions est proposée.
 (_à discuter : soit une liste, soit chaque question fait l'objet d'un écran spécifique et on bascule d'une question à une autre_)
