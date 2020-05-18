@@ -41,7 +41,8 @@ Un [Story Mapping](https://www.featuremap.co/m/ddC0Rj/plateforme-dsrc) a été r
 
 L'objectif est de prioriser les développements.
 
-_Proposition à discuter_
+Propositions à discuter :
+
 1) Interfaces de création d'une nouvelle évaluation
 2) Interfaces utilisateur de réponses à une évaluation : réponses aux différentes questions
 3) Interfaces de création utilisateur et organisation

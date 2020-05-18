@@ -81,7 +81,6 @@ GitLab-CI pour :
 
 Pour le prototypage, nous utiliserons l'outil [moqups](https://moqups.com/).
 
-
 ### Emailings
 
 Pour les emailings transactionnels on choisit le [module Mandrill de Mailchimp](https://mailchimp.com/fr/help/mailchimp-vs-mandrill/). On élaborera et designera les templates via l'interface Mandrill directement.
