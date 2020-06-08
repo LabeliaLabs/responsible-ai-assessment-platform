@@ -9,13 +9,17 @@ ENV PYTHONDONTWRITEBYTECODE 1
 RUN mkdir code
 WORKDIR code
 
+# copy project to /code
+COPY . .
+
 # install psycopg2 dependencies
 RUN apk update \
     && apk add postgresql-dev gcc python3-dev musl-dev
 
 RUN python -m pip install --upgrade pip
-
-# copy project to /code
-COPY . .
-
 RUN pip install -r requirements.txt
+
+# run entrypoint.sh
+#RUN chmod +x ./entrypoint.sh  # to delete later
+
+ENTRYPOINT ["/code/entrypoint.sh"]

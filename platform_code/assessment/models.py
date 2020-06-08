@@ -29,7 +29,7 @@ def get_last_assessment_created():
     if len(list(Assessment.objects.all().order_by("-created_at"))) > 0:
         return list(Assessment.objects.all().order_by("-created_at"))[0]
     else:
-        None
+        return None
 
 
 class Assessment(models.Model):
@@ -106,6 +106,13 @@ class Evaluation(models.Model):
             for element in section.evaluationelement_set.all().order_by(
                 "master_evaluation_element__order_id"
             ):
+                list_all_elements.append(element)
+        return list_all_elements
+
+    def get_list_all_elements(self):
+        list_all_elements = []
+        for section in self.section_set.all().order_by("master_section__order_id"):
+            for element in section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
                 list_all_elements.append(element)
         return list_all_elements
 
@@ -289,6 +296,14 @@ class Evaluation(models.Model):
         else:
             # later create pop in or smth but normally condition must be verified to call this method
             print("EVALUATION MUST BE FINISHED TO SET THE SCORE")
+
+    def set_finished(self):
+        list_section = self.section_set.all()
+        for section in list_section:
+            if section.user_progression != 1:
+                break
+        else:
+            self.is_finished = True
 
 
 class MasterSection(models.Model):

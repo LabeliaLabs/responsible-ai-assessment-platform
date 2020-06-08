@@ -4,22 +4,21 @@
 *.pyc
 __pycache__
 db.sqlite3
-
 trash/
-
-*.env
+*.env*
 *.env.*
 .env.dev
 
-#  PyCharm
+# PyCharm
 .idea/*
 
 #Dia
-
 *.dia~
 *.dia.autosave
 *.jpeg~
 
 # Other
-
 vim.exe.*
+nohup.out
+data/certbot/
+nohup.out
