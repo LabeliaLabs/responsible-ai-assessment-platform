@@ -1,0 +1,87 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+{% block content %}
+
+<h1>{% trans "Organisation: " %}{{organisation.name}} </h1>
+
+    <div class="row ">
+        <div class="col-ms-3 container-platform column-right">
+            <ul class="nav nav-pills nav-stacked flex-column table-column-profile" role="tablist" id="PillProfile">
+                <li class="nav-item">
+                    <a class="nav-link profile-column active" role="tab" data-toggle="tab"
+                       aria-controls="content-eval" aria-selected="true"
+                       id="eval" href="#content-eval">{% trans "Evaluations" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link profile-column" role="tab" data-toggle="tab"
+                       aria-controls="content-members" aria-selected="true"
+                       id="members" href="#content-members">{% trans "Members" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link profile-column" role="tab" data-toggle="tab"
+                       aria-controls="content-settings" aria-selected="true"
+                       id="settings" href="#content-settings">{% trans "Organisation's parameters" %}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="data">
+            <div class="tab-content"  id="PillProfileContent">
+
+               <div class="tab-pane active large-array" id="content-eval"
+                  role="tabpanel" aria-labelledby="tab-eval">
+                   {% include "assessment/orga-evaluation.html" %}
+
+               </div>
+               <div class="tab-pane fade" id="content-members"
+                  role="tabpanel" aria-labelledby="tab-members">
+                   {% include "assessment/orga-members.html" %}
+               </div>
+                <div class="tab-pane fade" id="content-settings"
+                  role="tabpanel" aria-labelledby="tab-settings">
+                   {% include "assessment/orga-settings.html" %}
+               </div>
+            </div>
+            </div>
+    </div>
+
+
+<div class="row bottom-page-button" style="margin-top:80px" >
+    <form action="{% url 'home:homepage'  %}" style="margin:auto;" >
+        <input type="submit" value="{% trans 'Back to the homepage' %}"
+               class="btn btn-primary same-size-280 " />
+    </form>
+
+    {% if last_version %}
+        <!-- Button to Open the Modal -->
+        <button type="button" class="btn btn-primary float-right same-size-280"
+                data-toggle="modal"
+                data-target="#modal-create-eval" style="margin:auto;">
+                {% trans "Start a new evaluation" %}
+        </button>
+    {% else %}
+        <button type="button" class="btn btn-primary float-right same-size-280" disabled="True"
+               style="margin:auto;" title="{% trans 'We are sorry, there is no assessment available yet.' %}">
+                {% trans "Start a new evaluation" %}
+        </button>
+    {% endif %}
+</div>
+
+<!-- The Modal create evaluation -->
+<div class="modal" id="modal-create-eval" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+
+      {% include "assessment/creation-evaluation-modal.html" %}
+
+    </div>
+  </div>
+</div>
+
+
+
+
+{% endblock %}
+

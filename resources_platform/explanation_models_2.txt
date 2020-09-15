@@ -1,0 +1,49 @@
+This document is aimed to deliver some explanations about the database model 2.
+
+Main points :
+    - I think we need 2 tables to store data for the evaluations. One where we create our model of assessment,
+    called "Assessment" and an other one, called "Evaluation" which contains the evaluations created by the users
+     (organizations). The table "Evaluation" is linked to Assessment table by a foreign key. The Assessment table and
+     the other "master" tables are abstract class which defines the objects and some properties. When the user want to
+     evaluate himself, it will call inherited classes of each object. The dedicated tables will store data (created_at,
+      status, points) related to this evaluation.
+
+    - For the scoring system, I think we need a table Scoring System where we will set the number of points for every
+    master choice, according to specific rules/properties.
+    The table Scoring system takes as foreign keys the assessment_id (to have a scoring system for each version)
+    As foreign key, there also is the master_choice_id so for each master_choice_id, we set a number of points.
+    When the user does the evaluation, the number of points will be counted at the level of the element of evaluation :
+    for each element of evaluation status=done (if the condition doesn't allow the element to be done -> ), the number
+    of points is the juncture of the choice(s) "ticked" in the table Choice where element_id is the same with the table
+    Scoring_system where a number of points is attributed for each choice.
+    Then the score is calculated for each Section and for the overall evaluation.
+
+
+
+On the open topics to discuss :
+
+    - For the feedback I'm still thinking how to manage it. Maybe we can create a dedicated table to keep these info
+    even if the user delete his evaluation or just to have smaller table dedicated to this (it could be easier to do some
+    requests on it instead of the overall element table). -> to discuss !
+=> solution found : we won't deal with this in the database, it will be treated in Gitlab
+
+    - For the order (of elements, sections, choices), should we keep the ID order or create an attribute order to allow some
+    changes when we want ?
+=> solution found : creation of an attribute "Number" which will be the one displayed when the user will do the evaluation
+and it will be used to order the different objects. It needs to be different of the ID because we may want to change the
+order and not the ID !!
+
+    - for the resources, should we create a dedicated table ?
+
+
+ Choices which have been made :
+
+    - We need to differentiate between the Assessment object which won't change except when a new version is
+    released and the Evaluation object which will be modified by each orga/user. With python we use the notion of
+    classes and inheritance.
+
+    - As we use the concept of inheritance, it is easier to store the data of the users' choices in a table with the same
+    format but with the specific attribute "is_ticked" (boolean) instead of having a table just with the ticked choices.
+    We hope this choice will facilitate the way we calculate the score for each element/section, the possibility of
+    printing in PDF format the user's evaluation and also facilitate the calculation of the progression of the evaluation
+    and the status of the evaluation/section/element

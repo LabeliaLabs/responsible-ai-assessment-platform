@@ -1,0 +1,36 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+<p>{{err}}</p>
+
+<h3 class="settings-subtitle" >{% trans "Are you sure you want to delete your account?" %}</h3>
+
+<p>{% trans "The organisations you are the only admin member will be deleted, as well as their evaluations." %}</p>
+
+<div class="">
+    <button class="btn btn-danger float-left" data-toggle="modal" data-target="#modal-delete-account">{% trans "Yes, I'm sure" %}</button>
+
+    <a class="btn btn-primary float-right color-white" href="{% url 'home:user-profile-settings' %}" >{% trans "No, back to my account" %}</a>
+
+</div>
+
+
+<div class="modal" id="modal-delete-account" aria-hidden="true" >
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">{% trans "Are you really sure you want to delete your account?" %}</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "The organisations you are the only admin member will be deleted, as well as their evaluations." %}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary same-size-250 " data-dismiss="modal" style="margin: auto" >{% trans "Go back" %}</button>
+                <a class="btn btn-danger same-size-250 color-white" href="{% url 'home:delete-user' %}" style="margin: auto;">{% trans "Delete my account" %}</a>
+            </div>
+
+        </div>
+    </div>
+</div>

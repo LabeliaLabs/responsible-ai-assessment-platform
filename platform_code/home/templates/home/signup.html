@@ -1,0 +1,37 @@
+{% extends 'base-evaluation.html' %}
+{% load i18n %}
+{% load static %}
+
+{% block content %}
+  <h1>{% trans "Sign up" %}</h1>
+<div class="grid-container-2-cols-signup">
+    <img class="img-fluid d-block mx-auto" style="max-height: 350px;" src="{% static 'image/sign_up.png' %}" alt="image">
+<div class="float-right" style="padding-left: 15%;">
+<form method="post" id="signup">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="row margin-10 grid-container-3-cols-signup" >
+                      <div  class="">
+                         <p>{{ field.label_tag }}</p>
+                       </div>
+                      <div  class=" form-input">
+                        <p>{{ field }}</p>
+                      </div>
+
+                      {% if forloop.counter == 4  %}
+                      <div class="help-tip help-tip-right">
+                        <p>{% trans "Your password must contain at least 8 characters, with at least one number and one letter" %}</p>
+                        </div>
+                    {% endif %}
+
+
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-primary bottom-page-button">{% trans "Sign up" %}</button>
+  </form>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{{ previous_section.get_absolute_url }}">{% trans "Previous section" %}</a>
+
+        {% else %}
+            <a href="{{ evaluation.get_absolute_url }}" >{% trans "Back to the organisation summary" %}</a>
+
+        {% endif %}
+
+        <span class="current">
+<!--            todo translation needed-->
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="{{ next_section.get_absolute_url }}">{% trans "Next section" %}</a>
+
+
+        {% endif %}
+    </span>
+</div>
+

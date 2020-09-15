@@ -1,0 +1,145 @@
+{% extends 'base-evaluation.html' %}
+{% load add_attr %}
+{% load i18n %}
+
+{% block content %}
+<h1>{{evaluation.name}}</h1>
+
+
+      <div class="bg-white rounded-lg p-5 shadow">
+        <h2 class="h6 font-weight-bold text-center mb-4">{% trans "Your score" %}</h2>
+
+        <!-- Progress bar 1 -->
+        <div class="progress progress-results mx-auto"
+             data-value='{{evaluation.score}}'>
+              <span class="progress-left progress-left-results"
+                    style="width: 50%;height: 100%;overflow: hidden;position: absolute;top: 0;z-index: 1;">
+                       <span class="progress-bar progress-bar-results border-primary" ></span>
+              </span>
+              <span class="progress-right progress-right-results"
+                    style="right: 0;width: 50%;  height: 100%; overflow: hidden; position: absolute; top: 0; z-index: 1;">
+                  <span class="progress-bar progress-bar-results border-primary"></span>
+              </span>
+          <div class="progress-value progress-value-results w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+            <div class="h2 font-weight-bold">{{evaluation.score}}<sup class="small"></sup></div>
+          </div>
+        </div>
+        <!-- END -->
+<!--            Todo see how to adapt, it is kept as comment as it may be tricky to code again -->
+<!--        &lt;!&ndash; Display none but keep it because may be used later &ndash;&gt;-->
+<!--        <div class="row text-center mt-4" style="display: none">-->
+<!--          <div class="col-6 border-right">-->
+<!--            <div class="h4 font-weight-bold mb-0">28%</div><span class="small text-gray">Meilleure section</span>-->
+<!--          </div>-->
+<!--          <div class="col-6">-->
+<!--            <div class="h4 font-weight-bold mb-0">60%</div><span class="small text-gray">Section à améliorer</span>-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        &lt;!&ndash; END &ndash;&gt;-->
+<!--      </div>-->
+
+<canvas width="475" height="187" id="canvas-preview" style="width: 380px; height: 150px;"></canvas>
+
+
+<form  action="{% url 'assessment:orga-summary' organisation.id %}">
+    <input class="btn btn-primary float-left validation-button" type="submit" value="{% trans 'Back to the organisation summary' %}" />
+</form>
+
+
+
+<form action="{{ evaluation.get_absolute_url }}">
+    <input type="submit" value="{% trans 'Modify' %}" class="btn btn-primary float-right validation-button" style="background-color: #FFBE3C; border-color: #FFBE3C;" />
+</form>
+
+
+
+
+<div class="response" id="responses" style="margin-top:80px;">
+    <h2>{% trans "Your answers" %}</h2>
+<!--    Need to create a new form, initiate with database, disable other choices-->
+
+
+
+            {% for element in evaluation_element_list %}
+                {% if element.master_evaluation_element.order_id == 1 %}
+                    <p>Section {{ element.section.master_section.order_id}}. {{ element.section.master_section.name }} </p>
+                {% endif %}
+                      <div class="card ">
+                        <div class="card-header card-headers-results row" id="heading{{element.id}}">
+                            <p>
+                              Q{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.name}}
+
+                            </p>
+
+                        </div>
+
+                      <div class="card-content">
+                          <div id="question-name" class="question-name" style="margin: 20px;">
+                              Q{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}{% trans ":" %}
+                              {{element.master_evaluation_element.question_text}}
+                           </div>
+
+                          {% if element.master_evaluation_element.question_type == "radio" %}
+                              <p style="font-style:italic; margin: 20px;"> R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                                  {% trans ": Please select one answer which best matches to your organisation situation" %}</p>
+
+                           {% elif element.master_evaluation_element.question_type == "checkbox"%}
+                                <p style="font-style:italic; margin: 20px;"> R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                                {% trans ": Please select all the answers which best match to your organisation situation. Be careful, some combinations are not coherent" %}</p>
+
+                           {% endif %}
+
+                          {{ dic_form_results|get_item:element }}
+
+                      </div>
+                      </div>
+
+                 {% endfor %}
+
+</div>
+
+<div>
+    <button class="btn btn-primary float-right bottom-page-button" onclick="topFunction()" id="top-button"
+            title="{% trans 'Top of the page' %}">{% trans 'Top of the page' %}</button>
+</div>
+
+<script>
+$(function() {
+
+  $(".progress").each(function() {
+    var value = $(this).attr('data-value');
+    if (typeof value === "string"){
+        value = parseFloat(value);
+        console.log("value changed", value, typeof value);
+    }
+    var left = $(this).find('.progress-left .progress-bar');
+    var right = $(this).find('.progress-right .progress-bar');
+    console.log("value", value, typeof value);
+
+    if (value > 0) {
+      if (value <= 50) {
+        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+      } else {
+        right.css('transform', 'rotate(180deg)')
+        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+      }
+    }
+
+  })
+
+  function percentageToDegrees(percentage) {
+
+    return percentage / 100 * 360
+
+  }
+
+});
+
+function topFunction() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+
+</script>
+
+{% endblock %}

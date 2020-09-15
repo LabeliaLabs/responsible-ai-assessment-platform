@@ -1,0 +1,15 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="center">
+
+    <p>{% trans "Logged out!" %}</p>
+    <a class="btn btn-primary" href="{% url 'home:login' %}">{% trans "Click here to login again." %}</a>
+
+</div>
+
+{% endblock %}

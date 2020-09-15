@@ -117,3 +117,11 @@ _To do :_
 
 - _gestion des zones DNS via Gandi ou via OVH ?_
 - _certificats SSL via Gandi ou via Let's Encrypt ?_
+
+### Comment tester la plateforme ?
+
+[todo quand ce sera en pre-prod car les commandes vont changer]
+
+Pour tester le feedback, vous devez insérer un token Gitlab lié au projet dans le fichier .env ainsi que l'id du projet Feedback-tests :
+PRIVATE_TOKEN=<add_your_token>
+PROJETC_ID=<add_the_project_id>

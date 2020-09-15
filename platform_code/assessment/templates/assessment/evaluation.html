@@ -1,0 +1,65 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+{% block content %}
+<div class="head-page">
+    <h1>{{ evaluation.name }}</h1>
+    <div class="progress" title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done{% endblocktrans %}"
+          style="width: 50%; margin: auto;">
+      <div class="progress-bar " role="progressbar" aria-valuenow="{{evaluation.calculate_progression}}"
+           style="width:{{evaluation.calculate_progression}}%; background-color: #28a745;"
+           title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done{% endblocktrans %}"
+           aria-valuemin="0" aria-valuemax="100" >
+           <p class="progress-bar-text">{{evaluation.calculate_progression}}%</p>
+      </div>
+        {% if evaluation.calculate_progression == 0 %}
+            <p class="progress-bar-text">{{evaluation.calculate_progression}}%</p>
+        {% endif %}
+    </div>
+    <p class="center" style="margin-bottom: 0px;">{% trans "Creation date:" %} {{evaluation.created_at|format_date_calendar}}</p>
+    <p class="center" style="margin-bottom: 30px;">{% trans "Version" %} {{evaluation.assessment.version}}</p>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+</div>
+
+<main class="main-area">
+    <div class="centered">
+        <section class="cards">
+            {% for section in section_list %}
+
+                {% include "assessment/base-card-section.html" %}
+
+
+
+            {% endfor %}
+        </section>
+    </div>
+</main>
+
+<div id="validation evaluation" >
+    {% if evaluation.is_finished %}
+        <div>
+        <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
+            <input type="submit" value="{% trans 'Validate and see the results' %}"
+                   class="btn btn-primary float-right bottom-page-button" />
+        </form>
+        </div>
+    {% else %}
+
+    <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
+        <input type="submit" value="{% trans 'Validate and see the results' %}" disabled="True"
+               alt="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
+               title="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
+               class="btn btn-primary float-right bottom-page-button"/>
+    </form>
+
+    {% endif %}
+</div>
+
+<form action="{% url 'assessment:orga-summary' organisation.id %}">
+    <input type="submit" value="{% trans 'Back to the organisation' %}" class="btn btn-primary float-left bottom-page-button"/>
+</form>
+
+{% endblock %}

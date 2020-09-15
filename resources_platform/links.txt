@@ -1,0 +1,20 @@
+1) Django tuto
+
+django tuto : https://docs.djangoproject.com/en/3.0/intro/tutorial01/
+mistakes : https://www.toptal.com/django/django-top-10-mistakes
+application system : https://django-best-practices.readthedocs.io/en/latest/applications.html#make-em-fat
+real python django tuto : https://realpython.com/tutorials/django/
+
+2) Database model
+
+for user database model : https://www.donedone.com/building-the-optimal-user-database-model-for-your-application/
+django code for user : https://realpython.com/manage-users-in-django-admin/
+django authentification : https://docs.djangoproject.com/en/3.0/topics/auth/default/
+django user model : https://github.com/django/django/blob/ff6ee5f06c2850f098863d4a747069e10727293e/django/contrib/auth/models.py#L225-404
+
+query expression : https://docs.djangoproject.com/en/3.0/ref/models/expressions/#avoiding-race-conditions-using-f
+
+3) Front
+
+css : https://www.w3schools.com/cssref/css_selectors.asp
+bootstrap : https://themes.getbootstrap.com/preview/?theme_id=28779

@@ -1,0 +1,27 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+{% for section in section_list %}
+    <a class=" title-sidenav" href="{{ section.get_absolute_url }}">{%trans "Section" %} {{ section.master_section.order_id}}</a>
+
+{% endfor %}
+
+<a class=" title-sidenav" href="{{ evaluation.get_absolute_url }}" >{% trans "Back to the evaluation summary" %}</a>
+
+<script>
+var coll = document.getElementsByClassName("collapsible-section");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.maxHeight){
+      content.style.maxHeight = null;
+    } else {
+      content.style.maxHeight = content.scrollHeight + "px";
+    }
+  });
+}
+</script>

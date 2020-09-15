@@ -1,0 +1,32 @@
+{% load i18n %}
+
+<div class="create-eval-modal">
+    <form id="create_evaluation_form" method='post' class="form" role="form"
+          action="{% url 'assessment:orga-summary' organisation.id %}">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">{% trans "Create a new evaluation" %}</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body modal-body-2-cols">
+            {% csrf_token %}
+            {% for field in form %}
+            <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                <p class="label-create">{{ field.label}}</p>
+                <p class="name-eval-field" > {{field}} </p>
+            {% endfor %}
+            <p class="text-form">{% trans "Version" %}</p>
+            <p class="attribute-form">{{last_version}}</p>
+
+        </div>
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-primary same-size-250" value="{% trans 'Create a new evaluation' %}"
+                   style="margin: auto" />
+            <input type="button" class="btn btn-danger same-size-250" data-dismiss="modal"
+                   value="{% trans 'Cancel' %}" style="margin: auto;"/>
+        </div>
+    </form>
+</div>
+
+
+
+

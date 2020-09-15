@@ -1,0 +1,29 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+<h3 class="title-column">{% trans "Organisation's members" %} </h3>
+
+<table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col" class="col-array">{% trans "User name" %}</th>
+              <th scope="col" class="col-array">{% trans "Rights" %}</th>
+              <th scope="col" class="col-array" >{% trans "Evaluations " %}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for member in member_list %}
+                <div >
+                <tr class="row-array" >
+
+                  <td class="case-array" >{{member.user.get_full_name}}</td>
+                  <td class="case-array">{{member.role}}</td>
+
+                  <td class="case-array">{{member|evaluation_created_by:evaluation_list}}</td>
+
+                </tr>
+                </div>
+            {% endfor %}
+          </tbody>
+</table>

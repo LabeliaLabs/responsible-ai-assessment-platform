@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+{% load static %}
+{% load i18n %}
+
+<html>
+  <head>
+    <title>Section card</title>
+<!--    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">-->
+<!--    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap-theme.min.css">-->
+
+            <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/jquery/jquery.slim.min.js' %}"></script>
+
+<!--    <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" type="text/css" rel="stylesheet" >-->
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" >
+    <link href="{% static 'vendor/bootstrap/css/bootstrap-grid.min.css' %}" type="text/css" rel="stylesheet" >
+    <link href="{% static 'vendor/bootstrap/css/bootstrap-reboot.min.css' %}" type="text/css" rel="stylesheet" >
+
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+    <link href="{% static 'css/section-card.css' %}" type="text/css" rel="stylesheet" >
+
+
+  </head>
+
+  <body>
+
+    <article class="card text-center " >
+        <div class="row">
+        <h5 class="section-card-title" title="Section {{section.master_section.order_id}}">
+            Section {{section.master_section.order_id}} </h5>
+
+        <div class="progress progress-section"
+             title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done{% endblocktrans %}">
+            <div class="progress-bar progress-bar-section" role="progressbar"
+                 aria-valuenow="{{section.user_progression}}" style="width: {{section.user_progression}}%; background-color: #28a745;"
+                 title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done {% endblocktrans %}"
+                 aria-valuemin="0" aria-valuemax="100" ></div>
+        </div>
+         </div>
+        <p class="card-title" style="text-align: left; height: 15%;" title="{% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}">
+            {% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}</p>
+       <div id="image"  >
+      {% if forloop.counter == 1 %}
+          <img src="{% static 'image/section1.png' %}" class="card-img-top" title="card image" alt="Card image">
+      {% elif forloop.counter == 2 %}
+          <img src="{% static 'image/section2.png' %}" class="card-img-top" title="card image" alt="Card image">
+      {% elif forloop.counter == 3 %}
+          <img src="{% static 'image/section3.png' %}" class="card-img-top" title="card image" alt="Card image">
+      {% elif forloop.counter == 4 %}
+          <img src="{% static 'image/section4.png' %}" class="card-img-top" title="card image" alt="Card image">
+      {% elif forloop.counter == 5 %}
+          <img src="{% static 'image/section5.png' %}" class="card-img-top" title="card image" alt="Card image">
+      {% elif forloop.counter == 6 %}
+          <img src="{% static 'image/section6.png' %}" class="card-img-top" title="card image" alt="Card image">
+      {% else %}
+          <img src="{% static 'image/section7.png' %}" class="card-img-top" title="card image" alt="Card image">
+      {% endif %}
+        </div>
+      <div class="card-body">
+        <p class="card-text">{% blocktrans with description=section.master_section.description %}{{description}}{% endblocktrans %}</p>
+        <a href="{{ section.get_absolute_url }}"
+           class="btn btn-primary card-button">{% trans "Go to the section" %}</a>
+      </div>
+    </article>
+  </body>
+
+</html>
+
