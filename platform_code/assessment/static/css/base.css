@@ -103,7 +103,8 @@ body.navbar-is-fixed-top {
 
 .link-with-border:hover {
     border-bottom-color: white;
-    color: rgba(75,96,115,.3);
+    color: white;
+    text-decoration: none;
 }
 
 .fa-icon-footer{
@@ -193,8 +194,7 @@ select {
     border-radius: 0.25em;
     border: 1px solid lightsteelblue;
 }
-input{
-    min-height: 30px;
+input {
     border-radius: 0.25em;
     border: 1px solid lightsteelblue;
     max-width: -webkit-fill-available;
