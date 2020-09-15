@@ -1,0 +1,112 @@
+body {
+   margin: 20px;
+}
+
+
+.centered {
+    margin: 0 auto;
+    padding: 0 1em;
+}
+
+.card {
+    flex: 1 0 500px;
+    box-sizing: border-box;
+    margin: 1rem .25em;
+    padding: 10px;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+h5.card-title {
+    text-align: left;
+    /*height: 100px;*/
+    overflow: hidden;
+    margin-left: 10px;
+    width: 50%;
+    margin-top:10px;
+
+}
+
+.section-card-title{
+    width: 50%;
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.card-text{
+  text-align: justify;
+  text-justify: auto;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  width: 100%;
+  /*height: 100%;*/
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+   -webkit-line-clamp: 7; /* number of lines to show */
+   -webkit-box-orient: vertical;
+
+
+}
+
+.card-button{
+    text-align: center;
+    align-self: center;
+    width: 100%;
+    margin: 0 auto;
+    bottom: 20px;
+    background-color: #FFBE3C;
+    border-color: #FFBE3C;
+
+}
+.card-img-top{
+    height: 80px;
+     width: 200px;
+}
+
+.card-img-top{
+    height: 100px;
+    width: 100px
+}
+
+.progress-section{
+    height: 14px;
+    margin: 0 auto;
+    width: 40%;
+}
+
+@media screen and (min-width: 40em) {
+    .card {
+        flex: 0 1 calc(50% - 1em);
+    }
+}
+
+@media screen and (min-width: 60em) {
+    .card {
+        max-width: calc(32% - 1em);
+    }
+}
+
+
+
+@media screen and (min-width: 52em) {
+    .centered {
+        max-width: 60em;
+    }
+    .card {
+        max-width: calc(32% - 1em);
+    }
+}
+
+
+@media screen and (min-width: 80em) {
+    .card {
+        max-width: calc(32% - 1em);
+    }
+}

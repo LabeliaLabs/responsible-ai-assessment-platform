@@ -1,0 +1,40 @@
+{% load i18n %}
+
+<div class="create-eval-modal">
+    {% if login_form.errors %}
+    <p>{% trans "Your username and password didn't match. Please try again." %}</p>
+  {% endif %}
+
+  {% if next %}
+    {% if user.is_authenticated %}
+      <p>{% trans "Your account doesn't have access to this page. To proceed,
+      please login with an account that has access." %}</p>
+    {% else %}
+      <p>{% trans "Please login to see this page." %}</p>
+    {% endif %}
+  {% endif %}
+    <form id="user_login_form" method='post' class="form" role="form">
+        <div class="modal-header">
+            <h4 class="modal-title" id="myModalLabel">{% trans "Login" %}</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body modal-body-2-cols">
+            {% csrf_token %}
+            <p style="margin-left:25%">{{ login_form.username.label_tag }}</p>
+            <p >{{ login_form.username }}</p>
+
+
+            <p style="margin-left:25%">{{ login_form.password.label_tag }}</p>
+            <p>{{ login_form.password }}</p>
+
+
+        </div>
+        <div class="modal-footer">
+            <input type="submit" class="btn btn-primary same-size-280" value="{% trans 'Validate' %}" style="margin: auto" />
+            <input type="hidden" name="next" value="{{ next }}" />
+          <a class="btn btn-danger same-size-280" type="button" href="{% url 'home:signup' %}">{% trans "I haven't an account" %}</a>
+
+        </div>
+    </form>
+    <a href="{% url 'home:password_reset' %}">{% trans "Forgotten password?" %}</a>
+</div>

@@ -1,0 +1,78 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+<h3 class="title-column">{% trans "Organisation's evaluations" %} </h3>
+
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col" class="col-array">{% trans "Evaluation's name" %}</th>
+          <th scope="col" class="col-array">{% trans "Creation date" %}</th>
+          <th scope="col" class="col-array" >{% trans "Validation date" %}</th>
+          <th scope="col" class="col-array">{% trans "Evaluation status" %}</th>
+          <th scope="col" class="col-array">{% trans "Progression" %}</th>
+          <th scope="col" class="col-array">{% trans "Score" %}</th>
+          <th scope="col" class="col-array">{% trans "Action" %}</th>
+          <th scope="col" class="col-array" style="display:none"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for evaluation in evaluation_list %}
+            <div  >
+            <tr class="row-array" >
+
+              <td class="case-array" >{{evaluation.name}}</td>
+              <td class="case-array">{{evaluation.created_at|format_date_calendar}}</td>
+
+              {% if evaluation.is_finished %}
+                <td class="case-array">{{evaluation.finished_at|format_date_calendar}}</td>
+              {% else %}
+                <td class="case-array">{% trans "Not validated yet" %}</td>
+              {% endif %}
+
+              {% if evaluation.is_finished %}
+                <td class="case-array">{% trans "Validated" %}</td>
+              {% else %}
+                <td class="case-array">{% trans "In progress" %}</td>
+              {% endif %}
+
+              <td class="case-array">{{evaluation.calculate_progression}} %</td>
+
+              {% if evaluation.is_finished %}
+                <td class="case-array">{{evaluation.score}}</td>
+              {% else %}
+                <td class="case-array">-</td>
+              {% endif %}
+
+              {% if evaluation.is_finished %}
+                <td class="case-array"><a class="btn btn-results" name="resultat-no-modif" href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">{% trans "See the results" %}</a></td>
+              {% else %}
+                <td class="case-array"><a class="btn btn-modify" href="{{ evaluation.get_absolute_url}}">{% trans "Modify" %}</a></td>
+              {% endif %}
+
+              <td class="div-trash" id="div-trash{{evaluation.id}}" style="border-top:0px; background-color: white;" >
+                  <button class="btn btn-danger" data-toggle="modal" data-target="#modal-delete{{evaluation.id}}"><span class="fa fa-trash"></span></button>
+                  <!-- The Modal delete evaluation -->
+                  <!-- The modal is inside the for loop because we need to catch the evaluation id -->
+                  <!-- It calls the DeleteEvaluation view -->
+                    <div class="modal" id="modal-delete{{evaluation.id}}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          {% include "assessment/deletion-evaluation.html" %}
+                        </div>
+                      </div>
+                    </div>
+
+              </td>
+            </tr>
+            </div>
+           {% endfor %}
+      </tbody>
+    </table>
+
+
+
+
+

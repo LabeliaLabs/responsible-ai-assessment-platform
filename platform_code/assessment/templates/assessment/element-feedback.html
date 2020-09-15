@@ -1,0 +1,46 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+<!-- Feedback for each evaluation element -->
+
+<a class="feedback" href="#" data-toggle="modal"
+   data-target="#modal-feedback-element{{element.id}}" type="button">{% trans "Give a feedback" %}</a>
+
+<!-- The Modal create feedback -->
+
+<div class="modal" id="modal-feedback-element{{element.id}}" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+
+      <form id="feedback_user_element{{element.id}}" method='post' class="form" role="form"
+          action="">
+        <div class="modal-header">
+            <h4 class="modal-title" >{% trans "Give a feedback on this element" %}</h4>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            {% csrf_token %}
+            {% for field in element_feedback_form %}
+            <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                <p class="" > {{field}} </p>
+            {% endfor %}
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary same-size-250" type="button" name="button_feedback"
+                    onclick="feedback({{element.id}}, 'element')" style="margin: auto" >{% trans 'Submit' %}</button>
+        </div>
+          <div id="confirmation_feedback_element{{element.id}}"></div>
+    </form>
+
+    </div>
+  </div>
+</div>
+
+<script>
+
+
+
+
+</script>

@@ -1,0 +1,123 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+{% if last_version %}
+
+    {% if evaluations %}
+    <div class="margin-bot-top-20">
+        <a data-toggle="modal" data-target="#modal-create-eval" href="#"
+           class="btn btn-primary ">{% trans "Create a new evaluation" %}</a>
+
+    </div>
+
+        <div id="table-eval-user">
+                  <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="col-array">{% trans "Evaluation name" %}</th>
+                      <th scope="col" class="col-array">{% trans "Organisation" %}</th>
+                      <th scope="col" class="col-array">{% trans "Creation date" %}</th>
+                      <th scope="col" class="col-array">{% trans "Validation date" %}</th>
+                      <th scope="col" class="col-array">{% trans "Evaluation status" %}</th>
+                      <th scope="col" class="col-array">{% trans "Progression" %}</th>
+                      <th scope="col" class="col-array">{% trans "Score" %}</th>
+                      <th scope="col" class="col-array">{% trans "Action" %}</th>
+                      <th scope="col" class="col-array" style="display:none"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for evaluation in evaluations %}
+                        <div  >
+                        <tr class="row-array" >
+
+                          <td class="case-array" >{{evaluation.name}}</td>
+                          <td class="case-array" >{{evaluation.organisation}}</td>
+                          <td class="case-array">{{evaluation.created_at|format_date_calendar}}</td>
+
+                          {% if evaluation.is_finished %}
+                            <td class="case-array">{{evaluation.finished_at|format_date_calendar}}</td>
+                          {% else %}
+                            <td class="case-array">{% trans "Not validated yet" %}</td>
+                          {% endif %}
+
+                          {% if evaluation.is_finished %}
+                            <td class="case-array">{% trans "Validated" %}</td>
+                          {% else %}
+                            <td class="case-array">{% trans " In progress" %}</td>
+                          {% endif %}
+
+                          <td class="case-array">{{evaluation.calculate_progression}} %</td>
+
+                          {% if evaluation.is_finished %}
+                            <td class="case-array">{{evaluation.score}}</td>
+                          {% else %}
+                            <td class="case-array">-</td>
+                          {% endif %}
+
+                          {% if evaluation.is_finished %}
+                            <td class="case-array"><a name="resultat-no-modif" class="btn btn-results"
+                                                      href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}">{% trans "See the results" %}</a></td>
+                          {% else %}
+                            <td class="case-array"><a class="btn btn-modify" href="{{ evaluation.get_absolute_url}}">{% trans "Modify" %}</a></td>
+                          {% endif %}
+
+                          <td class="div-trash" id="div-trash{{evaluation.id}}" style="border-top:0px; background-color: white;" >
+                              <button class="btn btn-danger" data-toggle="modal" data-target="#modal-delete{{evaluation.id}}"><span class="fa fa-trash"></span></button>
+                              <!-- The Modal delete evaluation -->
+                              <!-- The modal is inside the for loop because we need to catch the evaluation id -->
+                              <!-- It calls the DeleteEvaluation view -->
+                                <div class="modal" id="modal-delete{{evaluation.id}}" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      {% include "assessment/deletion-evaluation.html" %}
+                                    </div>
+                                  </div>
+                                </div>
+
+                          </td>
+                        </tr>
+                        </div>
+                       {% endfor %}
+                  </tbody>
+                </table>
+        </div>
+
+
+    {% else %}
+
+     <section class="cards">
+         <article class="card text-center " >
+            <h5 class="card-title" >{% trans "Create my evaluation" %}</h5>
+
+          <div class="card-body">
+            {% if organisations %}
+                <a data-toggle="modal" data-target="#modal-create-eval"
+                   class="btn btn-primary card-button">{% trans "Create my evaluation" %}</a>
+            {% else %}
+              <a href="{% url 'home:orga-creation' %}"
+                   class="btn btn-primary card-button">{% trans "Create my evaluation" %}</a>
+            {% endif %}
+
+          </div>
+         </article>
+
+     </section>
+
+    {% endif %}
+
+    <div class="modal" id="modal-create-eval" aria-hidden="true">
+      <div class="modal-dialog ">
+        <div class="modal-content">
+
+          {% include "home/creation-evaluation-mutli-orga-modal.html" %}
+
+        </div>
+      </div>
+    </div>
+
+{% else %}
+
+<p>{% trans "There is no assessment available." %}</p>
+
+{% endif %}

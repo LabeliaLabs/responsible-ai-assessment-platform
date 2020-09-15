@@ -1,0 +1,51 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+{% block content %}
+
+<div id="mySidenav" class="sidenav">
+    {% include "assessment/sidebar.html" %}
+</div>
+
+<div class="main">
+    <div id="content-section">
+        {% include "assessment/content-section.html" %}
+    </div>
+
+    <div class="pagination">
+        {% include "assessment/pagination.html" %}
+    </div>
+
+    <form action="{{ evaluation.get_absolute_url }}">
+        <input type="submit" value="{% trans 'Back to the sections page' %}" class="btn btn-primary float-left"/>
+    </form>
+
+    <div id="validation evaluation" >
+        {% if evaluation.is_finished %}
+        <div>
+        <form name="results-with-modification" action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
+            <input type="submit" value="{% trans 'Validate and see the results' %}"
+                   class="btn btn-primary float-right validation-button"/>
+        </form>
+        </div>
+
+        {% else %}
+        <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
+            <input type="submit" value="{% trans 'Validate and see the results' %}" disabled="true"
+                   alt="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
+                   title="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
+                   class="btn btn-primary float-right validation-button"/>
+        </form>
+        {% endif %}
+
+    </div>
+
+</div>
+
+
+{% endblock %}
+
+
+

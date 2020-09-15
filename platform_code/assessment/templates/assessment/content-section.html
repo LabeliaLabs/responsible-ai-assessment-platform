@@ -1,0 +1,225 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+{% load markdownify %}
+
+    {% for section in page_obj %}
+        <div class="evaluation-title" >
+            <h1>Section {{ section.master_section.order_id}} </h1>
+<!--             TODO check translate h3-->
+                <h3>{{section.master_section.name}}</h3>
+                {% include "assessment/section-feedback.html" %}
+            <div id="section-progress-bar" class="progress progress-section"
+                 title="{% blocktrans with progression=section.user_progression %}{{ progression }}% is done{% endblocktrans %}">
+                <div class="progress-bar progress-bar-section" role="progressbar" style="width: {{section.user_progression}}%;"
+                     aria-valuenow="{{section.user_progression}}" aria-valuemin="0" aria-valuemax="100"
+                     title="{% blocktrans with progression=section.user_progression %}{{ progression }}% is done{% endblocktrans %}" id="section-progress-bar-content"></div>
+            </div>
+
+        </div>
+        <div id="section-description" style="margin-bottom: 50px; text-align: justify; margin-top: 50px;">
+            {{section.master_section.description|markdownify}}
+        </div>
+
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+        <div class="element">
+
+            <div class="pagination-top" style="margin-bottom: 20px;">
+            {% include "assessment/pagination.html" %}
+            </div>
+
+            <div class="accordion" id="accordionExample" aria-multiselectable="true">
+            {% for element in element_list %}
+                      <div class="card">
+                        <div class="card-header row grid-container-3-cols" id="heading{{element.id}}">
+                          <h2 class="mb-0">
+                            <button class="btn btn-link btn-block text-left " type="button" data-toggle="collapse"
+                                    data-target="#collapse{{element.id}}" aria-expanded="true"
+                                    aria-controls="collapse{{element.id}}">
+                                Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.name}}
+                            </button>
+
+                          </h2>
+                            {% include "assessment/element-feedback.html" %}
+
+                            <span name="element_status_temporary{{element.id}}" class="fa-stack fa-lg"
+                                  style="display: none;"
+                                  title="">
+                            </span>
+
+                            {% if element.status %}
+                            <span name="element_status_done{{element.id}}" class="fa-stack fa-lg "
+                                   title="{% trans 'You have already answered to this evaluation element' %}">
+                                  <i class="fa fa-circle fa-stack-2x"></i>
+                            </span>
+
+                            {% elif not element.status %}
+                                {% if element.has_condition_on and element|is_not_applicable %}
+                                    <span name="element_status_invalid{{element.id}}" class="fa-stack fa-lg answer"
+                                          title="{% trans 'You are not concerned by this evaluation element due to your answer to this evaluation element' %} {{depends_on_dic|get_item:element}}">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                     </span>
+
+                                {% else %}
+                                    <span name="element_status_not_done{{element.id}}" class="fa-stack fa-lg answer"
+                                          title="{% trans 'You have not yet answered to this evaluation element' %}">
+                                          <i class="fa fa-circle-o fa-stack-2x" ></i>
+                                    </span>
+                                {% endif %}
+
+                            {% endif %}
+                        </div>
+
+                        <div id="collapse{{element.id}}" class="collapse" aria-labelledby="heading{{element.id}}" >
+                          <form method="POST" name="{{element.id}}" id="form{{element.id}}"
+                                action="{{ section.get_absolute_url }}" element="{{element}}" >
+                              {% csrf_token %}
+                            <div class="card-body">
+
+                                <div id="temp_warning{{element.id}}" class='alert alert-warning' style="display:none;">
+                                    {% trans "This evaluation element is not applicable due to your previous answers" %}
+                                </div>
+                                {% if element.has_condition_on and element|is_not_applicable %}
+                                    <div id="warningmessage{{element.id}}" class='alert alert-warning'>
+                                        {% trans 'You are not concerned by this evaluation element due to your answer to this evaluation element' %} {{depends_on_dic|get_item:element}}
+                                    </div>
+                                {% endif %}
+
+                                <div id="question-text" class="sub-question-headers">
+                                    <div id="question-name" class="question-name">
+                                        Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.question_text|markdownify}}
+                                    </div>
+                                    {% if element.master_evaluation_element.explanation_text %}
+                                    <div class="help-tip help-tip-explanation absolute" style="font-size:18px;">
+                                        <p>{{element.master_evaluation_element.explanation_text|markdownify}}</p>
+                                    </div>
+
+                                    {% endif %}
+                                </div>
+
+                                <div class="choices" id="{{element}}">
+                                    {% if element..master_evaluation_element.question_type == "radio" %}
+                                            <p style="font-style:italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                                            {% trans ": Please select one answer which best matches to your organisation situation" %}</p>
+
+                                      {% elif element.master_evaluation_element.question_type == "checkbox"%}
+                                        <p style="font-style:italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                                            {% trans ": Please select all the answers which best match to your organisation situation. Be careful, some combinations are not coherent" %}</p>
+
+                                      {% endif %}
+
+                                    {% if element.has_condition_on and element|is_not_applicable %}
+                                        <fieldset id="disable_element_{{element.id}}" disabled="true" >
+
+                                      {{ dic_form|get_item:element }}
+                                        </fieldset>
+                                    {% else %}
+                                        <fieldset id="disable_element{{element.id}}" >
+
+                                          {{ dic_form|get_item:element }}
+                                            </fieldset>
+                                    {% endif %}
+
+                                    {% if element.has_condition_on and element|is_not_applicable %}
+                                        <a id="reset_{{element.id}}" class="reset-response float-right" title="Inactive">
+                                            {% trans "Reset the answer" %}</a>
+                                    {% else %}
+                                        <a id="reset{{element.id}}" onclick="resetChoice('{{element.id}}')"
+                                           class="reset-response float-right" >{% trans "Reset the answer" %}</a>
+                                    {% endif %}
+
+                              </div>
+
+                            </div>
+                              <div class="wrapper">
+                                  {% if element.has_condition_on and element|is_not_applicable %}
+                                    <button type="button" onclick="submitForm('form{{element.id}}')" style="width:20%"
+                                             disabled="true" class="btn btn-primary" id="validate_{{element.id}}" >
+                                        {% trans "Validate" %}
+                                    </button>
+                                  {% else %}
+                                      <button type="button" onclick="submitForm('form{{element.id}}')" style="width:20%"
+                                                 class="btn btn-primary" id="validate{{element.id}}" >{% trans "Validate" %}
+                                      </button>
+                                  {% endif %}
+                              </div>
+                              <div class="margin-10" id="confirmationform{{element.id}}" >
+                              </div>
+                            <div id="warningmessage_temporary{{element.id}}" class='alert alert-warning'
+                                 style="visibility:hidden; height:1px;">{% trans "This evaluation element is not applicable due to the answer to this evaluation element" %}{depends_on_dic|get_item:element}}
+                            </div>
+
+                        </form>
+                            {% if element.master_evaluation_element.has_resources %}
+                                  <div id="accordion-{{element.id}}" class="accordion-resource" style="margin-top:20px;">
+                                        <div class="card mb-0">
+                                            <div class="card-header collapsed" data-toggle="collapse" href="#collapse-{{element.id}}"
+                                                style="background-color:white;">
+                                                <a class="card-title">{% trans "Resources" %}</a>
+                                            </div>
+                                            <div id="collapse-{{element.id}}" class="card-body collapse" data-parent="#accordion-{{element.id}}">
+                                                <form id="like_resources{{element.id}}" action="{{ section.get_absolute_url }}" method="POST">
+                                                {% csrf_token %}
+                                                <ul>
+                                                    {% for resource in element.master_evaluation_element.external_links.all %}
+                                                        <div class="grid-container-2-cols">
+                                                            <div class="grid-item">
+                                                                <li class="list-with-disc margin-10">
+                                                                [{{resource.type}}] - {{resource.text|markdownify}}
+                                                                </li>
+                                                            </div>
+                                                            <div class="icon-list">
+                                                                {% if not resource in resources_liked %}
+                                                                    <a onclick="like(this, {{element.id}}, {{resource.id}})" name="like">
+                                                                        <i class="fa fa-bookmark-o not-liked" name="resource_not_liked{{resource.id}}"></i>
+                                                                    </a>
+                                                                {% else %}
+                                                                    <a onclick="like(this, {{element.id}}, {{resource.id}})" name="unlike">
+                                                                        <i class="fa fa-bookmark liked" name="resource_liked{{resource.id}}"></i>
+                                                                    </a>
+                                                                {% endif %}
+                                                            </div>
+
+                                                        </div>
+                                                    {% endfor %}
+                                                    </ul>
+                                                    </form>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                              {% endif %}
+
+                           </div>
+                        </div>
+
+                {% endfor %}
+
+
+                </div>
+
+        </div>
+
+{% endfor %}
+
+<script>
+
+
+var coll = document.getElementsByClassName("collapsible-resource");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+
+
+</script>

@@ -1,0 +1,221 @@
+.card {
+        margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 25px; /* Added */
+        margin-bottom: 25px;
+        position: relative;
+
+}
+
+.card_title {
+}
+
+div.evaluation-title: h1 {
+    text-align: center;
+    margin: 0 auto;
+    position:absolute;
+}
+
+div.evaluation-title: h3 {
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.sub-question-headers{
+
+}
+
+.question-name{
+    width: 95%;
+    text-align: justify;
+}
+
+.feedback{
+    font-size: 12px;
+    margin-left: 5px;
+    margin-bottom: auto;
+    margin-top: auto;
+    color: #5550FF
+}
+
+.feedback:hover {
+    color: #8985FF;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.choices{
+    margin-top: 20px;
+}
+
+.textarea-empty {
+    width: 100%;
+    font-style: italic;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  height: 20px;
+  width: 100px;
+}
+
+.reset-response:hover{
+    cursor: pointer;
+    color: red;
+
+}
+
+.select_feedback{
+    width: 90%;
+    height: 40px;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.feedback-text{
+    width: 90%;
+    color: #4b6073;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.textarea-data {
+    width: 100%;
+    color: #212529;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+}
+
+.btn-primary{
+    background-color: #FFBE3C;
+    border-color: #FFBE3C;
+
+}
+
+.validation-button{
+
+}
+
+.collapsible-resource{
+  background-color: #FFFFFF;
+  margin-top: 10px;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+.active, .collapsible-resource:hover {
+
+}
+
+.fa-stack{
+    float: right;
+    margin-left: auto;
+    color: green;
+    font-size:18px;
+}
+
+.fa-stack-2x{
+    font-size: 20px;
+}
+
+
+.content-resource {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+}
+
+.accordion-resource .card-header:after {
+
+    font-family: 'FontAwesome';
+    content: "\f068";
+    margin-left: 20px;
+}
+.accordion-resource .card-header.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\f067";
+}
+
+.sidenav {
+  height: 70%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 25%;
+  left: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.title-sidenav {
+  padding: 6px 6px 6px 32px;
+  text-decoration: none;
+  font-size: 20px;
+  display: block;
+  color: #848482;
+
+}
+
+.sidenav a:hover {
+  color: #000066;
+}
+
+.collapsible-section{
+  cursor: pointer;
+}
+
+.collapsible-section:after {
+  content: '\1F892';
+  color: white;
+  font-weight: bold;
+  float: right;
+  size: 10px;
+  margin-left: 5px;
+}
+
+.content-sidebar {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.main {
+  margin-left: 150px; /* Same as the width of the sidenav */
+}
+
+/* CSS animation */
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity:0;
+        transform: scale(0.6);
+    }
+
+    100% {
+        opacity:100%;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    0% { opacity:0; }
+    100% { opacity:100%; }
+}
