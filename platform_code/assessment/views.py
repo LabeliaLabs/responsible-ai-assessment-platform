@@ -889,23 +889,24 @@ def is_user_spam_feedback(url, headers, user, delta_days, max_feedback):
     # Always the last 20 issues created
     issues_list = response.json()
     count = 0
-    i = 0
-    while i < len(issues_list) and count <= max_feedback:
-        issue = issues_list[i]
-        # The user email is not in the author dictionary but in the description, so we check it
-        description = issue["description"]
-        user_email = user.get_email()
-        if user_email in description:
-            # so the user created the issue, now we check the date
-            created_at = issue["created_at"].split('T')[0]
-            # convert into datetime format
-            formatted_created_at = datetime.strptime(created_at, "%Y-%m-%d")
-            # If the issue has been created between the delta days and now, we count this issue
-            if formatted_created_at > delta_time :
-                count += 1
-        i += 1
-    #    print("end loop", "i", i, "count", count)
-    #print("compare count and max", count, max_feedback )
+    if len(issues_list) > 0:
+        i = 0
+        while i < len(issues_list) and count <= max_feedback:
+            issue = issues_list[i]
+            # The user email is not in the author dictionary but in the description, so we check it
+            description = issue["description"]
+            user_email = user.get_email()
+            if user_email in description:
+                # so the user created the issue, now we check the date
+                created_at = issue["created_at"].split('T')[0]
+                # convert into datetime format
+                formatted_created_at = datetime.strptime(created_at, "%Y-%m-%d")
+                # If the issue has been created between the delta days and now, we count this issue
+                if formatted_created_at > delta_time :
+                    count += 1
+            i += 1
+        #    print("end loop", "i", i, "count", count)
+        #print("compare count and max", count, max_feedback )
     return count > max_feedback
 
 
