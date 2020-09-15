@@ -2,7 +2,6 @@
 {% load static %}
 {% load add_attr %}
 {% load i18n %}
-
 {% block content %}
 <div class="head-page">
     <h1>{{ evaluation.name }}</h1>
@@ -20,24 +19,17 @@
     </div>
     <p class="center" style="margin-bottom: 0px;">{% trans "Creation date:" %} {{evaluation.created_at|format_date_calendar}}</p>
     <p class="center" style="margin-bottom: 30px;">{% trans "Version" %} {{evaluation.assessment.version}}</p>
-
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 </div>
-
 <main class="main-area">
     <div class="centered">
         <section class="cards">
             {% for section in section_list %}
-
                 {% include "assessment/base-card-section.html" %}
-
-
-
             {% endfor %}
         </section>
     </div>
 </main>
-
 <div id="validation evaluation" >
     {% if evaluation.is_finished %}
         <div>
@@ -47,42 +39,15 @@
         </form>
         </div>
     {% else %}
-
     <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
         <input type="submit" value="{% trans 'Validate and see the results' %}" disabled="True"
                alt="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
                title="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
                class="btn btn-primary float-right bottom-page-button"/>
     </form>
-
     {% endif %}
 </div>
-
 <form action="{% url 'assessment:orga-summary' organisation.id %}">
     <input type="submit" value="{% trans 'Back to the organisation' %}" class="btn btn-primary float-left bottom-page-button"/>
 </form>
-
-<div id="validation evaluation" >
-    {% if evaluation.is_finished %}
-        <div>
-        <form action="{% url 'assessment:results' evaluation.id evaluation.slug %}">
-            <input type="submit" value="Valider et voir les résultats" class="btn btn-primary-2 float-right" />
-        </form>
-        </div>
-    {% else %}
-
-    <form action="{% url 'assessment:results' evaluation.id evaluation.slug %}">
-            <input type="submit" value="Valider et voir les résultats" disabled="True"
-                   alt="(info bulle) Veuillez finir l'évaluation avant de pouvoir la valider" title="(info bulle) Veuillez répondre à toutes les questions avant de pouvoir valider l'évaluation" class="btn btn-primary-2 float-right"/>
-        </form>
-
-    {% endif %}
-
-</div>
-
-<form style="margin-top: 20px;" action="{% url 'assessment:summary' %}">
-        <input type="submit" value="Retour au sommaire" class="btn btn-primary-2 float-left"/>
-    </form>
-
-
 {% endblock %}
