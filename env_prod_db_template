@@ -1,0 +1,4 @@
+# rename to .env.prod.db
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=<CHANGE_ME>
+POSTGRES_DB=platform_db_prod

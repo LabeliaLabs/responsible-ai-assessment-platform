@@ -58,8 +58,6 @@
     <h2>{% trans "Your answers" %}</h2>
 <!--    Need to create a new form, initiate with database, disable other choices-->
 
-
-
             {% for element in evaluation_element_list %}
                 {% if element.master_evaluation_element.order_id == 1 %}
                     <p>Section {{ element.section.master_section.order_id}}. {{ element.section.master_section.name }} </p>

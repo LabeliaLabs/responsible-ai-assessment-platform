@@ -113,12 +113,40 @@ Comme le suggère le [tutoriel ci-dessus](https://testdriven.io/blog/dockerizing
 
 ### Domaines et certificats SSL
 
-_To do :_
+- Url: <http://preprod.assessment.substra.ai/>
+- Lets encrypt certbot
+- TODO: Add auto renew & manual procedure!
 
-- _gestion des zones DNS via Gandi ou via OVH ?_
-- _certificats SSL via Gandi ou via Let's Encrypt ?_
+## Deploy & gitlab flow
 
+- [temp] TODO add docker-compose flow
+- [temp] Branch: <https://framagit.org/substra-foundation/pf-assessment-dsrc/-/merge_requests/28>
+- Flow: dev > preprod > prod
+- Unit tests!
+- CI:
+
+  -[ ] flake
+  -[ ] html & yaml lint
+  -[ ] docker build test
+
+- `manage.py`
+  - `docker-compose -f docker-compose.prod.yml exec web python manage.py makemigrations
+`
+  - `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
+`
+  - `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
+`
 ### Comment tester la plateforme ?
+
+## Deploy & gitlab flow
+- [temp] TODO add docker-compose flow
+- [temp] Branch: < https://framagit.org/substra-foundation/pf-assessment-dsrc/-/merge_requests/28>
+- Flow: dev > preprod > prod
+- Unit tests!
+- CI: 
+  -[ ] flake
+  -[ ] html & yaml lint
+  -[ ] docker build test
 
 [todo quand ce sera en pre-prod car les commandes vont changer]
 

@@ -132,3 +132,7 @@ class ScoringAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ScoringSystem, ScoringAdmin)
+from django.contrib import admin
+
+# Register your models here.
+

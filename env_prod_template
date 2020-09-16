@@ -1,0 +1,12 @@
+# rename to .env.prod
+DEBUG=False
+SECRET_KEY=<CHANGE_ME>
+DJANGO_ALLOWED_HOSTS=<CHANGE_ME>
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=platform_db_prod
+SQL_USER=<CHANGE_ME>
+SQL_PASSWORD=<CHANGE_ME>
+SQL_HOST=db
+SQL_PORT=5432
+DATABASE=postgres
+

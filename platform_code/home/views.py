@@ -489,8 +489,11 @@ class OrganisationCreationView(LoginRequiredMixin, FormView):
                 name=name, size=size, country=country, sector=sector, created_by=user,
             )
 
-            # redirect to a new URL:
-            response = redirect("assessment:creation-evaluation", organisation.id)
+            # redirect to a new URL, evaluation creation if there is an assessment in the DB, else profile:
+            if get_last_assessment_created():
+                response = redirect("assessment:creation-evaluation", organisation.id)
+            else:
+                response = redirect("home:user-profile")
             return response
         else:
             return self.form_invalid(form)
