@@ -19,6 +19,11 @@ body{
     padding-left: 15px;
 
 }
+
+.blue-color{
+    color: #007BFF;
+}
+
 /***** GLOBAL PROPERTIES *****/
 
 .display-none{
@@ -67,6 +72,14 @@ a:hover {
 }
 .margin-70 {
     margin-top: 70px;
+}
+
+.margin-110{
+    margin-top: 110px;
+}
+
+.margin-150 {
+    margin-top: 150px;
 }
 
 .margin-bot-top-20 {
@@ -183,6 +196,25 @@ body.navbar-is-fixed-top {
     float: left;
     padding: 10px;
     flex: 1;
+}
+
+.center-content{
+    align-self: center;
+}
+
+.homepage-banner{
+    color: white;
+    background-color: #5550FF;
+    padding: 15px;
+    text-align: center;
+    width: 100vw;
+    position: relative;
+    margin-left: -50vw;
+    left: 50%;
+}
+
+.margin-auto{
+    margin: auto;
 }
 
 .data{

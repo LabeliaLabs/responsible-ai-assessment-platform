@@ -30,8 +30,10 @@
         {% endfor %}
       </div>
     {% endfor %}
-    <button type="submit" class="btn btn-primary bottom-page-button">{% trans "Sign up" %}</button>
+    <button type="submit" class="btn btn-primary margin-bot-top-20">{% trans "Sign up" %}</button>
   </form>
+    <a class="margin-10" href="{% url 'home:login' %}">Vous avez déjà un compte ? </a>
     </div>
     </div>
+
 {% endblock %}
