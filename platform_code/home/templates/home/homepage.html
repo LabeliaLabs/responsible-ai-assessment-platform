@@ -13,38 +13,62 @@
 </ul>
 {% endif %}
 
-  <!-- Header - set the background image for the header in the line below -->
-  <header class=" bg-image-full">
-    <img class="img-fluid d-block mx-auto" style="max-height: 350px;" src="{% static 'image/Substra foundation_Illustration 3.png' %}" alt="image">
-  </header>
-
-  <!-- Content section -->
-<!--TODO translate this page-->
-  <section class="py-5">
-    <div class="container">
-      <h1>Data science responsable et de confiance - Référentiel d'évaluation</h1>
-      <h3>Contexte, motivations et ambition</h3>
-      <p class="description">Un nouvel espace émerge au croisement entre expansion de l'IA dans les organisations et les systèmes automatiques, et inquiétudes du public sur les données privées, la transparence et la robustesse des algorithmes.<br></p>
-      <p class="description"> Ce sont deux tendances puissantes qui commencent déjà à se percuter (voir par exemple le cas Apple Card en novembre 2019 ou le formidable article du New York Times en février 2020, An Algorithm that grants Freedom, or Takes it away). Comment les réconcilier, les conjuguer ensemble ? Des solutions techniques et organisationnelles nouvelles sont indispensables pour cela, pour accorder un cadre de confiance qui manque aujourd’hui, pour rendre possible des collaborations nouvelles, prometteuses et sûres entre les entreprises, les institutions publiques et les citoyens.<br></p>
-      <p class="description">De nombreux acteurs s'emparent du sujet et travaillent par exemple déjà à des cadres pour un usage à impact positif des technologies d'IA, à des outils pour apporter de la traçabilité aux travaux de data science, à des formations pour éviter la reproduction de biais discriminatoires, à des briques techniques pour permettre la mutualisation et renforcer la confidentialité des données, etc.</p>
-      <p class="description">En s'appuyant sur les travaux, cadres et corpus existants, nous proposons de travailler de manière ouverte et collaborative à la définition de ce que serait la data science responsable et de confiance. L'objectif ? Établir ensemble un référentiel open source de bonnes pratiques permettant aux organisations intéressées d'évaluer leur niveau de maturité.</p>
+    <div class="row" style="columns: 2">
+        <div class="column center-content" >
+            <h3 class="center blue-color">Substra Assessment</h3>
+            <p class="margin-50">Evaluez le niveau de maturité des pratiques de votre organisation de Data Science Responsable et de Confiance</p>
+            <div class="row">
+                <a class="btn btn-primary margin-auto margin-50" href="{% url 'home:signup' %}">{% trans "I register" %}</a>
+            </div>
+        </div>
+        <div class="column">
+            <img class="img-fluid d-block mx-auto " style="max-height: 350px;" src="{% static 'image/Illustration_3.png' %}" alt="image">
+        </div>
     </div>
-  </section>
 
-  <!-- Image Section - set the background image for the header in the line below -->
-  <section class="py-5 bg-image-full">
-    <!-- Put anything you want here! There is just a spacer below for demo purposes! -->
-        <img class="img-fluid d-block mx-auto" style="width:50%; height:300px;" src="{% static 'image/alina-grubnyak-hdpDLIXZg7Y-unsplash.jpg' %}" alt="image">
-  </section>
-
-  <!-- Content section -->
-  <section class="py-5">
-    <div class="container">
-      <h1></h1>
-      <p class="lead"></p>
-      <p></p>
+    <div class="homepage-banner margin-50">
+      Entrez dans l'univers de la Data Science Responsable et de Confiance
     </div>
-  </section>
 
+    <div class="row" style="columns: 2">
+        <div class="column center-content" >
+            <img class="img-fluid d-block mx-auto margin-50" style="max-height: 350px;" src="{% static 'image/Illustration_10.png' %}" alt="image">
+            <p class="margin-150">Des solutions techniques et organisationnelles nouvelles sont indispensables pour accorder un cadre de confiance qui manque aujourd'hui et pour rendre possible des collaborations nouvelles, prometteuses et sûres entre les entreprises, les institutions publiques et les citoyens.</p>
+            <img class="centered-image middle-width margin-110"  src="{% static 'image/Illustration_1.png' %}" alt="image">
+        </div>
+        <div class="column center-content">
+          <p class="margin-50">Un nouvel espace émerge au croisement entre expansion de l'IA dans les organisations et inquiétudes du public sur les données privées, la transparence et la robustesse des algorithmes. Ce sont deux tendances puissantes qui commencent déjà à se percuter. Comment les réconcilier, les conjuguer ensemble ?</p>
+            <img class="img-fluid d-block mx-auto margin-150" style="max-height: 350px;" src="{% static 'image/Illustration_7.png' %}" alt="image">
+          <p class="margin-150">En s'appuyant sur les travaux, cadres et corpus existants, nous avons élaboré un référentiel de bonnes pratiques et d'évaluation permettant aux organisations intéressées d'évaluer leur niveau de maturité...</p>
+        </div>
+    </div>
+
+    <div class="homepage-banner margin-50">
+      Evaluez le score de votre organisation dès à présent !
+    </div>
+
+    <div class="row" style="columns: 3">
+        <div class="column">
+            <img class="centered-image middle-width"  src="{% static 'image/picto_homepage_rose.png' %}" alt="image">
+            <p class="text-center"><strong>Evaluez votre organisation</strong></p>
+            <p class="center">Evaluez dès à présent votre score à partir d'une série de questions autour de 7 thèmes de la Data Science Responsable et de Confiance</p>
+
+        </div>
+        <div class="column">
+            <img class="centered-image middle-width"  src="{% static 'image/picto_homepage_vert.png' %}" alt="image">
+            <p class="text-center"><strong>Améliorez votre scoring</strong></p>
+            <p class="center">Analysez votre progression au fil du temps sur les différents axes d'évaluation</p>
+        </div>
+        <div class="column">
+            <img class="centered-image middle-width"  src="{% static 'image/picto_homepage_bleu.png' %}" alt="image">
+            <p class="text-center"><strong>Explorez les ressources</strong></p>
+            <p class="center">Découvrez les ressources qui vous permettrons de progresser, de découvrir de nouveaux outils et d'apprendre de nouvelles techniques</p>
+        </div>
+
+    </div>
+
+<div class="row">
+    <a class="btn btn-primary margin-auto" href="{% url 'home:signup' %}">{% trans "I register" %}</a>
+</div>
 
 {% endblock %}
