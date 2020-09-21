@@ -11,6 +11,7 @@ and the score.
 
 import random
 import re
+import json
 
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -45,6 +46,45 @@ class Assessment(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_list_all_choices(self):
+        """
+        Return a list of all the choices of the assessment (used to create upgrade json for example)
+        :return:
+        """
+        list_all_choices = []
+        for master_section in self.mastersection_set.all().order_by("order_id"):
+            for (
+                master_element
+            ) in master_section.masterevaluationelement_set.all().order_by("order_id"):
+                for master_choice in master_element.masterchoice_set.all().order_by(
+                    "order_id"
+                ):
+                    list_all_choices.append(master_choice.get_numbering())
+        return list_all_choices
+
+
+class Upgrade(models.Model):
+    """
+    This class aims to contain the modifications of the assessment between each versions
+    You can refer to the file "multiple_version.md" in the spec for more information
+    """
+
+    final_assessment = models.ForeignKey(
+        Assessment, related_name="final_assessment", on_delete=models.CASCADE
+    )
+    origin_assessment = models.ForeignKey(
+        Assessment, related_name="origin_assessment", on_delete=models.CASCADE
+    )
+    upgrade_json = JSONField()
+
+    def __str__(self):
+        return (
+            "Upgrade from V"
+            + str(self.origin_assessment.version)
+            + " to V"
+            + str(self.final_assessment.version)
+        )
 
 
 class Evaluation(models.Model):
@@ -100,6 +140,18 @@ class Evaluation(models.Model):
             kwargs={"orga_id": self.organisation.id, "slug": self.slug, "pk": self.pk, },
         )
 
+    def is_upgradable(self):
+        """
+        Test if an evaluation is upgradable. True if there is an assessment with a latest version
+        :return: boolean
+        """
+        if get_last_assessment_created():
+            last_version = float(get_last_assessment_created().version)
+            version = float(self.assessment.version)
+            return version < last_version
+        else:
+            return False
+
     def get_list_all_elements(self):
         list_all_elements = []
         for section in self.section_set.all().order_by("master_section__order_id"):
@@ -112,7 +164,9 @@ class Evaluation(models.Model):
     def get_list_all_elements(self):
         list_all_elements = []
         for section in self.section_set.all().order_by("master_section__order_id"):
-            for element in section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
+            for element in section.evaluationelement_set.all().order_by(
+                "master_evaluation_element__order_id"
+            ):
                 list_all_elements.append(element)
         return list_all_elements
 
@@ -149,6 +203,140 @@ class Evaluation(models.Model):
                     # Useless as it is already saved in create_choice but we need to use choice for flake
                     # todo do not return choice when create it ?
                     choice.save()
+
+    def fetch_the_evaluation(self, *args, **kwargs):
+        """
+        For an evaluation (self), we compare with an other version of assessment and we modify the fetch values for
+        the objects of the evaluation.
+        This function can be both use to create a new evaluation while having other with previous version or to upgrade
+        an evaluation with an old version
+        :param args:
+        :param kwargs: original_assessment (previous assessment)
+        :return:
+        """
+        original_assessment = kwargs.get("origin_assessment")
+
+        # If there are several assessment versions, this assessment is necessary the last one
+        if Upgrade.objects.all():
+            upgrade = Upgrade.objects.get(
+                origin_assessment=original_assessment, final_assessment=self.assessment
+            )
+            upgrade_dic = upgrade.upgrade_json
+
+            for section in self.section_set.all():
+                section_number = section.master_section.get_numbering()
+                if upgrade_dic["sections"][section_number] == "no_fetch":
+                    section.fetch = False
+                    section.save()
+
+                for element in section.evaluationelement_set.all():
+                    element_number = element.master_evaluation_element.get_numbering()
+                    if upgrade_dic["elements"][element_number] == "no_fetch":
+                        element.fetch = False
+                        element.save()
+
+                    for choice in element.choice_set.all():
+                        choice_number = choice.master_choice.get_numbering()
+                        if upgrade_dic["answer_items"][choice_number] == "no_fetch":
+                            choice.fetch = False
+                            choice.save()
+
+    def upgrade(self, **kwargs):
+        """
+        The evaluation is upgrade from the current version to the latest. All the notes and the answers are retrieved,
+        fetched from the origin version.
+        Return the new evaluation (and DO NOT delete the older)
+        :return:
+        """
+        print("upgrade")
+        user_ = kwargs.get("user")
+        origin_assessment = self.assessment
+        final_assessment = get_last_assessment_created()
+
+        # The final assessment must be more recent than the origin, this is check in the views
+
+        upgrade = Upgrade.objects.get(
+            origin_assessment=origin_assessment, final_assessment=final_assessment
+        )
+        upgrade_dic = upgrade.upgrade_json
+
+        # Case the user who created the eval deleted his account but the orga has still users, they retrieved it
+        if self.created_by:
+            user_eval = self.created_by
+        else:
+            user_eval = user_
+        new_eval = Evaluation.create_evaluation(
+            name=self.name,
+            assessment=final_assessment,
+            organisation=self.organisation,
+            user=user_eval,
+        )
+        new_eval.create_evaluation_body()
+        print("new eval created")
+
+        for new_section in new_eval.section_set.all():
+            new_section_number = new_section.master_section.get_numbering()
+            if upgrade_dic["sections"][new_section_number] == "no_fetch":
+                new_section.fetch = False
+                new_section.save()
+            else:
+                # We rely on the upgrade dic to find the matching
+                new_section_order_id = new_section.master_section.order_id
+                older_section_order_id = upgrade_dic["sections"][new_section_number]
+                new_section.user_notes = self.section_set.get(
+                    master_section__order_id=older_section_order_id
+                ).user_notes
+                new_section.save()
+
+            for new_element in new_section.evaluationelement_set.all():
+                new_element_number = (
+                    new_element.master_evaluation_element.get_numbering()
+                )
+                if upgrade_dic["elements"][new_element_number] == "no_fetch":
+                    new_element.fetch = False
+                    new_element.save()
+                else:
+                    new_element_order_id = (
+                        new_element.master_evaluation_element.order_id
+                    )
+                    older_element_order_id = upgrade_dic["elements"][
+                        new_element_number
+                    ][-1]
+                    # print("older section order id", older_section_order_id, "idem element", older_element_order_id, )
+
+                    new_element.user_notes = EvaluationElement.objects.get(
+                        master_evaluation_element__order_id=new_element_order_id,
+                        section__master_section__order_id=older_section_order_id,
+                        section__evaluation=self,
+                    ).user_notes
+                    new_element.save()
+
+                for new_choice in new_element.choice_set.all():
+                    new_choice_number = new_choice.master_choice.get_numbering()
+                    if upgrade_dic["answer_items"][new_choice_number] == "no_fetch":
+                        new_choice.fetch = False
+                        new_choice.save()
+
+                    else:
+                        new_choice_order_id = new_choice.master_choice.order_id
+                        new_choice.is_ticked = Choice.objects.get(
+                            master_choice__order_id=new_choice_order_id,
+                            evaluation_element__master_evaluation_element__order_id=older_element_order_id,
+                            evaluation_element__section__master_section__order_id=older_section_order_id,
+                            evaluation_element__section__evaluation=self,
+                        ).is_ticked
+                        new_choice.save()
+                        # print("choice to fetch", new_choice, new_choice.is_ticked)
+                new_element.set_points()
+                new_element.set_status()
+                new_element.save()  # Not sure it is useful to save as already done in the methods
+                # print("element after saving choice", new_element.points, new_element.status)
+            new_section.set_points()
+            new_section.set_progression()
+            new_section.save()
+        # Normally, as we create new items, it wont occur
+        new_eval.set_finished()
+        return new_eval
 
     def set_finished(self):
         """
@@ -323,6 +511,14 @@ class MasterSection(models.Model):
         else:
             return self.name
 
+    def get_numbering(self):
+        """
+        Return the number of the master section (string)
+        :return:
+        """
+        if self.order_id:
+            return str(self.order_id)
+
 
 class Section(models.Model):
     """
@@ -336,6 +532,9 @@ class Section(models.Model):
         default=0
     )  # progression of user inside this section, as percentage
     points = models.FloatField(default=0)
+    # This field "fetch" is used for the versioning of assessments
+    fetch = models.BooleanField(default=True)
+    user_notes = models.TextField(blank=True, null=True, max_length=20000)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -469,6 +668,10 @@ class MasterEvaluationElement(models.Model):
         else:
             return self.name
 
+    def get_numbering(self):
+        if self.order_id and self.master_section.order_id:
+            return str(self.master_section.order_id) + "." + str(self.order_id)
+
     def has_resources(self):
         """ Used to know if a master evaluation element has resources in its external_links, in this case return True,
         else, if it has no external linksor only explanations links, return False"""
@@ -488,11 +691,16 @@ class EvaluationElement(models.Model):
     user_notes = models.TextField(blank=True, null=True, max_length=20000)
     status = models.BooleanField(default=False)
     points = models.FloatField(default=0)
+    # This field "fetch" is used for the versioning of assessments
+    fetch = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        if self.master_evaluation_element.master_section.order_id and self.master_evaluation_element.order_id:
+        if (
+            self.master_evaluation_element.master_section.order_id
+            and self.master_evaluation_element.order_id
+        ):
             return (
                 "Q"
                 + str(self.master_evaluation_element.master_section.order_id)
@@ -712,7 +920,9 @@ class EvaluationElement(models.Model):
                         choice.master_choice
                     )
                     # Manage the case the choice disable other evaluation element to set their points to 0
-                    if choice.has_element_conditioned_on(): #todo check if it is this if which cause flake issue
+                    if (
+                        choice.has_element_conditioned_on()
+                    ):  # todo check if it is this if which cause flake issue
                         list_element_disabled = choice.get_list_element_depending_on()
                         for element in list_element_disabled:
                             element.points = 0
@@ -915,10 +1125,7 @@ class MasterChoice(models.Model):
     """
 
     master_evaluation_element = models.ForeignKey(
-        MasterEvaluationElement,
-        related_name="master_choice_set",
-        blank=True,
-        on_delete=models.CASCADE,
+        MasterEvaluationElement, blank=True, on_delete=models.CASCADE,
     )
     answer_text = models.TextField()
     order_id = models.CharField(blank=True, null=True, max_length=200)  # can be letters
@@ -934,7 +1141,11 @@ class MasterChoice(models.Model):
 
     def get_numbering(self):
         """ Get the numbering of the master choice, like 1.2.a for the section 1, evaluation element 2 and choice a"""
-        if self.master_evaluation_element.master_section.order_id and self.master_evaluation_element.order_id:
+        if (
+            self.master_evaluation_element.master_section.order_id
+            and self.master_evaluation_element.order_id
+            and self.order_id
+        ):
             return (
                 str(self.master_evaluation_element.master_section.order_id)
                 + "."
@@ -968,6 +1179,8 @@ class Choice(models.Model):
         EvaluationElement, blank=True, null=True, on_delete=models.CASCADE
     )  # Todo remove null
     is_ticked = models.BooleanField(default=False)
+    # This field "fetch" is used for the versioning of assessments
+    fetch = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # This field is aimed to contain the username of who ticked the choice
@@ -1089,7 +1302,7 @@ class Choice(models.Model):
         """
         master_evaluation_element = self.master_choice.master_evaluation_element
         # For all the master choices of this evaluation element
-        for master_choices in master_evaluation_element.master_choice_set.all():
+        for master_choices in master_evaluation_element.masterchoice_set.all():
             # if it has as condition choice this one, it means this choice can disable other choices
             if master_choices.depends_on == self.master_choice:
                 return True
@@ -1130,7 +1343,7 @@ class ScoringSystem(models.Model):
     version = models.CharField(max_length=255, blank=True, null=True)
     organisation_type = models.CharField(
         max_length=1000, blank=True, null=True, default="entreprise"
-    ) #todo change this field
+    )  # todo change this field
     master_choices_weight_json = JSONField()
     # this coefficient is used to split the points for elements not applicable
     attributed_points_coefficient = models.FloatField(default=0.5)
@@ -1156,7 +1369,11 @@ class ScoringSystem(models.Model):
                 return choice_points
             except KeyError as e:
                 # todo logs
-                print("Le choix n'est pas dans le dictionnaire du scoring, erreur {0}".format(e))
+                print(
+                    "Le choix n'est pas dans le dictionnaire du scoring, erreur {0}".format(
+                        e
+                    )
+                )
         else:
             print(
                 "Erreur, le master choice n'appartient pas au même assessment que le scoring"
@@ -1237,7 +1454,6 @@ class ExternalLink(models.Model):
 
     def __str__(self):
         return self.text + " (" + self.type + ")"
-
 
 
 def replace_special_characters(sentence):

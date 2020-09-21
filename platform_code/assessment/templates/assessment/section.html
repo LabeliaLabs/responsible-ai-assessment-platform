@@ -5,6 +5,12 @@
 
 {% block content %}
 
+{% if evaluation.is_upgradable %}
+<div class="section-banner">
+    {% include "assessment/upgrade-banner.html" %}
+</div>
+{% endif %}
+
 <div id="mySidenav" class="sidenav">
     {% include "assessment/sidebar.html" %}
 </div>

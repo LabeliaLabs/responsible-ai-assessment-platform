@@ -7,6 +7,14 @@
 
 <h1>{% trans "Organisation: " %}{{organisation.name}} </h1>
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class=" alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
     <div class="row ">
         <div class="col-ms-3 container-platform column-right">
             <ul class="nav nav-pills nav-stacked flex-column table-column-profile" role="tablist" id="PillProfile">

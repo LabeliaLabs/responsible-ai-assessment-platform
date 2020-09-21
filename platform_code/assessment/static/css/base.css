@@ -394,6 +394,19 @@ h1 img {
     left:50px;
 }
 
+
+.upgrade-banner{
+    background-color: #FFF9C0;
+    text-align: center;
+    margin-left: 10%;
+    padding-bottom: 12px;
+    padding-top: 12px;
+}
+
+.section-banner{
+    margin-left: 5%;
+}
+
 /******** BUTTONS *********/
 
 .column-button{
@@ -443,6 +456,32 @@ h1 img {
     align-item: center;
 }
 
+.btn-new{
+    background-color: #FFF9C0;
+    border-color: #FFF9C0;
+    color: #848482;
+    height: 30px;
+    width: 60px;
+    font-size: 18px;
+    padding: 0;
+    border-radius: .25rem;
+    border: 1px solid transparent;
+}
+
+.btn-new:hover{
+    cursor: default;
+}
+
+.top-section{
+    margin-left: 50%;
+    margin-top: 5px;
+    position: absolute;
+}
+
+.medium-button{
+    width: 90px;
+}
+
 /***** END BOTTONS *****/
 
 /***** PROGRESS BAR *****/
@@ -458,6 +497,11 @@ h1 img {
 }
 
 /***** END PROGRESS BAR *****/
+
+.display-line{
+    display: flex;
+    align-items: center;
+}
 
 .modal {
   display: none; /* Hidden by default */
