@@ -23,11 +23,17 @@
     </form>
 
     <div id="validation evaluation" >
+
+        <a id="temp-validation-button" class="btn btn-primary float-right display-none"
+                href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
+             >{% trans 'Validate and see the results' %}</a>
+
         {% if evaluation.is_finished %}
         <div>
-        <form name="results-with-modification" action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
+        <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
             <input type="submit" value="{% trans 'Validate and see the results' %}"
-                   class="btn btn-primary float-right validation-button"/>
+                   class="btn btn-primary float-right validation-button"
+                    name="validation-button"/>
         </form>
         </div>
 
@@ -36,7 +42,8 @@
             <input type="submit" value="{% trans 'Validate and see the results' %}" disabled="true"
                    alt="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
                    title="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
-                   class="btn btn-primary float-right validation-button"/>
+                   name="validation-button"
+                   class="btn btn-primary float-right "/>
         </form>
         {% endif %}
 

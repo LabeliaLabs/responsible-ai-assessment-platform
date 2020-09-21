@@ -150,6 +150,22 @@ function resetChoice(id_form){
 //                            todo : change and update the elements
                         }
                     }
+                    // If the evaluation is no more finished
+                    if (!response["evaluation_finished"]){
+                        console.log("unable the validation");
+                        var temp_button = document.getElementById("temp-validation-button");
+                        var permanent_button = document.getElementsByName("validation-button");
+                        console.log("permanent button, check", permanent_button);
+                        // If it is the permanent button displayed, we disable it
+                        if($(temp_button).hasClass("display-none")){
+                            $(permanent_button).attr("disabled", "true");
+                        } else {
+                            $(temp_button).addClass("display-none");
+                            $(permanent_button).attr("disabled", "true");
+                            $(permanent_button).removeClass("display-none");
+                        }
+
+                    }
                      $("#confirmationform"+element_id).html("<div class='alert alert-success'>"+response['message_reset']+"</div>");
                      $(".alert-success").delay(4000).slideUp(200, function() {
                         $(this).remove();
@@ -158,6 +174,8 @@ function resetChoice(id_form){
              }
      });
 };
+
+// Validation of an evaluation element
 
 function submitForm(id_form){
     console.log("enter submit function", "confirmation"+id_form);
@@ -177,9 +195,24 @@ function submitForm(id_form){
                      }
                      if (response["no_more_condition_inter"]){
                         location.reload();
-//                        todo : change and update the elements
+//                        todo : change and update the elements instead of reload the page !
                      }
                      $("#confirmation"+id_form).html("<div class='alert alert-success'>"+response['message']+"</div>");
+                     // If this evaluation element is the last one of the evaluation, we enable the validation button
+                     var temp_button = document.getElementById("temp-validation-button");
+                     var permanent_button = document.getElementsByName("validation-button");
+                     if (response["evaluation_finished"]){
+                        $(permanent_button).addClass("display-none");
+                        $(temp_button).removeClass("display-none");
+                     } else {
+                         if($(temp_button).hasClass("display-none")){
+                            $(permanent_button).attr("disabled", "true");
+                         } else {
+                             $(temp_button).addClass("display-none");
+                             $(permanent_button).attr("disabled", "true");
+                             $(permanent_button).removeClass("display-none");
+                         }
+                     }
                      $(".alert-success").delay(3000).slideUp(200, function() {
                         $(this).remove();
                         });

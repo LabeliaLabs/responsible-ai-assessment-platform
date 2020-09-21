@@ -155,10 +155,13 @@ class Evaluation(models.Model):
         If all section are completed, the evaluation is set to finished and the user can validate it
         """
         list_section = self.section_set.all()
+        # We assume the evaluation is not finished
+        self.is_finished = False
         for section in list_section:
             print("SECTION PROGRE", section.user_progression)
             if section.user_progression < 100:
                 break
+        # If the loop for has no break (all section are 100 % done)
         else:
             self.is_finished = True
             if not self.finished_at:
@@ -296,14 +299,6 @@ class Evaluation(models.Model):
         else:
             # later create pop in or smth but normally condition must be verified to call this method
             print("EVALUATION MUST BE FINISHED TO SET THE SCORE")
-
-    def set_finished(self):
-        list_section = self.section_set.all()
-        for section in list_section:
-            if section.user_progression != 1:
-                break
-        else:
-            self.is_finished = True
 
 
 class MasterSection(models.Model):
@@ -543,6 +538,7 @@ class EvaluationElement(models.Model):
         for choice in list_choices:
             choice.is_ticked = False
             choice.save()
+        self.save()
 
     def are_notes_filled(self):
         """

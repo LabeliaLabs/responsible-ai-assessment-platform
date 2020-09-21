@@ -19,9 +19,68 @@ body{
     padding-left: 15px;
 
 }
+/***** GLOBAL PROPERTIES *****/
 
+.display-none{
+    display: none;
+}
 
-#page-container {
+h1 {
+    text-align: center;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    color: #293484;
+    position:relative;
+    font-size: 2rem;
+}
+
+select {
+    min-height: 30px;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+}
+input {
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    max-width: -webkit-fill-available;
+}
+
+a {
+    color: #5550ff;
+}
+
+a:hover {
+    color: #8985FF;
+    text-decoration: underline;
+}
+
+.hidden-div{
+    visibility: hidden;
+}
+
+.margin-10 {
+    margin-top: 10px;
+}
+.margin-50 {
+    margin-top: 50px;
+}
+.margin-70 {
+    margin-top: 70px;
+}
+
+.margin-bot-top-20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.center{
+    text-align: center;
+}
+
+/***** END GLOBAL PROPERTIES *****/
+
+#page-container {  /* check if used */
     flex: auto;
 }
 
@@ -75,7 +134,7 @@ body{
 
 
 #content-wrap {
-  padding-bottom: 10rem;    /* Footer height */
+  padding-bottom: 10rem;    /* Footer height */  /* check if used */
 }
 
 /***** NAVBAR *****/
@@ -103,7 +162,16 @@ body.navbar-is-fixed-top {
     padding-top: 0 !important;
 }
 
-/**** END NAVBAR ****/
+.title-nav{
+    margin: 20px;
+    font-size: 18px;
+}
+
+.center-nav{
+    justify-content: center;
+}
+
+/******* END NAVBAR ********/
 
 .evaluation-title {
     text-align: center;
@@ -131,7 +199,7 @@ body.navbar-is-fixed-top {
     margin-block-end: 1em;
     margin-top: 50px;
 }
-/****** FOOTER *******/
+/******** FOOTER *********/
 
 .footer {
     flex-shrink: 0;
@@ -162,7 +230,6 @@ body.navbar-is-fixed-top {
   text-decoration: none;
   margin: 5px 2px;
   border-radius: 50%;
-/*  display: inline-block; */
 
 }
 
@@ -191,7 +258,13 @@ body.navbar-is-fixed-top {
     color: white;
 }
 
-/* END FOOTER */
+.col-md-3-footer{
+    padding: 4px;
+}
+
+/********* END FOOTER *********/
+
+/******** LIST *********/
 
 .li-with-disc{
     list-style-type: disc;
@@ -200,6 +273,24 @@ body.navbar-is-fixed-top {
 .li-with-circle{
     list-style-type: circle;
 }
+
+li {
+    list-style-type: none;
+}
+
+/* By default, the list has no style type - used for the choices of an evaluation element */
+.list-with-disc{
+    list-style-type: disc;
+}
+
+.icon-list{
+    float: right;
+    border-top:0px;
+    background-color: white;
+    margin: auto;
+}
+
+/********* END LIST *********/
 
 .grid-container-2-cols {
   display: grid;
@@ -226,37 +317,6 @@ body.navbar-is-fixed-top {
   display: grid;
   grid-template-columns: 90% 10%;
 }
-
-h1 {
-    text-align: center;
-    margin: 0 auto;
-    margin-top: 50px;
-    margin-bottom: 50px;
-    color: #293484;
-    position:relative;
-    font-size: 2rem;
-}
-
-select {
-    min-height: 30px;
-    border-radius: 0.25em;
-    border: 1px solid lightsteelblue;
-}
-input {
-    border-radius: 0.25em;
-    border: 1px solid lightsteelblue;
-    max-width: -webkit-fill-available;
-}
-
-a {
-    color: #5550ff;
-}
-
-a:hover {
-    color: #8985FF;
-    text-decoration: underline;
-}
-
 
 .progress-bar-text{
     margin: auto;
@@ -302,7 +362,7 @@ h1 img {
     left:50px;
 }
 
-/* BUTTONS */
+/******** BUTTONS *********/
 
 .column-button{
     padding-bottom: 3px;
@@ -351,7 +411,9 @@ h1 img {
     align-item: center;
 }
 
-/* END BOTTONS */
+/***** END BOTTONS *****/
+
+/***** PROGRESS BAR *****/
 
 .progress-section{
     height: 15px;
@@ -363,24 +425,7 @@ h1 img {
     background-color: #28a745;
 }
 
-.margin-10 {
-    margin-top: 10px;
-}
-.margin-50 {
-    margin-top: 50px;
-}
-.margin-70 {
-    margin-top: 70px;
-}
-
-.margin-bot-top-20 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.center{
-    text-align: center;
-}
+/***** END PROGRESS BAR *****/
 
 .modal {
   display: none; /* Hidden by default */
@@ -442,13 +487,11 @@ h1 img {
 .name-eval-field-bis{
     grid-column: 2;
     grid-row: 1;
-
 }
 
 .text-form-bis {
     grid-column: 1;
     grid-row: 2;
-
 }
 
 .attribute-form-bis{
@@ -459,15 +502,6 @@ h1 img {
 
 .settings-subtitle{
     margin-bottom: 30px;
-}
-
-li {
-    list-style-type: none;
-}
-
-/* By default, the list has no style type - used for the choices of an evaluation element */
-.list-with-disc{
-    list-style-type: disc;
 }
 
 .liked{
@@ -481,29 +515,10 @@ li {
 .not-liked:hover {
 }
 
-.icon-list{
-    float: right;
-    border-top:0px;
-    background-color: white;
-    margin: auto;
-}
-
-.title-nav{
-    margin: 20px;
-    font-size: 18px;
-}
-
-.center-nav{
-    justify-content: center;
-}
-
 .object-linked:hover .hidden-div {
     visibility: visible;
 }
 
-.hidden-div{
-    visibility: hidden;
-}
 .not-displayed-div{
     displayed: none;
 }
@@ -596,9 +611,6 @@ li {
 
 .middle-width{
     width: 65%;
-}
-.col-md-3-footer{
-    padding: 4px;
 }
 
 /******* MEDIA *******/
