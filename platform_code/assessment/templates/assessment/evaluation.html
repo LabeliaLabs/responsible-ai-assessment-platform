@@ -2,9 +2,25 @@
 {% load static %}
 {% load add_attr %}
 {% load i18n %}
+
 {% block content %}
+
+{% if evaluation.is_upgradable %}
+    <div>
+        {% include "assessment/upgrade-banner.html" %}
+    </div>
+{% endif %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class=" alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="head-page">
-    <h1>{{ evaluation.name }}</h1>
+    <h1 class="h1-section" style="margin-bottom: 10px; margin-top: 20px;">{{ evaluation.name }}</h1>
     <div class="progress" title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done{% endblocktrans %}"
           style="width: 50%; margin: auto;">
       <div class="progress-bar " role="progressbar" aria-valuenow="{{evaluation.calculate_progression}}"
@@ -23,7 +39,7 @@
 </div>
 <main class="main-area">
     <div class="centered">
-        <section class="cards">
+        <section class="cards-section">
             {% for section in section_list %}
                 {% include "assessment/base-card-section.html" %}
             {% endfor %}

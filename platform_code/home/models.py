@@ -75,7 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=255,
         unique=True,
         error_messages={
-            'unique': _("A user with that username already exists."),
+            'unique': _("A user with that email already exists."),
         },
     )
     # TODO replace fields active, admin, staff by is_admin, is_active, is_staff and delete the modification in
@@ -379,6 +379,38 @@ class Organisation(models.Model):
             return membership.role == "admin"
         else:
             return False
+
+    def get_list_evaluations(self):
+        """
+        Return the list of the evaluations for the organisation
+        :return:
+        """
+        return list(self.evaluation_set.all())
+
+    def get_list_assessment_version(self):
+        """
+        Return the list of the versions as string that the organisation has
+        :return:
+        """
+        list_eval = self.get_list_evaluations()
+        list_version = []
+        if list_eval:
+            for eval in list_eval:
+                version = eval.assessment.version
+                if version not in list_version:
+                    list_version.append(eval.assessment.version)
+        return list_version
+
+    def get_last_assessment_version(self):
+        """
+        Return the float of the lastest version of the assessment present in the orga
+        :return: float or None
+        """
+        list_version = self.get_list_assessment_version()
+        if list_version:
+            return max([float(i) for i in list_version])
+        else:
+            None
 
 
 def get_list_organisations_where_user_is_admin(user):

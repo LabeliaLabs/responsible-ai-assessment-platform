@@ -16,6 +16,7 @@
                   <thead>
                     <tr>
                       <th scope="col" class="col-array">{% trans "Evaluation name" %}</th>
+                      <th scope="col" class="col-array">{% trans "Version" %}</th>
                       <th scope="col" class="col-array">{% trans "Organisation" %}</th>
                       <th scope="col" class="col-array">{% trans "Creation date" %}</th>
                       <th scope="col" class="col-array">{% trans "Validation date" %}</th>
@@ -32,6 +33,7 @@
                         <tr class="row-array" >
 
                           <td class="case-array" >{{evaluation.name}}</td>
+                          <td class="case-array" >V{{evaluation.assessment.version}}</td>
                           <td class="case-array" >{{evaluation.organisation}}</td>
                           <td class="case-array">{{evaluation.created_at|format_date_calendar}}</td>
 
@@ -54,13 +56,37 @@
                           {% else %}
                             <td class="case-array">-</td>
                           {% endif %}
-
-                          {% if evaluation.is_finished %}
-                            <td class="case-array"><a name="resultat-no-modif" class="btn btn-results"
-                                                      href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}">{% trans "See the results" %}</a></td>
-                          {% else %}
-                            <td class="case-array"><a class="btn btn-modify" href="{{ evaluation.get_absolute_url}}">{% trans "Modify" %}</a></td>
-                          {% endif %}
+                            {% if evaluation.is_upgradable %}
+                                {% if evaluation.is_finished %}
+                                <td class="case-array">
+                                    <a name="resultat-no-modif" class="btn btn-results medium-button"
+                                       href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}"
+                                    >{% trans "Results" %}</a>
+                                      <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
+                                       class="btn btn-primary medium-button margin-10"
+                                        >{% trans "upgrade" %}</a>
+                                </td>
+                               {% else %}
+                                <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
+                                    >{% trans "Modify" %}</a>
+                                     <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
+                                       class="btn btn-primary medium-button margin-10"
+                                        >{% trans "upgrade" %}</a>
+                                </td>
+                              {% endif %}
+                            {% else %}
+                              {% if evaluation.is_finished %}
+                                <td class="case-array">
+                                    <a name="resultat-no-modif" class="btn btn-results medium-button"
+                                       href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}">
+                                        {% trans "Results" %}</a>
+                                </td>
+                              {% else %}
+                                <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
+                                    >{% trans "Modify" %}</a>
+                                </td>
+                              {% endif %}
+                            {% endif %}
 
                           <td class="div-trash" id="div-trash{{evaluation.id}}" style="border-top:0px; background-color: white;" >
                               <button class="btn btn-danger" data-toggle="modal" data-target="#modal-delete{{evaluation.id}}"><span class="fa fa-trash"></span></button>
@@ -76,8 +102,18 @@
                                 </div>
 
                           </td>
+                             <!--        Modal to upgrade-->
+                            <div class="modal" id="modal-upgrade-eval{{evaluation.id}}" aria-hidden="true">
+                            <div class="modal-dialog ">
+                              <div class="modal-content">
+                              {% include "assessment/upgrade-modal.html" %}
+                              </div>
+                            </div>
+                          </div>
+
                         </tr>
                         </div>
+
                        {% endfor %}
                   </tbody>
                 </table>

@@ -18,7 +18,7 @@ def check_and_valid_scoring_json(*args, **kwargs):
     count_choice = 0
     for master_section in assessment.mastersection_set.all():
         for master_element in master_section.masterevaluationelement_set.all():
-            for master_choice in master_element.master_choice_set.all():
+            for master_choice in master_element.masterchoice_set.all():
                 numbering = master_choice.get_numbering()
                 # Add the master_choice number (1.1.a) to the list
                 list_number.append(numbering)

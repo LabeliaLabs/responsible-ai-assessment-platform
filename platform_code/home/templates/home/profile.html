@@ -6,6 +6,15 @@
 {% block content %}
 
 <h1>{% trans "Your dashboard" %} </h1>
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class=" alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <div class="container">
     <div class="row ">
         <div class="col-ms-3 container-platform column-right">

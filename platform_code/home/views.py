@@ -8,14 +8,14 @@ from django.http import HttpResponse
 from django.contrib import messages
 from django.views import generic
 from django.contrib.auth.views import *
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import views as auth_views
 from django.utils.translation import gettext as _
 
 from assessment.views import treat_resources, error_500_view_handler, error_400_view_handler
 from assessment.forms import EvaluationMutliOrgaForm
-from assessment.models import Evaluation, get_last_assessment_created
+from assessment.models import Assessment, Evaluation, get_last_assessment_created
 from .forms import SignUpForm, OrganisationCreationForm, RegisterForm, DataSettingsForm, PasswordResetForm_
 from .models import User, UserResources, Organisation, get_list_organisations_where_user_is_admin, Membership
 
@@ -342,6 +342,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                     if form.is_valid():
                         name = form.cleaned_data.get("name")
                         organisation = form.cleaned_data.get("organisation")
+                        last_version_in_organisation = organisation.get_last_assessment_version()
                         eval = Evaluation.create_evaluation(
                             name=name,
                             assessment=get_last_assessment_created(),
@@ -349,6 +350,14 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                             user=user,
                         )
                         eval.create_evaluation_body()
+                        print("last eval, test fetch", last_version_in_organisation,
+                              get_last_assessment_created().version)
+                        if last_version_in_organisation and \
+                                last_version_in_organisation < float(get_last_assessment_created().version):
+                            print("fetch eval", eval)
+                            origin_assessment = get_object_or_404(Assessment,
+                                                                    version=str(last_version_in_organisation))
+                            eval.fetch_the_evaluation(origin_assessment=origin_assessment)
                         # redirect to a new URL:
                         response = redirect(
                             "assessment:evaluation",

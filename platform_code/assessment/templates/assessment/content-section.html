@@ -4,9 +4,12 @@
 {% load markdownify %}
 
     {% for section in page_obj %}
+        {% if not section.fetch %}
+            <button class="btn-new top-section" disabled="true">New</button>
+        {% endif %}
         <div class="evaluation-title" >
-            <h1>Section {{ section.master_section.order_id}} </h1>
-<!--             TODO check translate h3-->
+                <h1>Section {{ section.master_section.order_id}} </h1>
+
                 <h3>{{section.master_section.name}}</h3>
                 {% include "assessment/section-feedback.html" %}
             <div id="section-progress-bar" class="progress progress-section"
@@ -33,14 +36,20 @@
             {% for element in element_list %}
                       <div class="card">
                         <div class="card-header row grid-container-3-cols" id="heading{{element.id}}">
-                          <h2 class="mb-0">
-                            <button class="btn btn-link btn-block text-left " type="button" data-toggle="collapse"
-                                    data-target="#collapse{{element.id}}" aria-expanded="true"
-                                    aria-controls="collapse{{element.id}}">
-                                Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.name}}
-                            </button>
+                            <div class="display-line">
+                              <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left " type="button" data-toggle="collapse"
+                                        data-target="#collapse{{element.id}}" aria-expanded="true"
+                                        aria-controls="collapse{{element.id}}">
+                                    Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.name}}
+                                </button>
 
-                          </h2>
+
+                              </h2>
+                              {% if not element.fetch %}
+                                  <button class="btn-new" disabled="true">New</button>
+                              {% endif %}
+                                </div>
                             {% include "assessment/element-feedback.html" %}
 
                             <span name="element_status_temporary{{element.id}}" class="fa-stack fa-lg"

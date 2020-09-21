@@ -1,0 +1,17 @@
+{% load static %}
+{% load i18n %}
+
+<header role="banner" class="upgrade-banner">{% trans "Your evaluation version is not up to date. Do you want to" %}
+    <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval"
+    >{% trans " upgrade" %}</a>{% trans "? Your answers will be preserved." %}
+</header>
+
+<div class="modal" id="modal-upgrade-eval" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+
+    {% include "assessment/upgrade-modal.html" %}
+
+    </div>
+  </div>
+</div>

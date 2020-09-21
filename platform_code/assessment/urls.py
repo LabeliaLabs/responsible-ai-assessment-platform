@@ -26,6 +26,7 @@ urlpatterns = [
                                 views.DeleteEvaluation.as_view(),
                                 name="delete-evaluation",
                             ),
+                            path("upgrade/", views.upgradeView, name="upgrade"),
                             re_path(
                                 r"^section/(?P<id>[0-9]{1,})/(?P<name>[-\w\W]+)/(?P<page>\d+)$",
                                 views.SectionView.as_view(),

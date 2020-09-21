@@ -2,27 +2,35 @@ body {
    margin: 20px;
 }
 
+h1-section {
+    text-align: center;
+    margin: 0 auto;
+    color: #293484;
+    position:relative;
+    font-size: 3em;
+}
 
 .centered {
     margin: 0 auto;
     padding: 0 1em;
 }
 
-.card {
+.card-section {
     flex: 1 0 500px;
     box-sizing: border-box;
     margin: 1rem .25em;
     padding: 10px;
+    border: solid 3px lightgoldenrodyellow;
 }
 
-.cards {
+.cards-section {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
 
 }
 
-h5.card-title {
+h5.card-title-section {
     text-align: left;
     /*height: 100px;*/
     overflow: hidden;
@@ -35,10 +43,10 @@ h5.card-title {
 .section-card-title{
     width: 50%;
     margin-left: 10px;
-    margin-bottom: 20px;
+    margin: auto;
 }
 
-.card-text{
+.card-text-section{
   text-align: justify;
   text-justify: auto;
   margin-top: 30px;
@@ -55,7 +63,7 @@ h5.card-title {
 
 }
 
-.card-button{
+.card-button-section{
     text-align: center;
     align-self: center;
     width: 100%;
@@ -81,19 +89,14 @@ h5.card-title {
     width: 40%;
 }
 
-.progress{
-    height: 15px;
-    margin: auto;
-}
-
 @media screen and (min-width: 40em) {
-    .card {
+    .card-section {
         flex: 0 1 calc(50% - 1em);
     }
 }
 
 @media screen and (min-width: 60em) {
-    .card {
+    .card-section {
         max-width: calc(32% - 1em);
     }
 }
@@ -104,14 +107,14 @@ h5.card-title {
     .centered {
         max-width: 60em;
     }
-    .card {
+    .card-section {
         max-width: calc(32% - 1em);
     }
 }
 
 
 @media screen and (min-width: 80em) {
-    .card {
+    .card-section {
         max-width: calc(32% - 1em);
     }
 }
