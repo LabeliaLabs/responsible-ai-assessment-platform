@@ -664,6 +664,8 @@ class SectionView(LoginRequiredMixin, ListView):
         # The progression and status are added to the data_update dictionary
         data_update["section_progression"] = section.user_progression
         data_update["evaluation_element_treated"] = evaluation_element.status
+        data_update["evaluation_finished"] = evaluation.is_finished
+        print("evaluation finished ?", evaluation.is_finished)
         if evaluation_element.status != initial_element_status:
             data_update["element_status_changed"] = True
 
