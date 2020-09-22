@@ -25,9 +25,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"] # TODO: CHANGE
 
 # Application definition
 INSTALLED_APPS = [
@@ -85,7 +85,7 @@ DATABASES = {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
         "NAME": os.environ.get("SQL_DATABASE", "platform_db"),
         "USER": os.environ.get("SQL_USER", "postgres"),
-        "PASSWORD": os.environ["SQL_PASSWORD"], # TODO change
+        "PASSWORD": os.environ["SQL_PASSWORD"],
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
@@ -142,5 +142,5 @@ LOGOUT_REDIRECT_URL = 'homepage'
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 mimetypes.add_type("text/css", ".css", True)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = ["assessment.static"]  # []
+STATICFILES_DIRS = []
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
