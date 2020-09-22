@@ -3,7 +3,7 @@
 # Django configuration
 SECRET_KEY=<CHANGE_ME>
 DJANGO_ALLOWED_HOSTS=["*"]
-DJANGO_SETTINGS_MODULE=<ADD_PATH_TO_SETTINGS.PY>
+DJANGO_SETTINGS_MODULE=dev_platform.settings
 
 # Database configuration
 SQL_ENGINE=django.db.backends.postgresql
