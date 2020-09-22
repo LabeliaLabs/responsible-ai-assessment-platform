@@ -111,45 +111,21 @@ Comme le suggère le [tutoriel ci-dessus](https://testdriven.io/blog/dockerizing
 - gunicorn comme serveur web principal
 - nginx comme reverse proxy pour distribuer sur les assets statiques et le serveur web principal
 
-### Domaines et certificats SSL
+### Deploy
 
-- Url: <http://preprod.assessment.substra.ai/>
-- Lets encrypt certbot
-- TODO: Add auto renew & manual procedure!
+- Git flow: `develop` > `preprod` > `prod`
+- Url preprod: <http://preprod.assessment.substra.ai/>
 
-## Deploy & gitlab flow
+See the [dedicated document](./README_DEPLOY.md).
 
-- [temp] TODO add docker-compose flow
-- [temp] Branch: <https://framagit.org/substra-foundation/pf-assessment-dsrc/-/merge_requests/28>
-- Flow: dev > preprod > prod
+## TODO
+
+- use readonly gitlab token: <https://docs.gitlab.com/ee/user/project/deploy_tokens/>
+- Add auto renew & manual procedure (`cronjob`)!
+- Url prod: **www**.assessment.substra.ai (Note: attention wildcard DNS)
 - Unit tests!
-- CI:
-
-  -[ ] flake
-  -[ ] html & yaml lint
-  -[ ] docker build test
-
-- `manage.py`
-  - `docker-compose -f docker-compose.prod.yml exec web python manage.py makemigrations
-`
-  - `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
-`
-  - `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
-`
-### Comment tester la plateforme ?
-
-## Deploy & gitlab flow
-- [temp] TODO add docker-compose flow
-- [temp] Branch: < https://framagit.org/substra-foundation/pf-assessment-dsrc/-/merge_requests/28>
-- Flow: dev > preprod > prod
-- Unit tests!
-- CI: 
-  -[ ] flake
-  -[ ] html & yaml lint
-  -[ ] docker build test
-
-[todo quand ce sera en pre-prod car les commandes vont changer]
-
-Pour tester le feedback, vous devez insérer un token Gitlab lié au projet dans le fichier .env ainsi que l'id du projet Feedback-tests :
-PRIVATE_TOKEN=<add_your_token>
-PROJETC_ID=<add_the_project_id>
+- flake8
+- test html & yaml lint
+- docker build test
+- perf
+- sec (upload, sessions, url enum, etc.)
