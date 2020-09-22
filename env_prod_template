@@ -1,12 +1,27 @@
-# rename to .env.prod
-DEBUG=False
+# Rename this file to .env.prod
+
+# Django configuration
 SECRET_KEY=<CHANGE_ME>
 DJANGO_ALLOWED_HOSTS=<CHANGE_ME>
+DJANGO_SETTINGS_MODULE=<ADD_PATH_TO_SETTINGS.PY>
+
+# Database configuration
 SQL_ENGINE=django.db.backends.postgresql
 SQL_DATABASE=platform_db_prod
 SQL_USER=<CHANGE_ME>
 SQL_PASSWORD=<CHANGE_ME>
 SQL_HOST=db
 SQL_PORT=5432
-DATABASE=postgres
 
+DATABASE=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=<CHANGE_ME>
+POSTGRES_DB=platform_db_prod
+
+# Gitlab issue tracker / Feedback
+PRIVATE_TOKEN=<CHANGE_ME> # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/settings/access_tokens
+PROJECT_ID=65925 # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/issues
+
+# Email
+EMAIL_HOST_USER=<CHANGE_ME>
+EMAIL_HOST_PASSWORD=<CHANGE_ME>

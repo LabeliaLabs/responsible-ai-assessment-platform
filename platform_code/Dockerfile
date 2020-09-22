@@ -19,7 +19,7 @@ RUN apk update \
 RUN python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-# run entrypoint.sh
-#RUN chmod +x ./entrypoint.sh  # to delete later
+# make entrypoint.sh executable
+RUN chmod +x ./entrypoint.sh
 
 ENTRYPOINT ["/code/entrypoint.sh"]
