@@ -142,5 +142,5 @@ LOGOUT_REDIRECT_URL = 'homepage'
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 mimetypes.add_type("text/css", ".css", True)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = []
+STATICFILES_DIRS = ["assessment/static"]  # []
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
