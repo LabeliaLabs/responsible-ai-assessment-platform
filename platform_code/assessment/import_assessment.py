@@ -31,6 +31,12 @@ def treat_and_save_dictionary_data(dic):
     if list(Assessment.objects.filter(version=version)):
         message = "There already is an assessment with this version. Please change it."
         return success, message
+    # The version must be convertible into float value (example '0.5', '1.0', etc)
+    try:
+        float(version)
+    except ValueError as e:
+        return (success, f"Error {e}. The version must not contain letters. It should be convertible into a float "
+                         f"('0.5', '1.0', etc). The version you provided was '{version}'")
     # Otherwise we can create the assessment
     assessment = Assessment(name=dic.get("name"), version=version)
     assessment.save()

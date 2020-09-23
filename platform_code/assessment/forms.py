@@ -481,11 +481,12 @@ class JsonUploadForm(forms.Form):
     By default the upgrade json is not required and it will raise a message/error to the user if it is
     """
     json_file = forms.FileField()
-    upgrade_json_file = forms.FileField(required=False, help_text="Json file is the assessment (json) and upgrade "
+    upgrade_json_file = forms.FileField(required=False, help_text="Json file is the assessment (json) with the version "
+                                                                  "convertible into a float (ex: '1.0') and upgrade "
                                                                   "file is the json where all the differences between "
                                                                   "this assessment and the assessments in the DB are "
                                                                   "regirstered. You don't need to provide and upgrade "
-                                                                "json when it is the first assessment in the database."
+                                                                  "json when it's the first assessment in the database."
                                                                   "Importing an assessment will automatically create an"
                                                                   "empty scoring. Please import one with values.")
 
