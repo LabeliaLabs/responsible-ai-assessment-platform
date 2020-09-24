@@ -37,6 +37,10 @@ def treat_and_save_dictionary_data(dic):
     except ValueError as e:
         return (success, f"Error {e}. The version must not contain letters. It should be convertible into a float "
                          f"('0.5', '1.0', etc). The version you provided was '{version}'")
+    if float(version) < float(get_last_assessment_created().version):
+        return success, f"The assessment version must not be smaller than the assessment versions already in the DB" \
+                        f"The new assessment version is {version} and the latest in th DB" \
+                        f" is {get_last_assessment_created().version}"
     # Otherwise we can create the assessment
     assessment = Assessment(name=dic.get("name"), version=version)
     assessment.save()

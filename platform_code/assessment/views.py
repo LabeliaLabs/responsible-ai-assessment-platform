@@ -102,17 +102,17 @@ def upgradeView(request, *args, **kwargs):
 
     evaluation_id = kwargs.get("pk")
     evaluation = get_object_or_404(Evaluation, id=evaluation_id)
-    print("evaluation", evaluation)
     evaluation_version = evaluation.assessment.version
     latest_version = get_last_assessment_created().version
-    print("compare versions", evaluation_version, latest_version)
+    # print("compare versions", evaluation_version, latest_version)
     if float(evaluation_version) < float(latest_version):
         success = False
         try:
-            print("Try upgrade !!")
+            # todo logs
             new_eval = evaluation.upgrade(user=user)
             success = True
-        except:
+        except ValueError as e:
+            # todo logs
             messages.warning(request, _("We are sorry, the operation failed."))
             url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 

@@ -208,8 +208,7 @@ class Evaluation(models.Model):
         """
         For an evaluation (self), we compare with an other version of assessment and we modify the fetch values for
         the objects of the evaluation.
-        This function can be both use to create a new evaluation while having other with previous version or to upgrade
-        an evaluation with an old version
+        This function can be used to create a new evaluation while having other with previous version
         :param args:
         :param kwargs: original_assessment (previous assessment)
         :return:
@@ -249,7 +248,7 @@ class Evaluation(models.Model):
         :return:
         """
         print("upgrade")
-        user_ = kwargs.get("user")
+        user_request = kwargs.get("user")
         origin_assessment = self.assessment
         final_assessment = get_last_assessment_created()
 
@@ -264,7 +263,7 @@ class Evaluation(models.Model):
         if self.created_by:
             user_eval = self.created_by
         else:
-            user_eval = user_
+            user_eval = user_request
         new_eval = Evaluation.create_evaluation(
             name=self.name,
             assessment=final_assessment,
@@ -272,7 +271,6 @@ class Evaluation(models.Model):
             user=user_eval,
         )
         new_eval.create_evaluation_body()
-        print("new eval created")
 
         for new_section in new_eval.section_set.all():
             new_section_number = new_section.master_section.get_numbering()
@@ -281,7 +279,6 @@ class Evaluation(models.Model):
                 new_section.save()
             else:
                 # We rely on the upgrade dic to find the matching
-                new_section_order_id = new_section.master_section.order_id
                 older_section_order_id = upgrade_dic["sections"][new_section_number]
                 new_section.user_notes = self.section_set.get(
                     master_section__order_id=older_section_order_id
@@ -296,19 +293,15 @@ class Evaluation(models.Model):
                     new_element.fetch = False
                     new_element.save()
                 else:
-                    new_element_order_id = (
-                        new_element.master_evaluation_element.order_id
-                    )
-                    older_element_order_id = upgrade_dic["elements"][
-                        new_element_number
-                    ][-1]
-                    # print("older section order id", older_section_order_id, "idem element", older_element_order_id, )
 
-                    new_element.user_notes = EvaluationElement.objects.get(
-                        master_evaluation_element__order_id=new_element_order_id,
-                        section__master_section__order_id=older_section_order_id,
+                    older_element_order_id = upgrade_dic["elements"][new_element_number][-1]
+                    older_element_section_order_id = upgrade_dic["elements"][new_element_number][-3]
+                    older_element = EvaluationElement.objects.get(
+                        master_evaluation_element__order_id=older_element_order_id,
+                        section__master_section__order_id=older_element_section_order_id ,
                         section__evaluation=self,
-                    ).user_notes
+                    )
+                    new_element.user_notes = older_element.user_notes
                     new_element.save()
 
                 for new_choice in new_element.choice_set.all():
@@ -318,19 +311,20 @@ class Evaluation(models.Model):
                         new_choice.save()
 
                     else:
-                        new_choice_order_id = new_choice.master_choice.order_id
-                        new_choice.is_ticked = Choice.objects.get(
-                            master_choice__order_id=new_choice_order_id,
-                            evaluation_element__master_evaluation_element__order_id=older_element_order_id,
-                            evaluation_element__section__master_section__order_id=older_section_order_id,
+                        older_choice_order_id = upgrade_dic["answer_items"][new_choice_number][-1]
+                        older_choice_element_order_id = upgrade_dic["answer_items"][new_choice_number][-3]
+                        older_choice_section_order_id = upgrade_dic["answer_items"][new_choice_number][-5]
+                        older_choice = Choice.objects.get(
+                            master_choice__order_id=older_choice_order_id,
+                            evaluation_element__master_evaluation_element__order_id=older_choice_element_order_id,
+                            evaluation_element__section__master_section__order_id=older_choice_section_order_id,
                             evaluation_element__section__evaluation=self,
-                        ).is_ticked
+                        )
+                        new_choice.is_ticked = older_choice.is_ticked
                         new_choice.save()
-                        # print("choice to fetch", new_choice, new_choice.is_ticked)
                 new_element.set_points()
                 new_element.set_status()
                 new_element.save()  # Not sure it is useful to save as already done in the methods
-                # print("element after saving choice", new_element.points, new_element.status)
             new_section.set_points()
             new_section.set_progression()
             new_section.save()
@@ -935,13 +929,7 @@ class EvaluationElement(models.Model):
                     self.master_evaluation_element
                 )
             )
-            print(
-                "SET POINTS ELEMENT WEIGHT",
-                master_evaluation_element_weight.get_master_element_weight(
-                    self.master_evaluation_element
-                ),
-                points_element,
-            )
+
             # check if it works
             # case there are conditions : no choice is ticked or the choice ticked sets conditions on other choice
             # so no points

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-21 09:58+0200\n"
+"POT-Creation-Date: 2020-09-23 12:43+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -77,8 +77,8 @@ msgid "Evaluation title"
 msgstr "Titre de l'évaluation"
 
 #: .\assessment\forms.py:192
-#: .\home\templates\home\profile-user-evaluations.html:19
-#: .\home\templates\home\profile.html:19
+#: .\home\templates\home\profile-user-evaluations.html:20
+#: .\home\templates\home\profile.html:28
 msgid "Organisation"
 msgstr "Organisation"
 
@@ -96,8 +96,8 @@ msgid "My feedback"
 msgstr "Mon feedback"
 
 #: .\assessment\templates\assessment\base-card-section.html:36
-#: .\assessment\templates\assessment\evaluation.html:8
-#: .\assessment\templates\assessment\evaluation.html:12
+#: .\assessment\templates\assessment\evaluation.html:24
+#: .\assessment\templates\assessment\evaluation.html:28
 #, python-format
 msgid "%(progression)s%% done"
 msgstr "La progression est de %(progression)s%%"
@@ -122,18 +122,18 @@ msgstr "%(description)s"
 msgid "Go to the section"
 msgstr "Aller à la section"
 
-#: .\assessment\templates\assessment\content-section.html:13
 #: .\assessment\templates\assessment\content-section.html:16
+#: .\assessment\templates\assessment\content-section.html:19
 #, python-format
 msgid "%(progression)s%% is done"
 msgstr "La progression est de %(progression)s%%"
 
-#: .\assessment\templates\assessment\content-section.html:53
+#: .\assessment\templates\assessment\content-section.html:62
 msgid "You have already answered to this evaluation element"
 msgstr "Vous avez déjà répondu à cet élément d'évaluation"
 
-#: .\assessment\templates\assessment\content-section.html:60
-#: .\assessment\templates\assessment\content-section.html:85
+#: .\assessment\templates\assessment\content-section.html:69
+#: .\assessment\templates\assessment\content-section.html:94
 msgid ""
 "You are not concerned by this evaluation element due to your answer to this "
 "evaluation element"
@@ -141,26 +141,26 @@ msgstr ""
 "Vous n'êtes pas concerné.e.s par cet élément d'évaluation suite à votre "
 "réponse à l'élément "
 
-#: .\assessment\templates\assessment\content-section.html:66
+#: .\assessment\templates\assessment\content-section.html:75
 msgid "You have not yet answered to this evaluation element"
 msgstr "Vous n'êtes pas concerné.e.s par cet élément d'évaluation"
 
-#: .\assessment\templates\assessment\content-section.html:81
+#: .\assessment\templates\assessment\content-section.html:90
 msgid "This evaluation element is not applicable due to your previous answers"
 msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à vos réponses "
 "précédentes"
 
-#: .\assessment\templates\assessment\content-section.html:104
-#: .\assessment\templates\assessment\results.html:82
+#: .\assessment\templates\assessment\content-section.html:113
+#: .\assessment\templates\assessment\results.html:89
 msgid ""
 ": Please select one answer which best matches to your organisation situation"
 msgstr ""
 " : Veuillez séléctionner une seule réponse, correspondant le mieux à la "
 "maturité de l'organisation à ce sujet"
 
-#: .\assessment\templates\assessment\content-section.html:108
-#: .\assessment\templates\assessment\results.html:86
+#: .\assessment\templates\assessment\content-section.html:117
+#: .\assessment\templates\assessment\results.html:93
 msgid ""
 ": Please select all the answers which best match to your organisation "
 "situation. Be careful, some combinations are not coherent"
@@ -169,19 +169,19 @@ msgstr ""
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes"
 
-#: .\assessment\templates\assessment\content-section.html:126
-#: .\assessment\templates\assessment\content-section.html:129
+#: .\assessment\templates\assessment\content-section.html:135
+#: .\assessment\templates\assessment\content-section.html:138
 msgid "Reset the answer"
 msgstr "Réinitialiser les réponses"
 
-#: .\assessment\templates\assessment\content-section.html:139
-#: .\assessment\templates\assessment\content-section.html:143
+#: .\assessment\templates\assessment\content-section.html:148
+#: .\assessment\templates\assessment\content-section.html:152
 #: .\home\templates\home\login-modal.html:33
 #: .\home\templates\home\login.html:50
 msgid "Validate"
 msgstr "Valider"
 
-#: .\assessment\templates\assessment\content-section.html:150
+#: .\assessment\templates\assessment\content-section.html:159
 msgid ""
 "This evaluation element is not applicable due to the answer to this "
 "evaluation element"
@@ -189,9 +189,9 @@ msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
 "l'élément "
 
-#: .\assessment\templates\assessment\content-section.html:159
+#: .\assessment\templates\assessment\content-section.html:168
 #: .\home\templates\home\profile-my-ressources.html:15
-#: .\templates\base-evaluation.html:44
+#: .\templates\base-evaluation.html:50
 msgid "Resources"
 msgstr "Ressources"
 
@@ -205,13 +205,16 @@ msgstr "Créer une nouvelle évaluation"
 
 #: .\assessment\templates\assessment\creation-evaluation-modal.html:17
 #: .\assessment\templates\assessment\creation-evaluation.html:19
-#: .\assessment\templates\assessment\evaluation.html:21
+#: .\assessment\templates\assessment\evaluation.html:37
+#: .\assessment\templates\assessment\orga-evaluation.html:12
 #: .\home\templates\home\creation-evaluation-mutli-orga-modal.html:16
+#: .\home\templates\home\profile-user-evaluations.html:19
 msgid "Version"
 msgstr "Version"
 
 #: .\assessment\templates\assessment\creation-evaluation-modal.html:25
 #: .\assessment\templates\assessment\deletion-evaluation.html:17
+#: .\assessment\templates\assessment\upgrade-modal.html:21
 #: .\home\templates\home\creation-evaluation-mutli-orga-modal.html:24
 #: .\home\templates\home\logout-page.html:10
 #: .\home\templates\home\profile-orga-creation-modal.html:20
@@ -256,26 +259,27 @@ msgstr "Donnez votre feedback sur cet élément d'évaluation"
 msgid "Submit"
 msgstr "Envoyer"
 
-#: .\assessment\templates\assessment\evaluation.html:20
+#: .\assessment\templates\assessment\evaluation.html:36
 msgid "Creation date:"
 msgstr "Créée le"
 
-#: .\assessment\templates\assessment\evaluation.html:37
-#: .\assessment\templates\assessment\evaluation.html:43
-#: .\assessment\templates\assessment\section.html:29
-#: .\assessment\templates\assessment\section.html:36
+#: .\assessment\templates\assessment\evaluation.html:53
+#: .\assessment\templates\assessment\evaluation.html:59
+#: .\assessment\templates\assessment\section.html:35
+#: .\assessment\templates\assessment\section.html:40
+#: .\assessment\templates\assessment\section.html:48
 msgid "Validate and see the results"
 msgstr "Valider et voir les résultats"
 
-#: .\assessment\templates\assessment\evaluation.html:44
-#: .\assessment\templates\assessment\evaluation.html:45
-#: .\assessment\templates\assessment\section.html:37
-#: .\assessment\templates\assessment\section.html:38
+#: .\assessment\templates\assessment\evaluation.html:60
+#: .\assessment\templates\assessment\evaluation.html:61
+#: .\assessment\templates\assessment\section.html:49
+#: .\assessment\templates\assessment\section.html:50
 msgid ""
 "(info) Please you have to finish the evaluation before it can be validated"
 msgstr "(info bulle) Veuillez finir l'évaluation avant de pouvoir la valider"
 
-#: .\assessment\templates\assessment\evaluation.html:51
+#: .\assessment\templates\assessment\evaluation.html:67
 msgid "Back to the organisation"
 msgstr "Retour à l'organisation"
 
@@ -287,58 +291,69 @@ msgstr "Evaluations de l'organisation"
 msgid "Evaluation's name"
 msgstr "Nom de l'évaluation"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:12
-#: .\home\templates\home\profile-user-evaluations.html:20
+#: .\assessment\templates\assessment\orga-evaluation.html:13
+#: .\home\templates\home\profile-user-evaluations.html:21
 msgid "Creation date"
 msgstr "Créée le"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:13
-#: .\home\templates\home\profile-user-evaluations.html:21
+#: .\assessment\templates\assessment\orga-evaluation.html:14
+#: .\home\templates\home\profile-user-evaluations.html:22
 msgid "Validation date"
 msgstr "Date de validation"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:14
-#: .\home\templates\home\profile-user-evaluations.html:22
+#: .\assessment\templates\assessment\orga-evaluation.html:15
+#: .\home\templates\home\profile-user-evaluations.html:23
 msgid "Evaluation status"
 msgstr "Statut de l'évaluation"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:15
-#: .\home\templates\home\profile-user-evaluations.html:23
+#: .\assessment\templates\assessment\orga-evaluation.html:16
+#: .\home\templates\home\profile-user-evaluations.html:24
 msgid "Progression"
 msgstr "Progression"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:16
-#: .\home\templates\home\profile-user-evaluations.html:24
+#: .\assessment\templates\assessment\orga-evaluation.html:17
+#: .\home\templates\home\profile-user-evaluations.html:25
 msgid "Score"
 msgstr "Score"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:17
-#: .\home\templates\home\profile-user-evaluations.html:25
+#: .\assessment\templates\assessment\orga-evaluation.html:18
+#: .\home\templates\home\profile-user-evaluations.html:26
 msgid "Action"
 msgstr "Action"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:32
-#: .\home\templates\home\profile-user-evaluations.html:41
+#: .\assessment\templates\assessment\orga-evaluation.html:34
+#: .\home\templates\home\profile-user-evaluations.html:43
 msgid "Not validated yet"
 msgstr "Pas encore soumise"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:36
-#: .\home\templates\home\profile-user-evaluations.html:45
+#: .\assessment\templates\assessment\orga-evaluation.html:38
+#: .\home\templates\home\profile-user-evaluations.html:47
 msgid "Validated"
 msgstr "Soumise"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:38
+#: .\assessment\templates\assessment\orga-evaluation.html:40
 msgid "In progress"
 msgstr "En cours de progression"
 
-#: .\assessment\templates\assessment\orga-evaluation.html:50
-#: .\home\templates\home\profile-user-evaluations.html:60
-msgid "See the results"
-msgstr "Voir les résultats"
+#: .\assessment\templates\assessment\orga-evaluation.html:55
+#: .\assessment\templates\assessment\orga-evaluation.html:83
+#: .\home\templates\home\profile-user-evaluations.html:64
+#: .\home\templates\home\profile-user-evaluations.html:82
+msgid "Results"
+msgstr ""
 
-#: .\assessment\templates\assessment\orga-evaluation.html:52
-#: .\assessment\templates\assessment\results.html:51
-#: .\home\templates\home\profile-user-evaluations.html:62
+#: .\assessment\templates\assessment\orga-evaluation.html:58
+#: .\assessment\templates\assessment\orga-evaluation.html:65
+#: .\home\templates\home\profile-user-evaluations.html:67
+#: .\home\templates\home\profile-user-evaluations.html:74
+msgid "upgrade"
+msgstr ""
+
+#: .\assessment\templates\assessment\orga-evaluation.html:62
+#: .\assessment\templates\assessment\orga-evaluation.html:86
+#: .\assessment\templates\assessment\results.html:58
+#: .\home\templates\home\profile-user-evaluations.html:71
+#: .\home\templates\home\profile-user-evaluations.html:86
 #: .\home\templates\home\settings-data.html:29
 #: .\home\templates\home\settings-password.html:46
 msgid "Modify"
@@ -361,7 +376,7 @@ msgid "Evaluations "
 msgstr "Evaluation"
 
 #: .\assessment\templates\assessment\orga-settings.html:5
-#: .\assessment\templates\assessment\organisation.html:26
+#: .\assessment\templates\assessment\organisation.html:34
 msgid "Organisation's parameters"
 msgstr " Paramètres de l'organisation "
 
@@ -385,24 +400,24 @@ msgstr "Nombre de membre(s) :"
 msgid "Organisation: "
 msgstr "Organisation : "
 
-#: .\assessment\templates\assessment\organisation.html:16
+#: .\assessment\templates\assessment\organisation.html:24
 msgid "Evaluations"
 msgstr "Evaluations"
 
-#: .\assessment\templates\assessment\organisation.html:21
+#: .\assessment\templates\assessment\organisation.html:29
 msgid "Members"
 msgstr "Membres"
 
-#: .\assessment\templates\assessment\organisation.html:53
+#: .\assessment\templates\assessment\organisation.html:61
 msgid "Back to the homepage"
 msgstr "Retour à la page d'accueil"
 
-#: .\assessment\templates\assessment\organisation.html:62
-#: .\assessment\templates\assessment\organisation.html:67
+#: .\assessment\templates\assessment\organisation.html:70
+#: .\assessment\templates\assessment\organisation.html:75
 msgid "Start a new evaluation"
 msgstr "Démarrer une nouvelle évaluation"
 
-#: .\assessment\templates\assessment\organisation.html:66
+#: .\assessment\templates\assessment\organisation.html:74
 msgid "We are sorry, there is no assessment available yet."
 msgstr "Nous sommes désolé, il n'y a pas d'assessment disponible actuellement."
 
@@ -411,7 +426,7 @@ msgid "Previous section"
 msgstr "Section précédente"
 
 #: .\assessment\templates\assessment\pagination.html:12
-#: .\assessment\templates\assessment\results.html:45
+#: .\assessment\templates\assessment\results.html:52
 msgid "Back to the organisation summary"
 msgstr "Retour à l'organisation"
 
@@ -419,19 +434,19 @@ msgstr "Retour à l'organisation"
 msgid "Next section"
 msgstr "Section suivante"
 
-#: .\assessment\templates\assessment\results.html:10
+#: .\assessment\templates\assessment\results.html:17
 msgid "Your score"
 msgstr "Votre score"
 
-#: .\assessment\templates\assessment\results.html:58
+#: .\assessment\templates\assessment\results.html:65
 msgid "Your answers"
 msgstr "Vos réponses"
 
-#: .\assessment\templates\assessment\results.html:76
+#: .\assessment\templates\assessment\results.html:83
 msgid ":"
 msgstr " :"
 
-#: .\assessment\templates\assessment\results.html:101
+#: .\assessment\templates\assessment\results.html:108
 msgid "Top of the page"
 msgstr "Retour haut de page"
 
@@ -439,7 +454,7 @@ msgstr "Retour haut de page"
 msgid "Give a feedback on this section"
 msgstr "Donnez votre feedback sur cette section"
 
-#: .\assessment\templates\assessment\section.html:22
+#: .\assessment\templates\assessment\section.html:28
 msgid "Back to the sections page"
 msgstr "Retour aux différentes sections"
 
@@ -451,18 +466,72 @@ msgstr "Section"
 msgid "Back to the evaluation summary"
 msgstr "Retour aux différentes sections"
 
-#: .\assessment\views.py:105 .\assessment\views.py:180
-#: .\assessment\views.py:235 .\assessment\views.py:263
-#: .\assessment\views.py:295 .\assessment\views.py:432
-#: .\assessment\views.py:956
+#: .\assessment\templates\assessment\upgrade-banner.html:4
+msgid "Your evaluation version is not up to date. Do you want to"
+msgstr ""
+
+#: .\assessment\templates\assessment\upgrade-banner.html:6
+msgid " upgrade"
+msgstr ""
+
+#: .\assessment\templates\assessment\upgrade-banner.html:6
+msgid "? Your answers will be preserved."
+msgstr ""
+
+#: .\assessment\templates\assessment\upgrade-modal.html:7
+msgid "Upgrade the evaluation"
+msgstr "Monter en version l'évaluation"
+
+#: .\assessment\templates\assessment\upgrade-modal.html:12
+msgid ""
+"Do you want to upgrade your evaluation to the latest version? Your answers "
+"and your notes will be transferred to the new evaluation. This evaluation "
+"won't be deleted by the process."
+msgstr ""
+"Voulez-vous monter en version votre évaluation à la dernière version disponible ?"
+"Vos réponses et vos notes seront retranscrises dans la nouvelle évaluation."
+"Votre évaluation actuelle ne sera pas supprimée."
+
+#: .\assessment\templates\assessment\upgrade-modal.html:19
+msgid "Yes"
+msgstr "Oui"
+
+#: .\assessment\views.py:100 .\assessment\views.py:191
+#: .\assessment\views.py:289 .\assessment\views.py:346
+#: .\assessment\views.py:376 .\assessment\views.py:410
+#: .\assessment\views.py:549 .\assessment\views.py:1080
 msgid "You don't have access to this content."
 msgstr "Vous n'avez pas accès à ce contenu"
 
-#: .\assessment\views.py:686
+#: .\assessment\views.py:116
+msgid "We are sorry, the operation failed."
+msgstr "Nous sommes désolé, l'opération a échoué."
+
+#: .\assessment\views.py:128 .\assessment\views.py:162
+msgid "Your evaluation has been upgraded! You have been redirected to it."
+msgstr "Votre évaluation a bien été mise à jour ! Vous avez été redirigée vers celle-ci."
+
+#: .\assessment\views.py:141
+msgid ""
+"Your evaluation has been upgraded! You have been redirected to it. You have "
+"to complete the new items before the validation."
+msgstr ""
+"Votre évaluation a bien été mise à jour ! Vous avez été redirigée vers celle-ci."
+"Vous devez la terminer avant de pouvoir accéder aux résultats."
+
+#: .\assessment\views.py:147 .\assessment\views.py:153
+msgid "Your evaluation has been upgraded!"
+msgstr "Votre a bien été mise à jour à la dernière version."
+
+#: .\assessment\views.py:168
+msgid "There is an issue with the versions."
+msgstr "Il y a une erreur avec les versions"
+
+#: .\assessment\views.py:805
 msgid "An issue occured, please try again."
 msgstr "Un problème est survenu. Veuillez réessayer."
 
-#: .\assessment\views.py:781
+#: .\assessment\views.py:900
 msgid ""
 "We are sorry but the message hasn't been sent. Try again or contact the "
 "Substra team through another channel."
@@ -470,7 +539,7 @@ msgstr ""
 "Nous sommes désolé mais votre message n'a pas été envoyé. Essayez de nouveau "
 "ou contactez nous par un notre moyen !"
 
-#: .\assessment\views.py:857
+#: .\assessment\views.py:984
 msgid ""
 "Thank you for your feedback, it helps us a lot! We will take it into "
 "consideration as soon as possible"
@@ -478,7 +547,7 @@ msgstr ""
 "Merci pour votre retour ! Nous l'avons bien pris en compte et nous "
 "essayerons de le traiter au plus vite."
 
-#: .\assessment\views.py:865
+#: .\assessment\views.py:992
 msgid ""
 "Please, do not spam the feature. If your are not, contact the support "
 "service!"
@@ -486,44 +555,44 @@ msgstr ""
 "Veuillez utiliser cette feature avec modération ! Si vous pensez qu'il y a "
 "un problème, contactez le support."
 
-#: .\assessment\views.py:919
+#: .\assessment\views.py:1043
 msgid "404 - Page not found"
 msgstr "404 - La page n'a pas été trouvée"
 
-#: .\assessment\views.py:920
+#: .\assessment\views.py:1044
 msgid "Sorry, the page has not been found or does not exist !"
 msgstr ""
 "Désolé, la page que vous avez demandée n'existe pas ou n'a pas été trouvée"
 
-#: .\assessment\views.py:922
+#: .\assessment\views.py:1046
 msgid "Internal error"
 msgstr "Erreur interne"
 
-#: .\assessment\views.py:922
+#: .\assessment\views.py:1046
 msgid "An internal error occured"
 msgstr "Une erreur interne est survenue"
 
-#: .\assessment\views.py:924
+#: .\assessment\views.py:1048
 msgid "Permission denied"
 msgstr "Permission refusée"
 
-#: .\assessment\views.py:925
+#: .\assessment\views.py:1049
 msgid "Sorry, you can not access this content"
 msgstr "Vous ne pouvez pas accéder à ce contenu"
 
-#: .\assessment\views.py:927
+#: .\assessment\views.py:1051
 msgid "Bad request"
 msgstr "Mauvaise requête"
 
-#: .\assessment\views.py:927
+#: .\assessment\views.py:1051
 msgid "There is an error in the request"
 msgstr "Il y a une erreur dans la requête"
 
-#: .\dev_platform\settings.py:123
+#: .\dev_platform\settings.py:123 .\dev_platform\settings_prod.py:123
 msgid "English"
 msgstr "Anglais"
 
-#: .\dev_platform\settings.py:124
+#: .\dev_platform\settings.py:124 .\dev_platform\settings_prod.py:124
 msgid "French"
 msgstr "Français"
 
@@ -566,7 +635,7 @@ msgid "Users must have an email address"
 msgstr ""
 
 #: .\home\models.py:78
-msgid "A user with that username already exists."
+msgid "A user with that email already exists."
 msgstr ""
 
 #: .\home\models.py:83
@@ -592,8 +661,8 @@ msgid "Please login to see this page."
 msgstr "Veuillez vous connecter pour accéder à cette page"
 
 #: .\home\templates\home\login-modal.html:18
-#: .\home\templates\home\login.html:27 .\templates\base-evaluation.html:55
-#: .\templates\base-evaluation.html:60 .\templates\base-evaluation.html:89
+#: .\home\templates\home\login.html:27 .\templates\base-evaluation.html:61
+#: .\templates\base-evaluation.html:66 .\templates\base-evaluation.html:95
 msgid "Login"
 msgstr "Connexion"
 
@@ -616,7 +685,7 @@ msgid "Do you want to logout?"
 msgstr "Voulez-vous vous déconnecter ?"
 
 #: .\home\templates\home\logout-page.html:12
-#: .\templates\base-evaluation.html:47 .\templates\base-evaluation.html:86
+#: .\templates\base-evaluation.html:53 .\templates\base-evaluation.html:92
 msgid "Logout"
 msgstr "Déconnexion"
 
@@ -632,15 +701,15 @@ msgstr "Cliquez ici pour vous reconnecter"
 msgid "My favorite resources"
 msgstr "Mes ressources favorites"
 
-#: .\home\templates\home\profile-my-ressources.html:17
+#: .\home\templates\home\profile-my-ressources.html:18
 msgid "Glossary"
 msgstr "Glossaire"
 
-#: .\home\templates\home\profile-my-ressources.html:107
+#: .\home\templates\home\profile-my-ressources.html:108
 msgid "Privacy:"
 msgstr "Vie privée"
 
-#: .\home\templates\home\profile-my-ressources.html:107
+#: .\home\templates\home\profile-my-ressources.html:108
 msgid ""
 "the right to an individual to control who have access to his personal data."
 msgstr ""
@@ -711,17 +780,17 @@ msgstr "Retour à mon tableau de bord"
 msgid "Evaluation name"
 msgstr "Nom de l'évaluation"
 
-#: .\home\templates\home\profile-user-evaluations.html:47
+#: .\home\templates\home\profile-user-evaluations.html:49
 msgid " In progress"
 msgstr "En cours de progression"
 
-#: .\home\templates\home\profile-user-evaluations.html:91
-#: .\home\templates\home\profile-user-evaluations.html:96
-#: .\home\templates\home\profile-user-evaluations.html:99
+#: .\home\templates\home\profile-user-evaluations.html:127
+#: .\home\templates\home\profile-user-evaluations.html:132
+#: .\home\templates\home\profile-user-evaluations.html:135
 msgid "Create my evaluation"
 msgstr "Créer mon évaluation"
 
-#: .\home\templates\home\profile-user-evaluations.html:121
+#: .\home\templates\home\profile-user-evaluations.html:157
 msgid "There is no assessment available."
 msgstr "Nous sommes désolé, il n'y a pas d'assessment disponible actuellement."
 
@@ -729,15 +798,15 @@ msgstr "Nous sommes désolé, il n'y a pas d'assessment disponible actuellement.
 msgid "Your dashboard"
 msgstr "Votre tableau de bord"
 
-#: .\home\templates\home\profile.html:15
+#: .\home\templates\home\profile.html:24
 msgid "My evaluations"
 msgstr "Mes évaluations"
 
-#: .\home\templates\home\profile.html:23
+#: .\home\templates\home\profile.html:32
 msgid "My resources"
 msgstr "Mes ressources"
 
-#: .\home\templates\home\profile.html:28
+#: .\home\templates\home\profile.html:37
 msgid "User settings"
 msgstr "Paramètres du compte"
 
@@ -802,7 +871,7 @@ msgid "Change password"
 msgstr "Changer mon mot de passe"
 
 #: .\home\templates\home\signup.html:6 .\home\templates\home\signup.html:33
-#: .\templates\base-evaluation.html:88
+#: .\templates\base-evaluation.html:94
 msgid "Sign up"
 msgstr "Création du compte"
 
@@ -828,7 +897,7 @@ msgstr ""
 "Votre compte a bien été supprimé ainsi que les organisations : {0} et leurs "
 "évaluations associées."
 
-#: .\home\views.py:466
+#: .\home\views.py:475
 msgid ""
 "Your account has been created! \n"
 " Do you want to create your organisation now? You could do it later but it "
@@ -838,17 +907,17 @@ msgstr ""
 "Voulez-vous créer votre organisation maintenant ? Vous pourrez la créer plus "
 "tard mais il est nécessaire d'en avoir une pour s'évaluer."
 
-#: .\home\views.py:525
+#: .\home\views.py:534
 msgid "You must be connected to access this content"
 msgstr "Vous devez vous connecter pour accéder à ce contenu"
 
-#: .\home\views.py:532
+#: .\home\views.py:541
 msgid ""
 "The attempt to connect with this combination email/password failed. Please "
 "try again!"
 msgstr "La combinaison email/mot de passe est erronée. Réessayez !"
 
-#: .\home\views.py:541
+#: .\home\views.py:550
 msgid ""
 "Please, enter your email and your password to login to your account.\n"
 " If you don't have an account, click on the 'I do not have an account' button"
@@ -862,28 +931,31 @@ msgstr ""
 # msgstr "Rentrez votre nom d'utilisateur et votre mot de passe pour vous "
 # "connecter.\n"
 # " Si vous n'en avez pas, cliquez sur le bouton 'Je n'ai pas de compte'."
-#: .\home\views.py:556
+#: .\home\views.py:565
 msgid ""
 "You first need to create your organisation before creating your evaluation."
 msgstr ""
 "Vous devez d'abord créer votre organisation avant de pouvoir faire une "
 "évaluation."
 
-#: .\templates\base-evaluation.html:41
+#: .\templates\base-evaluation.html:47
 msgid "My dashboard"
 msgstr "Votre tableau de bord"
 
-#: .\templates\base-evaluation.html:51 .\templates\base-evaluation.html:93
+#: .\templates\base-evaluation.html:57 .\templates\base-evaluation.html:99
 msgid "About"
 msgstr "A propos"
 
-#: .\templates\base-evaluation.html:96
+#: .\templates\base-evaluation.html:102
 msgid "Legal notices"
 msgstr "Mentions légales"
 
 #: .\templates\errors.html:46
 msgid "Homepage"
 msgstr "Page d'accueil"
+
+#~ msgid "See the results"
+#~ msgstr "Voir les résultats"
 
 #~ msgid "I don't find the section content coherent"
 #~ msgstr "Je trouve que cette section n'est pas cohérente"
