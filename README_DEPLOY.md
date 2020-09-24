@@ -123,6 +123,10 @@ sudo ufw status numbered
 # Allow web connections, only
 sudo ufw allow http
 sudo ufw allow https
+
+# Custom
+sudo ufw delete <ID>
+sudo ufw deny out <PORT>
 ```
 
 As of now, available applications:
