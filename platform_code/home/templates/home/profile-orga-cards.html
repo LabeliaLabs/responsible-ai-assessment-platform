@@ -3,12 +3,14 @@
 {% load home_tags %}
 {% load i18n %}
 
- <section class="cards">
+
      <div class="margin-bot-top-20">
-     <a href="{% url 'home:orga-creation' %}" data-toggle="modal" data-target="#modal-create-orga"
-           class="btn btn-primary card-button">{% trans "Create a new organisation" %}</a>
+        <a href="{% url 'home:orga-creation' %}" data-toggle="modal" data-target="#modal-create-orga"
+           class="btn btn-primary card-button">{% trans "Create a new organisation" %}
+        </a>
      </div>
 
+ <section class="cards-orga">
      {% for organisation in organisations %}
      <article class="card text-center " >
         <h5 class="card-title" >{{organisation.name}} </h5>
