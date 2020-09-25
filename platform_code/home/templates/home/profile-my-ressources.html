@@ -23,25 +23,33 @@
 <div class="tab-content" id="nav-tabContent">
   <div class="tab-pane fade show active" id="nav-favorite" role="tabpanel" aria-labelledby="nav-favorite-tab">
       <ul style="display: inline-grid;" id="liked-resources-array">
-        {% for resource in resources %}
-          <div class="grid-container-2-cols">
-             <div class="grid-item">
-                <li id="resource{{resource.id}}" class="object-linked list-with-disc margin-10 ">
-                    [{{resource.type}}] - {{resource.text|markdownify}}
-                </li>
-             </div>
-              <div class="icon-list" >
-                    <form id="{{resource.id}}" method='post' action="{% url 'home:user-profile' %}" >
-                        {% csrf_token %}
-                        <a onclick="remove(this, {{resource.id}})" name="unlike">
-                             <i class="fa fa-bookmark liked" id="resource_list{{resource.id}}"></i>
-                        </a>
-                    </form>
-                </div>
-          </div>
+          {% if resources %}
+            {% for resource in resources %}
+              <div class="grid-container-2-cols">
+                 <div class="grid-item">
+                    <li id="resource{{resource.id}}" class="object-linked list-with-disc margin-10 ">
+                        [{{resource.type}}] - {{resource.text|markdownify}}
+                    </li>
+                 </div>
+                  <div class="icon-list" >
+                        <form id="{{resource.id}}" method='post' action="{% url 'home:user-profile' %}" >
+                            {% csrf_token %}
+                            <a onclick="remove(this, {{resource.id}})" name="unlike">
+                                 <i class="fa fa-bookmark liked" id="resource_list{{resource.id}}"></i>
+                            </a>
+                        </form>
+                    </div>
+              </div>
+            {% endfor %}
+          {% else %}
+           <p id="no-resources-message" class="margin-50"
+                >{% trans "You do not have selected resources as favorite yet. You can do this in the next tab or during the evaluation by clicking on the small icon next to the resources. " %}
+           </p>
+          {% endif %}
+            <p id="no-resources-message-temp" class="margin-50 display-none"
+                >{% trans "You do not have selected resources as favorite yet. You can do this in the next tab or during the evaluation by clicking on the small icon next to the resources. " %}
+           </p>
 
-
-        {% endfor %}
       </ul>
   </div>
   <div class="tab-pane fade" id="nav-resources" role="tabpanel" aria-labelledby="nav-resources-tab">
@@ -75,12 +83,14 @@
                                                         {% if not resource in resources_liked %}
                                                             <a onclick="like(this, {{master_element.id}}, {{resource.id}})" name="like">
                                                                 <i class="fa fa-bookmark-o  not-liked"
+                                                                   title="{% trans 'Click to like the resource' %}"
                                                                    name="resource_not_liked{{resource.id}}"></i>
                                                             </a>
                                                         {% else %}
                                                             <a onclick="like(this, {{master_element.id}}, {{resource.id}})"
                                                                name="unlike">
                                                                 <i class="fa fa-bookmark liked"
+                                                                   title="{% trans 'Click to unlike the resource' %}"
                                                                    name="resource_liked{{resource.id}}"></i>
                                                             </a>
                                                         {% endif %}

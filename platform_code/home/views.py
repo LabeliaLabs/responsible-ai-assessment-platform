@@ -215,8 +215,10 @@ class ResourcesView(LoginRequiredMixin, generic.DetailView):
         context["resources"] = query_resources_dict
         context["resources_liked"] = request.user.userresources.resources.all()
 
-        # todo fix when there is no assessment
-        context['last_version'] = get_last_assessment_created().version  # get last version
+        if get_last_assessment_created():
+            context['last_version'] = get_last_assessment_created().version  # get last version
+        else:
+            context['last_version'] = None
         context["last_assessment"] = get_last_assessment_created()
         return self.render_to_response(context)
 
