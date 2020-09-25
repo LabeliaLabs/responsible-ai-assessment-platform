@@ -57,6 +57,10 @@ class OrganisationCreationForm(ModelForm):
         self.fields["size"].label = _("Size")
         self.fields["country"].label = _("Country")
         self.fields["sector"].label = _("Sector")
+        self.fields["size"].widget.attrs = {"class": "full-width"}
+        self.fields["country"].widget.attrs = {"class": "full-width"}
+        self.fields["sector"].widget.attrs = {"class": "full-width"}
+        self.fields["name"].widget.attrs = {"class": "full-width"}
 
 
 class DataSettingsForm(ModelForm):

@@ -4,36 +4,27 @@
 
 <div>
 <h3 class="settings-subtitle" >{% trans "My information" %}</h3>
-
-        {% if message %}
-            <div class="alert {{message|get_key_by_position:0}}">{{message|get_value_by_position:0}} </div>
-        {% endif %}
-        <div class="body">
-
+    {% if message %}
+        <div class="alert {{message|get_key_by_position:0}}">{{message|get_value_by_position:0}} </div>
+    {% endif %}
+    <div class="body form-center">
+        <div class="column">
             <form id="form-user-data" method='post' action="#" >
                 {% csrf_token %}
-
                 {% for field in user_data_form %}
-                  <div class="row margin-10">
-                      <div class="col-md-3">
-                         <p>{% blocktrans with tag=field.label_tag %}{{tag}}{% endblocktrans %}</p>
-                       </div>
-                      <div  class="col-md-3" >
-                        <p>{{ field }}</p>
-                      </div>
-                  </div>
-
+                     <span class="float-left"
+                     >{% blocktrans with tag=field.label_tag %}{{tag}}{% endblocktrans %}</span>
+                    <p>{{ field }}</p>
                 {% endfor %}
-
-                    <button type="button" onclick="submitUserSettingsDataForm('form-user-data')"
-                                class="btn btn-primary float-right ">{% trans "Modify" %}</button>
-
+                <button type="button" onclick="submitUserSettingsDataForm('form-user-data')"
+                        class="btn btn-primary float-left ">{% trans "Modify" %}
+                </button>
             </form>
-
-            </div>
-
+        </div>
+    </div>
     <div id="confirmation"></div>
     <div id="error_messages"></div>
-
 </div>
+
+
 

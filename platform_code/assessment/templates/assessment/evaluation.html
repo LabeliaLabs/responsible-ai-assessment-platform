@@ -29,17 +29,19 @@
 
 <div class="head-page">
     <h1 class="h1-section" style="margin-bottom: 10px; margin-top: 20px;">{{ evaluation.name }}</h1>
-    <div class="progress" title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done{% endblocktrans %}"
+    <div class="progress" title="{% blocktrans with progression=evaluation.calculate_progression %}{{ progression }}% done{% endblocktrans %}"
           style="width: 50%; margin: auto;">
       <div class="progress-bar " role="progressbar" aria-valuenow="{{evaluation.calculate_progression}}"
            style="width:{{evaluation.calculate_progression}}%; background-color: #28a745;"
-           title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done{% endblocktrans %}"
+           title="{% blocktrans with progression=evaluation.calculate_progression %}{{ progression }}% done{% endblocktrans %}"
            aria-valuemin="0" aria-valuemax="100" >
-           <p class="progress-bar-text">{{evaluation.calculate_progression}}%</p>
+          {% if evaluation.calculate_progression != 0 %}
+                <p class="progress-bar-text" >{{evaluation.calculate_progression}}%</p>
+          {% endif %}
       </div>
         {% if evaluation.calculate_progression == 0 %}
-            <p class="progress-bar-text">{{evaluation.calculate_progression}}%</p>
-        {% endif %}
+                <p class="progress-bar-text" >{{evaluation.calculate_progression}}%</p>
+          {% endif %}
     </div>
     <p class="center" style="margin-bottom: 0px;">{% trans "Creation date:" %} {{evaluation.created_at|format_date_calendar}}</p>
     <p class="center" style="margin-bottom: 30px;">{% trans "Version" %} {{evaluation.assessment.version}}</p>
@@ -65,8 +67,8 @@
     {% else %}
     <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
         <input type="submit" value="{% trans 'Validate and see the results' %}" disabled="True"
-               alt="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
-               title="{% trans '(info) Please you have to finish the evaluation before it can be validated' %}"
+               alt="{% trans 'Please you have to finish the evaluation before it can be validated' %}"
+               title="{% trans 'Please you have to finish the evaluation before it can be validated' %}"
                class="btn btn-primary float-right bottom-page-button"/>
     </form>
     {% endif %}

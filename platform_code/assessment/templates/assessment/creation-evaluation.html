@@ -7,23 +7,27 @@
 
 <h1>{% trans "Evaluation creation" %}</h1>
 
-<form id="create_evaluation_form" method='post' class="form" role="form">
+<div class="form-center width-35">
+     <div class="column">
+    <form id="create_evaluation_form" method='post' class="form" role="form">
 
         <div class="form-body">
             {% csrf_token %}
             {% for field in form %}
             <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                <p class="label-create-bis">{{ field.label}}</p>
-                <p class="name-eval-field-bis" > {{field}} </p>
+                <span class="float-left">{{ field.label}}</span>
+                <p > {{field}} </p>
             {% endfor %}
             <p class="text-form-bis">{% trans "Version" %}</p>
             <p class="attribute-form-bis">{{last_version}}</p>
 
         </div>
 
-            <input type="submit" class="btn btn-primary same-size-250 float-right"
+            <input type="submit" class="btn btn-primary same-size-250"
                    value="{% trans 'Create the evaluation' %}" style="margin: auto" />
 
     </form>
+     </div>
+</div>
 
 {% endblock %}

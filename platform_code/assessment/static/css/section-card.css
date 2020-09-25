@@ -20,7 +20,7 @@ h1-section {
     box-sizing: border-box;
     margin: 1rem .25em;
     padding: 10px;
-    border: solid 3px lightgoldenrodyellow;
+    border: solid 1px lightgrey;
 }
 
 .cards-section {
@@ -37,7 +37,6 @@ h5.card-title-section {
     margin-left: 10px;
     width: 50%;
     margin-top:10px;
-
 }
 
 .section-card-title{
@@ -59,8 +58,6 @@ h5.card-title-section {
   display: -webkit-box;
    -webkit-line-clamp: 7; /* number of lines to show */
    -webkit-box-orient: vertical;
-
-
 }
 
 .card-button-section{
@@ -68,10 +65,8 @@ h5.card-title-section {
     align-self: center;
     width: 100%;
     margin: 0 auto;
-    bottom: 20px;
-    background-color: #FFBE3C;
-    border-color: #FFBE3C;
-
+    margin-bottom: 20px;
+    margin-top: 10px;
 }
 .card-img-top{
     height: 80px;
@@ -85,8 +80,13 @@ h5.card-title-section {
 
 .progress-section{
     height: 14px;
-    margin: 0 auto;
+    margin: auto;
+/*    margin-right: 8%;*/
     width: 40%;
+}
+
+.margin-right-8{
+    margin-right: 8%;
 }
 
 @media screen and (min-width: 40em) {

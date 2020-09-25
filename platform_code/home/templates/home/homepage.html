@@ -18,7 +18,11 @@
             <h3 class="center blue-color">Substra Assessment</h3>
             <p class="margin-50">Evaluez le niveau de maturité des pratiques de votre organisation de Data Science Responsable et de Confiance</p>
             <div class="row">
-                <a class="btn btn-primary margin-auto margin-50" href="{% url 'home:signup' %}">{% trans "I register" %}</a>
+                {% if user.is_authenticated %}
+                     <a class="btn btn-primary margin-auto margin-50" href="{% url 'home:user-profile' %}">{% trans "My dashboard" %}</a>
+                {% else %}
+                    <a class="btn btn-primary margin-auto margin-50" href="{% url 'home:signup' %}">{% trans "I register" %}</a>
+                {% endif %}
             </div>
         </div>
         <div class="column">
@@ -68,7 +72,11 @@
     </div>
 
 <div class="row">
-    <a class="btn btn-primary margin-auto" href="{% url 'home:signup' %}">{% trans "I register" %}</a>
+    {% if user.is_authenticated %}
+        <a class="btn btn-primary margin-auto" href="{% url 'home:user-profile' %}">{% trans "My dashboard" %}</a>
+    {% else %}
+        <a class="btn btn-primary margin-auto" href="{% url 'home:signup' %}">{% trans "I register" %}</a>
+    {% endif %}
 </div>
 
 {% endblock %}

@@ -87,7 +87,7 @@ def membership_admin_security_check(request, *args, **kwargs):
 
 
 def upgradeView(request, *args, **kwargs):
-    print("UPGRADE VIEW", kwargs, request.POST.dict())
+    # print("UPGRADE VIEW", kwargs, request.POST.dict())
     user = request.user
     organisation_id = kwargs.get("orga_id")
     organisation = get_object_or_404(
