@@ -5,6 +5,12 @@
 
 {% block content %}
 
+<div class="breadcrumbs">
+    <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
+    <span> ></span>
+    <a href="#" class="active-breadcrumb">{% trans 'Organisation' %}</a>
+</div>
+
 <h1>{% trans "Organisation: " %}{{organisation.name}} </h1>
 
 {% if messages %}
