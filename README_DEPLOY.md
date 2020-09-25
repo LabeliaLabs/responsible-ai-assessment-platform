@@ -154,6 +154,32 @@ You can load different settings when starting django with this:
 ```sh
 python manage.py runserver 0.0.0.0:8000 --settings=dev_platform.settings
 ```
+#### Translation
+
+Note that all the content should be written in english. Currently, the languages accepted are
+French and English. The site is deployed in french. To realize the translation (refer to the
+ [django documentation](https://docs.djangoproject.com/en/3.1/topics/i18n/translation/)
+to implement it ), you need to use `gettext_lazy` or `i18n` or even `ngettext` to manage plurial.
+ For example, in python files, use the syntax
+`_("English message to translate in French")` with the **underscore** for `gettext_lazy`.
+In the html files, at the beginning of the file, add `{% load i18n %}` and for the text 
+you want to translate, use the tags `{% trans "English message to translate in French" %}`.
+Then you can do the command:
+
+```sh
+django-admin makemessages -l fr
+```
+
+This will gather all the text between the tags in the file `django.po`. 
+Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`.
+You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`
+Be careful to the 'fuzzy' translations which are inaccurate. Make all your translations and then do the command:
+
+```sh
+django-admin compilemessages
+```
+
+Do not forget to add and commit both of the files `django.po` and `django.mo`.
 
 ### Prod
 
