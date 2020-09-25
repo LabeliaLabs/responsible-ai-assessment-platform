@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 14:44+0200\n"
+"POT-Creation-Date: 2020-09-25 14:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -636,16 +636,16 @@ msgstr "Anglais"
 msgid "French"
 msgstr "Français"
 
-#: .\platform_code\home\forms.py:16 .\platform_code\home\forms.py:59
-#: .\platform_code\home\forms.py:74
+#: .\platform_code\home\forms.py:16 .\platform_code\home\forms.py:63
+#: .\platform_code\home\forms.py:78
 msgid "First_name"
 msgstr "Prénom"
 
-#: .\platform_code\home\forms.py:19 .\platform_code\home\forms.py:60
+#: .\platform_code\home\forms.py:19 .\platform_code\home\forms.py:64
 msgid "Last_name"
 msgstr "Nom"
 
-#: .\platform_code\home\forms.py:22 .\platform_code\home\forms.py:116
+#: .\platform_code\home\forms.py:22 .\platform_code\home\forms.py:120
 #: .\platform_code\home\templates\home\profile-settings.html:19
 msgid "Password"
 msgstr "Mot de passe"
@@ -660,25 +660,41 @@ msgstr ""
 "Votre mot de passe doit contenir au moins 8 caractères avec au moins une "
 "lettre et un chiffre"
 
-#: .\platform_code\home\forms.py:98
-msgid "email is taken"
-msgstr ""
+#: .\platform_code\home\forms.py:56
+msgid "Name"
+msgstr "Nom"
 
-#: .\platform_code\home\forms.py:106 .\platform_code\home\forms.py:130
+#: .\platform_code\home\forms.py:57
+msgid "Size"
+msgstr "Taille"
+
+#: .\platform_code\home\forms.py:58
+msgid "Country"
+msgstr "Pays"
+
+#: .\platform_code\home\forms.py:59
+msgid "Sector"
+msgstr "Secteur"
+
+#: .\platform_code\home\forms.py:102
+msgid "email is taken"
+msgstr "l'email est déjà pris"
+
+#: .\platform_code\home\forms.py:110 .\platform_code\home\forms.py:134
 msgid "Passwords don't match"
 msgstr "Votre mot de passe est erroné"
 
-#: .\platform_code\home\forms.py:118
+#: .\platform_code\home\forms.py:122
 msgid "Password confirmation"
 msgstr "Confirmation du mot de passe"
 
 #: .\platform_code\home\models.py:28
 msgid "Users must have an email address"
-msgstr ""
+msgstr "Un utilisateur doit avoir un email"
 
 #: .\platform_code\home\models.py:78
 msgid "A user with that email already exists."
-msgstr ""
+msgstr "Un utilisateur a déjà cet email"
 
 #: .\platform_code\home\models.py:83
 msgid "first name"
@@ -757,8 +773,9 @@ msgid ""
 "next tab or during the evaluation by clicking on the small icon next to the "
 "resources. "
 msgstr ""
-"Vous n'avez pas de ressources favorites actuellement. Vous pouvez en ajouter dans l'onglet suivant ou "
-"lors de l'évaluation en cliquant sur l'icône à côté de la ressource."
+"Vous n'avez pas de ressources favorites actuellement. Vous pouvez en ajouter "
+"dans l'onglet suivant ou lors de l'évaluation en cliquant sur l'icône à côté "
+"de la ressource."
 
 #: .\platform_code\home\templates\home\profile-my-ressources.html:118
 msgid "Privacy:"

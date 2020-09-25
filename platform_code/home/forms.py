@@ -53,6 +53,10 @@ class OrganisationCreationForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super(OrganisationCreationForm, self).__init__(*args, **kwargs)
         self.fields["country"].initial = "FR"
+        self.fields["name"].label = _("Name")
+        self.fields["size"].label = _("Size")
+        self.fields["country"].label = _("Country")
+        self.fields["sector"].label = _("Sector")
 
 
 class DataSettingsForm(ModelForm):
