@@ -852,6 +852,10 @@ tr.spaceUnder>td {
     width: 65%;
 }
 
+.modal-title{
+    position: absolute;
+}
+
 /******* MEDIA *******/
 
 @media screen and (min-width: 1200px) {
