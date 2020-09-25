@@ -13,8 +13,16 @@ function like(x, element_id, resource_id){
                 console.log("response", response);
                  if(response['success']) {
                      if (response['like']){
-                        var resources_list = document.getElementsByName("resource_not_liked"+resource_id)
+                        var resources_list = document.getElementsByName("resource_not_liked"+resource_id);
                         console.log("list ressources", resources_list);
+
+                        // remove the text when we like a resource
+                        var text_no_resources = document.getElementById("no-resources-message");
+                        if ($(text_no_resources).attr("style", "display: block;")){
+                            $(text_no_resources).attr("style", "display: none;");
+                            $("#no-resources-message-temp").addClass("display-none");
+                        }
+
                         for ( var i = 0; i <= resources_list.length; i++){
                         console.log("Icon", resources_list[i]);
                             $(resources_list[0]).removeClass("fa-bookmark-o").addClass("fa-bookmark");
@@ -26,7 +34,8 @@ function like(x, element_id, resource_id){
                      var resource_text = response["resource_text"];
                      $(resources_liked_array).append('<li id="resource'+resource_id+'" class="object-linked list-with-disc margin-10">'+resource_text+'</li>');
                      } else {
-                        var resources_list = document.getElementsByName("resource_liked"+resource_id)
+                        var resources_list = document.getElementsByName("resource_liked"+resource_id);
+
                         for ( var i = 0; i <= resources_list.length; i++){
                             $(resources_list[0]).removeClass("fa-bookmark").addClass("fa-bookmark-o");
                             $(resources_list[0]).attr("name","resource_not_liked"+resource_id);
@@ -35,6 +44,11 @@ function like(x, element_id, resource_id){
                         var resource = document.getElementById("resource"+resource_id);
                         console.log("success", resource);
                         $("#resource"+resource_id).remove();
+
+                        // Manage the fact there is no more resource liked and the text message is displayed
+                        if (response["no_resource_liked"]){
+                            $("#no-resources-message-temp").removeClass("display-none");
+                        }
                      }
 
                  }
@@ -62,6 +76,10 @@ function remove(x, resource_id){
                         $(resources_list[0]).attr("name","resource_not_liked"+resource_id);
                         $("#resource_list"+resource_id).addClass("hidden-div");
 
+                    }
+                    // Manage the fact there is no more resource liked and the text message is displayed
+                    if (response["no_resource_liked"]){
+                        $("#no-resources-message-temp").removeClass("display-none");
                     }
                  } else {
                     var messages = response["error_messages"];

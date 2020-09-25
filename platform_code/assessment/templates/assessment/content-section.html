@@ -181,11 +181,15 @@
                                                             <div class="icon-list">
                                                                 {% if not resource in resources_liked %}
                                                                     <a onclick="like(this, {{element.id}}, {{resource.id}})" name="like">
-                                                                        <i class="fa fa-bookmark-o not-liked" name="resource_not_liked{{resource.id}}"></i>
+                                                                        <i class="fa fa-bookmark-o not-liked"
+                                                                           title="{% trans 'Click to like the resource' %}"
+                                                                           name="resource_not_liked{{resource.id}}"></i>
                                                                     </a>
                                                                 {% else %}
                                                                     <a onclick="like(this, {{element.id}}, {{resource.id}})" name="unlike">
-                                                                        <i class="fa fa-bookmark liked" name="resource_liked{{resource.id}}"></i>
+                                                                        <i class="fa fa-bookmark liked"
+                                                                           title="{% trans 'Click to unlike the resource' %}"
+                                                                           name="resource_liked{{resource.id}}"></i>
                                                                     </a>
                                                                 {% endif %}
                                                             </div>

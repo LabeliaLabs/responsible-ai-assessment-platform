@@ -852,7 +852,7 @@ def treat_resources(request):
     from the field. Otherway, the user liked it and the resource is added to the field.
     """
     resource_id = request.POST.dict().get("resource_id")
-    data_update = {"success": False}
+    data_update = {"success": False, "no_resource_liked": False}
     try:
         resource = ExternalLink.objects.get(id=resource_id)
     except KeyError as e:
@@ -870,6 +870,8 @@ def treat_resources(request):
         user_r.save()
         data_update["success"] = True
         data_update["like"] = False
+        if len(list(user_r.resources.all())) == 0:
+            data_update["no_resource_liked"] = True
     # Case the resource is not liked so the user likes it and we add the resource to the m2m field resources
     elif resource not in user_resources:
         # Add the resource to the field, do not create duplicate if it is already
