@@ -38,7 +38,7 @@
       <a class="navbar-brand" title="home" href="{% url 'home:homepage' %}" style="color: #FFF;">
           <img class="logo-navbar" src="{% static 'image/Substra Foundation_Logo horizontal_fond.png' %}">
       </a>
-      <button class="navbar-toggler btn-primary" type="button" data-toggle="collapse"
+      <button class="navbar-toggler icon-navbar" type="button" data-toggle="collapse"
               data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
               aria-label="Toggle navigation" id="navbar-button">
         <i class="fa fa-bars" aria-hidden="true"></i>
@@ -46,34 +46,34 @@
       <div class="collapse navbar-collapse" id="navbarResponsive" >
         <ul class="navbar-nav ml-auto" >
             {% if user.is_authenticated %}
-                <li class="nav-item">
+                <li class="nav-item navbar-item">
                  <a class="nav-link" href="{% url 'home:user-profile' %}"
-                    id="navbar-link">{% trans "My dashboard" %}
+                    >{% trans "My dashboard" %}
                  </a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item navbar-item">
                     <a class="nav-link" href="{% url 'home:resources' %}"
                     >{% trans "Resources" %}</a>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item navbar-item">
                  <a class="nav-link" href="{% url 'home:logout' %}"
                     >{% trans "Logout" %}
                  </a>
                 </li>
             {% else %}
-                <li class="nav-item">
+                <li class="nav-item navbar-item">
                     <a class="nav-link" href="{% url 'home:about' %}"
                         >{% trans "About" %}
                     </a>
                 </li>
                 {% if request.get_full_path == "/signup/" or request.get_full_path == "/legal-notices/" or request.get_full_path == "/about/"%}
-                <li class="nav-item">
+                <li class="nav-item navbar-item">
                  <a class="nav-link" href="{% url 'home:login' %}"
                     >{% trans "Login" %}
                  </a>
                 </li>
                 {% else %}
-                    <li class="nav-item">
+                    <li class="nav-item navbar-item">
                          <a class="nav-link" data-toggle="modal" href="{% url 'home:homepage' %}"
                             data-target="#modal-login-user" >{% trans "Login" %}</a>
                     </li>

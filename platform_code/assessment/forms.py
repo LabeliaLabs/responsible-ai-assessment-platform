@@ -168,7 +168,8 @@ class EvaluationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(EvaluationForm, self).__init__(*args, **kwargs)
         self.fields["name"].label = _("Evaluation title")
-        self.fields["name"].widget.attrs = {"class": "name-eval-field"}
+        self.fields["name"].widget.attrs = {"class": "full-width"}
+
 
 
 # organisation_choices = get_tuple_all_organisation_choices()
@@ -194,6 +195,8 @@ class EvaluationMutliOrgaForm(ModelForm):
             membership__user=user, membership__role="admin"
         )
         self.fields["organisation"].queryset = queryset
+        self.fields["name"].widget.attrs = {"class": "full-width"}
+        self.fields["organisation"].widget.attrs = {"class": "full-width"}
 
 
 class ChoiceForm(ModelForm):

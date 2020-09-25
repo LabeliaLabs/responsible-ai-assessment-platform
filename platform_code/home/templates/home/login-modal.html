@@ -13,28 +13,33 @@
       <p>{% trans "Please login to see this page." %}</p>
     {% endif %}
   {% endif %}
-    <form id="user_login_form" method='post' class="form" role="form">
+    <form id="user_login_form" method='post' class="form " role="form">
         <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">{% trans "Login" %}</h4>
+            <h4 class="modal-title absolute-position" id="myModalLabel">{% trans "Login" %}</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <div class="modal-body modal-body-2-cols">
-            {% csrf_token %}
-            <p style="margin-left:25%">{{ login_form.username.label_tag }}</p>
-            <p >{{ login_form.username }}</p>
+        <div class="modal-body create-form">
+            <div class="column">
+                {% csrf_token %}
+                <span class="margin-right: 9em;">{{ login_form.username.label_tag }}</span>
+                <p >{{ login_form.username }}</p>
+                <span class="margin-right: 5em;">{{ login_form.password.label_tag }}</span>
+                <p>{{ login_form.password }}</p>
+                <div class="modal-footer row" >
+                    <div>
+                        <input type="submit" class="btn btn-primary same-size-280" value="{% trans 'Validate' %}" style="margin: auto" />
+                    </div>
+                    <div class="margin-10">
+                        <input type="hidden" name="next" value="{{ next }}" />
+                        <a class="btn btn-blue same-size-280" type="button" href="{% url 'home:signup' %}">{% trans "I haven't an account" %}</a>
+                    </div>
 
-
-            <p style="margin-left:25%">{{ login_form.password.label_tag }}</p>
-            <p>{{ login_form.password }}</p>
-
-
-        </div>
-        <div class="modal-footer">
-            <input type="submit" class="btn btn-primary same-size-280" value="{% trans 'Validate' %}" style="margin: auto" />
-            <input type="hidden" name="next" value="{{ next }}" />
-          <a class="btn btn-danger same-size-280" type="button" href="{% url 'home:signup' %}">{% trans "I haven't an account" %}</a>
-
+                </div>
+                <div class="password-forgotten">
+                    <a href="{% url 'home:password_reset' %}">{% trans "Forgotten password?" %}</a>
+                </div>
+            </div>
         </div>
     </form>
-    <a href="{% url 'home:password_reset' %}">{% trans "Forgotten password?" %}</a>
+
 </div>

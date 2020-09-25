@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 15:41+0200\n"
+"POT-Creation-Date: 2020-09-25 16:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,11 +74,11 @@ msgstr ""
 # "Le json doit contenir les id des choix comme clés ('1.1.a' par exemple) "
 # "et les poids comme valeur"
 #: .\platform_code\assessment\forms.py:170
-#: .\platform_code\assessment\forms.py:190
+#: .\platform_code\assessment\forms.py:191
 msgid "Evaluation title"
 msgstr "Titre de l'évaluation"
 
-#: .\platform_code\assessment\forms.py:192
+#: .\platform_code\assessment\forms.py:193
 #: .\platform_code\assessment\templates\assessment\evaluation.html:17
 #: .\platform_code\assessment\templates\assessment\organisation.html:11
 #: .\platform_code\assessment\templates\assessment\section.html:21
@@ -87,46 +87,46 @@ msgstr "Titre de l'évaluation"
 msgid "Organisation"
 msgstr "Organisation"
 
-#: .\platform_code\assessment\forms.py:244
-#: .\platform_code\assessment\forms.py:260
-#: .\platform_code\assessment\forms.py:458
+#: .\platform_code\assessment\forms.py:247
+#: .\platform_code\assessment\forms.py:263
+#: .\platform_code\assessment\forms.py:461
 msgid "My notes"
 msgstr "Mes notes"
 
-#: .\platform_code\assessment\forms.py:365
-#: .\platform_code\assessment\forms.py:392
+#: .\platform_code\assessment\forms.py:368
+#: .\platform_code\assessment\forms.py:395
 msgid "Your feedback"
 msgstr "Votre feedback"
 
-#: .\platform_code\assessment\forms.py:372
-#: .\platform_code\assessment\forms.py:399
+#: .\platform_code\assessment\forms.py:375
+#: .\platform_code\assessment\forms.py:402
 msgid "My feedback"
 msgstr "Mon feedback"
 
-#: .\platform_code\assessment\templates\assessment\base-card-section.html:36
+#: .\platform_code\assessment\templates\assessment\base-card-section.html:37
 #: .\platform_code\assessment\templates\assessment\evaluation.html:32
 #: .\platform_code\assessment\templates\assessment\evaluation.html:36
 #, python-format
 msgid "%(progression)s%% done"
 msgstr "La progression est de %(progression)s%%"
 
-#: .\platform_code\assessment\templates\assessment\base-card-section.html:39
+#: .\platform_code\assessment\templates\assessment\base-card-section.html:40
 #, python-format
 msgid "%(progression)s%% done "
 msgstr "La progression est de %(progression)s%%"
 
-#: .\platform_code\assessment\templates\assessment\base-card-section.html:43
-#: .\platform_code\assessment\templates\assessment\base-card-section.html:44
+#: .\platform_code\assessment\templates\assessment\base-card-section.html:46
+#: .\platform_code\assessment\templates\assessment\base-card-section.html:47
 #, python-format
 msgid "%(name)s"
 msgstr "%(name)s"
 
-#: .\platform_code\assessment\templates\assessment\base-card-section.html:63
+#: .\platform_code\assessment\templates\assessment\base-card-section.html:67
 #, python-format
 msgid "%(description)s"
 msgstr "%(description)s"
 
-#: .\platform_code\assessment\templates\assessment\base-card-section.html:65
+#: .\platform_code\assessment\templates\assessment\base-card-section.html:69
 msgid "Go to the section"
 msgstr "Aller à la section"
 
@@ -184,8 +184,8 @@ msgstr "Réinitialiser les réponses"
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:148
 #: .\platform_code\assessment\templates\assessment\content-section.html:152
-#: .\platform_code\home\templates\home\login-modal.html:33
-#: .\platform_code\home\templates\home\login.html:50
+#: .\platform_code\home\templates\home\login-modal.html:30
+#: .\platform_code\home\templates\home\login.html:57
 msgid "Validate"
 msgstr "Valider"
 
@@ -214,28 +214,28 @@ msgid "Click to unlike the resource"
 msgstr "Cliquez pour retirer la ressource de vos favoris"
 
 #: .\platform_code\assessment\templates\assessment\creation-evaluation-modal.html:7
-#: .\platform_code\assessment\templates\assessment\creation-evaluation-modal.html:22
+#: .\platform_code\assessment\templates\assessment\creation-evaluation-modal.html:25
 #: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:6
-#: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:22
+#: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:25
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:10
 msgid "Create a new evaluation"
 msgstr "Créer une nouvelle évaluation"
 
-#: .\platform_code\assessment\templates\assessment\creation-evaluation-modal.html:17
-#: .\platform_code\assessment\templates\assessment\creation-evaluation.html:19
-#: .\platform_code\assessment\templates\assessment\evaluation.html:45
+#: .\platform_code\assessment\templates\assessment\creation-evaluation-modal.html:18
+#: .\platform_code\assessment\templates\assessment\creation-evaluation.html:21
+#: .\platform_code\assessment\templates\assessment\evaluation.html:42
 #: .\platform_code\assessment\templates\assessment\orga-evaluation.html:12
-#: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:16
+#: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:17
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:19
 msgid "Version"
 msgstr "Version"
 
-#: .\platform_code\assessment\templates\assessment\creation-evaluation-modal.html:25
+#: .\platform_code\assessment\templates\assessment\creation-evaluation-modal.html:29
 #: .\platform_code\assessment\templates\assessment\deletion-evaluation.html:17
 #: .\platform_code\assessment\templates\assessment\upgrade-modal.html:21
-#: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:24
+#: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:29
 #: .\platform_code\home\templates\home\logout-page.html:10
-#: .\platform_code\home\templates\home\profile-orga-creation-modal.html:20
+#: .\platform_code\home\templates\home\profile-orga-creation-modal.html:28
 #: .\platform_code\home\templates\home\registration\password_reset_form.html:13
 msgid "Cancel"
 msgstr "Annuler"
@@ -244,7 +244,7 @@ msgstr "Annuler"
 msgid "Evaluation creation"
 msgstr "Création de l'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\creation-evaluation.html:25
+#: .\platform_code\assessment\templates\assessment\creation-evaluation.html:27
 msgid "Create the evaluation"
 msgstr "Créer l'évaluation"
 
@@ -289,27 +289,26 @@ msgstr "Tableau de bord"
 msgid "Evaluation"
 msgstr "Evaluation"
 
-#: .\platform_code\assessment\templates\assessment\evaluation.html:44
+#: .\platform_code\assessment\templates\assessment\evaluation.html:41
 msgid "Creation date:"
 msgstr "Créée le"
 
-#: .\platform_code\assessment\templates\assessment\evaluation.html:61
-#: .\platform_code\assessment\templates\assessment\evaluation.html:67
+#: .\platform_code\assessment\templates\assessment\evaluation.html:58
+#: .\platform_code\assessment\templates\assessment\evaluation.html:64
 #: .\platform_code\assessment\templates\assessment\section.html:45
 #: .\platform_code\assessment\templates\assessment\section.html:50
 #: .\platform_code\assessment\templates\assessment\section.html:58
 msgid "Validate and see the results"
 msgstr "Valider et voir les résultats"
 
-#: .\platform_code\assessment\templates\assessment\evaluation.html:68
-#: .\platform_code\assessment\templates\assessment\evaluation.html:69
+#: .\platform_code\assessment\templates\assessment\evaluation.html:65
+#: .\platform_code\assessment\templates\assessment\evaluation.html:66
 #: .\platform_code\assessment\templates\assessment\section.html:59
 #: .\platform_code\assessment\templates\assessment\section.html:60
-msgid ""
-"(info) Please you have to finish the evaluation before it can be validated"
-msgstr "(info bulle) Veuillez finir l'évaluation avant de pouvoir la valider"
+msgid "Please you have to finish the evaluation before it can be validated"
+msgstr "Veuillez finir l'évaluation avant de pouvoir la valider"
 
-#: .\platform_code\assessment\templates\assessment\evaluation.html:75
+#: .\platform_code\assessment\templates\assessment\evaluation.html:72
 msgid "Back to the organisation"
 msgstr "Retour à l'organisation"
 
@@ -370,22 +369,22 @@ msgstr "En cours de progression"
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:64
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:82
 msgid "Results"
-msgstr ""
+msgstr "Résulats"
 
 #: .\platform_code\assessment\templates\assessment\orga-evaluation.html:58
 #: .\platform_code\assessment\templates\assessment\orga-evaluation.html:65
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:67
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:74
-msgid "upgrade"
-msgstr ""
+msgid "Upgrade"
+msgstr "Mise à jour"
 
 #: .\platform_code\assessment\templates\assessment\orga-evaluation.html:62
 #: .\platform_code\assessment\templates\assessment\orga-evaluation.html:86
 #: .\platform_code\assessment\templates\assessment\results.html:58
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:71
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:86
-#: .\platform_code\home\templates\home\settings-data.html:29
-#: .\platform_code\home\templates\home\settings-password.html:46
+#: .\platform_code\home\templates\home\settings-data.html:20
+#: .\platform_code\home\templates\home\settings-password.html:27
 msgid "Modify"
 msgstr "Modifier"
 
@@ -499,15 +498,15 @@ msgstr "Retour aux différentes sections"
 
 #: .\platform_code\assessment\templates\assessment\upgrade-banner.html:4
 msgid "Your evaluation version is not up to date. Do you want to"
-msgstr ""
+msgstr "Votre évaluation n'est aps à jour, une nouvelle version existe. Voulez-vous la"
 
 #: .\platform_code\assessment\templates\assessment\upgrade-banner.html:6
 msgid " upgrade"
-msgstr ""
+msgstr " mettre à jour"
 
 #: .\platform_code\assessment\templates\assessment\upgrade-banner.html:6
 msgid "? Your answers will be preserved."
-msgstr ""
+msgstr " ? Cela créera une nouvelle évaluation avec vos réponses actuelles."
 
 #: .\platform_code\assessment\templates\assessment\upgrade-modal.html:7
 msgid "Upgrade the evaluation"
@@ -637,22 +636,22 @@ msgstr "Anglais"
 msgid "French"
 msgstr "Français"
 
-#: .\platform_code\home\forms.py:16 .\platform_code\home\forms.py:63
-#: .\platform_code\home\forms.py:78
+#: .\platform_code\home\forms.py:16 .\platform_code\home\forms.py:67
+#: .\platform_code\home\forms.py:82
 msgid "First_name"
 msgstr "Prénom"
 
-#: .\platform_code\home\forms.py:19 .\platform_code\home\forms.py:64
+#: .\platform_code\home\forms.py:19 .\platform_code\home\forms.py:68
 msgid "Last_name"
 msgstr "Nom"
 
-#: .\platform_code\home\forms.py:22 .\platform_code\home\forms.py:120
+#: .\platform_code\home\forms.py:22 .\platform_code\home\forms.py:124
 #: .\platform_code\home\templates\home\profile-settings.html:19
 msgid "Password"
 msgstr "Mot de passe"
 
 #: .\platform_code\home\forms.py:26
-#: .\platform_code\home\templates\home\settings-password.html:30
+#: .\platform_code\home\templates\home\settings-password.html:7
 #: .\platform_code\home\templates\home\signup.html:23
 msgid ""
 "Your password must contain at least 8 characters, with at least one number "
@@ -677,15 +676,15 @@ msgstr "Pays"
 msgid "Sector"
 msgstr "Secteur"
 
-#: .\platform_code\home\forms.py:102
+#: .\platform_code\home\forms.py:106
 msgid "email is taken"
 msgstr "l'email est déjà pris"
 
-#: .\platform_code\home\forms.py:110 .\platform_code\home\forms.py:134
+#: .\platform_code\home\forms.py:114 .\platform_code\home\forms.py:138
 msgid "Passwords don't match"
 msgstr "Votre mot de passe est erroné"
 
-#: .\platform_code\home\forms.py:122
+#: .\platform_code\home\forms.py:126
 msgid "Password confirmation"
 msgstr "Confirmation du mot de passe"
 
@@ -705,8 +704,14 @@ msgstr "Prénom"
 msgid "last name"
 msgstr "Nom"
 
-#: .\platform_code\home\templates\home\homepage.html:21
-#: .\platform_code\home\templates\home\homepage.html:71
+#: .\platform_code\home\templates\home\homepage.html:22
+#: .\platform_code\home\templates\home\homepage.html:76
+#: .\platform_code\templates\base-evaluation.html:51
+msgid "My dashboard"
+msgstr "Votre tableau de bord"
+
+#: .\platform_code\home\templates\home\homepage.html:24
+#: .\platform_code\home\templates\home\homepage.html:78
 msgid "I register"
 msgstr "Je m'inscris"
 
@@ -728,13 +733,13 @@ msgstr "Veuillez vous connecter pour accéder à cette page"
 msgid "Login"
 msgstr "Connexion"
 
-#: .\platform_code\home\templates\home\login-modal.html:35
-#: .\platform_code\home\templates\home\login.html:53
+#: .\platform_code\home\templates\home\login-modal.html:34
+#: .\platform_code\home\templates\home\login.html:62
 msgid "I haven't an account"
 msgstr "Je n'ai pas de compte"
 
 #: .\platform_code\home\templates\home\login-modal.html:39
-#: .\platform_code\home\templates\home\login.html:61
+#: .\platform_code\home\templates\home\login.html:70
 msgid "Forgotten password?"
 msgstr "Mot de passe oublié ?"
 
@@ -810,7 +815,7 @@ msgstr "Nombre d'évaluations terminées : "
 msgid "Go to the organisation"
 msgstr "Aller à l'organisation"
 
-#: .\platform_code\home\templates\home\profile-orga-creation-modal.html:19
+#: .\platform_code\home\templates\home\profile-orga-creation-modal.html:24
 msgid "Create the organisation"
 msgstr "Créer l'organisation"
 
@@ -818,15 +823,15 @@ msgstr "Créer l'organisation"
 msgid "Organisation creation"
 msgstr "Création de l'organisation"
 
-#: .\platform_code\home\templates\home\profile-organisation-creation.html:37
+#: .\platform_code\home\templates\home\profile-organisation-creation.html:40
 msgid "Create"
 msgstr "Créer"
 
-#: .\platform_code\home\templates\home\profile-organisation-creation.html:43
+#: .\platform_code\home\templates\home\profile-organisation-creation.html:48
 msgid "Pass"
 msgstr "Passer"
 
-#: .\platform_code\home\templates\home\profile-organisation-creation.html:47
+#: .\platform_code\home\templates\home\profile-organisation-creation.html:52
 msgid "Back"
 msgstr "Retour"
 
@@ -897,8 +902,10 @@ msgstr "Changer mon mot de passe"
 msgid ""
 "We've emailed you instructions for setting your password, if an account "
 "exists with the email you entered."
-msgstr "Nous vous avons envoyé un email contenant les instructions pour réinitialiser votre mot de passe"
-" à l'adresse mail renseignée, si celle-ci est liée à un compte."
+msgstr ""
+"Nous vous avons envoyé un email contenant les instructions pour "
+"réinitialiser votre mot de passe à l'adresse mail renseignée, si celle-ci "
+"est liée à un compte."
 
 #: .\platform_code\home\templates\home\registration\password_reset_done.html:8
 msgid "You should receive them shortly."
@@ -908,22 +915,27 @@ msgstr "Vous devriez le recevoir rapidement."
 msgid ""
 "If you don't receive an email, please make sure you've entered the address "
 "you registered with, and check your spam folder."
-msgstr "Si vous ne recevez pas l'email, vérifiez que vous avez correctement entré votre adresse email "
-"et regardez dans vos emails indésirables."
+msgstr ""
+"Si vous ne recevez pas l'email, vérifiez que vous avez correctement entré "
+"votre adresse email et regardez dans vos emails indésirables."
 
 #: .\platform_code\home\templates\home\registration\password_reset_email.html:6
 msgid ""
 "We received a request to reset the password for your account on Substra "
 "Foundation for this email address. To initiate the password reset process "
 "for your account, click the link below."
-msgstr "Nous avons reçu une demande de réinitialisation de mot de passe pour le compte Substra Foundation lié à "
-"cette adresse email. Pour intilialiser l'opération, cliquez sur le lien ci-dessous."
+msgstr ""
+"Nous avons reçu une demande de réinitialisation de mot de passe pour le "
+"compte Substra Foundation lié à cette adresse email. Pour intilialiser "
+"l'opération, cliquez sur le lien ci-dessous."
 
 #: .\platform_code\home\templates\home\registration\password_reset_email.html:10
 msgid ""
 "If clicking the link above doesn't work, please copy and paste the URL in a "
 "new browser window instead."
-msgstr "Si le lien ne fonctionne pas, veuillez le copier et le coller dans l'URL d'une nouelle fenêtre."
+msgstr ""
+"Si le lien ne fonctionne pas, veuillez le copier et le coller dans l'URL "
+"d'une nouelle fenêtre."
 
 #: .\platform_code\home\templates\home\registration\password_reset_email.html:12
 msgid "Sincerely,"
@@ -949,7 +961,7 @@ msgstr "Réinitialiser le mot de passe - Substra"
 msgid "My information"
 msgstr "Vos informations"
 
-#: .\platform_code\home\templates\home\settings-data.html:19
+#: .\platform_code\home\templates\home\settings-data.html:16
 #, python-format
 msgid "%(tag)s"
 msgstr "%(tag)s"
@@ -959,7 +971,7 @@ msgid "Are you sure you want to delete your account?"
 msgstr "Etes-vous sûr de vouloir supprimer votre compte ?"
 
 #: .\platform_code\home\templates\home\settings-delete.html:9
-#: .\platform_code\home\templates\home\settings-delete.html:27
+#: .\platform_code\home\templates\home\settings-delete.html:26
 msgid ""
 "The organisations you are the only admin member will be deleted, as well as "
 "their evaluations."
@@ -968,22 +980,22 @@ msgstr ""
 "administrateur ainsi que les évaluations associées."
 
 #: .\platform_code\home\templates\home\settings-delete.html:12
-msgid "Yes, I'm sure"
-msgstr "Oui"
-
-#: .\platform_code\home\templates\home\settings-delete.html:14
 msgid "No, back to my account"
 msgstr "Non, retour à mes informations"
 
-#: .\platform_code\home\templates\home\settings-delete.html:23
+#: .\platform_code\home\templates\home\settings-delete.html:13
+msgid "Yes, I'm sure"
+msgstr "Oui"
+
+#: .\platform_code\home\templates\home\settings-delete.html:22
 msgid "Are you really sure you want to delete your account?"
 msgstr "Etes-vous sûr de vouloir supprimer votre compte ?"
 
-#: .\platform_code\home\templates\home\settings-delete.html:30
+#: .\platform_code\home\templates\home\settings-delete.html:29
 msgid "Go back"
 msgstr "Retour"
 
-#: .\platform_code\home\templates\home\settings-delete.html:31
+#: .\platform_code\home\templates\home\settings-delete.html:30
 msgid "Delete my account"
 msgstr "Supprimer mon compte"
 
@@ -1006,7 +1018,7 @@ msgid "Change password"
 msgstr "Changer mon mot de passe"
 
 #: .\platform_code\home\templates\home\signup.html:6
-#: .\platform_code\home\templates\home\signup.html:33
+#: .\platform_code\home\templates\home\signup.html:34
 #: .\platform_code\templates\base-evaluation.html:106
 msgid "Sign up"
 msgstr "Création du compte"
@@ -1073,10 +1085,6 @@ msgid ""
 msgstr ""
 "Vous devez d'abord créer votre organisation avant de pouvoir faire une "
 "évaluation."
-
-#: .\platform_code\templates\base-evaluation.html:51
-msgid "My dashboard"
-msgstr "Votre tableau de bord"
 
 #: .\platform_code\templates\base-evaluation.html:66
 #: .\platform_code\templates\base-evaluation.html:111

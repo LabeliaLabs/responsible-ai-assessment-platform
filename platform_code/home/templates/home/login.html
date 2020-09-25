@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div class="login container">
+<div class="login container form-center" >
 <!--    I don't know why it is not working -> TODO but manage by messages-->
     {% if login_form.errors %}
     <p>{% trans "Your email and password didn't match. Please try again." %}</p>
@@ -32,34 +32,42 @@
             <div class="alert {{message|get_key_by_position:0}}">{{message|get_value_by_position:0}} </div>
 
         {% endif %}
-        <div class="body">
+        <div class="body margin-50 ">
             {% csrf_token %}
             <table>
-              <tr>
-                <td>{{ login_form.username.label_tag }}</td>
-                <td>{{ login_form.username }}</td>
+              <tr >
+                <td class="margin-50">{{ login_form.username.label_tag }}</td>
               </tr>
-              <tr>
-                <td>{{ login_form.password.label_tag }}</td>
-                <td>{{ login_form.password }}</td>
+                <tr class="spaceUnder">
+                    <td class="margin-50">{{ login_form.username }}</td>
+                </tr>
+              <tr >
+                <td class="margin-50">{{ login_form.password.label_tag }}</td>
+
               </tr>
+                <tr class="spaceUnder" >
+                    <td class="margin-50">{{ login_form.password }}</td>
+                </tr>
             </table>
 
         </div>
-        <div class="margin-50">
-            <input type="submit" class="btn btn-primary same-size-280" value="{% trans 'Validate' %}" style="margin: auto" />
-            <input type="hidden" name="next" value="{{ next }}" />
-          <a class="btn btn-danger same-size-280" type="button"
-             href="{% url 'home:signup' %}">{% trans "I haven't an account" %}</a>
+        <div class="margin-50 row" style="columns: 1">
+            <div class="column">
+                <div>
+                    <input type="submit" class="btn btn-primary same-size-280" value="{% trans 'Validate' %}" style="margin: auto" />
+                </div>
+                <div class="margin-10">
+                    <input type="hidden" name="next" value="{{ next }}" />
+                    <a class="btn btn-blue same-size-280" type="button"
+                         href="{% url 'home:signup' %}">{% trans "I haven't an account" %}</a>
+                </div>
+            </div>
 
         </div>
     </form>
 
-    <div class="margin-10">
-        <form action="{% url 'home:password_reset' %}"  >
-            <button onclick="submit" class="btn btn-primary float-right same-size-280 "
-                >{% trans 'Forgotten password?' %}</button>
-    </form>
+    <div class="margin-10 center">
+        <a href="{% url 'home:password_reset' %}">{% trans "Forgotten password?" %}</a>
     </div>
 </div>
 

@@ -18,17 +18,6 @@ h1{
     text-align: center;
 }
 
-.same-size-220{
-    width: 220px;
-}
-
-.same-size-250{
-    width: 250px;
-}
-
-.same-size-280{
-    width: 280px;
-}
 
 .modal-backdrop.show {
     opacity: 0;

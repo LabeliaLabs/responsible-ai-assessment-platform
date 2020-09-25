@@ -4,7 +4,8 @@ body{
     font-style: normal;
     font-size: 18px;
     line-height: 1.2em;
-    color: #4b6073;
+/*    color: #4b6073;*/
+    color :  #4D566B;
     position: relative;
     height: 100vh;
     display: flex;
@@ -35,7 +36,7 @@ h1 {
     margin: 0 auto;
     margin-top: 50px;
     margin-bottom: 50px;
-    color: #293484;
+    color: #1962E5;
     position:relative;
     font-size: 2rem;
 }
@@ -87,8 +88,40 @@ a:hover {
     margin-bottom: 20px;
 }
 
+.margin-auto{
+    margin: auto;
+}
+
+.margin-left-signup{
+    margin-left: 10%;
+}
+
 .center{
     text-align: center;
+}
+
+.same-size-220{
+    width: 220px;
+}
+
+.same-size-250{
+    width: 250px;
+}
+
+.same-size-280{
+    width: 280px;
+}
+
+.width-35{
+    width: 35%
+}
+
+.full-width{
+    width: 100%;
+}
+
+.absolute-position{
+    position: absolute;
 }
 
 /***** END GLOBAL PROPERTIES *****/
@@ -119,7 +152,7 @@ a:hover {
   width: 100px;
   display: block;
   background: #79A70A;
-  background: linear-gradient(#9BC90D 0%, #79A70A 100%);
+  background: linear-gradient(#FF7364 0%, #CF5D51 100%);
   box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
   position: absolute;
   top: 19px; left: -21px;
@@ -166,7 +199,7 @@ a:hover {
      width: 150px;
 }
 
-.nav-item a{
+.navbar-item a{
     color: #5550FF;
     font-size: 16px;
 }
@@ -186,6 +219,14 @@ body.navbar-is-fixed-top {
 
 .navbar-nav .nav-link{
     float: right;
+}
+
+.icon-navbar{
+    border: solid 2px lightgrey;
+}
+
+.fa-bars{
+    color: #5550ff;
 }
 
 /******* END NAVBAR ********/
@@ -215,10 +256,6 @@ body.navbar-is-fixed-top {
     position: relative;
     margin-left: -50vw;
     left: 50%;
-}
-
-.margin-auto{
-    margin: auto;
 }
 
 .data{
@@ -339,14 +376,19 @@ li {
   margin: auto;
 }
 
-.grid-container-3-cols {
+.grid-2-cols-tooltip {
   display: grid;
-  grid-template-columns: 85% 10% 5%;
+  grid-template-columns: 60% 40%;
 }
 
 .grid-container-3-cols-signup {
   display: grid;
   grid-template-columns: 45% 45% 10%;
+}
+
+.grid-container-3-cols{
+    display: grid;
+    grid-template-columns: 75% 15% 8%;;
 }
 
 .grid-container-feedback-section {
@@ -357,6 +399,7 @@ li {
 .progress-bar-text{
     margin: auto;
     font-size: 10px;
+    color: #22242B;
 }
 
 /* Need to create special class for the sections in the resource list because no href to not reload the page */
@@ -391,7 +434,8 @@ h1 img {
 
 .form-input input{
     border-radius: 0.25em;
-    border-color: #FFBE3C;
+    border-color: lightsteelblue;
+    width: 90%;
 }
 
 .pagination a{
@@ -418,9 +462,17 @@ h1 img {
 }
 
 .btn-primary{
-    background-color: #FFBE3C;
-    border-color: #FFBE3C;
-    color: white;
+/*    background-color: #FFBE3C;
+    border-color: #FFBE3C;*/
+    background-color : #FCE180;
+    border-color: #FCE180;
+    color: #4D566B;
+}
+
+.btn-primary:hover {
+    background-color: #FAE8A7;
+    border-color: #FAE8A7;
+    color: #70788B;
 }
 
 .btn-modify{
@@ -451,13 +503,52 @@ h1 img {
     background-color: #5550FF;
 }
 
-.bottom-page-button{
+.btn-primary:disabled{
+    background-color: #FAE8A7;
+    border-color: #FAE8A7;
+    color: #70788B;
+}
+
+.bottom-page-button{  /* not sure it is still used*/
     margin-top: 20px;
     margin-bottom: 100px;
 }
 
 .center-button{
     align-item: center;
+}
+
+.btn-blue{
+    background-color: #91D3FF;
+    border-color: #91D3FF;
+    color: #4D566B;
+}
+
+.btn-blue:hover{
+   background-color: #B8DFFA;
+   border-color: #B8DFFA;
+   color: #70788B;
+}
+
+/* button in the profile and the organisation column */
+.profile-column{
+    background-color: #FCE180;
+    border-color: #FCE180;
+    color: #4D566B;
+    padding: 20px;
+    border-radius: .10rem;
+}
+
+a[name="column-button"].nav-link.active{
+    background-color: #91D3FF;
+    border-color: #91D3FF;
+    color: #4D566B;
+}
+
+a[name="column-button"]:hover{
+    background-color: #FAE8A7;
+    border-color: #FAE8A7;
+    color: #4D566B;
 }
 
 .btn-new{
@@ -483,10 +574,10 @@ h1 img {
 }
 
 .medium-button{
-    width: 90px;
+    width: 105px;
 }
 
-/***** END BOTTONS *****/
+/***** END BUTTONS *****/
 
 /***** PROGRESS BAR *****/
 
@@ -557,16 +648,17 @@ h1 img {
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
-.profile-column{
-    background-color: #FFBE3C;
-    border-color: #FFBE3C;
-    padding: 20px;
-    border-radius: .10rem;
-}
-
 .table-column-profile{
     margin-top: 100px;
     margin-bottom: 50px;
+}
+
+.table td{
+    padding: 0.5em;
+}
+
+tr.spaceUnder>td {
+  padding-bottom: 1em;
 }
 
 .title-column{
@@ -579,6 +671,10 @@ h1 img {
     max-width: min-content;
 }
 
+.password-forgotten{
+    margin-bottom: 10px;
+    font-size: 15px;
+}
 
 .title-pills{
     margin: 20px;
@@ -592,20 +688,46 @@ h1 img {
     grid-template-columns: repeat(2, 1fr);
     display: grid;
     grid-gap: 10px;
+    grid-template-columns: max-content;
     grid-auto-rows: minmax(70px, auto);
     text-align: left;
 }
 
+
+.margin-right-form{
+    margin-right: 9em;
+}
+/*
 .label-create-bis {
     grid-column: 1;
     grid-row: 1;
+}*/
+
+.form-center{
+    text-align: center;
+    text-align: -webkit-center; /* keep only one */
+    columns: 1;
+    margin: auto;
 }
 
+.change-password-form{
+    width: 40%;
+    columns: 1;
+}
+
+.create-form{
+    width: 50%;
+    columns: 1;
+    margin: auto;
+    text-align: center;
+}
+
+/*
 .name-eval-field-bis{
     grid-column: 2;
     grid-row: 1;
 }
-
+*/
 .text-form-bis {
     grid-column: 1;
     grid-row: 2;
@@ -732,6 +854,11 @@ h1 img {
 
 /******* MEDIA *******/
 
+@media screen and (min-width: 1200px) {
+    .column-right {
+       margin-left: -30px;
+    }
+}
 
 @media screen and (min-width: 768px) {
     .col-md-3-footer {
