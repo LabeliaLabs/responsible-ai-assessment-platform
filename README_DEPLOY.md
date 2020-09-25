@@ -78,6 +78,7 @@ curl 0.0.0.0:8000
 curl --insecure -I -k localhost:443
 # nginx logs path
 cat /var/log/nginx/access.log
+cat /var/log/nginx/error.log
 ```
 
 ## Certbot
