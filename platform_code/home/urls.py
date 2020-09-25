@@ -36,8 +36,8 @@ urlpatterns = [
                     views.PasswordReset.as_view(
                         template_name="home/registration/password_reset_form.html",
                         email_template_name="home/registration/password_reset_email.html",
-                        subject_template_name="home/registration/password_reset_subject.txt",
                         success_url=reverse_lazy("home:password_reset_done"),
+                        subject_template_name = "home/registration/password_reset_subject.txt",
                     ),
                     name="password_reset",
                 ),

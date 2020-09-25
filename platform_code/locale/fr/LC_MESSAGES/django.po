@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-25 14:52+0200\n"
+"POT-Creation-Date: 2020-09-25 15:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -236,6 +236,7 @@ msgstr "Version"
 #: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:24
 #: .\platform_code\home\templates\home\logout-page.html:10
 #: .\platform_code\home\templates\home\profile-orga-creation-modal.html:20
+#: .\platform_code\home\templates\home\registration\password_reset_form.html:13
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -720,6 +721,7 @@ msgstr "Veuillez vous connecter pour accéder à cette page"
 
 #: .\platform_code\home\templates\home\login-modal.html:18
 #: .\platform_code\home\templates\home\login.html:27
+#: .\platform_code\home\templates\home\registration\password_reset_complete.html:7
 #: .\platform_code\templates\base-evaluation.html:72
 #: .\platform_code\templates\base-evaluation.html:78
 #: .\platform_code\templates\base-evaluation.html:107
@@ -882,6 +884,67 @@ msgstr "Mes ressources"
 msgid "User settings"
 msgstr "Paramètres du compte"
 
+#: .\platform_code\home\templates\home\registration\password_reset_complete.html:6
+msgid "The password has been changed!"
+msgstr "Votre mot de passe a bien été changé !"
+
+#: .\platform_code\home\templates\home\registration\password_reset_confirm.html:8
+#: .\platform_code\home\templates\home\registration\password_reset_confirm.html:12
+msgid "Change the password"
+msgstr "Changer mon mot de passe"
+
+#: .\platform_code\home\templates\home\registration\password_reset_done.html:7
+msgid ""
+"We've emailed you instructions for setting your password, if an account "
+"exists with the email you entered."
+msgstr "Nous vous avons envoyé un email contenant les instructions pour réinitialiser votre mot de passe"
+" à l'adresse mail renseignée, si celle-ci est liée à un compte."
+
+#: .\platform_code\home\templates\home\registration\password_reset_done.html:8
+msgid "You should receive them shortly."
+msgstr "Vous devriez le recevoir rapidement."
+
+#: .\platform_code\home\templates\home\registration\password_reset_done.html:11
+msgid ""
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
+msgstr "Si vous ne recevez pas l'email, vérifiez que vous avez correctement entré votre adresse email "
+"et regardez dans vos emails indésirables."
+
+#: .\platform_code\home\templates\home\registration\password_reset_email.html:6
+msgid ""
+"We received a request to reset the password for your account on Substra "
+"Foundation for this email address. To initiate the password reset process "
+"for your account, click the link below."
+msgstr "Nous avons reçu une demande de réinitialisation de mot de passe pour le compte Substra Foundation lié à "
+"cette adresse email. Pour intilialiser l'opération, cliquez sur le lien ci-dessous."
+
+#: .\platform_code\home\templates\home\registration\password_reset_email.html:10
+msgid ""
+"If clicking the link above doesn't work, please copy and paste the URL in a "
+"new browser window instead."
+msgstr "Si le lien ne fonctionne pas, veuillez le copier et le coller dans l'URL d'une nouelle fenêtre."
+
+#: .\platform_code\home\templates\home\registration\password_reset_email.html:12
+msgid "Sincerely,"
+msgstr "Cordialement,"
+
+#: .\platform_code\home\templates\home\registration\password_reset_email.html:13
+msgid "The Substra Foundation Team"
+msgstr "L'équipe Substra Foundation"
+
+#: .\platform_code\home\templates\home\registration\password_reset_form.html:7
+msgid "Forgotten password"
+msgstr "Mot de passe oublié"
+
+#: .\platform_code\home\templates\home\registration\password_reset_form.html:12
+msgid "Reset"
+msgstr "Réinitialiser"
+
+#: .\platform_code\home\templates\home\registration\password_reset_subject.txt:3
+msgid "Reset password - Substra assessment"
+msgstr "Réinitialiser le mot de passe - Substra"
+
 #: .\platform_code\home\templates\home\settings-data.html:6
 msgid "My information"
 msgstr "Vos informations"
@@ -889,7 +952,7 @@ msgstr "Vos informations"
 #: .\platform_code\home\templates\home\settings-data.html:19
 #, python-format
 msgid "%(tag)s"
-msgstr ""
+msgstr "%(tag)s"
 
 #: .\platform_code\home\templates\home\settings-delete.html:7
 msgid "Are you sure you want to delete your account?"
@@ -1027,15 +1090,3 @@ msgstr "Mentions légales"
 #: .\platform_code\templates\errors.html:46
 msgid "Homepage"
 msgstr "Page d'accueil"
-
-#~ msgid "Back to the homepage"
-#~ msgstr "Retour à la page d'accueil"
-
-#~ msgid "See the results"
-#~ msgstr "Voir les résultats"
-
-#~ msgid "I don't find the section content coherent"
-#~ msgstr "Je trouve que cette section n'est pas cohérente"
-
-#~ msgid " Create a new organisation"
-#~ msgstr "Créer une nouvelle organisation"
