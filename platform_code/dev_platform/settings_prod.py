@@ -144,3 +144,11 @@ mimetypes.add_type("text/css", ".css", True)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ["assessment/static"]  # []
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+# Email configuration
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST_USER = os.getenv("EMAIL_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
+EMAIL_HOST = os.getenv("EMAIL_URL")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_USE_TLS = True

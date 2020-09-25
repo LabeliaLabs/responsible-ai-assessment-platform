@@ -23,5 +23,8 @@ PRIVATE_TOKEN=<CHANGE_ME> # https://framagit.org/substra-foundation/pf-assessmen
 PROJECT_ID=65925 # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/issues
 
 # Email
-EMAIL_HOST_USER=<CHANGE_ME>
-EMAIL_HOST_PASSWORD=<CHANGE_ME>
+EMAIL_USER=<CHANGE_ME>
+EMAIL_PASSWORD=<CHANGE_ME>
+EMAIL_URL=<CHANGE_ME>
+EMAIL_PORT=<CHANGE_ME> #587
+
