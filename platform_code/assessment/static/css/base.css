@@ -498,6 +498,18 @@ h1 img {
 
 /***** END PROGRESS BAR *****/
 
+
+/****** CARDS ORGA ******/
+
+.cards-orga {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-gap: 10px;
+    grid-auto-rows: minmax(70px, auto);
+}
+
+/****** END CARDS ORGA ******/
+
 .display-line{
     display: flex;
     align-items: center;
