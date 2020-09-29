@@ -51,11 +51,8 @@ sudo vi /etc/nginx/sites-available/preprod.assessment.substra.ai
 # Link it to the enabled websites
 sudo ln -s /etc/nginx/sites-available/preprod.assessment.substra.ai /etc/nginx/sites-enabled
 
-# Test config: will provide feedbacks in case of errors
-sudo nginx -t
-
-# Reload nginx: required if the configuration is updated
-sudo nginx -s reload
+# Test config & reload nginx: will provide feedbacks in case of errors
+sudo nginx -t && sudo nginx -s reload
 ```
 
 ### Debug
@@ -72,10 +69,16 @@ sudo lsof -P -i -n
 # Follow logs from container
 docker logs -f nginx
 docker logs -f web
+
 # GET on port 8000 & 443
 curl http://0.0.0.0:8000
 curl 0.0.0.0:8000
 curl --insecure -I -k localhost:443
+
+# From your local machine
+nmap -F preprod.assessment.substra.ai # Fast
+nmap -A preprod.assessment.substra.ai # longer
+
 # nginx logs path
 cat /var/log/nginx/access.log
 cat /var/log/nginx/error.log
@@ -128,6 +131,9 @@ sudo ufw allow https
 # Custom
 sudo ufw delete <ID>
 sudo ufw deny out <PORT>
+
+# Logs
+tail -f /var/log/ufw.log
 ```
 
 As of now, available applications:
@@ -155,6 +161,7 @@ You can load different settings when starting django with this:
 ```sh
 python manage.py runserver 0.0.0.0:8000 --settings=dev_platform.settings
 ```
+
 #### Translation
 
 Note that all the content should be written in english. Currently, the languages accepted are
