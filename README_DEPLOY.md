@@ -80,8 +80,8 @@ nmap -F preprod.assessment.substra.ai # Fast
 nmap -A preprod.assessment.substra.ai # longer
 
 # nginx logs path
-cat /var/log/nginx/access.log
-cat /var/log/nginx/error.log
+tail -f /var/log/nginx/access.log
+tail -f /var/log/nginx/error.log
 ```
 
 ## Certbot
