@@ -26,6 +26,7 @@ class UserAdmin(BaseUserAdmin):
     list_display = (
         "email",
         "admin",
+        "staff",
         "active",
         "first_name",
         "last_name",
