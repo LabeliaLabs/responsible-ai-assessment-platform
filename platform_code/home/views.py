@@ -4,10 +4,13 @@ import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import MultipleObjectsReturned
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.views import generic
-from django.contrib.auth.views import *
+from django.contrib.auth.views import (
+    login_required, LoginView, LogoutView, PasswordChangeForm, AuthenticationForm, auth_login,
+    FormView, update_session_auth_hash,
+    )
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import views as auth_views
@@ -77,13 +80,13 @@ def delete_user(request):
     if len(list_orga_user_is_admin) == 0:
         messages.success(request, _("Your account has been deleted"))
     elif len(list_orga_user_is_admin) == 1:
-        messages.success(request, _(f"Your account has been deleted as well as the organisation {list_orga_user_is_admin[0]} and its evaluations."))
+        messages.success(request, _(f"Your account has been deleted as well as"
+                                    f" the organisation {list_orga_user_is_admin[0]} and its evaluations."))
     else:
         messages.success(
             request,
-            _("Your account has been deleted as well as the organisations: {0} and their linked evaluations.").format(
-                str(list_orga_user_is_admin).replace("[", "").replace("]", "")
-            ),
+            _(f"Your account has been deleted as well as the organisations:"
+              f" {str(list_orga_user_is_admin).replace('[', '').replace(']', '')} and their linked evaluations."),
         )
     return redirect("home:homepage")
 
@@ -357,8 +360,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                         if last_version_in_organisation and \
                                 last_version_in_organisation < float(get_last_assessment_created().version):
                             print("fetch eval", eval)
-                            origin_assessment = get_object_or_404(Assessment,
-                                                                    version=str(last_version_in_organisation))
+                            origin_assessment = get_object_or_404(Assessment, version=str(last_version_in_organisation))
                             eval.fetch_the_evaluation(origin_assessment=origin_assessment)
                         # redirect to a new URL:
                         response = redirect(
@@ -443,7 +445,7 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
                     # data_update["message_success"] = _("Your personnal data have well been updated!")
                     data_update["message_success"] = "Vos données personnelles ont bien été mises à jour."
                 else:
-                    #data_update["message_fail"] = _("The validation failed. Please check you have well filled all the "
+                    # data_update["message_fail"] = _("The validation failed. Please check you have well filled all the"
                     #                                "fields")
                     data_update["message_fail"] = "La validation a échouée. Vérifiez que vous avez bien rempli" \
                                                   " tous les champs."
@@ -487,7 +489,6 @@ class OrganisationCreationView(LoginRequiredMixin, FormView):
     def post(self, request, *args, **kwargs):
         """If the form is valid, redirect to the supplied URL."""
         form = OrganisationCreationForm(request.POST)
-        dic_form = request.POST.dict()
         # check whether it's valid:
         if form.is_valid():
             user = request.user
@@ -537,7 +538,7 @@ def manage_message_login_page(request):
         }
         return message  # break the function
     # Case the user failed to provide a good combination of email and password
-    elif "/login/" in previous_url or previous_url == "http://127.0.0.1:8000/": # todo will need to be changed
+    elif "/login/" in previous_url or previous_url == "http://127.0.0.1:8000/":  # todo will need to be changed
         message = {
             # todo : solve bug translation
             "alert-warning": _("The attempt to connect with this combination email/password failed. Please try again!")
@@ -566,4 +567,3 @@ def organisation_required_message(context):
         # todo : solve bug translation
         "alert-warning": _("You first need to create your organisation before creating your evaluation.")
     }
-

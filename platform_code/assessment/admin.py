@@ -47,7 +47,7 @@ class PrettyJSONWidget(widgets.Textarea):
 class EvaluationElementWeightAdmin(admin.ModelAdmin):
     form = EvaluationElementWeightForm
     add_form = EvaluationElementWeightForm
-    formfield_overrides = {JSONField: {"widget": PrettyJSONWidget,}}
+    formfield_overrides = {JSONField: {"widget": PrettyJSONWidget, }}
 
 
 admin.site.register(MasterSection)
@@ -72,7 +72,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
     "multiple_version.md" to see the format). From this upgrade json, the table Upgrade is populated.
     """
 
-    # TODO refacto a little bit this function
+    # TODO refactor a little bit this function
     change_list_template = "assessment/import-json.html"
 
     def get_urls(self):
@@ -111,24 +111,22 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             # Process the import of the assessment
                             try:
                                 dict_data = json.loads(decoded_assessment_file)
-                            except:
+                            except json.JSONDecodeError as e:
                                 self.message_user(
                                     request,
-                                    "There is an issue in your json architecture. Please verify you file.",
+                                    f"There is an issue in your json architecture. Please verify you file. Error {e}",
                                     level=messages.ERROR,
                                 )
                                 return redirect("admin/")
                             # Process all the saving of the items (in import_assessment.py)
                             # If it fails, there is a message and a redirection to admin
                             try:
-                                (
-                                    assessment_success,
-                                    assessment_save_message,
-                                ) = treat_and_save_dictionary_data(dict_data)
-                            except:
-                                # todo delete the parts of the assessment created (if there are)
+                                assessment_success, assessment_save_message = treat_and_save_dictionary_data(dict_data)
+                            except (ValueError, KeyError) as e:
+                                # todo if it fails, no assessment should be created (and objects related to it)
                                 assessment_success = False
-                                assessment_save_message = "The import of the assessment failed. Please, verify your file."
+                                assessment_save_message = f"The import of the assessment failed. " \
+                                                          f"Please, verify your file. Error {e}"
                             if not assessment_success:
                                 self.message_user(
                                     request,
@@ -153,7 +151,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             )
                             if not upgrade_save_success:
                                 self.message_user(
-                                    request, upgrade_save_success, level=messages.ERROR,
+                                    request, upgrade_save_message, level=messages.ERROR,
                                 )
                                 return redirect("admin/")
 
@@ -174,15 +172,15 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                 level=messages.ERROR,
                             )
 
-                    # Else this is the first assessment that we ganna import so we don't need an upgrade_file
+                    # Else this is the first assessment that we are going to import so we don't need an upgrade_file
                     else:
                         # Process the import of the assessment
                         try:
                             dict_data = json.loads(decoded_assessment_file)
-                        except:
+                        except json.JSONDecodeError as e:
                             self.message_user(
                                 request,
-                                "There is an issue in your json architecture. Please verify you file.",
+                                f"There is an issue in your json architecture. Please verify you file. Error {e}",
                                 level=messages.ERROR,
                             )
                             return redirect("admin/")
@@ -192,10 +190,11 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                 assessment_success,
                                 assessment_save_message,
                             ) = treat_and_save_dictionary_data(dict_data)
-                        except:
+                        except (ValueError, KeyError) as e:
                             # todo delete the parts of the assessment created (if there are)
                             assessment_success = False
-                            assessment_save_message = "The import of the assessment failed. Please, verify your file."
+                            assessment_save_message = f"The import of the assessment failed." \
+                                                      f" Please, verify your file. Error {e}"
 
                         if not assessment_success:
                             self.message_user(
@@ -213,16 +212,14 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                 else:
                     self.message_user(
                         request,
-                        "Incorrect file type: {}".format(
-                            request.FILES["json_file"].name.split(".")[1]
-                        ),
+                        f"Incorrect file type: {request.FILES['json_file'].name.split('.')[1]}",
                         level=messages.ERROR,
                     )
 
         else:
             self.message_user(
                 request,
-                "There was an error in the form {}".format(JsonUploadForm.errors),
+                f"There was an error in the form {JsonUploadForm.errors}",
                 level=messages.ERROR,
             )
 
@@ -240,7 +237,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
         except UnicodeDecodeError as e:
             self.message_user(
                 request,
-                "There was an error decoding the file:{}".format(e),
+                f"There was an error decoding the file:{e}",
                 level=messages.ERROR,
             )
             return redirect("admin/")
@@ -257,7 +254,7 @@ class ScoringAdmin(admin.ModelAdmin):
     change_form_template = "assessment/import-json-scoring.html"
     form = ScoringSystemForm
     add_form = ScoringSystemForm
-    formfield_overrides = {JSONField: {"widget": PrettyJSONWidget,}}
+    formfield_overrides = {JSONField: {"widget": PrettyJSONWidget, }}
 
     def get_form(self, request, obj=None, **kwargs):
         """Get the form which will be displayed"""
@@ -273,7 +270,3 @@ class ScoringAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ScoringSystem, ScoringAdmin)
-from django.contrib import admin
-
-# Register your models here.
-

@@ -1,5 +1,7 @@
 import re
 
+from django.core.exceptions import ObjectDoesNotExist
+
 from .models import (
     Assessment,
     MasterChoice,
@@ -39,7 +41,8 @@ def treat_and_save_dictionary_data(dic):
                          f"('0.5', '1.0', etc). The version you provided was '{version}'")
     if get_last_assessment_created():
         if float(version) < float(get_last_assessment_created().version):
-            return success, f"The assessment version must not be smaller than the assessment versions already in the DB" \
+            return success, f"The assessment version must not be smaller than the" \
+                            f" assessment versions already in the DB" \
                             f"The new assessment version is {version} and the latest in th DB" \
                             f" is {get_last_assessment_created().version}"
     # Otherwise we can create the assessment
@@ -267,7 +270,9 @@ def check_object_within(object_type, object_assessment, dic_diff):
     message = ""
     if object_assessment.get_numbering() not in dic_diff[object_type].keys():
         success = False
-        message = f"The {object_type} {object_assessment.get_numbering()} of the assessment is not in the dictionary of differences for the version {dic_diff.keys()}, the {object_type} present are : {dic_diff[object_type].keys()}"
+        message = f"The {object_type} {object_assessment.get_numbering()} of" \
+                  f" the assessment is not in the dictionary of differences for" \
+                  f" the version {dic_diff.keys()}, the {object_type} present are : {dic_diff[object_type].keys()}"
 
     return success, message
 
@@ -301,8 +306,9 @@ def save_upgrade(dict_upgrade_data):
                 upgrade_json=list(dic_differences.values())[0],
             )
             upgrade.save()
-        except:
+        except ObjectDoesNotExist as e:
             success = False
-            message = f"The version {version} in the upgrade json is not an assessment version in the database."
+            message = f"The version {version} in the upgrade json is not an assessment version in the database. " \
+                      f"Error {e}"
 
     return success, message

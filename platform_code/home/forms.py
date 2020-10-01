@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm, _unicode_ci_compare
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import ReadOnlyPasswordHashField, PasswordResetForm
 
 from .models import User, Organisation
 
@@ -80,15 +81,11 @@ class DataSettingsForm(ModelForm):
         self.fields["first_name"].initial = user.first_name
         self.fields["last_name"].initial = user.last_name
         self.fields["first_name"].label = _("First_name")
-        #self.fields["last_name"].label = _("Last_name")  # todo do not work currently, I DON T KNOW WHY .....
+        # self.fields["last_name"].label = _("Last_name")  # todo do not work currently, I DON T KNOW WHY .....
         self.fields["last_name"].label = "Nom"
 
 
-
 # USER PART #
-
-
-from django.contrib.auth.forms import ReadOnlyPasswordHashField, PasswordResetForm
 
 
 class RegisterForm(forms.ModelForm):

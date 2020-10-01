@@ -85,7 +85,7 @@ DATABASES = {
         "ENGINE": os.environ.get("SQL_ENGINE", "django.db.backends.postgresql"),
         "NAME": os.environ.get("SQL_DATABASE", "platform_db"),
         "USER": os.environ.get("SQL_USER", "postgres"),
-        "PASSWORD": os.environ["SQL_PASSWORD"], # TODO change
+        "PASSWORD": os.environ["SQL_PASSWORD"],  # TODO change
         "HOST": os.environ.get("SQL_HOST", "localhost"),
         "PORT": os.environ.get("SQL_PORT", "5432"),
     }
@@ -147,4 +147,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Email configuration
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
