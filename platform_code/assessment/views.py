@@ -12,7 +12,6 @@ from datetime import datetime, timedelta
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.handlers import exception
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404, get_list_or_404, render
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
@@ -111,7 +110,7 @@ def upgradeView(request, *args, **kwargs):
             # todo logs
             new_eval = evaluation.upgrade(user=user)
             success = True
-        except ValueError as e:
+        except ValueError:
             # todo logs
             messages.warning(request, _("We are sorry, the operation failed."))
             url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
@@ -986,8 +985,9 @@ def treat_feedback(request, *args, **kwargs):
                         "Thank you for your feedback, it helps us a lot!"
                         " We will take it into consideration as soon as possible"
                     )
-            except:
+            except requests.exceptions.RequestException as e:
                 # todo logs
+                print(f"error in requests {e}")
                 pass
         else:
             data_update["message"] = _(
@@ -1045,12 +1045,12 @@ VIEW_ERRORS = {
         "title": _("404 - Page not found"),
         "content": _("Sorry, the page has not been found or does not exist !"),
     },
-    500: {"title": _("Internal error"), "content": _("An internal error occured"),},
+    500: {"title": _("Internal error"), "content": _("An internal error occured"), },
     403: {
         "title": _("Permission denied"),
         "content": _("Sorry, you can not access this content"),
     },
-    400: {"title": _("Bad request"), "content": _("There is an error in the request"),},
+    400: {"title": _("Bad request"), "content": _("There is an error in the request"), },
 }
 
 
@@ -1080,7 +1080,7 @@ def error_500_view_handler(request, exception=None):
 
 def error_403_view_handler(request, exception=None):
     messages.warning(request, _("You don't have access to this content."))
-    print("ERREUR 403")
+    print(f"ERREUR 403, {exception}")
     return HttpResponseRedirect("/home/")
     # return redirect("home:homepage")
     # return error_view_handler(request, exception, 403)

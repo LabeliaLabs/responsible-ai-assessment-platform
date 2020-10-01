@@ -1,10 +1,11 @@
 import json
-import re
 
 
 def check_and_valid_scoring_json(*args, **kwargs):
-    """This function is used when we import a json for the scoring
-    We need to check that the choices are the same that in the assessment"""
+    """
+    This function is used when we import a json for the scoring, in ScoringSystemForm.
+    We need to check that the choices are the same that in the assessment
+    """
 
     # Case: we test the json
     json_data = kwargs.get("decoded_file")
@@ -12,7 +13,6 @@ def check_and_valid_scoring_json(*args, **kwargs):
         dict_data = json.loads(json_data)
 
     assessment = kwargs.get("assessment")
-    print("ASSESSMENt", assessment.name)
 
     list_number = []
     count_choice = 0
@@ -25,15 +25,15 @@ def check_and_valid_scoring_json(*args, **kwargs):
                 count_choice += 1
                 # If the master choice is present in the assessment but not in the imported scoring file
                 if numbering not in dict_data.keys():
-                    raise ValueError("Il manque des choix dans le json", numbering)
+                    raise ValueError("Missing choice in the json", numbering)
 
                 # Check the values are numbers
                 try:
-                    value = float(dict_data[numbering])
+                    float(dict_data[numbering])
                 except ValueError as e:
                     # TODO add logs
                     print(
-                        f"Il faut que la valeur soit un nombre décimal, (exemple 0.5), erreur {e}",
+                        f"The scoring choice value must be convertible into a float like '0.5', error {e}",
                         numbering,
                         dict_data[numbering],
                     )

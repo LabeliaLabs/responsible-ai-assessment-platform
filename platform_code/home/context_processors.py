@@ -1,4 +1,3 @@
-from django.contrib.auth.views import *
 from django.contrib.auth.forms import AuthenticationForm
 
 

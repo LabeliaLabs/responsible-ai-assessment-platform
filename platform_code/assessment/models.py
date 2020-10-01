@@ -11,7 +11,6 @@ and the score.
 
 import random
 import re
-import json
 
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -19,7 +18,6 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.html import format_html
 
 from home.models import Organisation
 
@@ -161,15 +159,6 @@ class Evaluation(models.Model):
                 list_all_elements.append(element)
         return list_all_elements
 
-    def get_list_all_elements(self):
-        list_all_elements = []
-        for section in self.section_set.all().order_by("master_section__order_id"):
-            for element in section.evaluationelement_set.all().order_by(
-                "master_evaluation_element__order_id"
-            ):
-                list_all_elements.append(element)
-        return list_all_elements
-
     def create_evaluation_body(self):
         """
         Create the dynamic elements (section, evaluation elements, choices) for an evaluation after the being
@@ -298,7 +287,7 @@ class Evaluation(models.Model):
                     older_element_section_order_id = upgrade_dic["elements"][new_element_number][-3]
                     older_element = EvaluationElement.objects.get(
                         master_evaluation_element__order_id=older_element_order_id,
-                        section__master_section__order_id=older_element_section_order_id ,
+                        section__master_section__order_id=older_element_section_order_id,
                         section__evaluation=self,
                     )
                     new_element.user_notes = older_element.user_notes
@@ -340,15 +329,14 @@ class Evaluation(models.Model):
         # We assume the evaluation is not finished
         self.is_finished = False
         for section in list_section:
-            print("SECTION PROGRE", section.user_progression)
             if section.user_progression < 100:
                 break
         # If the loop for has no break (all section are 100 % done)
         else:
             self.is_finished = True
+            # If the field is empty, it is the first time the evaluation is finished so it is set to now
             if not self.finished_at:
                 self.finished_at = timezone.now()
-                self.save()
         self.save()
 
     def calculate_progression(self):
@@ -813,9 +801,8 @@ class EvaluationElement(models.Model):
         """False id the choice this evaluation element depends on is ticked, else True"""
         # print("IS APPLICABLE", self, self.has_condition_on())
         if self.has_condition_on():
-            # print("CHOICE", self.get_choice_depending_on(), "IS TICKED", self.get_choice_depending_on().is_ticked)
             choice = self.get_choice_depending_on()
-            if choice.is_ticked == True:
+            if choice.is_ticked:
                 return False
             else:
                 return True
@@ -823,14 +810,19 @@ class EvaluationElement(models.Model):
             return True
 
     def condition_on_other_elements(self):
-        """For this element, if one of his choice set conditions for other element, return True, else False"""
+        """
+        For this element, if one of his choice set conditions for other element,
+         return True, else False
+         """
         for choice in self.choice_set.all():
             if choice.has_element_conditioned_on():
                 return True
         return False
 
     def get_choice_setting_conditions_on_other_elements(self):
-        """ Get the choice setting conditions on other evaluation elements"""
+        """
+        Get the choice setting conditions on other evaluation elements
+        """
         for choice in self.choice_set.all():
             if choice.has_element_conditioned_on():
                 return choice
@@ -863,8 +855,9 @@ class EvaluationElement(models.Model):
 
     def are_conditions_between_choices_satisfied(self, list_choices_wanted_ticked):
         """
-        This function checks, for an evaluation element with conditions between choices, if the choices ticked are possible
-        regarding the conditions between the choices inside this evalution element, if there are conditions.
+        This function checks, for an evaluation element with conditions between choices,
+         if the choices ticked are possible
+        regarding the conditions between the choices inside this evaluation element, if there are conditions.
         Return True if the choices ticked respects the conditions, else False
 
         WARNING : list_choices_wanted_ticked is a list of string, not a list of choices !!
@@ -880,7 +873,8 @@ class EvaluationElement(models.Model):
         if self.has_condition_between_choices():
             # For all the choices of the evaluation element
             for choice in list_choices:
-                # If the choice has a condition on, we need to look if the choice setting the condition is not ticked
+                # If the choice has a condition on,
+                # we need to look if the choice setting the condition is not ticked
                 # or is not gonna be ticked with the POST request
                 if choice.has_condition_on():
                     # Get the choice which sets conditions on the current choice of the loop
@@ -899,7 +893,8 @@ class EvaluationElement(models.Model):
         """
         This method sets the points attribute of an evaluation element
         This is calculated by adding the weight of the choices set to True
-        and then by multiplying the sum by the weight of the evaluation element in the dic of EvaluationElementWeight
+        and then by multiplying the sum by the weight of the evaluation element in
+        the dic of EvaluationElementWeight
         """
         # dic_weight_choice = self.get_dic_weight_scoring_system()
         # dic_weight_element = self.get_dic_weight_evaluation_element()
@@ -978,7 +973,8 @@ class EvaluationElement(models.Model):
 
     def get_coeff_scoring(self):
         """
-        This method returns the coeff of the scoring system, used to know the percentage of points non concerned attributed
+        This method returns the coeff of the scoring system, used to know the percentage
+         of points non concerned attributed
         :return: float
         """
         scoring_system = self.get_scoring_system()
@@ -1094,7 +1090,6 @@ class EvaluationElement(models.Model):
         # If the choice is not applicable, this means that it is due to an answer in a previous evaluation element
         elif not self.is_applicable():
             # we just calculate the max possible points if the case would have been possible
-            # print("CHOICE NOT APPLI, POINTS NOT CONCERNED", self, self.calculate_max_points_if_concerned_by_everything())
             sum_points_not_concerned = (
                 self.calculate_max_points_if_concerned_by_everything()
             )

@@ -1,5 +1,4 @@
 from django import template
-from django.utils.html import format_html
 from home.models import Membership
 
 register = template.Library()

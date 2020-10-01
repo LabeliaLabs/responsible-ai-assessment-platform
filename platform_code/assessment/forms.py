@@ -1,4 +1,3 @@
-import json
 from ast import literal_eval
 
 from django import forms
@@ -102,7 +101,7 @@ class ScoringSystemForm(forms.ModelForm):
                 check_and_valid_scoring_json(
                     decoded_file=decoded_file, assessment=assessment
                 )
-                json_data = json.loads(decoded_file)
+
                 self.instance = ScoringSystem(
                     assessment=assessment,
                     version=version,
@@ -169,10 +168,6 @@ class EvaluationForm(forms.ModelForm):
         super(EvaluationForm, self).__init__(*args, **kwargs)
         self.fields["name"].label = _("Evaluation title")
         self.fields["name"].widget.attrs = {"class": "full-width"}
-
-
-
-# organisation_choices = get_tuple_all_organisation_choices()
 
 
 class EvaluationMutliOrgaForm(ModelForm):
@@ -492,5 +487,3 @@ class JsonUploadForm(forms.Form):
                                                                   "json when it's the first assessment in the database."
                                                                   "Importing an assessment will automatically create an"
                                                                   "empty scoring. Please import one with values.")
-
-

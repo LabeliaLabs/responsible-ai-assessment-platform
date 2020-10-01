@@ -419,7 +419,6 @@ def get_list_organisations_where_user_is_admin(user):
     :param user: user
     :return: list of organisations
     """
-    print("get_list_organisations_where_user_is_admin", list(Organisation.objects.distinct().filter(membership__user=user, membership__role="admin")))
     return list(Organisation.objects.distinct().filter(membership__user=user, membership__role="admin"))
 
 
