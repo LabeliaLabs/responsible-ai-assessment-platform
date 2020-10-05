@@ -124,6 +124,10 @@ a:hover {
     position: absolute;
 }
 
+.padding-1{
+    padding: 1em;
+}
+
 /***** END GLOBAL PROPERTIES *****/
 
 #page-container {  /* check if used */
@@ -774,10 +778,6 @@ tr.spaceUnder>td {
     cursor: default;
 }
 
-.absolute{
-    position: absolute;
-}
-
 .help-tip:before{
     content:'?';
     font-weight: bold;
@@ -849,10 +849,6 @@ tr.spaceUnder>td {
 
 .middle-width{
     width: 65%;
-}
-
-.modal-title{
-    position: absolute;
 }
 
 /******* MEDIA *******/

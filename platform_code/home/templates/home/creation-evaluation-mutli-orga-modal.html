@@ -3,10 +3,10 @@
 <div class="create-modal">
     <form id="create_evaluation_form" method='post' class="form" role="form">
         <div class="modal-header">
-            <h4 class="modal-title" id="myModalLabel">{% trans 'Create a new evaluation' %}</h4>
+            <h4 class="modal-title absolute-position" id="myModalLabel">{% trans 'Create a new evaluation' %}</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <div class="modal-body create-form">
+        <div class="modal-body create-form ">
             <div class="column">
             {% csrf_token %}
             {% for field in new_evaluation_form %}
