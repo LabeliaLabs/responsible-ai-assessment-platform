@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-01 16:43+0200\n"
+"POT-Creation-Date: 2020-10-05 14:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -73,12 +73,13 @@ msgstr ""
 # msgstr ""
 # "Le json doit contenir les id des choix comme clés ('1.1.a' par exemple) "
 # "et les poids comme valeur"
-#: .\platform_code\assessment\forms.py:169
-#: .\platform_code\assessment\forms.py:186
+
+#: .\platform_code\assessment\forms.py:173
+#: .\platform_code\assessment\forms.py:193
 msgid "Evaluation title"
 msgstr "Titre de l'évaluation"
 
-#: .\platform_code\assessment\forms.py:188
+#: .\platform_code\assessment\forms.py:195
 #: .\platform_code\assessment\templates\assessment\evaluation.html:17
 #: .\platform_code\assessment\templates\assessment\organisation.html:12
 #: .\platform_code\assessment\templates\assessment\section.html:21
@@ -87,19 +88,19 @@ msgstr "Titre de l'évaluation"
 msgid "Organisation"
 msgstr "Organisation"
 
-#: .\platform_code\assessment\forms.py:242
-#: .\platform_code\assessment\forms.py:258
-#: .\platform_code\assessment\forms.py:456
+#: .\platform_code\assessment\forms.py:249
+#: .\platform_code\assessment\forms.py:265
+#: .\platform_code\assessment\forms.py:463
 msgid "My notes"
 msgstr "Mes notes"
 
-#: .\platform_code\assessment\forms.py:363
-#: .\platform_code\assessment\forms.py:390
+#: .\platform_code\assessment\forms.py:370
+#: .\platform_code\assessment\forms.py:397
 msgid "Your feedback"
 msgstr "Votre feedback"
 
-#: .\platform_code\assessment\forms.py:370
-#: .\platform_code\assessment\forms.py:397
+#: .\platform_code\assessment\forms.py:377
+#: .\platform_code\assessment\forms.py:404
 msgid "My feedback"
 msgstr "Mon feedback"
 
@@ -207,7 +208,7 @@ msgstr ""
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:187
 #: .\platform_code\home\templates\home\profile-my-ressources.html:15
-#: .\platform_code\templates\base-evaluation.html:56
+#: .\platform_code\templates\base-evaluation.html:63
 msgid "Resources"
 msgstr "Ressources"
 
@@ -245,6 +246,8 @@ msgstr "Version"
 #: .\platform_code\home\templates\home\logout-page.html:10
 #: .\platform_code\home\templates\home\profile-orga-creation-modal.html:28
 #: .\platform_code\home\templates\home\registration\password_reset_form.html:13
+#: .\platform_code\home\templates\home\settings-delete.html:12
+#: .\platform_code\home\templates\home\settings-delete.html:29
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -738,7 +741,7 @@ msgstr "Nom"
 
 #: .\platform_code\home\templates\home\homepage.html:22
 #: .\platform_code\home\templates\home\homepage.html:76
-#: .\platform_code\templates\base-evaluation.html:51
+#: .\platform_code\templates\base-evaluation.html:58
 msgid "My dashboard"
 msgstr "Votre tableau de bord"
 
@@ -759,9 +762,9 @@ msgstr "Veuillez vous connecter pour accéder à cette page"
 #: .\platform_code\home\templates\home\login-modal.html:18
 #: .\platform_code\home\templates\home\login.html:27
 #: .\platform_code\home\templates\home\registration\password_reset_complete.html:7
-#: .\platform_code\templates\base-evaluation.html:72
-#: .\platform_code\templates\base-evaluation.html:78
-#: .\platform_code\templates\base-evaluation.html:107
+#: .\platform_code\templates\base-evaluation.html:79
+#: .\platform_code\templates\base-evaluation.html:85
+#: .\platform_code\templates\base-evaluation.html:114
 msgid "Login"
 msgstr "Connexion"
 
@@ -784,8 +787,8 @@ msgid "Do you want to logout?"
 msgstr "Voulez-vous vous déconnecter ?"
 
 #: .\platform_code\home\templates\home\logout-page.html:12
-#: .\platform_code\templates\base-evaluation.html:60
-#: .\platform_code\templates\base-evaluation.html:104
+#: .\platform_code\templates\base-evaluation.html:67
+#: .\platform_code\templates\base-evaluation.html:111
 msgid "Logout"
 msgstr "Déconnexion"
 
@@ -1011,21 +1014,13 @@ msgstr ""
 "Cela entrainera la suppression des organisations où vous êtes l'unique "
 "administrateur ainsi que les évaluations associées."
 
-#: .\platform_code\home\templates\home\settings-delete.html:12
-msgid "No, back to my account"
-msgstr "Non, retour à mes informations"
-
 #: .\platform_code\home\templates\home\settings-delete.html:13
-msgid "Yes, I'm sure"
-msgstr "Oui"
+msgid "Delete"
+msgstr "Supprimer"
 
 #: .\platform_code\home\templates\home\settings-delete.html:22
 msgid "Are you really sure you want to delete your account?"
 msgstr "Etes-vous sûr de vouloir supprimer votre compte ?"
-
-#: .\platform_code\home\templates\home\settings-delete.html:29
-msgid "Go back"
-msgstr "Retour"
 
 #: .\platform_code\home\templates\home\settings-delete.html:30
 msgid "Delete my account"
@@ -1051,7 +1046,7 @@ msgstr "Changer mon mot de passe"
 
 #: .\platform_code\home\templates\home\signup.html:6
 #: .\platform_code\home\templates\home\signup.html:34
-#: .\platform_code\templates\base-evaluation.html:106
+#: .\platform_code\templates\base-evaluation.html:113
 msgid "Sign up"
 msgstr "Création du compte"
 
@@ -1110,18 +1105,25 @@ msgstr ""
 "Vous devez d'abord créer votre organisation avant de pouvoir faire une "
 "évaluation."
 
-#: .\platform_code\templates\base-evaluation.html:66
-#: .\platform_code\templates\base-evaluation.html:111
+#: .\platform_code\templates\base-evaluation.html:52
+msgid "Admin"
+msgstr "Admin"
+
+#: .\platform_code\templates\base-evaluation.html:73
+#: .\platform_code\templates\base-evaluation.html:118
 msgid "About"
 msgstr "A propos"
 
-#: .\platform_code\templates\base-evaluation.html:114
+#: .\platform_code\templates\base-evaluation.html:121
 msgid "Legal notices"
 msgstr "Mentions légales"
 
 #: .\platform_code\templates\errors.html:46
 msgid "Homepage"
 msgstr "Page d'accueil"
+
+#~ msgid "No, back to my account"
+#~ msgstr "Non, retour à mes informations"
 
 #, python-brace-format
 #~ msgid ""

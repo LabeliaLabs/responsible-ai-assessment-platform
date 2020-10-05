@@ -9,8 +9,8 @@
 <p>{% trans "The organisations you are the only admin member will be deleted, as well as their evaluations." %}</p>
 
 <div class="">
-    <a class="btn btn-primary same-size_220 float-left" href="{% url 'home:user-profile-settings' %}" >{% trans "No, back to my account" %}</a>
-    <button class="btn btn-danger same-size-220 float-right" data-toggle="modal" data-target="#modal-delete-account">{% trans "Yes, I'm sure" %}</button>
+    <a class="btn btn-primary same-size-220 float-left" href="{% url 'home:user-profile-settings' %}" >{% trans "Cancel" %}</a>
+    <button class="btn btn-danger same-size-220 float-right" data-toggle="modal" data-target="#modal-delete-account">{% trans "Delete" %}</button>
 
 </div>
 
@@ -26,8 +26,8 @@
                 <p>{% trans "The organisations you are the only admin member will be deleted, as well as their evaluations." %}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary same-size-250 " data-dismiss="modal" style="margin: auto" >{% trans "Go back" %}</button>
-                <a class="btn btn-danger same-size-250" href="{% url 'home:delete-user' %}" style="margin: auto;">{% trans "Delete my account" %}</a>
+                <button type="button" class="btn btn-primary same-size-250 margin-auto" data-dismiss="modal" >{% trans "Cancel" %}</button>
+                <a class="btn btn-danger same-size-250 margin-auto" href="{% url 'home:delete-user' %}">{% trans "Delete my account" %}</a>
             </div>
 
         </div>
