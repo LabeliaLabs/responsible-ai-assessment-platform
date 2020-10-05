@@ -32,9 +32,9 @@ element_feedback_list = [
 
 # todo : develop this list
 section_feedback_list = [
-    ["section_content", _("Add a notion in this section")],
-    ["section_content", _("Reorganize the section")],
-    ["section_content", _("Description/title of the section")],
+    ["section_content", _("I find that an evaluation element is not appropriated")],
+    ["section_content", _("I would like to propose a new evaluation element")],
+    ["section_content", _("I would like to propose a new resource to this section")],
     ["other", _("Other")],
 ]
 
