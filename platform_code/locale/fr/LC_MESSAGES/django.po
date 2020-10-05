@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-05 15:41+0200\n"
+"POT-Creation-Date: 2020-10-05 17:41+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,16 +48,16 @@ msgid "Other"
 msgstr "Autres"
 
 #: .\platform_code\assessment\forms.py:35
-msgid "Add a notion in this section"
-msgstr "Ajouter une notion à cette section"
+msgid "I find that an evaluation element is not appropriated"
+msgstr "Un élément d’évaluation ne me semble pas approprié"
 
 #: .\platform_code\assessment\forms.py:36
-msgid "Reorganize the section"
-msgstr "Réorganiser cette section"
+msgid "I would like to propose a new evaluation element"
+msgstr "J’ai une suggestion d’un nouvel élément d’évaluation"
 
 #: .\platform_code\assessment\forms.py:37
-msgid "Description/title of the section"
-msgstr "Description/titre de la section"
+msgid "I would like to propose a new resource to this section"
+msgstr "J’ai une ressource à proposer pour cette section"
 
 #: .\platform_code\assessment\forms.py:61
 msgid ""
@@ -1083,9 +1083,7 @@ msgstr "Votre compte a bien été supprimé ainsi que"
 
 #: .\platform_code\home\views.py:88
 msgid "Your account has been deleted as well as the organisations:"
-msgstr ""
-"Votre compte a bien été supprimé ainsi que les organisations : {0} et leurs "
-"évaluations associées."
+msgstr "Votre compte a bien été supprimé ainsi que les organisations :"
 
 #: .\platform_code\home\views.py:479
 msgid ""
@@ -1144,17 +1142,3 @@ msgstr "Mentions légales"
 #: .\platform_code\templates\errors.html:46
 msgid "Homepage"
 msgstr "Page d'accueil"
-
-#~ msgid "Settings"
-#~ msgstr "Paramètres du compte"
-
-#~ msgid "No, back to my account"
-#~ msgstr "Non, retour à mes informations"
-
-#, python-brace-format
-#~ msgid ""
-#~ "Your account has been deleted as well as the organisation "
-#~ "{list_orga_user_is_admin[0]} and its evaluations."
-#~ msgstr ""
-#~ "Votre compte a bien été supprimé ainsi que l'organisation "
-#~ "{list_orga_user_is_admin[0]} et ses évaluations associées."
