@@ -4,8 +4,16 @@
 
 {% block content %}
 
+<div class="breadcrumbs">
+    <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
+    <span> ></span>
+    <a href="{% url 'home:user-profile' %}">{% trans 'My evaluations' %}</a>
+    <span> ></span>
+    <a href="#" class="active-breadcrumb">{% trans 'Results' %}</a>
+</div>
+
 {% if evaluation.is_upgradable %}
-<div>
+<div class="section-banner">
     {% include "assessment/upgrade-banner.html" %}
 </div>
 {% endif %}

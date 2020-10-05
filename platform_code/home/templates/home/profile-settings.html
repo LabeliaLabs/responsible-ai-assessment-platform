@@ -5,6 +5,14 @@
 
 {% block content %}
 
+<div class="breadcrumbs">
+    <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
+    <span> ></span>
+    <a href="#" class="active-breadcrumb">{% trans 'User settings' %}</a>
+    <span> ></span>
+    <a href="#" class="active-breadcrumb" id="active-profile-settings"><span>{% trans "My information" %}</span></a>
+</div>
+
 <h1>{% trans "My account" %}</h1>
 <div class="container">
     <div class="row ">
@@ -12,19 +20,24 @@
             <ul class="nav nav-pills nav-stacked flex-column table-column-profile" role="tablist">
                 <li class="nav-item column-button">
                     <a class="nav-link profile-column active" data-toggle="pill" name="column-button"
+                       onclick="display_text_in_link('{% trans 'My information' %}', 'active-profile-settings')"
                        href="#content-username">{% trans "User information" %}</a>
                 </li>
                 <li class="nav-item column-button">
                    <a class="nav-link profile-column" data-toggle="pill" name="column-button"
-                       href="#content-password">{% trans "Password" %}</a>
+                       href="#content-password"
+                       onclick="display_text_in_link('{% trans 'Password' %}', 'active-profile-settings')"
+                       >{% trans "Password" %}</a>
                 </li>
                 <li class="nav-item column-button">
                     <a class="nav-link profile-column" data-toggle="pill" name="column-button"
+                       onclick="display_text_in_link('{% trans 'Data export' %}', 'active-profile-settings')"
                        href="#content-export">{% trans "Export personnal data" %}</a>
                 </li>
 
                 <li class="nav-item column-button">
                     <a class="nav-link profile-column" data-toggle="pill" name="column-button"
+                       onclick="display_text_in_link('{% trans 'Account deletion' %}', 'active-profile-settings')"
                        href="#content-delete">{% trans "Delete the account" %}</a>
                 </li>
             </ul>

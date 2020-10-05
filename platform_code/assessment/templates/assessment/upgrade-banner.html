@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load home_tags %}
 
-<header role="banner" class="upgrade-banner">{% trans "Your evaluation version is not up to date. Do you want to" %}
+<header role="banner" class="upgrade-banner margin-bot-top-20">{% trans "Your evaluation version is not up to date. Do you want to" %}
     {% if evaluation.organisation|get_role:user == "admin" %}
         <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval"
         >{% trans " upgrade" %}</a>

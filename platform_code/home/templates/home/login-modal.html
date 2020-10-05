@@ -25,13 +25,13 @@
                 <p >{{ login_form.username }}</p>
                 <span class="margin-right: 5em;">{{ login_form.password.label_tag }}</span>
                 <p>{{ login_form.password }}</p>
-                <div class="modal-footer row" >
+                <div class="row padding-1" >
                     <div>
-                        <input type="submit" class="btn btn-primary same-size-280" value="{% trans 'Validate' %}" style="margin: auto" />
+                        <input type="submit" class="btn btn-primary same-size-250" value="{% trans 'Validate' %}" style="margin: auto" />
                     </div>
                     <div class="margin-10">
                         <input type="hidden" name="next" value="{{ next }}" />
-                        <a class="btn btn-blue same-size-280" type="button" href="{% url 'home:signup' %}">{% trans "I haven't an account" %}</a>
+                        <a class="btn btn-blue same-size-250" type="button" href="{% url 'home:signup' %}">{% trans "I haven't an account" %}</a>
                     </div>
 
                 </div>

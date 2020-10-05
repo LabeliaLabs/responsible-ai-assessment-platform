@@ -5,6 +5,16 @@
 
 {% block content %}
 
+<div class="breadcrumbs">
+    <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
+    <span> ></span>
+    <a href="{% url 'assessment:orga-summary' evaluation.organisation.id %}">{% trans 'Organisation' %}</a>
+    <span> ></span>
+    <a href="{{ evaluation.get_absolute_url }}">{% trans 'Evaluation' %}</a>
+    <span> ></span>
+    <a href="#" class="active-breadcrumb">{% trans 'Section' %}</a>
+</div>
+
 {% if evaluation.is_upgradable %}
 <div class="section-banner">
     {% include "assessment/upgrade-banner.html" %}
@@ -15,15 +25,7 @@
     {% include "assessment/sidebar.html" %}
 </div>
 
-<div class="breadcrumbs">
-    <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
-    <span> ></span>
-    <a href="{% url 'assessment:orga-summary' evaluation.organisation.id %}">{% trans 'Organisation' %}</a>
-    <span> ></span>
-    <a href="{{ evaluation.get_absolute_url }}">{% trans 'Evaluation' %}</a>
-    <span> ></span>
-    <a href="#" class="active-breadcrumb">{% trans 'Section' %}</a>
-</div>
+
 
 <div class="main">
     <div id="content-section">

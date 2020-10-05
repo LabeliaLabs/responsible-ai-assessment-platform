@@ -395,3 +395,11 @@ function set_element_evaluation_status_not_done_after_invalid(element_id){
         $(new_element_status).html('<i class="fa fa-circle-o fa-stack-2x"></i></span>');
     }
 }
+
+// used in the profile view to adapt the breadcrumbs
+function display_text_in_link(text_to_display, link_id){
+    console.log("select active breadcrumb",text_to_display, link_id);
+    var link_object = document.getElementById(link_id);
+    link_object.innerHTML=text_to_display;
+}
+
