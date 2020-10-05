@@ -6,7 +6,12 @@ register = template.Library()
 
 @register.filter
 def get_role(organisation, user):
-    print("get role", organisation, user)
+    """
+    Get the role of the user membership in the organisation
+    :param organisation: organisation
+    :param user: user
+    :return: string : "admin" or "simple_user"
+    """
     member = Membership.objects.get(user=user, organisation=organisation)
     return member.role
 
