@@ -109,7 +109,7 @@
                                 </div>
 
                                 <div class="choices" id="{{element}}">
-                                    {% if element..master_evaluation_element.question_type == "radio" %}
+                                    {% if element.master_evaluation_element.question_type == "radio" %}
                                             <p style="font-style:italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
                                             {% trans ": Please select one answer which best matches to your organisation situation" %}</p>
 
