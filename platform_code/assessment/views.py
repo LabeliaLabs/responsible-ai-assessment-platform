@@ -208,7 +208,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
         else:
             context["last_version"] = get_last_assessment_created()
         # print("GEEEET", self.object_list, context)
-        context["member_list"] = organisation.get_list_members()
+        context["member_list"] = organisation.get_list_members_not_staff()
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -216,10 +216,18 @@ class SummaryView(LoginRequiredMixin, DetailView):
 
         organisation_id = kwargs.get("orga_id")
         organisation = get_object_or_404(Organisation, id=organisation_id)
-        # Check if the user is member of the orga, if not, return HttpResponseForbidden
-        membership_security_check(request, organisation=organisation, *args, **kwargs)
+        if not membership_security_check(
+            request, organisation=organisation, *args, **kwargs
+        ):
+            messages.warning(request, _("You don't have access to this content."))
+            return redirect("home:homepage")
 
-        # TODO : WE WILL NEED TO CHECK IF THE MEMBER IS ADMIN
+        # Check if the user is an admin member of the orga, if not, return to the same page
+        if not membership_admin_security_check(
+                request, organisation=organisation, *args, **kwargs
+        ):
+            messages.warning(request, _("You don't have the right to do this action."))
+            return redirect("assessment:orga-summary", organisation.id)
 
         # When creating an evaluation
         if request.method == "POST":
@@ -297,9 +305,18 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
             organisation_id = kwargs.get("orga_id")
             organisation = get_object_or_404(Organisation, id=organisation_id)
             # Check if the user is member of the orga, if not, return HttpResponseForbidden
-            membership_security_check(
-                request, organisation=organisation, *args, **kwargs
-            )
+            if not membership_security_check(
+                    request, organisation=organisation, *args, **kwargs
+            ):
+                messages.warning(request, _("You don't have access to this content."))
+                return redirect("home:homepage")
+
+            # Check if the user is an admin member of the orga, if not, return to the same page
+            if not membership_admin_security_check(
+                    request, organisation=organisation, *args, **kwargs
+            ):
+                messages.warning(request, _("You don't have the right to do this action."))
+                return redirect("home:user-profile")
 
             form = EvaluationForm(request.POST)
             dic_form = request.POST.dict()
@@ -331,7 +348,7 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
     redirect_field_name = "home:homepage"
 
     def delete(self, request, *args, **kwargs):
-        # TODO CHANGE TO HAVE SECURITY -> admin
+
         """
         Call the delete() method on the fetched object and then redirect to the
         success URL.
@@ -339,11 +356,18 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
         organisation_id = kwargs.get("orga_id")
         organisation = get_object_or_404(Organisation, id=organisation_id)
         # Check if the user is member of the orga, if not, return HttpResponseForbidden
-        if not membership_admin_security_check(
-            request, organisation=organisation, *args, **kwargs
+        if not membership_security_check(
+                request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
             return redirect("home:homepage")
+
+        # Check if the user is an admin member of the orga, if not, return to the same page
+        if not membership_admin_security_check(
+                request, organisation=organisation, *args, **kwargs
+        ):
+            messages.warning(request, _("You don't have the right to do this action."))
+            return redirect("assessment:orga-summary", organisation_id)
 
         self.object = self.get_object()
         print("DELETE", dir(request), request.get_full_path)
@@ -468,13 +492,18 @@ class SectionView(LoginRequiredMixin, ListView):
         :return:
         """
         # If the user submit the form for an evaluation element
+
         if request.method == "POST":
-            print(
-                "ENTER POST FUNCTION",
-                request.is_ajax(),
-                request.POST.dict(),
-                request.POST.get("name"),
-            )
+            # We allow the simple user to like resources, to give feedback !
+            # The user which is not member of the orga is redirected to the homepage
+            organisation_id = kwargs.get("orga_id")
+            organisation = get_object_or_404(Organisation, id=organisation_id)
+            if not membership_security_check(
+                    request, organisation=organisation, *args, **kwargs
+            ):
+                messages.warning(request, _("You don't have access to this content."))
+                return redirect("home:homepage")
+
             # If the ajax, if when the user likes/unlikes a resource
             if "resource_id" in request.POST.dict():
                 return treat_resources(request)
@@ -489,16 +518,26 @@ class SectionView(LoginRequiredMixin, ListView):
 
             # Else, it s when the user validates an answer
             else:
-                organisation_id = kwargs.get("orga_id")
-                organisation = get_object_or_404(Organisation, id=organisation_id)
-                # Check if the user is member of the orga, if not, return HttpResponseForbidden
-                membership_security_check(
-                    request, organisation=organisation, *args, **kwargs
-                )
-
                 # Get ids of the objects Section and Evaluation from the url
                 # evaluation_id = kwargs.get("pk") # todo remove if not used
                 evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"))
+
+                # Check if the user is an admin member of the orga, if not, he is redirected to the evaluation summary
+                if not membership_admin_security_check(
+                        request, organisation=organisation, *args, **kwargs
+                ):
+                    # This is a security with an error message telling the user he cannot do the action (validate an
+                    # answer). Normally, the button is disabled for non-admin user of the organisation
+                    data_update = {
+                        "conditional_elements_list": [],
+                        "success": False,
+                        "conditions_respected": True,
+                        "element_status_changed": False,
+                        "no_more_condition_inter": False,
+                        "message": _("You don't have the right to do this action.")
+                    }
+                    return HttpResponse(json.dumps(data_update), content_type="application/json")
+
                 section_query = get_list_or_404(
                     Section, evaluation=evaluation
                 )  # List or 404

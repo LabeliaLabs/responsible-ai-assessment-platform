@@ -310,20 +310,33 @@ class Organisation(models.Model):
         organisation = cls(name=name, size=size, country=country, sector=sector, created_by=created_by)
         organisation.save()
         Membership.create_membership(user=created_by, role="admin", organisation=organisation)
+        # Give the simple_user right to all the platform staff to allow them to see the evaluations
+        list_staff_platform = get_list_all_staff_admin_platform()
+        for staff_user in list_staff_platform:
+            # If the user who created the organisation is admin, it is useless to give him a "simple_user" right
+            if staff_user != created_by:
+                Membership.create_membership(user=staff_user, role="simple_user", organisation=organisation)
         return organisation
 
     def __str__(self):
         return self.name
 
-    def get_list_members(self):
+    def get_list_members_not_staff(self):
         """
-        Get the list of the members of the organisation
+        Get the list of the members of the organisation, admin or simple user, but which
+        are not staff of the platform
         :return: list
         """
-        return list(Membership.objects.filter(organisation=self))
+        # List all the members of the orga, admin and simple users, but we don t want the platform staff in this list
+        list_members = list(Membership.objects.filter(organisation=self))
+        for member in list_members:
+            # We need to keep the user if he created the organisation, so he is admin of the organisation
+            if member.user.staff and member.role == "simple_user":
+                list_members.remove(member)
+        return list_members
 
     def count_members(self):
-        return str(len(self.get_list_members()))
+        return str(len(self.get_list_members_not_staff()))
 
     def get_list_admin_members(self):
         """
@@ -413,6 +426,8 @@ class Organisation(models.Model):
             None
 
 
+# Functions #
+
 def get_list_organisations_where_user_is_admin(user):
     """
     This function is used to obtain the list of organisations the user is member as admin
@@ -432,3 +447,11 @@ def turn_list_orga_into_tuple(list_orga):
     for orga in list_orga:
         list_tuple.append((orga.id, orga))
     return list_tuple
+
+
+def get_list_all_staff_admin_platform():
+    """
+    This function returns the list of all the admin or staff users (an admin has necessarily the field 'staff'=True)
+    :return: list of users
+    """
+    return list(User.object.filter(staff=True))

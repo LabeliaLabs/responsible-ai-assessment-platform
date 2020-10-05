@@ -158,6 +158,10 @@ class EvaluationElementWeightForm(forms.ModelForm):
 
 
 class EvaluationForm(forms.ModelForm):
+    """
+    This from is used when the organisation attached to the evaluation is clearly defined: organisation view
+    or after the user created his organisation
+    """
     class Meta:
         model = Evaluation
         fields = [
@@ -171,6 +175,9 @@ class EvaluationForm(forms.ModelForm):
 
 
 class EvaluationMutliOrgaForm(ModelForm):
+    """
+    This form is used to create an evaluation in the user dashboard view
+    """
     organisation = forms.ModelChoiceField(queryset=Organisation.objects.all())
 
     class Meta:

@@ -49,13 +49,13 @@
 
 
 <form  action="{% url 'assessment:orga-summary' organisation.id %}">
-    <input class="btn btn-primary float-left validation-button" type="submit" value="{% trans 'Back to the organisation summary' %}" />
+    <input class="btn btn-primary float-left same-size-250" type="submit" value="{% trans 'Back to the organisation summary' %}" />
 </form>
 
 
 
 <form action="{{ evaluation.get_absolute_url }}">
-    <input type="submit" value="{% trans 'Modify' %}" class="btn btn-primary float-right validation-button" style="background-color: #FFBE3C; border-color: #FFBE3C;" />
+    <input type="submit" value="{% trans 'Modify' %}" class="btn btn-primary float-right same-size-250" />
 </form>
 
 
@@ -104,7 +104,7 @@
 </div>
 
 <div>
-    <button class="btn btn-primary float-right bottom-page-button" onclick="topFunction()" id="top-button"
+    <button class="btn btn-primary float-right" onclick="topFunction()" id="top-button"
             title="{% trans 'Top of the page' %}">{% trans 'Top of the page' %}</button>
 </div>
 

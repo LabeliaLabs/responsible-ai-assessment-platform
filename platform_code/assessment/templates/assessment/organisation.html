@@ -1,6 +1,7 @@
 {% extends 'base-evaluation.html' %}
 {% load static %}
 {% load add_attr %}
+{% load home_tags %}
 {% load i18n %}
 
 {% block content %}
@@ -67,18 +68,24 @@
         <input type="submit" value="{% trans 'Back to your dashboard' %}"
                class="btn btn-primary same-size-280 " />
     </form>
-
-    {% if last_version %}
-        <!-- Button to Open the Modal -->
-        <button type="button" class="btn btn-primary float-right same-size-280"
-                data-toggle="modal"
-                data-target="#modal-create-eval" style="margin:auto;">
-                {% trans "Start a new evaluation" %}
-        </button>
+    {% if organisation|get_role:user == "admin" %}
+        {% if last_version %}
+            <!-- Button to Open the Modal -->
+            <button type="button" class="btn btn-primary float-right same-size-280"
+                    data-toggle="modal"
+                    data-target="#modal-create-eval" style="margin:auto;">
+                    {% trans "Start a new evaluation" %}
+            </button>
+        {% else %}
+            <button type="button" class="btn btn-primary float-right same-size-280" disabled="True"
+                   style="margin:auto;" title="{% trans 'We are sorry, there is no assessment available yet.' %}">
+                    {% trans "Start a new evaluation" %}
+            </button>
+        {% endif %}
     {% else %}
-        <button type="button" class="btn btn-primary float-right same-size-280" disabled="True"
-               style="margin:auto;" title="{% trans 'We are sorry, there is no assessment available yet.' %}">
-                {% trans "Start a new evaluation" %}
+        <button type="button" class="btn btn-primary float-right same-size-280 margin-auto" disabled
+                    title="{% trans 'You do not have the right to do this action' %}">
+                    {% trans "Start a new evaluation" %}
         </button>
     {% endif %}
 </div>

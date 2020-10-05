@@ -1,5 +1,6 @@
 {% load static %}
 {% load add_attr %}
+{% load home_tags %}
 {% load i18n %}
 
 <h3 class="title-column">{% trans "Organisation's evaluations" %} </h3>
@@ -53,16 +54,28 @@
                     <a class="btn btn-results medium-button" name="resultat-no-modif"
                        href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
                       >{% trans "Results" %}</a>
-                    <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
-                       class="btn btn-primary medium-button margin-10"
-                        >{% trans "Upgrade" %}</a>
+                    {% if organisation|get_role:user == "admin" %}
+                      <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
+                         class="btn btn-primary medium-button margin-10"
+                          >{% trans "Upgrade" %}</a>
+                    {% else %}
+                      <button class="btn btn-primary medium-button margin-10" disabled
+                              title="{% trans 'You do not have the right to do this action' %}">{% trans "Upgrade" %}
+                      </button>
+                    {% endif %}
                   </td>
                 {% else %}
                   <td class="case-array">
                     <a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}">{% trans "Modify" %}</a>
-                    <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
-                       class="btn btn-primary medium-button margin-10"
-                        >{% trans "Upgrade" %}</a>
+                    {% if organisation|get_role:user == "admin" %}
+                      <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
+                         class="btn btn-primary medium-button margin-10"
+                          >{% trans "Upgrade" %}</a>
+                    {% else %}
+                      <button class="btn btn-primary medium-button margin-10" disabled
+                              title="{% trans 'You do not have the right to do this action' %}">{% trans "Upgrade" %}
+                      </button>
+                    {% endif %}
                   </td>
                 {% endif %}
                 <!--        Modal to upgrade-->
@@ -88,17 +101,19 @@
               {% endif %}
 
               <td class="div-trash" id="div-trash{{evaluation.id}}" style="border-top:0px; background-color: white;" >
-                  <button class="btn btn-danger" data-toggle="modal" data-target="#modal-delete{{evaluation.id}}"><span class="fa fa-trash"></span></button>
-                  <!-- The Modal delete evaluation -->
-                  <!-- The modal is inside the for loop because we need to catch the evaluation id -->
-                  <!-- It calls the DeleteEvaluation view -->
-                    <div class="modal" id="modal-delete{{evaluation.id}}" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          {% include "assessment/deletion-evaluation.html" %}
+                  {% if organisation|get_role:user == "admin" %}
+                    <button class="btn btn-danger" data-toggle="modal" data-target="#modal-delete{{evaluation.id}}"><span class="fa fa-trash"></span></button>
+                    <!-- The Modal delete evaluation -->
+                    <!-- The modal is inside the for loop because we need to catch the evaluation id -->
+                    <!-- It calls the DeleteEvaluation view -->
+                      <div class="modal" id="modal-delete{{evaluation.id}}" aria-hidden="true">
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            {% include "assessment/deletion-evaluation.html" %}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                  {% endif %}
 
               </td>
             </tr>

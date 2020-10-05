@@ -1,4 +1,5 @@
 {% load static %}
+{% load home_tags %}
 {% load add_attr %}
 {% load i18n %}
 {% load markdownify %}
@@ -118,39 +119,57 @@
 
                                       {% endif %}
 
-                                    {% if element.has_condition_on and element|is_not_applicable %}
-                                        <fieldset id="disable_element_{{element.id}}" disabled="true" >
+                                    {% if evaluation.organisation|get_role:user == "admin" %}
+                                        {% if element.has_condition_on and element|is_not_applicable %}
+                                            <fieldset id="disable_element_{{element.id}}" disabled >
 
-                                      {{ dic_form|get_item:element }}
-                                        </fieldset>
+                                          {{ dic_form|get_item:element }}
+                                            </fieldset>
+                                        {% else %}
+                                            <fieldset id="disable_element{{element.id}}" >
+
+                                              {{ dic_form|get_item:element }}
+                                                </fieldset>
+                                        {% endif %}
                                     {% else %}
-                                        <fieldset id="disable_element{{element.id}}" >
+                                        <fieldset  disabled >
 
                                           {{ dic_form|get_item:element }}
                                             </fieldset>
                                     {% endif %}
 
-                                    {% if element.has_condition_on and element|is_not_applicable %}
-                                        <a id="reset_{{element.id}}" class="reset-response float-right" title="Inactive">
-                                            {% trans "Reset the answer" %}</a>
-                                    {% else %}
-                                        <a id="reset{{element.id}}" onclick="resetChoice('{{element.id}}')"
-                                           class="reset-response float-right" >{% trans "Reset the answer" %}</a>
+<!--                                    Reset the answers -->
+                                    {% if evaluation.organisation|get_role:user == "admin" %}
+                                        {% if element.has_condition_on and element|is_not_applicable %}
+                                            <a id="reset_{{element.id}}" class="reset-response float-right" title="Inactive">
+                                                {% trans "Reset the answer" %}</a>
+                                        {% else %}
+                                            <a id="reset{{element.id}}" onclick="resetChoice('{{element.id}}')"
+                                               class="reset-response float-right" >{% trans "Reset the answer" %}</a>
+                                        {% endif %}
                                     {% endif %}
 
                               </div>
 
                             </div>
                               <div class="wrapper">
-                                  {% if element.has_condition_on and element|is_not_applicable %}
-                                    <button type="button" onclick="submitForm('form{{element.id}}')" style="width:20%"
-                                             disabled="true" class="btn btn-primary" id="validate_{{element.id}}" >
-                                        {% trans "Validate" %}
-                                    </button>
+                                  {% if evaluation.organisation|get_role:user == "admin" %}
+                                      {% if element.has_condition_on and element|is_not_applicable %}
+                                        <button type="button" style="width:20%"
+                                                 disabled class="btn btn-primary" id="validate_{{element.id}}" >
+                                            {% trans "Validate" %}
+                                        </button>
+                                      {% else %}
+                                          <button type="button" onclick="submitForm('form{{element.id}}')" style="width:20%"
+                                                     class="btn btn-primary" id="validate{{element.id}}" >{% trans "Validate" %}
+                                          </button>
+                                      {% endif %}
                                   {% else %}
-                                      <button type="button" onclick="submitForm('form{{element.id}}')" style="width:20%"
-                                                 class="btn btn-primary" id="validate{{element.id}}" >{% trans "Validate" %}
-                                      </button>
+                                      <button type="button" style="width:20%"
+                                                 disabled class="btn btn-primary"
+                                                title="{% trans 'You do not have the right to do this action' %}" >
+                                            {% trans "Validate" %}
+                                        </button>
                                   {% endif %}
                               </div>
                               <div class="margin-10" id="confirmationform{{element.id}}" >
