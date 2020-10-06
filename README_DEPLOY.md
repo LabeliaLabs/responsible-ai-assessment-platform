@@ -1,6 +1,16 @@
 # Deploy
 
 > No deploy friday & use `tmux`!
+> At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`. /!\ This will **remove** your images!
+
+## Tests
+
+You can run tests with:
+
+```sh
+# dev
+docker-compose exec web python manage.py test --verbosity 2
+```
 
 ## Updates
 
