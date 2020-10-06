@@ -189,6 +189,46 @@ django-admin compilemessages
 
 Do not forget to add and commit both of the files `django.po` and `django.mo`.
 
+### Tests
+
+The tests are implemented on each application, assessment and home, in a folder named "tests".
+You can add your own tests in this folders or create a new one. The only requirement is to make your python
+file starting with "test". For more details, refer to the [django documentation](https://docs.djangoproject.com/fr/3.0/topics/testing/overview/).
+
+To run the tests, use the following command:
+
+```sh
+docker-compose exec web python manage.py test --verbosity 2
+```
+
+If all your tests are passed, you should see something like this:
+
+```sh
+Ran 92 tests in 11.590s
+
+OK
+Destroying test database for alias 'default' ('test_platform_db')...
+```
+
+If one or more of the tests failed, you should have a message like this: 
+
+```sh
+======================================================================
+FAIL: test_order_id_letter (assessment.tests.tests_imports.TestOrderIdTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/code/assessment/tests/tests_imports.py", line 283, in test_order_id_letter
+    self.assertFalse(test_order_id_letter("a,"))
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 92 tests in 12.213s
+
+FAILED (failures=1)
+Destroying test database for alias 'default' ('test_platform_db')...
+```
+
+
 ### Prod
 
 ```sh

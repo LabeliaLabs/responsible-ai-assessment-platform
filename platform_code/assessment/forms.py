@@ -92,15 +92,18 @@ class ScoringSystemForm(forms.ModelForm):
             if json_file.name.endswith("json"):
                 try:
                     decoded_file = json_file.read().decode("utf-8")
-                    print("decoded file", type(decoded_file), decoded_file)
                 except UnicodeDecodeError as e:
                     raise forms.ValidationError(
                         f"Il y a un problème d'encodage dans le json, erreur {e}"
                     )
 
-                check_and_valid_scoring_json(
-                    decoded_file=decoded_file, assessment=assessment
-                )
+                success, message = check_and_valid_scoring_json(
+                                        decoded_file=decoded_file, assessment=assessment
+                                    )
+                if not success:
+                    raise forms.ValidationError(
+                        f"The format of the file is not correct, {message}"
+                    )
 
                 self.instance = ScoringSystem(
                     assessment=assessment,

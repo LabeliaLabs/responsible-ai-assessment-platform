@@ -20,7 +20,7 @@ from assessment.views import treat_resources, error_500_view_handler, error_400_
 from assessment.forms import EvaluationMutliOrgaForm
 from assessment.models import Assessment, Evaluation, get_last_assessment_created
 from .forms import SignUpForm, OrganisationCreationForm, RegisterForm, DataSettingsForm, PasswordResetForm_
-from .models import User, UserResources, Organisation, get_list_organisations_where_user_is_admin, Membership
+from .models import User, UserResources, Organisation, Membership
 
 # Functions #
 
@@ -43,7 +43,7 @@ def signup(request):
             login(request, user)
             UserResources.create_user_resources(
                 user=user
-            )  # create user_resources so the user can access resources
+            )  # create user_resources so the user can access resources, this could be integrated to user creation ?
             return redirect("home:orga-creation")
     else:
         form = SignUpForm()
@@ -67,7 +67,7 @@ def delete_user(request):
     # todo logs
     # try:
     user = request.user
-    list_orga_user_is_admin = get_list_organisations_where_user_is_admin(user)
+    list_orga_user_is_admin = user.get_list_organisations_where_user_as_role(role="admin")
     for orga in list_orga_user_is_admin:
         # If the user is the only admin of the organisation
         if orga.count_admin_members() == 1:
@@ -335,7 +335,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             elif "organisation" in request.POST:
 
                 # If the user belongs to multiple organisation, it is a form with a field organisation
-                if len(get_list_organisations_where_user_is_admin(user)) >= 1:
+                if len(user.get_list_organisations_where_user_as_role(role="admin")) >= 1:
                     form = EvaluationMutliOrgaForm(
                         request.POST,
                         user=user,

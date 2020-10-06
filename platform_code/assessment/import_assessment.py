@@ -1,6 +1,6 @@
 import re
 
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 
 from .models import (
     Assessment,
@@ -28,7 +28,10 @@ def treat_and_save_dictionary_data(dic):
     success = False
     message = ""
     # First layer : Assessment data
-    version = dic.get("version")
+    try:
+        version = dic["version"]
+    except KeyError as e:
+        return success, f"You need to provide an assessment version which could be converted into a float, error {e}"
     # If there already is an assessment with the same version, raise error and ask for change
     if list(Assessment.objects.filter(version=version)):
         message = "There already is an assessment with this version. Please change it."
@@ -39,14 +42,23 @@ def treat_and_save_dictionary_data(dic):
     except ValueError as e:
         return (success, f"Error {e}. The version must not contain letters. It should be convertible into a float "
                          f"('0.5', '1.0', etc). The version you provided was '{version}'")
+
+    if float(version) <= 0:
+        return success, "The version must be convertible into a positive number"
     if get_last_assessment_created():
         if float(version) < float(get_last_assessment_created().version):
             return success, f"The assessment version must not be smaller than the" \
                             f" assessment versions already in the DB" \
                             f"The new assessment version is {version} and the latest in th DB" \
                             f" is {get_last_assessment_created().version}"
+
+    if "name" not in dic.keys():
+        return success, "You need to provide a name for the assessment"
+
+    name = dic["name"]
     # Otherwise we can create the assessment
-    assessment = Assessment(name=dic.get("name"), version=version)
+    # If the import fails later, we need to delete the assessment
+    assessment = Assessment(name=name, version=version)
     assessment.save()
     # In case we need to create the scoring system
     dic_choices = {}
@@ -54,13 +66,25 @@ def treat_and_save_dictionary_data(dic):
     dic_elements = {}
     # Second layer : sections
     # Dic section keys as "section 1" and values are dictionaries with section data {"order_id":1, ...}
-    dic_sections = dic.get("sections")
+
+    try:
+        dic_sections = dic["sections"]
+    except KeyError:
+        clean_failed_assessment_import(name, version)
+        return success, "You haven't sections in your assessment"
 
     for section in list(dic_sections.keys()):
         # print("SECTION INIT", dic_sections, section)
         section_data = dic_sections.get(section)  # dic of the section data
-
+        # Name cannot be null for a master section
+        if "name" not in section_data.keys():
+            clean_failed_assessment_import(name, version)
+            return success, f"You have a section without name {section_data}"
+        if "order_id" not in section_data.keys():
+            clean_failed_assessment_import(name, version)
+            return success, f"You have a section without order_id {section_data}"
         if not test_order_id_number(section_data.get("order_id")):
+            clean_failed_assessment_import(name, version)
             return (
                 success,
                 f"The section id is not an integer for this section {section_data}",
@@ -77,23 +101,46 @@ def treat_and_save_dictionary_data(dic):
         # Third layer : evaluation elements
 
         # Dic_element has "element1" as key and the element data (dict) as value : {"order_id": "1", ..}
-        dic_element = section_data.get("elements")
+        if "elements" in section_data.keys():
+            dic_element = section_data.get("elements")
+        else:
+            clean_failed_assessment_import(name, version)
+            return success, "You have a section without elements"
 
         for element in dic_element.keys():
             element_data = dic_element.get(element)  # dic of the element data
+
+            # If there are missing keys in the element_data dic
+            if not all(x in element_data.keys() for x in ["order_id",
+                                                          "name",
+                                                          "condition",
+                                                          "question_text",
+                                                          "question_type",
+                                                          ]):
+                clean_failed_assessment_import(name, version)
+                return success, f"You have missing fields for the element {element_data}"
 
             # Case there is a condition inter evaluation elements
             # Condition : 1.5.a for example
             depends_on = None
             external_links_element = []
             if element_data.get("condition") != "n/a":
+                if not test_choice_numbering(element_data.get("condition")):
+                    clean_failed_assessment_import(name, version)
+                    return success, f"You have a condition for a choice which the numbering is" \
+                                    f" not respected {element_data.get('condition')}. Please follow th format '1.1.a'"
                 condition = element_data.get("condition").split(".")
-                depends_on = MasterChoice.objects.get(
-                    order_id=condition[2],
-                    master_evaluation_element__order_id=condition[1],
-                    master_evaluation_element__master_section__order_id=condition[0],
-                    master_evaluation_element__master_section__assessment=assessment,
-                )
+                try:
+                    depends_on = MasterChoice.objects.get(
+                        order_id=condition[2],
+                        master_evaluation_element__order_id=condition[1],
+                        master_evaluation_element__master_section__order_id=condition[0],
+                        master_evaluation_element__master_section__assessment=assessment,
+                    )
+                except (ObjectDoesNotExist, MultipleObjectsReturned):
+                    clean_failed_assessment_import(name, version)
+                    return success, f"You have set a condition on a choice which does not exist or which is not " \
+                                    f"before the evaluation element. Choice {element_data.get('condition')}"
 
             # Case there are resources
             if element_data.get("resources"):
@@ -105,6 +152,8 @@ def treat_and_save_dictionary_data(dic):
                     if not external_link_already_exist(
                         external_link_data.get("resource_text"), resource_type
                     ):
+                        # Note that there is no condition on the resource type or resource text as
+                        # it is only markdownify (no need to respect a format with a template tags)
                         external_link = ExternalLink(
                             text=external_link_data.get("resource_text"),
                             type=resource_type,
@@ -120,10 +169,14 @@ def treat_and_save_dictionary_data(dic):
                         external_link
                     )  # Add to the list to add it later to the element
 
+            if "order_id" not in element_data.keys():
+                clean_failed_assessment_import(name, version)
+                return success, f"The element {element_data} has no order_id"
             if not test_order_id_number(element_data.get("order_id")):
+                clean_failed_assessment_import(name, version)
                 return (
                     success,
-                    f"The element id is not an integer for this element {element_data}",
+                    f"The order_id is not an convertible into an integer for this element {element_data}",
                 )
 
             master_evaluation_element = MasterEvaluationElement(
@@ -143,24 +196,39 @@ def treat_and_save_dictionary_data(dic):
             dic_elements[str(master_evaluation_element)] = "1"
 
             # Fourth layer : choices
-
-            dic_choice = element_data.get("answer_items")
-            # print("dic choice", dic_choice)
+            if "answer_items" in element_data:
+                dic_choice = element_data.get("answer_items")
+            else:
+                clean_failed_assessment_import(name, version)
+                return success, f"The element {element_data} has no answer_items"
 
             for choice in list(dic_choice.keys()):
                 choice_data = dic_choice.get(choice)  # dic of the choice data
                 # print("CHOICE DATA", choice_data)
                 depends_on = None
                 if choice_data.get("depends_on"):
-                    depends_on = MasterChoice.objects.get(
-                        master_evaluation_element=master_evaluation_element,
-                        order_id=choice_data.get("depends_on"),
-                        master_evaluation_element__master_section__assessment=assessment,
-                    )
+                    try:
+                        depends_on = MasterChoice.objects.get(
+                            master_evaluation_element=master_evaluation_element,
+                            order_id=choice_data.get("depends_on"),
+                            master_evaluation_element__master_section__assessment=assessment,
+                        )
+                    except (ObjectDoesNotExist, MultipleObjectsReturned):
+                        clean_failed_assessment_import(name, version)
+                        return success, f"You have set a condition inter choices on a choice which does not exist " \
+                                        f"or which is not before the choices. Choice {element_data.get('condition')}"
+
+                if not all(x in choice_data.keys() for x in ["order_id",
+                                                             "answer_text",
+                                                             ]):
+                    clean_failed_assessment_import(name, version)
+                    return success, f"You have missing fields for the choice {element_data}"
+
                 if not test_order_id_letter(choice_data.get("order_id")):
+                    clean_failed_assessment_import(name, version)
                     return (
                         success,
-                        f"The choice id is not a letter for this section {choice_data}",
+                        f"The order_id is not a letter for this choice {choice_data}",
                     )
 
                 master_choice = MasterChoice(
@@ -170,7 +238,13 @@ def treat_and_save_dictionary_data(dic):
                     depends_on=depends_on,
                 )
                 master_choice.save()
-                dic_choices[master_choice.get_numbering()] = "0"
+                # The choice should be unique, so it shouldn't exist yet
+                if master_choice.get_numbering() in dic_choices:
+                    clean_failed_assessment_import(name, version)
+                    return success, f"You have duplicate choice numbering so please verify your " \
+                                    f"order_id {master_choice.get_numbering()}"
+                else:
+                    dic_choices[master_choice.get_numbering()] = "0"
 
     if not list(ScoringSystem.objects.filter(assessment=assessment)):
         scoring = ScoringSystem(
@@ -192,14 +266,26 @@ def treat_and_save_dictionary_data(dic):
 
 
 def test_order_id_number(order_id):
-    """Check if the choice order_id is a letter"""
-    reg = re.findall(r"[0-9]", order_id)
-    return reg != []
+    """Check if the choice order_id is a string convertible into an integer"""
+    if type(order_id) == str:
+        try:
+            int(order_id)
+            return True
+        except ValueError:
+            return False
+    else:
+        return False
 
 
 def test_order_id_letter(order_id):
-    """Check if the choice order_id is a letter"""
-    reg = re.findall(r"[a-z]", order_id)
+    """Check if the choice order_id is a letter between a and h"""
+    reg = re.findall(r"^[a-h]$", order_id)
+    return reg != []
+
+
+def test_choice_numbering(numbering):
+    """Check the numbering for a string. It s almost the same principle of test_numbering in the MasterChoice class"""
+    reg = re.findall(r"^[0-9]\.[0-9]\.[a-h]$", numbering)
     return reg != []
 
 
@@ -312,3 +398,17 @@ def save_upgrade(dict_upgrade_data):
                       f"Error {e}"
 
     return success, message
+
+
+def clean_failed_assessment_import(name, version):
+    """
+    Delete the assessment if the import fails because it can be created during the process but the latter
+    failed after
+    :param name: string
+    :param version: string
+    :return:
+    """
+    if len(list(Assessment.objects.filter(name=name, version=version))) == 1:
+        Assessment.objects.get(name=name, version=version).delete()
+    else:
+        raise ValueError
