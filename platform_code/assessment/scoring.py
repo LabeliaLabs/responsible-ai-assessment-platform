@@ -8,9 +8,16 @@ def check_and_valid_scoring_json(*args, **kwargs):
     """
 
     # Case: we test the json
+    success = False
     json_data = kwargs.get("decoded_file")
     if json_data is not None:
-        dict_data = json.loads(json_data)
+        try:
+            dict_data = json.loads(json_data)
+        except json.JSONDecodeError as e:
+            return (
+                success,
+                f"There is an issue in your json architecture. Please verify you file. Error {e}",
+            )
 
     assessment = kwargs.get("assessment")
 
@@ -25,22 +32,21 @@ def check_and_valid_scoring_json(*args, **kwargs):
                 count_choice += 1
                 # If the master choice is present in the assessment but not in the imported scoring file
                 if numbering not in dict_data.keys():
-                    raise ValueError("Missing choice in the json", numbering)
+                    return success, f"Missing choice in the json {numbering}"
 
                 # Check the values are numbers
                 try:
                     float(dict_data[numbering])
                 except ValueError as e:
                     # TODO add logs
-                    print(
-                        f"The scoring choice value must be convertible into a float like '0.5', error {e}",
-                        numbering,
-                        dict_data[numbering],
+                    return (
+                        success,
+                        f"The value {dict_data[numbering]} must be convertible into a float like '0.5', error {e}",
                     )
 
     # Reverse test, check if all the json keys (items) are well in the assessment's choices database
     for key in dict_data.keys():
         if key not in list_number:
-            raise ValueError(
-                f"The choice {key} is not in the assessment but in the json"
-            )
+            return success, f"The choice {key} is not in the assessment but in the json"
+
+    return True, "The scoring is ok to be imported"

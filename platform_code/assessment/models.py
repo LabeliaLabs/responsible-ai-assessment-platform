@@ -123,6 +123,16 @@ class Evaluation(models.Model):
 
     @classmethod
     def create_evaluation(cls, name, assessment, user, organisation):
+        """
+        To create an evaluation, we need to link it to an assessment (with a defined version)
+        and also to an user who does the action and an organisation where the user belongs to
+        Note there is no content to the evaluation yet
+        :param name: string
+        :param assessment: assessment object
+        :param user: user
+        :param organisation: organisation
+        :return:
+        """
         evaluation = cls(
             name=name,
             assessment=assessment,
@@ -190,7 +200,6 @@ class Evaluation(models.Model):
                 for master_choice in master_choice_list:
                     choice = Choice.create_choice(master_choice, evaluation_element)
                     # Useless as it is already saved in create_choice but we need to use choice for flake
-                    # todo do not return choice when create it ?
                     choice.save()
 
     def fetch_the_evaluation(self, *args, **kwargs):
@@ -1120,10 +1129,15 @@ class MasterChoice(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.get_numbering() + " " + self.answer_text
+        if self.get_numbering():
+            return self.get_numbering() + " " + self.answer_text
+        else:
+            return self.answer_text
 
     def get_numbering(self):
-        """ Get the numbering of the master choice, like 1.2.a for the section 1, evaluation element 2 and choice a"""
+        """
+        Get the numbering of the master choice, like 1.2.a for the section 1, evaluation element 2 and choice a
+        """
         if (
             self.master_evaluation_element.master_section.order_id
             and self.master_evaluation_element.order_id
@@ -1137,11 +1151,16 @@ class MasterChoice(models.Model):
                 + self.order_id
             )
         else:
-            print("You have to set an order_id")
+            print(f"You need to have an order id for the section "
+                  f"({self.master_evaluation_element.master_section.order_id}) "
+                  f", the evaluation element ({self.master_evaluation_element.order_id})"
+                  f" and the choice ({self.order_id})")
             return ""
 
     def test_numbering(self):
-        """ Test if the numbering format is well respected. Used to import the scoring with json format"""
+        """
+        Test if the numbering format is well respected. Used to import the scoring with json format
+        """
         numbering = self.get_numbering()
         # Search if the format is respected in the numbering
         regex = re.findall(r"[0-9].[0-9]{1,2}.[a-zA-Z]", numbering)
@@ -1194,6 +1213,7 @@ class Choice(models.Model):
     def convert_order_id_to_int(self):
         """ Convert the order id (letter) of the master choice into an int
         This could be done with a dictionary, I don't know what is 'cleaner'
+        This function is used to format the widgets in the results page
         :return integer"""
         order_id = self.master_choice.order_id
         if order_id == "a" or order_id == "A":

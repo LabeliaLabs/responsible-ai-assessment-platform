@@ -141,6 +141,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Is the user active?"""
         return self.active
 
+    def get_list_all_memberships_user(self):
+        """
+        Get the list of all the membership of an user
+        :return: list of memberships
+        """
+        return list(Membership.objects.filter(user=self))
+
+    def get_list_organisations_where_user_as_role(self, role):
+        """
+        This function is used to obtain the list of organisations the user is member with a defined role
+        :return: list of organisations
+        """
+        return list(Organisation.objects.distinct().filter(membership__user=self, membership__role=role))
+
 
 class UserResources(models.Model):
     """
@@ -321,6 +335,28 @@ class Organisation(models.Model):
     def __str__(self):
         return self.name
 
+    def add_user_to_organisation(self, user, role="simple_user"):
+        """
+        Add an user to the organisation, with a defined role (by default simple_user)
+        :param user: user
+        :param role: Membership.ROLE: string, "admin" or "simple_user"
+        :return: None
+        """
+        # If the user is not already in the organisation
+        if not self.check_user_is_member(user=user):
+            Membership.create_membership(user=user, role=role, organisation=self)
+
+    def remove_user_to_organisation(self, user):
+        """
+        This method removes the user membership of an organisation. This couldn't be used when there is one user in the
+        organisation or if the user is not already member of the organisation
+        :param user:
+        :return:
+        """
+        if self.count_members() > 1 and self.check_user_is_member(user):
+            membership = self.get_membership_user(user=user)
+            membership.delete()
+
     def get_list_members_not_staff(self):
         """
         Get the list of the members of the organisation, admin or simple user, but which
@@ -336,7 +372,11 @@ class Organisation(models.Model):
         return list_members
 
     def count_members(self):
-        return str(len(self.get_list_members_not_staff()))
+        """
+        Count the number of member in the organisation, used in the organisation view for the organisation settings
+        :return: int
+        """
+        return len(self.get_list_members_not_staff())
 
     def get_list_admin_members(self):
         """
@@ -416,25 +456,14 @@ class Organisation(models.Model):
 
     def get_last_assessment_version(self):
         """
-        Return the float of the lastest version of the assessment present in the orga
+        Return the float of the latest version of the assessment present in the orga
         :return: float or None
         """
         list_version = self.get_list_assessment_version()
         if list_version:
             return max([float(i) for i in list_version])
         else:
-            None
-
-
-# Functions #
-
-def get_list_organisations_where_user_is_admin(user):
-    """
-    This function is used to obtain the list of organisations the user is member as admin
-    :param user: user
-    :return: list of organisations
-    """
-    return list(Organisation.objects.distinct().filter(membership__user=user, membership__role="admin"))
+            return None
 
 
 def turn_list_orga_into_tuple(list_orga):
