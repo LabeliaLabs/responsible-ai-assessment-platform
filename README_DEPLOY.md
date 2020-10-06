@@ -1,6 +1,7 @@
 # Deploy
 
 > No deploy friday & use `tmux`!
+> At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`. /!\ This will **remove** your images!
 
 ## Updates
 
