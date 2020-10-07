@@ -113,3 +113,31 @@ def evaluation_created_by(member, evaluation_list):
         print(string_to_display[-5:])
         string_to_display = string_to_display[:-2]
     return string_to_display
+
+
+@register.filter
+def count_in_progress(list_evaluation):
+    """
+    Used in the organisation settings to count the number of evaluations in progress
+    :param list_evaluation:
+    :return:
+    """
+    count = 0
+    for evaluation in list_evaluation:
+        if not evaluation.is_finished:
+            count += 1
+    return count
+
+
+@register.filter
+def count_finished(list_evaluation):
+    """
+    Used in the organisation settings to count the number of evaluations finished
+    :param list_evaluation:
+    :return:
+    """
+    count = 0
+    for evaluation in list_evaluation:
+        if evaluation.is_finished:
+            count += 1
+    return count
