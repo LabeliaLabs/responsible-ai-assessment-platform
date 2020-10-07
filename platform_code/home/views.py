@@ -17,7 +17,7 @@ from django.contrib.auth import views as auth_views
 from django.utils.translation import gettext as _
 
 from assessment.views import treat_resources, error_500_view_handler, error_400_view_handler
-from assessment.forms import EvaluationMutliOrgaForm
+from assessment.forms import EvaluationMutliOrgaForm, EvaluationForm
 from assessment.models import Assessment, Evaluation, get_last_assessment_created
 from .forms import SignUpForm, OrganisationCreationForm, RegisterForm, DataSettingsForm, PasswordResetForm_
 from .models import User, UserResources, Organisation, Membership
@@ -275,9 +275,11 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         # Get the evaluations created by the user
         # This can be modified if we want all the evaluations of the organisations the user belong to
         # Can be empty
-        context["evaluations"] = Evaluation.objects.filter(created_by=user).order_by(
-            "-created_at"
-        )
+        list_evaluations = Evaluation.objects.filter(created_by=user).order_by("-created_at")
+        context["evaluations"] = list_evaluations
+        context["evaluation_form_dic"] = {}
+        for evaluation in list_evaluations:
+            context["evaluation_form_dic"][str(evaluation.id)] = EvaluationForm(name=evaluation.name)
         context["new_orga_form"] = OrganisationCreationForm()
         context["new_evaluation_form"] = EvaluationMutliOrgaForm(user=user)
         # TODO other way to find the last version, not relying on the creation date
@@ -385,6 +387,21 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                 # The function is defined in assessment/views and add or remove the resource to the user_resource m2m
                 # field 'resources'
                 return treat_resources(request)
+
+            # If the user edits the name of the evaluation
+            elif "name" in request.POST.dict():
+                print("enter because NAME", request.is_ajax())
+                data_update = {"success": False, "message": _("An error occurred")}
+                form = EvaluationForm(request.POST)
+                if form.is_valid():
+                    name = form.cleaned_data.get("name")
+                    evaluation_id = int(request.POST.dict().get("evaluation_id"))
+                    evaluation = get_object_or_404(Evaluation, id=evaluation_id)
+                    evaluation.name = name
+                    evaluation.save()
+                    data_update["success"] = True
+                    data_update["message"] = _("The evaluation's name has been changed")
+                return HttpResponse(json.dumps(data_update), content_type="application/json")
 
             # Case there is a post which is not managed by the function
             else:

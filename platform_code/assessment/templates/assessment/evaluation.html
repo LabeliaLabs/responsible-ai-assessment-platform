@@ -1,6 +1,7 @@
 {% extends 'base-evaluation.html' %}
 {% load static %}
 {% load add_attr %}
+{% load home_tags %}
 {% load i18n %}
 
 {% block content %}
@@ -28,7 +29,28 @@
 {% endif %}
 
 <div class="head-page">
-    <h1 class="h1-section" style="margin-bottom: 10px; margin-top: 20px;">{{ evaluation.name }}</h1>
+    {% if organisation|get_role:user == "admin" %}
+    <ul id='listTitle'>
+        <li class="flex">
+            <h1 class="h1-section" id="evaluationName" >{{ evaluation.name }}
+            <button id="hiddenButton" class="btn btn-primary small-btn hidden-div"
+                    data-toggle="modal" data-target="#modal-edit{{evaluation.id}}">
+                <i class="fa fa-edit"></i>
+            </button>
+            </h1>
+        </li>
+    </ul>
+    {% else %}
+        <h1 class="h1-section">{{ evaluation.name }}</h1>
+    {% endif %}
+
+    <div class="modal" id="modal-edit{{evaluation.id}}" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          {% include "assessment/edit-evaluation.html" %}
+        </div>
+      </div>
+    </div>
     <div class="progress" title="{% blocktrans with progression=evaluation.calculate_progression %}{{ progression }}% done{% endblocktrans %}"
           style="width: 50%; margin: auto;">
       <div class="progress-bar " role="progressbar" aria-valuenow="{{evaluation.calculate_progression}}"
@@ -76,4 +98,17 @@
 <form action="{% url 'assessment:orga-summary' organisation.id %}">
     <input type="submit" value="{% trans 'Back to the organisation' %}" class="btn btn-primary float-left bottom-page-button"/>
 </form>
+
+<script>
+// This script is used in the title of the evaluation page to allow the admin user to edit his evaluation name (display a button which open a popin)
+$(document).ready(function(){
+  $("h1").mouseover(function(){
+    $("#hiddenButton").removeClass("hidden-div");
+  });
+  $("h1").mouseout(function(){
+    $('#hiddenButton').addClass("hidden-div");
+  });
+});
+
+</script>
 {% endblock %}

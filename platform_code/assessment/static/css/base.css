@@ -124,6 +124,10 @@ a:hover {
     position: absolute;
 }
 
+.flex{
+    display: flex;
+}
+
 .padding-1{
     padding: 1em;
 }
@@ -578,6 +582,12 @@ a[name="column-button"]:hover{
 
 .medium-button{
     width: 105px;
+}
+
+.small-btn{
+    width: 40px;
+    height: 35px;
+    text-align: center;
 }
 
 /***** END BUTTONS *****/

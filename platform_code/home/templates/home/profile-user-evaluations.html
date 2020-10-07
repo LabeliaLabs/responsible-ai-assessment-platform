@@ -89,7 +89,19 @@
                             {% endif %}
 
                           <td class="div-trash" id="div-trash{{evaluation.id}}" style="border-top:0px; background-color: white;" >
-                              <button class="btn btn-danger" data-toggle="modal" data-target="#modal-delete{{evaluation.id}}"><span class="fa fa-trash"></span></button>
+                              <button class="btn btn-primary small-btn" data-toggle="modal" data-target="#modal-edit{{evaluation.id}}">
+                                  <i class="fa fa-edit"></i>
+                              </button>
+                                <div class="modal" id="modal-edit{{evaluation.id}}" aria-hidden="true">
+                                  <div class="modal-dialog">
+                                    <div class="modal-content">
+                                      {% include "assessment/edit-evaluation.html" %}
+                                    </div>
+                                  </div>
+                                </div>
+                              <button class="btn btn-danger small-btn margin-10" data-toggle="modal" data-target="#modal-delete{{evaluation.id}}">
+                                  <span class="fa fa-trash"></span>
+                              </button>
                               <!-- The Modal delete evaluation -->
                               <!-- The modal is inside the for loop because we need to catch the evaluation id -->
                               <!-- It calls the DeleteEvaluation view -->
