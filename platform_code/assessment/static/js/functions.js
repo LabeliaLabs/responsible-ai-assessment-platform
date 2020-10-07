@@ -157,9 +157,9 @@ function resetChoice(id_form){
                  if(response['success']) {
                      console.log("response", response);
                      console.log("message", document.getElementById("#confirmationform"+element_id));
-                     set_section_progress_bar(response);
+                     setSectionProgressBar(response);
                      if (response["element_status_changed"]){
-                        set_element_evaluation_status_not_done(element_id);
+                        setElementEvaluationStatusNotDone(element_id);
                      }
                      if(response['conditional_elements_list'].length > 0) {
                         for (var i=0; i < response['conditional_elements_list'].length; i++) {
@@ -207,9 +207,9 @@ function submitForm(id_form){
              success: function(response) {
                  if(response['success']) {
                      console.log("response", response);
-                     set_section_progress_bar(response);
+                     setSectionProgressBar(response);
                      if (response["element_status_changed"]){
-                        set_element_evaluation_status_done(element_id);
+                        setElementEvaluationStatusDone(element_id);
                      }
                      if (response["no_more_condition_inter"]){
                         location.reload();
@@ -254,7 +254,7 @@ function submitForm(id_form){
                  if(response['conditional_elements_list'].length > 0) {
                     for (var i=0; i < response['conditional_elements_list'].length; i++) {
                         var id_evaluation_element = response['conditional_elements_list'][i];
-                        set_element_evaluation_status_done(id_evaluation_element);
+                        setElementEvaluationStatusDone(id_evaluation_element);
                         $("#temp_warning"+id_evaluation_element).attr("style", "display: block;");
                         $("#disable_element"+id_evaluation_element).attr("disabled","true");
                         $("#validate"+id_evaluation_element).attr("disabled", "true");
@@ -340,7 +340,7 @@ function submitUserSettingsPasswordForm(id_form){
 };
 
 
-function set_section_progress_bar(response){
+function setSectionProgressBar(response){
     console.log("set progress bar", response["section_progression"]);
     var progress_bar = document.getElementById("section-progress-bar");
     var progress_bar_content = document.getElementById("section-progress-bar-content");
@@ -351,8 +351,7 @@ function set_section_progress_bar(response){
 
 }
 
-function set_element_evaluation_status_done(element_id){
-
+function setElementEvaluationStatusDone(element_id){
     var element_status_to_disable = document.getElementsByName("element_status_not_done"+element_id);
     var new_element_status = document.getElementsByName("element_status_temporary"+element_id);
     console.log("elements older and then new", element_status_to_disable, new_element_status);
@@ -366,7 +365,7 @@ function set_element_evaluation_status_done(element_id){
 
 }
 
-function set_element_evaluation_status_not_done(element_id){
+function setElementEvaluationStatusNotDone(element_id){
     console.log("reset_element");
     var element_status_to_disable = document.getElementsByName("element_status_done"+element_id);
     var new_element_status = document.getElementsByName("element_status_temporary"+element_id);
@@ -380,8 +379,8 @@ function set_element_evaluation_status_not_done(element_id){
         $(new_element_status).html('<i class="fa fa-circle-o fa-stack-2x"></i></span>');
     }
 }
-
-function set_element_evaluation_status_not_done_after_invalid(element_id){
+// not used
+function setElementEvaluationStatusNotDoneAfterInvalid(element_id){
     console.log("reset_element after invalid");
     var element_status_to_disable = document.getElementsByName("element_status_invalid"+element_id);
     var new_element_status = document.getElementsByName("element_status_temporary"+element_id);
@@ -397,9 +396,33 @@ function set_element_evaluation_status_not_done_after_invalid(element_id){
 }
 
 // used in the profile view to adapt the breadcrumbs
-function display_text_in_link(text_to_display, link_id){
+function displayTextLink(text_to_display, link_id){
     console.log("select active breadcrumb",text_to_display, link_id);
     var link_object = document.getElementById(link_id);
     link_object.innerHTML=text_to_display;
 }
 
+function changeNameEvaluation(form_id, evaluation_id){
+    var form = document.getElementById(form_id);
+    console.log("form", form);
+    $.ajax({ data: $(form).serialize()+ "&evaluation_id=" + evaluation_id,
+             type: $(form).attr('method'),
+             url: $(form).attr('action'),
+             success: function(response) {
+                 console.log("response", response);
+                 if(response['success']) {
+                     $("#confirmation"+form_id).html("<div class='alert alert-success margin-10'>"+response['message']+"</div>");
+                     $(".alert").delay(3000).slideUp(200, function() {
+                        $(this).remove();
+                        });
+                     location.reload();  // to update the array and the page
+                 } else {
+                    $("#confirmation"+form_id).html("<div class='alert alert-danger margin-10'>"+response['message']+"</div>");
+                    $(".alert").delay(5000).slideUp(200, function() {
+                        $(this).remove();
+                        });
+                 }
+             }
+    });
+
+};

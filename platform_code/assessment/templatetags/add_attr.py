@@ -141,3 +141,12 @@ def count_finished(list_evaluation):
         if evaluation.is_finished:
             count += 1
     return count
+
+
+@register.filter
+def get_evaluation_form(dictionary, key):
+    key = str(key)
+    if type(dictionary) == dict and key in dictionary.keys():
+        return dictionary.get(key)
+    else:
+        return None

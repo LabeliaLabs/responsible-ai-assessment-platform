@@ -1,0 +1,37 @@
+{% load i18n %}
+{% load add_attr %}
+{% load static %}
+
+<div class="content-modal-delete">
+
+  <form  method='post' class="form" role="form" id="changeNameEval{{evaluation.id}}"
+        action="">
+    <div class="modal-header">
+        <h4 class="modal-title" >{% trans "Do you want to change the name of your evaluation?" %} </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+        <div class="modal-body create-form">
+            <div class="column">
+            {% csrf_token %}
+            {% with eval_form=evaluation_form_dic|get_evaluation_form:evaluation.id %}
+                {% for field in eval_form %}
+                <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                    <span class="float-left">{{ field.label}}</span>
+                    <p > {{field}} </p>
+                {% endfor %}
+             {% endwith %}
+            </div>
+        </div>
+      <div class="modal-footer">
+        <input  type="button" data-dismiss="modal" class="btn btn-primary same-size-220 margin-auto" value="{% trans 'Cancel' %}"/>
+        <button onclick="changeNameEvaluation('changeNameEval{{evaluation.id}}', '{{evaluation.id}}')"
+               class="btn btn-modify same-size-220 margin-auto" type="button"
+                >{% trans "Change" %}
+        </button>
+
+      </div>
+    </form>
+
+    <div id="confirmationchangeNameEval{{evaluation.id}}"></div>
+
+</div>

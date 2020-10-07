@@ -172,7 +172,13 @@ class EvaluationForm(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
+        is_name = False
+        if "name" in kwargs:
+            name = kwargs.pop("name")
+            is_name = True
         super(EvaluationForm, self).__init__(*args, **kwargs)
+        if is_name:
+            self.fields["name"].initial = name
         self.fields["name"].label = _("Evaluation title")
         self.fields["name"].widget.attrs = {"class": "full-width"}
 

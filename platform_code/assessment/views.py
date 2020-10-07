@@ -411,7 +411,31 @@ class EvaluationView(LoginRequiredMixin, DetailView):
         context["section_list"] = section_list
         # print("EVALUATION", context)
         context["organisation"] = organisation
+        context["evaluation_form_dic"] = {str(evaluation.id): EvaluationForm(name=evaluation.name)}
         return self.render_to_response(context)
+
+    def post(self, request, *args, **kwargs):
+        if request.method == 'POST':
+            organisation_id = kwargs.get("orga_id")
+            organisation = get_object_or_404(Organisation, id=organisation_id)
+            if not membership_admin_security_check(
+                    request, organisation=organisation, *args, **kwargs
+            ):
+                messages.warning(request, _("You don't have the right to do this action."))
+                return HttpResponseRedirect(self.request.path_info)
+            if "name" in request.POST.dict() and request.is_ajax():
+                data_update = {"success": False, "message": _("An error occurred")}
+                form = EvaluationForm(request.POST)
+                if form.is_valid():
+                    name = form.cleaned_data.get("name")
+                    evaluation_id = int(request.POST.dict().get("evaluation_id"))
+                    evaluation = get_object_or_404(Evaluation, id=evaluation_id)
+                    evaluation.name = name
+                    evaluation.save()
+                    data_update["success"] = True
+                    data_update["message"] = _("The evaluation's name has been changed")
+                return HttpResponse(json.dumps(data_update), content_type="application/json")
+            return HttpResponseRedirect(self.request.path_info)
 
 
 class ResultsView(LoginRequiredMixin, DetailView):
