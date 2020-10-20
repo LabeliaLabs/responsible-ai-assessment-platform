@@ -249,7 +249,7 @@ def treat_and_save_dictionary_data(dic):
     if not list(ScoringSystem.objects.filter(assessment=assessment)):
         scoring = ScoringSystem(
             assessment=assessment,
-            name="scoring",
+            name="choice_scoring_of_"+assessment.name,
             master_choices_weight_json=dic_choices,
         )
         scoring.save()
@@ -257,7 +257,7 @@ def treat_and_save_dictionary_data(dic):
     if not list(EvaluationElementWeight.objects.filter(assessment=assessment)):
         element_weight = EvaluationElementWeight(
             assessment=assessment,
-            name="element weight",
+            name="element_weight_of_"+assessment.name,
             master_evaluation_element_weight_json=dic_elements,
         )
         element_weight.save()
