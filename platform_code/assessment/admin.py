@@ -1,11 +1,12 @@
 import json
+from ast import literal_eval
 
 from django.contrib import admin, messages
 from django.contrib.admin import helpers
 from django.contrib.admin.exceptions import DisallowedModelAdminToField
 from django.contrib.admin.options import TO_FIELD_VAR, IS_POPUP_VAR
 from django.contrib.admin.utils import flatten_fieldsets, unquote
-from django.core.exceptions import ValidationError, PermissionDenied
+from django.core.exceptions import ValidationError, PermissionDenied, ObjectDoesNotExist, MultipleObjectsReturned
 from django.forms import widgets, all_valid
 from django.shortcuts import redirect
 from django.urls import path  # Used to import Json
@@ -33,6 +34,8 @@ from .models import (
     Upgrade,
     get_last_assessment_created,
 )
+
+from assessment.scoring import check_and_valid_scoring_json
 
 
 class PrettyJSONWidget(widgets.Textarea):
@@ -72,7 +75,7 @@ admin.site.register(Upgrade)
 
 class JsonUploadAssessmentAdmin(admin.ModelAdmin):
     """
-    This class defines the assessment json import as well as the upgrade_json import.
+    This class defines the assessment json import, the choice scoring json import as well as the upgrade_json import.
     From the assessment json file, we create all the objects it contains.
     If there are more than one assessment in the database, an upgrade json must be provided (refer to the doc
     "multiple_version.md" to see the format). From this upgrade json, the table Upgrade is populated.
@@ -99,10 +102,9 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
         if request.method == "POST":
             form = JsonUploadForm(request.POST, request.FILES)
             if form.is_valid():
-                if request.FILES["json_file"].name.endswith("json"):
-
+                if request.FILES["assessment_json_file"].name.endswith("json"):
                     decoded_assessment_file = self.decode_file(
-                        request, "json_file"
+                        request, "assessment_json_file"
                     )  # check it works both cases
 
                     # If there is already an assessment in the data base and we need a
@@ -140,6 +142,11 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                     level=messages.ERROR,
                                 )
                                 return redirect("admin/")
+
+                            # Update the scoring with the import file
+                            if assessment_success:
+                                assessment = get_last_assessment_created()  # It is the assessment just created
+                                self.import_scoring(request, assessment)
 
                             # Process the import of the upgrade json
                             dict_upgrade_data = json.loads(decoded_upgrade_file)
@@ -208,6 +215,8 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             )
                             return redirect("admin/")
                         else:
+                            assessment = get_last_assessment_created()  # It is the assessment just created
+                            self.import_scoring(request, assessment)
                             self.message_user(
                                 request,
                                 assessment_save_message,
@@ -218,7 +227,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                 else:
                     self.message_user(
                         request,
-                        f"Incorrect file type: {request.FILES['json_file'].name.split('.')[1]}",
+                        f"Incorrect file type: {request.FILES['assessment_json_file'].name.split('.')[1]}",
                         level=messages.ERROR,
                     )
 
@@ -230,6 +239,65 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
             )
 
         return redirect("admin/")
+
+    def import_scoring(self, request, assessment):
+        """
+        This function modify the scoring system created during the assessment import (or the scoring associated
+        to this assessment if it already exists). It checks the json of the master_choices_weight is well
+        formatted according to the assessment and then get the scoring system and replace this field to the new one
+        and save the object.
+        :param assessment:
+        :param request:
+        :return:
+        """
+        # Import the scoring after the import of the assessment and the upgrade table
+        # The scoring has been initialized with empty values
+        if request.FILES["scoring_json_file"].name.endswith("json"):
+            # Handles the exception in case it is a bad json format
+            decoded_scoring_file = self.decode_file(
+                request, "scoring_json_file"
+            )
+            # Test that the scoring system has a good format
+            success_scoring, message_scoring = check_and_valid_scoring_json(
+                decoded_file=decoded_scoring_file, assessment=assessment
+            )
+
+            if not success_scoring:
+                self.message_user(
+                    request,
+                    message_scoring,
+                    level=messages.ERROR,
+                )
+                assessment.delete()
+                return redirect("admin/")
+            try:
+                scoring = ScoringSystem.objects.get(assessment=assessment)
+                scoring.master_choices_weight_json = literal_eval(decoded_scoring_file)
+                scoring.save()
+                self.message_user(
+                    request,
+                    "The scoring system has been imported!",
+                    level=messages.SUCCESS,
+                )
+            except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
+                self.message_user(
+                    request,
+                    f"The scoring is not unique or doesn't exist "
+                    f"(query {ScoringSystem.object.filter(assessment=assessment)})"
+                    f" for the assessment {assessment}, error {e}",
+                    level=messages.ERROR,
+                )
+                assessment.delete()
+                return redirect("admin/")
+
+        # Else there is an issue with the scoring json format (which is not a json)
+        else:
+            assessment.delete()
+            self.message_user(
+                request,
+                f"Incorrect file type: {request.FILES['scoring_json_file'].name.split('.')[1]}",
+                level=messages.ERROR,
+            )
 
     def decode_file(self, request, file_name):
         """
@@ -318,7 +386,6 @@ class ScoringAdmin(admin.ModelAdmin):
             form = ModelForm(request.POST, request.FILES, instance=obj)
             form_validated = form.is_valid()
             if form_validated:
-                print("test save form")
                 try:
                     new_object = self.save_form(request, form, change=not add)
                 except ValidationError as e:
