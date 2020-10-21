@@ -426,3 +426,48 @@ function changeNameEvaluation(form_id, evaluation_id){
     });
 
 };
+
+// upgrade function used to upgrade an evaluation and block the popin from closing
+function upgrade(modal_id, form_id, evaluation_id){
+    var upgrade_modal = document.getElementById(modal_id);
+    var form = document.getElementById(form_id);
+    var text_message = document.getElementById("upgrade_message_text"+evaluation_id);
+    var upgrade_message = document.getElementById("upgrade_message"+evaluation_id);
+    $(upgrade_message).addClass("alert-warning");
+    $(upgrade_message).removeClass("display-none");
+    text_message.textContent = 'The upgrade is in process, please wait.';
+    var buttons = document.getElementsByTagName('button');
+    for (var button of buttons) {
+        $(button).attr("disabled", "true");
+        $(button).addClass("waiting-cursor");
+    }
+    document.body.style.cursor='wait'; // transform the cursor to a loading cursor
+    $.ajax({
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        success: function(response) {
+            console.log("response", response);
+             if(response['success']) {
+                document.body.style.cursor='default';
+                $(upgrade_message).removeClass("alert-warning");
+                $(upgrade_message).addClass("alert-success");
+                text_message.textContent = response["message"];
+                $(".alert").delay(5000).slideUp(200, function() {
+                    $(this).remove();
+                });
+                document.location.href=response["redirection"];
+             } else {
+                document.body.style.cursor='default';
+                for (var button of buttons) {
+                    $(button).removeAttr("disabled");
+                    $(button).removeClass("waiting-cursor");
+                }
+                $(upgrade_message).removeClass("alert-warning");
+                $(upgrade_message).addClass("alert-danger");
+                console.log("test message rep", response["message"])
+                text_message.textContent = response["message"];
+                setTimeout(location.reload.bind(location), 3000);
+             }
+        }
+    });
+}

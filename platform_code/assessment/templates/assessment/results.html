@@ -18,6 +18,14 @@
 </div>
 {% endif %}
 
+{% if messages %}
+<ul class="messages margin-50">
+    {% for message in messages %}
+    <li {% if message.tags %} class=" alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
 <h1>{{evaluation.name}}</h1>
 
 <div class="bg-white rounded-lg p-5 shadow">

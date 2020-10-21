@@ -56,7 +56,9 @@
                           {% else %}
                             <td class="case-array">-</td>
                           {% endif %}
+                          <!-- Actions buttons -->
                             {% if evaluation.is_upgradable %}
+                                <!-- If the evaluation is upgradable && finished  -->
                                 {% if evaluation.is_finished %}
                                 <td class="case-array">
                                     <a name="resultat-no-modif" class="btn btn-results medium-button"
@@ -66,6 +68,7 @@
                                        class="btn btn-primary medium-button margin-10"
                                         >{% trans "Upgrade" %}</a>
                                 </td>
+                                <!-- If the evaluation is upgradable but not finished -->
                                {% else %}
                                 <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
                                     >{% trans "Modify" %}</a>
@@ -74,6 +77,16 @@
                                         >{% trans "Upgrade" %}</a>
                                 </td>
                               {% endif %}
+                            <!--  Modal to upgrade for all cases finished/not finished-->
+                                <div class="modal" id="modal-upgrade-eval{{evaluation.id}}" aria-hidden="true"
+                                     data-backdrop="static" data-keyboard="false">
+                                    <div class="modal-dialog ">
+                                      <div class="modal-content" >
+                                      {% include "assessment/upgrade-modal.html" %}
+                                      </div>
+                                    </div>
+                                </div>
+                            <!-- Else the evaluation is not upgradable -->
                             {% else %}
                               {% if evaluation.is_finished %}
                                 <td class="case-array">
@@ -114,14 +127,7 @@
                                 </div>
 
                           </td>
-                             <!--        Modal to upgrade-->
-                            <div class="modal" id="modal-upgrade-eval{{evaluation.id}}" aria-hidden="true">
-                            <div class="modal-dialog ">
-                              <div class="modal-content">
-                              {% include "assessment/upgrade-modal.html" %}
-                              </div>
-                            </div>
-                          </div>
+
 
                         </tr>
                         </div>

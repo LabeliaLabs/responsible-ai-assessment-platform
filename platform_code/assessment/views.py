@@ -104,6 +104,8 @@ def upgradeView(request, *args, **kwargs):
     evaluation_version = evaluation.assessment.version
     latest_version = get_last_assessment_created().version
     # print("compare versions", evaluation_version, latest_version)
+    data_update = {"success": False, "message": _("The operation failed. Please try again or"
+                                                  " contact the site administrators")}
     if float(evaluation_version) < float(latest_version):
         success = False
         try:
@@ -113,13 +115,15 @@ def upgradeView(request, *args, **kwargs):
         except ValueError:
             # todo logs
             messages.warning(request, _("We are sorry, the operation failed."))
-            url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 
         if success:
+            data_update["message"] = _("Your evaluation has been upgraded."
+                                       " You will be redirected to the new version.")
+            data_update["success"] = True
             previous_url = request.META.get("HTTP_REFERER")
             print("previous URL", previous_url, kwargs)
             # Todo can factorize this and redirect to the section
-            if "/section/" in previous_url:
+            if "/section/" in previous_url and not new_eval.is_finished:
                 # url = redirect("assessment:section", organisation.id, new_eval.slug, new_eval.pk)
                 messages.success(
                     request,
@@ -130,7 +134,7 @@ def upgradeView(request, *args, **kwargs):
                 url = redirect(
                     "assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk
                 )
-            elif "/results/" in previous_url:
+            elif "/results/" in previous_url and not new_eval.is_finished:
                 url = redirect(
                     "assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk
                 )
@@ -141,17 +145,18 @@ def upgradeView(request, *args, **kwargs):
                         "You have to complete the new items before the validation."
                     ),
                 )
-            elif "/profile/" in previous_url:
+            elif "/profile/" in previous_url and not new_eval.is_finished:
                 url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
                 messages.success(request, _("Your evaluation has been upgraded!"))
             elif (
                 "organisation" in previous_url
                 and not str(evaluation_id) in previous_url
+                and not new_eval.is_finished
             ):
                 url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
                 messages.success(request, _("Your evaluation has been upgraded!"))
-            # Case it is the evaluation page
-            else:
+            # Case "else" when it is the evaluation page
+            elif not new_eval.is_finished:
                 url = redirect(
                     "assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk
                 )
@@ -161,11 +166,20 @@ def upgradeView(request, *args, **kwargs):
                         "Your evaluation has been upgraded! You have been redirected to it."
                     ),
                 )
+            # If the new version is finished, we redirect to the results in any case
+            if new_eval.is_finished:
+                url = redirect(
+                    "assessment:results", organisation.id, new_eval.slug, new_eval.pk
+                )
+                messages.success(
+                    request,
+                    _(
+                        "Your evaluation has been upgraded! You have been redirected to it. "
+                    ),
+                )
+            data_update["redirection"] = url.url
 
-    else:
-        url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
-        messages.warning(request, _("There is an issue with the versions."))
-    return url
+    return HttpResponse(json.dumps(data_update), content_type="application/json")
 
 
 class SummaryView(LoginRequiredMixin, DetailView):

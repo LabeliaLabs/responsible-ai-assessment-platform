@@ -48,46 +48,56 @@
               {% else %}
                 <td class="case-array">-</td>
               {% endif %}
+              <!-- If the evaluation is upgradable, which means a new assessment version exists-->
               {% if evaluation.is_upgradable %}
+                <!-- If the evaluation is finished && upgradable -->
                 {% if evaluation.is_finished %}
                   <td class="case-array">
                     <a class="btn btn-results medium-button" name="resultat-no-modif"
                        href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
                       >{% trans "Results" %}</a>
+                    <!-- If the user is an admin of the organisation so he has the right to upgrade && evaluation finished && upgradable  -->
                     {% if organisation|get_role:user == "admin" %}
                       <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
                          class="btn btn-primary medium-button margin-10"
                           >{% trans "Upgrade" %}</a>
+                    <!-- If the user is not an admin of the organisation, he can not upgrade the evaluation   -->
                     {% else %}
                       <button class="btn btn-primary medium-button margin-10" disabled
                               title="{% trans 'You do not have the right to do this action' %}">{% trans "Upgrade" %}
                       </button>
+                    <!-- endif role user -->
                     {% endif %}
                   </td>
+                <!-- Else the evaluation is not finished ( && upgradable )-->
                 {% else %}
                   <td class="case-array">
                     <a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}">{% trans "Modify" %}</a>
+                    <!-- If the user is an organisation admin -->
                     {% if organisation|get_role:user == "admin" %}
                       <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
                          class="btn btn-primary medium-button margin-10"
                           >{% trans "Upgrade" %}</a>
+                    <!--Else the user is not an organisation admin, ie simple user, so he cannot upgrade the evaluation  -->
                     {% else %}
                       <button class="btn btn-primary medium-button margin-10" disabled
                               title="{% trans 'You do not have the right to do this action' %}">{% trans "Upgrade" %}
                       </button>
+                    <!-- Endif role user -->
                     {% endif %}
                   </td>
+                <!-- Endif evaluation is finished -->
                 {% endif %}
-                <!--        Modal to upgrade-->
-              <div class="modal" id="modal-upgrade-eval{{evaluation.id}}" aria-hidden="true">
-              <div class="modal-dialog ">
-                <div class="modal-content">
-
-                {% include "assessment/upgrade-modal.html" %}
-
+                <!-- Modal to upgrade-->
+              <div class="modal" id="modal-upgrade-eval{{evaluation.id}}" aria-hidden="true"
+                   data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog ">
+                  <div class="modal-content">
+                  {% include "assessment/upgrade-modal.html" %}
+                  </div>
                 </div>
               </div>
-            </div>
+              <!-- Else the evaluation is not upgradable -->
               {% else %}
               {% if evaluation.is_finished %}
                   <td class="case-array">
@@ -98,6 +108,7 @@
                   <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
                   >{% trans "Modify" %}</a></td>
                 {% endif %}
+              <!-- Endif the evaluation is upgradable and end of the case -->
               {% endif %}
 
               <td class="div-trash" id="div-trash{{evaluation.id}}" style="border-top:0px; background-color: white;" >
