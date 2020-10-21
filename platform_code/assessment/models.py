@@ -18,6 +18,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from home.models import Organisation
 
@@ -263,7 +264,7 @@ class Evaluation(models.Model):
         else:
             user_eval = user_request
         new_eval = Evaluation.create_evaluation(
-            name=self.name,
+            name=self.name + _(" (new version)"),
             assessment=final_assessment,
             organisation=self.organisation,
             user=user_eval,
@@ -328,6 +329,7 @@ class Evaluation(models.Model):
             new_section.save()
         # Normally, as we create new items, it wont occur
         new_eval.set_finished()
+        # we don't set the score here as it is already implemented in the views so we will redirect
         return new_eval
 
     def set_finished(self):

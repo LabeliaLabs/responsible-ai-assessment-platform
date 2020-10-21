@@ -144,6 +144,10 @@ a:hover {
     padding: 1em;
 }
 
+.waiting-cursor:hover{
+    cursor: wait;
+}
+
 /***** END GLOBAL PROPERTIES *****/
 
 #page-container {  /* check if used */
@@ -663,7 +667,7 @@ a[name="column-button"]:hover{
 .modal {
   display: none; /* Hidden by default */
   position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  z-index: 3; /* Sit on top */
   left: 0;
   top: 0;
   width: 100%; /* Full width */
@@ -777,6 +781,10 @@ tr.spaceUnder>td {
 }
 
 .not-liked:hover {
+}
+
+.self-center{
+    align-self: center;
 }
 
 .object-linked:hover .hidden-div {
