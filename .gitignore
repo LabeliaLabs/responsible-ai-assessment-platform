@@ -22,3 +22,4 @@ vim.exe.*
 nohup.out
 data/certbot/
 nohup.out
+.coverage
