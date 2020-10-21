@@ -25,12 +25,9 @@ class UserManager(BaseUserManager):
         Creates and saves a User with the given email and password.
         """
         if not email:
-            raise ValueError(_('Users must have an email address'))
+            raise ValueError(_("Users must have an email address"))
 
-        user = self.model(
-            email=self.normalize_email(email),
-
-        )
+        user = self.model(email=self.normalize_email(email),)
 
         user.set_password(password)
         user.save(using=self._db)
@@ -40,10 +37,7 @@ class UserManager(BaseUserManager):
         """
         Creates and saves a staff user with the given email and password.
         """
-        user = self.create_user(
-            email,
-            password=password,
-        )
+        user = self.create_user(email, password=password,)
         user.staff = True
         user.save(using=self._db)
         return user
@@ -52,10 +46,7 @@ class UserManager(BaseUserManager):
         """
         Creates and saves a superuser with the given email and password.
         """
-        user = self.create_user(
-            email,
-            password=password,
-        )
+        user = self.create_user(email, password=password,)
         user.staff = True
         user.admin = True
         user.save(using=self._db)
@@ -70,25 +61,24 @@ class User(AbstractBaseUser, PermissionsMixin):
     case, the field wasn't caught. This issue forced me to overwrite some methods and class to reset the user password.
 
     """
+
     email = models.EmailField(
-        verbose_name='email',
+        verbose_name="email",
         max_length=255,
         unique=True,
-        error_messages={
-            'unique': _("A user with that email already exists."),
-        },
+        error_messages={"unique": _("A user with that email already exists.")},
     )
     # TODO replace fields active, admin, staff by is_admin, is_active, is_staff and delete the modification in
     #  PasswordResetForm (in home/forms) and PasswordReset (in home/views)
-    first_name = models.CharField(_('first name'), max_length=30, blank=True)
-    last_name = models.CharField(_('last name'), max_length=150, blank=True)
+    first_name = models.CharField(_("first name"), max_length=30, blank=True)
+    last_name = models.CharField(_("last name"), max_length=150, blank=True)
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)  # a admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
     # notice the absence of a "Password field", that is built in.
 
     object = UserManager()
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []  # Email & Password are required by default.
 
     def get_email(self):
@@ -121,10 +111,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_all_data(self):
         """This function is used to download the personal data of the user. It returns a dictionary."""
-        return {"email": self.email,
-                "first_name": self.first_name,
-                "last_name": self.last_name,
-                }
+        return {
+            "email": self.email,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+        }
 
     @property
     def is_staff(self):
@@ -153,7 +144,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         This function is used to obtain the list of organisations the user is member with a defined role
         :return: list of organisations
         """
-        return list(Organisation.objects.distinct().filter(membership__user=self, membership__role=role))
+        return list(
+            Organisation.objects.distinct()
+            .filter(membership__user=self, membership__role=role)
+            .order_by("-created_at")
+        )
 
 
 class UserResources(models.Model):
@@ -162,6 +157,7 @@ class UserResources(models.Model):
     wants to consult them regardless the fact he liked the resource doing an evaluation for an organization
     (!= Membership)
     """
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     resources = models.ManyToManyField("assessment.ExternalLink", blank=True)
 
@@ -178,24 +174,24 @@ class Membership(models.Model):
     """
     The class Membership
     """
-    ADMIN = 'admin'
+
+    ADMIN = "admin"
     READ_ONLY = "simple_user"
 
     ROLES = (
-        (ADMIN, 'admin'),
+        (ADMIN, "admin"),
         (READ_ONLY, "simple_user"),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    organisation = models.ForeignKey("home.Organisation", blank=True, null=True, on_delete=models.CASCADE)
+    organisation = models.ForeignKey(
+        "home.Organisation", blank=True, null=True, on_delete=models.CASCADE
+    )
     role = models.CharField(max_length=200, choices=ROLES, default=ADMIN)
 
     @classmethod
     def create_membership(cls, user, organisation, role):
-        member = cls(user=user,
-                     organisation=organisation,
-                     role=role,
-                     )
+        member = cls(user=user, organisation=organisation, role=role,)
         member.save()
 
     def __str__(self):
@@ -206,20 +202,21 @@ class Organisation(models.Model):
     """
 
     """
-    TEN = '0-9'
-    FIFTY = '10-49'
-    HUNDRED = '50-99'
-    FIVEHUNDRED = '100-499'
-    FIVETHOUSAND = '500-4999'
-    PLUS = '>5000'
+
+    TEN = "0-9"
+    FIFTY = "10-49"
+    HUNDRED = "50-99"
+    FIVEHUNDRED = "100-499"
+    FIVETHOUSAND = "500-4999"
+    PLUS = ">5000"
 
     SIZE = (
-        (TEN, '0-9'),
-        (FIFTY, '10-49'),
-        (HUNDRED, '50-99'),
-        (FIVEHUNDRED, '100-499'),
-        (FIVETHOUSAND, '500-4999'),
-        (PLUS, '>5000'),
+        (TEN, "0-9"),
+        (FIFTY, "10-49"),
+        (HUNDRED, "50-99"),
+        (FIVEHUNDRED, "100-499"),
+        (FIVETHOUSAND, "500-4999"),
+        (PLUS, ">5000"),
     )
 
     # todo : if we keep this field, we need to work on translation
@@ -242,7 +239,7 @@ class Organisation(models.Model):
     AUTO = "Automobile"
     ENVIRONNEMENT = "Environnement"
     DROIT = "Droit / Justice"
-    AGROALIMENTAIRE = 'Agroalimentaire'
+    AGROALIMENTAIRE = "Agroalimentaire"
     BANQUE = "Banque / Assurance"
     BOIS = "Bois / Papier / Carton / Imprimerie"
     BTP = "BTP / Architecture / Matériaux de construction"
@@ -261,9 +258,8 @@ class Organisation(models.Model):
     AUTRE = "Autre"
 
     SECTOR = (
-
         (AGRICULTURE, "Agriculture"),
-        (AGROALIMENTAIRE, 'Industrie Agroalimentaire'),
+        (AGROALIMENTAIRE, "Industrie Agroalimentaire"),
         (ARMEE, "Armée / sécurité"),
         (ART, "Art / Design"),
         (AUDIO, "Audiovisuel / Spectacle"),
@@ -298,13 +294,17 @@ class Organisation(models.Model):
         (TRADUCTION, "Traduction / Interprétariat"),
         (TRANSPORT, "Transports / Logistique"),
         (AUTRE, "Autre"),
-
     )
 
     name = models.CharField(max_length=200)
     size = models.CharField(max_length=200, choices=SIZE)
-    created_by = models.ForeignKey(User, null=True, blank=True,
-                                   on_delete=models.SET_NULL, related_name="created_by")
+    created_by = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="created_by",
+    )
     country = CountryField()  # Set a default country, France
     sector = models.CharField(max_length=1000, choices=SECTOR)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -321,15 +321,21 @@ class Organisation(models.Model):
         :param created_by:
         :return:
         """
-        organisation = cls(name=name, size=size, country=country, sector=sector, created_by=created_by)
+        organisation = cls(
+            name=name, size=size, country=country, sector=sector, created_by=created_by
+        )
         organisation.save()
-        Membership.create_membership(user=created_by, role="admin", organisation=organisation)
+        Membership.create_membership(
+            user=created_by, role="admin", organisation=organisation
+        )
         # Give the simple_user right to all the platform staff to allow them to see the evaluations
         list_staff_platform = get_list_all_staff_admin_platform()
         for staff_user in list_staff_platform:
             # If the user who created the organisation is admin, it is useless to give him a "simple_user" right
             if staff_user != created_by:
-                Membership.create_membership(user=staff_user, role="simple_user", organisation=organisation)
+                Membership.create_membership(
+                    user=staff_user, role="simple_user", organisation=organisation
+                )
         return organisation
 
     def __str__(self):
@@ -438,7 +444,7 @@ class Organisation(models.Model):
         Return the list of the evaluations for the organisation
         :return:
         """
-        return list(self.evaluation_set.all())
+        return list(self.evaluation_set.all().order_by("-created_at"))
 
     def get_list_assessment_version(self):
         """

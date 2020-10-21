@@ -275,14 +275,16 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         # Get the evaluations created by the user
         # This can be modified if we want all the evaluations of the organisations the user belong to
         # Can be empty
-        list_evaluations = Evaluation.objects.filter(created_by=user).order_by("-created_at")
+        # Todo tests
+        list_evaluations = Evaluation.objects.filter(organisation__membership__user=user,
+                                                     organisation__membership__role="admin").order_by("-created_at")
         context["evaluations"] = list_evaluations
         context["evaluation_form_dic"] = {}
         for evaluation in list_evaluations:
             context["evaluation_form_dic"][str(evaluation.id)] = EvaluationForm(name=evaluation.name)
         context["new_orga_form"] = OrganisationCreationForm()
         context["new_evaluation_form"] = EvaluationMutliOrgaForm(user=user)
-        # TODO other way to find the last version, not relying on the creation date
+
         if get_last_assessment_created():
             context[
                 "last_version"
