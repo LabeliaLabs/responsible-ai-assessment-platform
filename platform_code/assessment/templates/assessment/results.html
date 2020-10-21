@@ -20,25 +20,23 @@
 
 <h1>{{evaluation.name}}</h1>
 
+<div class="bg-white rounded-lg p-5 shadow">
+    <h2 class="h6 font-weight-bold text-center mb-4">{% trans "Your score" %}</h2>
 
-      <div class="bg-white rounded-lg p-5 shadow">
-        <h2 class="h6 font-weight-bold text-center mb-4">{% trans "Your score" %}</h2>
-
-        <!-- Progress bar 1 -->
-        <div class="progress progress-results mx-auto"
-             data-value='{{evaluation.score}}'>
-              <span class="progress-left progress-left-results"
-                    style="width: 50%;height: 100%;overflow: hidden;position: absolute;top: 0;z-index: 1;">
-                       <span class="progress-bar progress-bar-results border-primary" ></span>
-              </span>
-              <span class="progress-right progress-right-results"
-                    style="right: 0;width: 50%;  height: 100%; overflow: hidden; position: absolute; top: 0; z-index: 1;">
-                  <span class="progress-bar progress-bar-results border-primary"></span>
-              </span>
-          <div class="progress-value progress-value-results w-100 h-100 rounded-circle d-flex align-items-center justify-content-center">
+    <!-- Progress bar 1 -->
+    <div class="progress progress-results mx-auto"
+         data-value='{{evaluation.score}}'>
+          <span class="progress-left progress-left-results">
+              <span class="progress-bar progress-bar-results border-primary" ></span>
+          </span>
+          <span class="progress-right progress-right-results">
+              <span class="progress-bar progress-bar-results border-primary"></span>
+          </span>
+          <div class="progress-value progress-value-results w-100 h-100
+           rounded-circle d-flex align-items-center justify-content-center">
             <div class="h2 font-weight-bold">{{evaluation.score}}<sup class="small"></sup></div>
           </div>
-        </div>
+    </div>
         <!-- END -->
 <!--            Todo see how to adapt, it is kept as comment as it may be tricky to code again -->
 <!--        &lt;!&ndash; Display none but keep it because may be used later &ndash;&gt;-->
@@ -53,67 +51,67 @@
 <!--        &lt;!&ndash; END &ndash;&gt;-->
 <!--      </div>-->
 
-<canvas width="475" height="187" id="canvas-preview" style="width: 380px; height: 150px;"></canvas>
+    <div class="margin-70 margin-bot-50">
+        <p class="">{% trans "The synthetic score is on a total of 100 theoretical maximum points. It provides an indication of the organization maturity level concerning a responsible and trustworthy data science. At the end of 2020, the 50/100 threshold can be considered a very advanced maturity level." %}
+        </p>
+        <p class="">{% trans "Note: the score is a synthetic indication, not an end in itself. In particular, we invite you to consult the resources associated with each assessment element, which are excellent entry points for building skills on your topics of interest." %}
+        </p>
+    </div>
+    <div class="row">
+        <form  action="{% url 'assessment:orga-summary' organisation.id %}" class="float-left margin-auto">
+            <input class="btn btn-primary same-size-220" type="submit" value="{% trans 'Back to the organisation summary' %}" />
+        </form>
 
-
-<form  action="{% url 'assessment:orga-summary' organisation.id %}">
-    <input class="btn btn-primary float-left same-size-250" type="submit" value="{% trans 'Back to the organisation summary' %}" />
-</form>
-
-
-
-<form action="{{ evaluation.get_absolute_url }}">
-    <input type="submit" value="{% trans 'Modify' %}" class="btn btn-primary float-right same-size-250" />
-</form>
-
-
-
-
-<div class="response" id="responses" style="margin-top:80px;">
-    <h2>{% trans "Your answers" %}</h2>
-<!--    Need to create a new form, initiate with database, disable other choices-->
-
+        <form action="{{ evaluation.get_absolute_url }}" class="float-right margin-auto">
+            <input type="submit" value="{% trans 'Modify' %}" class="btn btn-primary same-size-220" />
+        </form>
+    </div>
+    <div class="response margin-70" id="responses">
+        <h2>{% trans "Your answers" %}</h2>
+    <!--    Need to create a new form, initiate with database, disable other choices-->
             {% for element in evaluation_element_list %}
                 {% if element.master_evaluation_element.order_id == 1 %}
-                    <p>Section {{ element.section.master_section.order_id}}. {{ element.section.master_section.name }} </p>
+                    <p>Section {{ element.section.master_section.order_id}}. {{ element.section.master_section.name }}
+                    </p>
                 {% endif %}
-                      <div class="card ">
-                        <div class="card-header card-headers-results row" id="heading{{element.id}}">
-                            <p>
-                              Q{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.name}}
+                <div class="card ">
+                    <div class="card-header card-headers-results row" id="heading{{element.id}}">
+                        <p>Q{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.name}}
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        {% if element.has_condition_on and element|is_not_applicable %}
+                            <div id="warningmessage{{element.id}}" class='alert alert-warning'>
+                                 {% trans 'You are not concerned by this evaluation element' %}
+                            </div>
+                        {% endif %}
+                       <div id="question-name" class="question-name margin-all-20">
+                          Q{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}{% trans ":" %}
+                          {{element.master_evaluation_element.question_text}}
+                       </div>
+                        {% if element.master_evaluation_element.question_type == "radio" %}
+                           <p class="italic margin-all-20"> R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                              {% trans ": Please select one answer which best matches to your organisation situation" %}
+                           </p>
 
+                        {% elif element.master_evaluation_element.question_type == "checkbox"%}
+                            <p class="italic margin-all-20"> R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                               {% trans ": Please select all the answers which best match to your organisation situation. Be careful, some combinations are not coherent" %}
                             </p>
 
-                        </div>
+                        {% endif %}
 
-                      <div class="card-content">
-                          <div id="question-name" class="question-name" style="margin: 20px;">
-                              Q{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}{% trans ":" %}
-                              {{element.master_evaluation_element.question_text}}
-                           </div>
+                        {{ dic_form_results|get_item:element }}
 
-                          {% if element.master_evaluation_element.question_type == "radio" %}
-                              <p style="font-style:italic; margin: 20px;"> R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
-                                  {% trans ": Please select one answer which best matches to your organisation situation" %}</p>
-
-                           {% elif element.master_evaluation_element.question_type == "checkbox"%}
-                                <p style="font-style:italic; margin: 20px;"> R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
-                                {% trans ": Please select all the answers which best match to your organisation situation. Be careful, some combinations are not coherent" %}</p>
-
-                           {% endif %}
-
-                          {{ dic_form_results|get_item:element }}
-
-                      </div>
-                      </div>
-
-                 {% endfor %}
-
-</div>
-
-<div>
-    <button class="btn btn-primary float-right" onclick="topFunction()" id="top-button"
-            title="{% trans 'Top of the page' %}">{% trans 'Top of the page' %}</button>
+                    </div>
+                </div>
+            {% endfor %}
+    </div>
+    <div>
+        <button class="btn btn-primary float-right" onclick="topFunction()" id="top-button"
+                title="{% trans 'Top of the page' %}">{% trans 'Top of the page' %}
+        </button>
+    </div>
 </div>
 
 <script>
