@@ -3,6 +3,7 @@ from ast import literal_eval
 from django import forms
 from django.forms import ModelForm
 from django.forms import widgets
+from django.forms.renderers import get_default_renderer
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
@@ -16,6 +17,7 @@ from .models import (
 )
 from .scoring import check_and_valid_scoring_json
 from home.models import Organisation
+from .utils import markdownify_bold, markdownify_italic
 
 element_feedback_list = [
     ["element_fit", _("No evaluation element fits to my case")],
@@ -232,7 +234,7 @@ class ChoiceForm(ModelForm):
             list_choices_ticked = evaluation_element.get_list_choices_ticked()
             question = forms.ChoiceField(
                 label="",
-                widget=forms.RadioSelect(),
+                widget=MarkdownifyRadioChoices,
                 choices=choices_tuple,
                 initial=list_choices_ticked,  # Initial ticked choices according the database
                 required=False,
@@ -245,7 +247,7 @@ class ChoiceForm(ModelForm):
             list_choices_ticked = evaluation_element.get_list_choices_ticked()
             question = forms.MultipleChoiceField(
                 label="",
-                widget=forms.CheckboxSelectMultiple(),
+                widget=MarkdownifyMultiselectChoices,
                 choices=choices_tuple,
                 initial=list_choices_ticked,
                 required=False,
@@ -285,6 +287,26 @@ class ChoiceForm(ModelForm):
             )
 
         self.fields["notes"] = notes  # add the notes (empty or not) in the form
+
+
+class MarkdownifyRadioChoices(widgets.RadioSelect):
+    """
+    Format the choices of the evaluation elements in order to transform markdown symbols into html tags
+    """
+    def _render(self, template_name, context, renderer=None):
+        if renderer is None:
+            renderer = get_default_renderer()
+        return markdownify_italic(markdownify_bold(mark_safe(renderer.render(template_name, context))))
+
+
+class MarkdownifyMultiselectChoices(forms.CheckboxSelectMultiple):
+    """
+    Format the choices of the evaluation elements in order to transform markdown symbols into html tags
+    """
+    def _render(self, template_name, context, renderer=None):
+        if renderer is None:
+            renderer = get_default_renderer()
+        return markdownify_italic(markdownify_bold(mark_safe(renderer.render(template_name, context))))
 
 
 class RadioResultsWidget(widgets.CheckboxSelectMultiple):
