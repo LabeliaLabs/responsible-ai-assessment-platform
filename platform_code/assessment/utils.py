@@ -33,3 +33,12 @@ def markdownify_italic(text):
     return re.sub(
         r"(?<!\_)\_(?!\_)(.*?)(?<!\_)\_(?!\_)", "<i>\g<1></i>", text_bis  # noqa
     )
+
+
+def select_label_choice(text):
+    """
+    This function selects the string between /" after 'value' keyword and before "id"
+    :param text:
+    :return:
+    """
+    return re.findall(r"[0-9]\"\>\r?\n?(.*?)\<\/label", text)
