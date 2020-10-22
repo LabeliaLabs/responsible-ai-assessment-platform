@@ -1,6 +1,7 @@
 # IMPORTS #
 
 import json
+import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import MultipleObjectsReturned
@@ -21,6 +22,8 @@ from assessment.forms import EvaluationMutliOrgaForm, EvaluationForm
 from assessment.models import Assessment, Evaluation, get_last_assessment_created
 from .forms import SignUpForm, OrganisationCreationForm, RegisterForm, DataSettingsForm, PasswordResetForm_
 from .models import User, UserResources, Organisation, Membership
+
+logger = logging.getLogger('monitoring')
 
 # Functions #
 
@@ -43,7 +46,8 @@ def signup(request):
             login(request, user)
             UserResources.create_user_resources(
                 user=user
-            )  # create user_resources so the user can access resources, this could be integrated to user creation ?
+            )  # create user_resources so the user can access resources
+            logger.info(f"[account_creation] The user {email} created an account")
             return redirect("home:orga-creation")
     else:
         form = SignUpForm()
@@ -64,17 +68,18 @@ def delete_user(request):
     :return:
     """
 
-    # todo logs
-    # try:
     user = request.user
     list_orga_user_is_admin = user.get_list_organisations_where_user_as_role(role="admin")
     for orga in list_orga_user_is_admin:
         # If the user is the only admin of the organisation
         if orga.count_admin_members() == 1:
             # Delete the organisation and thus, the evaluations attached (CASCADE)
+            logger.info(f"[organisation_deletion] The orga {orga.name} has been deleted with the deletion of "
+                        f"the user account {user.email}")
             orga.delete()
     # UserResources is deleted on CASCADE
     # Membership is deleted on CASCADE
+    logger.info(f"[account_deletion] The user {user.email} has deleted his account")
     user.delete()
     # Todo use django.utils.translation.ngettext for the plurial
     if len(list_orga_user_is_admin) == 0:
@@ -98,20 +103,19 @@ def login_view(request):
     :return:
     """
     if request.method == "POST":
-        # todo add logs
         form = RegisterForm(request.POST)
         email = request.POST["username"]  # Which is actually the email
         password = request.POST["password"]
         user = authenticate(email=email, password=password)
         if user is not None and user.is_active:
             login(request, user)
+            logger.info(f"[user_connection] The user {user.email} has logged in")
             return redirect("home:user-profile")
         else:
             message = manage_message_login_page(request)
     else:
         form = RegisterForm()
         message = manage_message_login_page(request)
-    print("REFEREEEE", request.META.get("HTTP_REFERER"))
     # TODO add message if redirect "vous devez vous connecter", if redirect from signup "connexion",
     #  if user fail " alert-danger : bad username or pwd"
     return render(request, "home/login.html", {"form": form, "message": message})
@@ -125,7 +129,7 @@ def export_user_data(request):
 
     response = HttpResponse(jsonResponse)
     response["Content-Disposition"] = "attachment; filename=personal_data.json"
-
+    logger.info(f"[data_export] The user {user.email} has exported his personal data")
     return response
 
 
@@ -177,6 +181,7 @@ class LoginView(LoginView):
                 user = authenticate(email=email, password=password)
                 if user is not None and user.is_active:
                     login(self.request, user)
+                    logger.info(f"[user_connection] The user {user.email} has logged in")
                     return HttpResponseRedirect(self.get_success_url())
                 else:
                     return redirect("home:login")
@@ -212,6 +217,7 @@ class ResourcesView(LoginRequiredMixin, generic.DetailView):
             UserResources.create_user_resources(user=user)  # create user_resources so the user can access resources
             user_resources = UserResources.objects.get(user=user)
         else:
+            logger.error(f"[multiple_user_resources] The user {user.email} has multiple user resources")
             error_500_view_handler(request, exception=MultipleObjectsReturned())
 
         query_resources_dict = user_resources.resources.all()
@@ -244,7 +250,6 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         user = request.user
         self.object = user
         context = self.get_context_data(object=user)
-
         # Catch the userresources object
         if len(UserResources.objects.filter(user=user)) == 1:
             user_resources = UserResources.objects.get(user=user)
@@ -254,6 +259,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             UserResources.create_user_resources(user=user)  # create user_resources so the user can access resources
             user_resources = UserResources.objects.get(user=user)
         else:
+            logger.error(f"[multiple_user_resources] The user {user.email} has multiple user resources")
             error_500_view_handler(request, exception=MultipleObjectsReturned())
 
         # not the resources but the dictionary of resources' info
@@ -306,7 +312,6 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         """
         if request.method == 'POST':
 
-            print(request.POST)
             user = request.user
             # Differentiate between the organisation creation and the evaluation creation
             # It could be done with the form id but easier this way, may be to improve
@@ -328,7 +333,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                         sector=sector,
                         created_by=user,
                     )
-
+                    logger.info(f"[organisation_creation] A new organisation {organisation.name} has been "
+                                f"created by the user {user.email}")
                     # redirect to a new URL:
                     response = redirect("assessment:orga-summary", organisation.id)
                     return response
@@ -359,11 +365,11 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                             user=user,
                         )
                         eval.create_evaluation_body()
-                        print("last eval, test fetch", last_version_in_organisation,
-                              get_last_assessment_created().version)
+                        logger.info(f"[evaluation_creation] The user {user.email} has created an evaluation "
+                                    f"{eval.name} for the organisation {organisation}")
                         if last_version_in_organisation and \
                                 last_version_in_organisation < float(get_last_assessment_created().version):
-                            print("fetch eval", eval)
+                            # print("fetch eval", eval)
                             origin_assessment = get_object_or_404(Assessment, version=str(last_version_in_organisation))
                             eval.fetch_the_evaluation(origin_assessment=origin_assessment)
                         # redirect to a new URL:
@@ -392,7 +398,6 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
             # If the user edits the name of the evaluation
             elif "name" in request.POST.dict():
-                print("enter because NAME", request.is_ajax())
                 data_update = {"success": False, "message": _("An error occurred")}
                 form = EvaluationForm(request.POST)
                 if form.is_valid():
@@ -403,10 +408,13 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                     evaluation.save()
                     data_update["success"] = True
                     data_update["message"] = _("The evaluation's name has been changed")
+                    logger.info(f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
+                                f"evaluation (id: {evaluation_id})")
                 return HttpResponse(json.dumps(data_update), content_type="application/json")
 
             # Case there is a post which is not managed by the function
             else:
+                logger.error("[post_error] The post in ProfilView is not managed by any case.")
                 error_400_view_handler(request)
 
 
@@ -438,6 +446,7 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
                     user = form.save()
                     update_session_auth_hash(request, user)  # Important!
                     data_update["success"] = True
+                    logger.info(f"[password_changed] The user {user.email} has changed his password.")
                     # todo solve bug translation
                     # data_update["message_success"] = _("Your password has been changed!")
                     data_update["message_success"] = "Votre mot de passe a bien été changé !"
@@ -449,7 +458,6 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
 
                     for error_dic in error_list_values:
                         data_update["error_messages"].append(error_dic.get("message"))
-                    print("error password", all_error_data)
 
             elif "last_name" in dic_form:
                 form = DataSettingsForm(request.POST, user=user)
@@ -519,7 +527,8 @@ class OrganisationCreationView(LoginRequiredMixin, FormView):
             organisation = Organisation.create_organisation(
                 name=name, size=size, country=country, sector=sector, created_by=user,
             )
-
+            logger.info(f"[organisation_creation] A new organisation {organisation.name} has been created by "
+                        f"the user {user.email}")
             # redirect to a new URL, evaluation creation if there is an assessment in the DB, else profile:
             if get_last_assessment_created():
                 response = redirect("assessment:creation-evaluation", organisation.id)
@@ -542,13 +551,12 @@ class PasswordReset(auth_views.PasswordResetView):
 
 def manage_message_login_page(request):
     """
-    This fucntion manage the messages displayed to the user in the login page
+    This function manages the messages displayed to the user in the login page
     I have chosen to not use the Django messages process (messages.add_message) as it doesn't work properly
     :param request:
     :return:
     """
     previous_url = request.META.get("HTTP_REFERER")
-    print("TEST MESSAGE", previous_url, type(previous_url))
     # Case it s a redirection because the user wanted to access content where as he is not login
     if previous_url is None:
         message = {

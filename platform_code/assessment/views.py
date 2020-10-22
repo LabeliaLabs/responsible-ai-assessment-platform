@@ -9,6 +9,7 @@ import json
 import markdown
 import requests
 from datetime import datetime, timedelta
+import logging
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -41,6 +42,7 @@ from django.conf import settings
 private_token = settings.PRIVATE_TOKEN
 project_id = str(settings.PROJECT_ID)
 
+logger = logging.getLogger('monitoring')
 
 # As we get the organisation id in the url, we need to be sure that the user is a member of the organisation called
 # in the url
@@ -97,6 +99,9 @@ def upgradeView(request, *args, **kwargs):
         request, organisation=organisation, *args, **kwargs
     ):
         messages.warning(request, _("You don't have access to this content."))
+        logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                       f"{organisation} while not member")
+
         return redirect("home:homepage")
 
     evaluation_id = kwargs.get("pk")
@@ -109,11 +114,13 @@ def upgradeView(request, *args, **kwargs):
     if float(evaluation_version) < float(latest_version):
         success = False
         try:
-            # todo logs
             new_eval = evaluation.upgrade(user=user)
             success = True
+            logger.info(f"[upgrade] The user {request.user.email} upgrade his evaluation (id: {evaluation_id})")
         except ValueError:
-            # todo logs
+            logger.warning(f"[upgrade_failed] The user {request.user.email} tried to upgrade his evaluation "
+                           f"(id: {evaluation_id}) but it failed")
+
             messages.warning(request, _("We are sorry, the operation failed."))
 
         if success:
@@ -121,7 +128,7 @@ def upgradeView(request, *args, **kwargs):
                                        " You will be redirected to the new version.")
             data_update["success"] = True
             previous_url = request.META.get("HTTP_REFERER")
-            print("previous URL", previous_url, kwargs)
+            # Print("previous URL", previous_url, kwargs)
             # Todo can factorize this and redirect to the section
             if "/section/" in previous_url and not new_eval.is_finished:
                 # url = redirect("assessment:section", organisation.id, new_eval.slug, new_eval.pk)
@@ -202,9 +209,9 @@ class SummaryView(LoginRequiredMixin, DetailView):
             request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
+            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                           f"{organisation} while not member")
             return redirect("home:homepage")
-
-        print("KWARGS", kwargs)
 
         self.object = organisation
         context = self.get_context_data(object=self.object)
@@ -214,7 +221,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
             organisation=organisation
         ).order_by("-created_at")
         context["form"] = EvaluationForm()
-        # TODO other way to find the last version, not relying on the creation date
+        # The last assessment created is necessarily the last version as it must be strictly croissant
         if get_last_assessment_created():
             context[
                 "last_version"
@@ -226,15 +233,14 @@ class SummaryView(LoginRequiredMixin, DetailView):
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
-        print("CALL THE POST")
-
         organisation_id = kwargs.get("orga_id")
         organisation = get_object_or_404(Organisation, id=organisation_id)
-        if not membership_security_check(
-            request, organisation=organisation, *args, **kwargs
-        ):
+        # Check if the user is member of the orga, if not, return HttpResponseForbidden
+        if not membership_security_check(request, organisation=organisation, *args, **kwargs):
             messages.warning(request, _("You don't have access to this content."))
-            return redirect("home:homepage")
+            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                           f"{organisation} while not member")
+            return redirect('home:homepage')
 
         # Check if the user is an admin member of the orga, if not, return to the same page
         if not membership_admin_security_check(
@@ -264,18 +270,13 @@ class SummaryView(LoginRequiredMixin, DetailView):
                     user=user,
                 )
                 eval.create_evaluation_body()
+                logger.info(f"[evaluation_creation] The user {user.email} created an evaluation {eval.name}")
                 # Check if we need to fetch the evaluation
-                print(
-                    "last eval, test fetch",
-                    last_version_in_organisation,
-                    get_last_assessment_created().version,
-                )
                 if (
                     last_version_in_organisation
                     and last_version_in_organisation
                     < float(get_last_assessment_created().version)
                 ):
-                    print("fetch eval", eval)
                     origin_assessment = get_object_or_404(
                         Assessment, version=str(last_version_in_organisation)
                     )
@@ -308,6 +309,8 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
             request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
+            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                           f"{organisation} while not member")
             return redirect("home:homepage")
         self.object = None
         context = self.get_context_data()
@@ -323,6 +326,8 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
                     request, organisation=organisation, *args, **kwargs
             ):
                 messages.warning(request, _("You don't have access to this content."))
+                logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                               f"{organisation} while not member")
                 return redirect("home:homepage")
 
             # Check if the user is an admin member of the orga, if not, return to the same page
@@ -336,7 +341,6 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
             dic_form = request.POST.dict()
             user = request.user
             # check whether it's valid:
-            print("POST EVAL", dic_form)
             if form.is_valid():
                 name = dic_form.get("name")
                 eval = Evaluation.create_evaluation(
@@ -346,6 +350,7 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
                     user=user,
                 )
                 eval.create_evaluation_body()
+                logger.info(f"[evaluation_creation] The user {user.email} created an evaluation {eval.name}")
                 # redirect to a new URL:
                 response = redirect(
                     "assessment:evaluation", organisation.id, eval.slug, eval.pk,
@@ -374,6 +379,8 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
                 request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
+            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                           f"{organisation} and delete an evaluation while not admin member")
             return redirect("home:homepage")
 
         # Check if the user is an admin member of the orga, if not, return to the same page
@@ -384,14 +391,12 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
             return redirect("assessment:orga-summary", organisation_id)
 
         self.object = self.get_object()
-        print("DELETE", dir(request), request.get_full_path)
-
+        logger.info(f"[evaluation_deletion] The user {request.user.email} deleted an evaluation {self.object.name}")
         self.object.delete()
 
         # Manage the redirection, if the user delete the evaluation from his profile, it redirect to his profile
         # If the user does the suppression from the organisation, redirect to the organisation
         previous_url = request.META.get("HTTP_REFERER")
-        print("DELETION EVAL, test previous_url", previous_url)
         return HttpResponseRedirect(previous_url)
 
 
@@ -411,7 +416,9 @@ class EvaluationView(LoginRequiredMixin, DetailView):
             request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
-            return redirect("home:homepage")
+            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                           f"{organisation} while not member")
+            return redirect('home:homepage')
 
         evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"))
         self.object = self.get_object()
@@ -437,6 +444,7 @@ class EvaluationView(LoginRequiredMixin, DetailView):
             ):
                 messages.warning(request, _("You don't have the right to do this action."))
                 return HttpResponseRedirect(self.request.path_info)
+            # Edit the name of the evaluation
             if "name" in request.POST.dict() and request.is_ajax():
                 data_update = {"success": False, "message": _("An error occurred")}
                 form = EvaluationForm(request.POST)
@@ -448,6 +456,8 @@ class EvaluationView(LoginRequiredMixin, DetailView):
                     evaluation.save()
                     data_update["success"] = True
                     data_update["message"] = _("The evaluation's name has been changed")
+                    logger.info(f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
+                                f"evaluation (id: {evaluation_id})")
                 return HttpResponse(json.dumps(data_update), content_type="application/json")
             return HttpResponseRedirect(self.request.path_info)
 
@@ -469,9 +479,9 @@ class ResultsView(LoginRequiredMixin, DetailView):
             request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
-            return redirect("home:homepage")
-        print("RESULT", dir(request))
-        # evaluation_id = kwargs.get("pk")  # TODO if not used, to delete
+            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                           f"{organisation} while not member")
+            return redirect('home:homepage')
         evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"))
         # If the evaluation is finished, which should always be the case here, set the score of the evaluation
         if evaluation.is_finished:
@@ -540,6 +550,8 @@ class SectionView(LoginRequiredMixin, ListView):
                     request, organisation=organisation, *args, **kwargs
             ):
                 messages.warning(request, _("You don't have access to this content."))
+                logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                               f"{organisation} while not member")
                 return redirect("home:homepage")
 
             # If the ajax, if when the user likes/unlikes a resource
@@ -548,16 +560,17 @@ class SectionView(LoginRequiredMixin, ListView):
 
             # If in the ajax post is for element feedback
             elif "element_feedback_type" in request.POST.dict():
+                logger.info(f"[element_feedback] The user {request.user.email} sent an element feedback")
                 return treat_feedback(request, "element")
 
             # If in the ajax post is for element feedback
             elif "section_feedback_type" in request.POST.dict():
+                logger.info(f"[section_feedback] The user {request.user.email} sent a section feedback")
                 return treat_feedback(request, "section")
 
             # Else, it s when the user validates an answer
             else:
                 # Get ids of the objects Section and Evaluation from the url
-                # evaluation_id = kwargs.get("pk") # todo remove if not used
                 evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"))
 
                 # Check if the user is an admin member of the orga, if not, he is redirected to the evaluation summary
@@ -601,7 +614,7 @@ class SectionView(LoginRequiredMixin, ListView):
                         context, evaluation_element, request, dic_choices, form
                     )
                 else:
-                    return self.handle_invalid_form(context, kwargs)
+                    return self.handle_invalid_form(context, evaluation_element=evaluation_element)
 
     def get(self, request, *args, **kwargs):
         """
@@ -623,7 +636,9 @@ class SectionView(LoginRequiredMixin, ListView):
             request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
-            return redirect("home:homepage")
+            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                           f"{organisation} while not member")
+            return redirect('home:homepage')
 
         # Get ids and objects form the url
         evaluation_id = kwargs.get("pk")
@@ -805,7 +820,6 @@ class SectionView(LoginRequiredMixin, ListView):
         # If there is no choice ticked (unselect all for checkbox or reset choices)
         # So the evaluation element status is set to False (not answered) and all choices.is_ticked are set to False
         else:
-            print("ELSE NO TICKED")
             # If the element we rest the choice sets conditions on other elements
             if evaluation_element.condition_on_other_elements:
                 # If we reset the choices of the element and among the choices, one set condition on other elements,
@@ -858,11 +872,13 @@ class SectionView(LoginRequiredMixin, ListView):
         data_update["section_progression"] = section.user_progression
         data_update["evaluation_element_treated"] = evaluation_element.status
         data_update["evaluation_finished"] = evaluation.is_finished
-        print("evaluation finished ?", evaluation.is_finished)
+        if evaluation.is_finished:
+            logger.info(f"[evaluation_finished] The user {request.user.email} have finished his evaluation "
+                        f"(id: {evaluation.id}) of the organisation {evaluation.organisation}")
         if evaluation_element.status != initial_element_status:
             data_update["element_status_changed"] = True
 
-        print("DAT UPDATE", data_update)
+        # print("DAT UPDATE", data_update)
         return HttpResponse(json.dumps(data_update), content_type="application/json")
 
     def handle_invalid_form(self, request, *args, **kwargs):
@@ -880,7 +896,8 @@ class SectionView(LoginRequiredMixin, ListView):
             "conditions_respected": True,
             "message": _("An issue occured, please try again."),
         }
-
+        logger.warning(f"[form_issue] The user {request.user.email} validated an invalid form for "
+                       f" answers of an element {kwargs.get('evaluation_element')}")
         return HttpResponse(json.dumps(data_update), content_type="application/json")
 
 
@@ -932,6 +949,8 @@ def treat_resources(request):
     try:
         resource = ExternalLink.objects.get(id=resource_id)
     except KeyError as e:
+        logger.error(f"[resource_error] The resource id {resource_id} from the post of "
+                     f"the user {request.user.email} is not a resource")
         error_500_view_handler(request, exception=e)
 
     # object user_resources
@@ -987,6 +1006,7 @@ def treat_feedback(request, *args, **kwargs):
         feedback = "section_feedback"
         form = SectionFeedbackForm(request.POST)
     else:
+        logger.error("[feedback_error] There is a feedback not for the element nor the section")
         error_500_view_handler(request, exception=None)
 
     if form.is_valid():
@@ -1004,6 +1024,8 @@ def treat_feedback(request, *args, **kwargs):
                 master_id = feedback_object.master_evaluation_element.id
                 object_type = "master_section"
             except KeyError as e:
+                logger.error(f"[feedback_error] The element id {object_id} is not an id of an element in the database,"
+                             f" from the feedback post")
                 error_500_view_handler(request, exception=e)
         # If the function is called by a post in the section feedback
         else:
@@ -1019,6 +1041,8 @@ def treat_feedback(request, *args, **kwargs):
                 master_id = feedback_object.master_section.id
                 object_type = "master_evaluation_element"
             except KeyError as e:
+                logger.error(f"[feedback_error] The section id {object_id} is not an id of a section in the database,"
+                             f" from the feedback post")
                 error_500_view_handler(request, exception=e)
         # Process variables to sent to the framagit API to create the issue
         text = form.cleaned_data.get("text")
@@ -1063,10 +1087,11 @@ def treat_feedback(request, *args, **kwargs):
                         " We will take it into consideration as soon as possible"
                     )
             except requests.exceptions.RequestException as e:
-                # todo logs
-                print(f"error in requests {e}")
+                logger.error(f"[feedback_error] There is an issue with the feedback API, the request has "
+                             f"the response {response.json()} and a status code {response.status_code}. Error {e}")
                 pass
         else:
+            logger.error(f"[feedback_error] The user {user.email} spams the feedback feature !")
             data_update["message"] = _(
                 "Please, do not spam the feature. If your are not, contact the support service!"
             )
@@ -1146,22 +1171,23 @@ def error_view_handler(request, exception, status):
 
 
 def error_404_view_handler(request, exception=None):
-    print("error 404")
+    logger.error(f"[error_404] Error 404 for the request {request}, exception {exception}")
     return error_view_handler(request, exception, 404)
 
 
 def error_500_view_handler(request, exception=None):
-    print("error 500")
+    logger.error(f"[error_500] Error 500 for the request {request}, exception {exception}")
     return error_view_handler(request, exception, 500)
 
 
 def error_403_view_handler(request, exception=None):
     messages.warning(request, _("You don't have access to this content."))
-    print(f"ERREUR 403, {exception}")
+    logger.error(f"[error_403] Error 403 for the request {request}, exception {exception}")
     return HttpResponseRedirect("/home/")
     # return redirect("home:homepage")
     # return error_view_handler(request, exception, 403)
 
 
 def error_400_view_handler(request, exception=None):
+    logger.error(f"[error_400] Error 400 for the request {request}, exception {exception}")
     return error_view_handler(request, exception, 400)
