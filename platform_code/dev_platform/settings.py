@@ -138,6 +138,38 @@ USE_TZ = True
 
 LOGOUT_REDIRECT_URL = 'homepage'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': './dev.log',
+            'backupCount': 10,
+            'formatter': 'app',
+            'maxBytes': 10485760,  # 10MB
+        },
+    },
+    'loggers': {
+        'monitoring': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+    'formatters': {
+        "app": {
+            "format": (
+                u"%(asctime)s [%(levelname)-s] "
+                "(%(module)s.%(funcName)s) %(message)s"
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+}
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 mimetypes.add_type("text/css", ".css", True)

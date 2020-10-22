@@ -27,7 +27,7 @@ SECRET_KEY = os.environ["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]  # TODO: CHANGE
+ALLOWED_HOSTS = os.environ["DJANGO_ALLOWED_HOSTS"]  # TODO: CHANGE
 
 # Application definition
 INSTALLED_APPS = [
@@ -137,6 +137,37 @@ USE_L10N = True
 USE_TZ = True
 
 LOGOUT_REDIRECT_URL = 'homepage'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': './prod.log',
+            'backupCount': 10,  # will rotate with 10 files
+            'formatter': 'app',
+            'maxBytes': 10485760,  # 10MB
+        },
+    },
+    'loggers': {
+        'monitoring': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+    'formatters': {
+        "app": {
+            "format": (
+                u"%(asctime)s [%(levelname)-s] "
+                "(%(module)s.%(funcName)s) %(message)s"
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
+    },
+}
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/

@@ -163,6 +163,12 @@ You can load different settings when starting django with this:
 python manage.py runserver 0.0.0.0:8000 --settings=dev_platform.settings
 ```
 
+You can follow logged elements live with:
+
+```sh
+docker-compose exec web watch cat dev.log
+```
+
 #### Translation
 
 Note that all the content should be written in english. Currently, the languages accepted are
