@@ -773,7 +773,7 @@ class SectionView(LoginRequiredMixin, ListView):
                 for choice in list_choices_element:
 
                     # If this choice is ticked
-                    if str(choice) in list_choices_ticked:
+                    if any(choice.master_choice.get_numbering() in choice_str for choice_str in list_choices_ticked):
                         # It is saved with the value 'is_ticked' as True
                         choice.is_ticked = True
                         choice.save()

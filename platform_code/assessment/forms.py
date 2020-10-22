@@ -17,7 +17,7 @@ from .models import (
 )
 from .scoring import check_and_valid_scoring_json
 from home.models import Organisation
-from .utils import markdownify_bold, markdownify_italic
+from .utils import markdownify_bold, markdownify_italic, select_label_choice
 
 element_feedback_list = [
     ["element_fit", _("No evaluation element fits to my case")],
@@ -293,20 +293,28 @@ class MarkdownifyRadioChoices(widgets.RadioSelect):
     """
     Format the choices of the evaluation elements in order to transform markdown symbols into html tags
     """
+
     def _render(self, template_name, context, renderer=None):
         if renderer is None:
             renderer = get_default_renderer()
-        return markdownify_italic(markdownify_bold(mark_safe(renderer.render(template_name, context))))
+        text = renderer.render(template_name, context)
+        for value in select_label_choice(renderer.render(template_name, context)):
+            text = text.replace(value, markdownify_italic(markdownify_bold(value)))
+        return mark_safe(text)
 
 
 class MarkdownifyMultiselectChoices(forms.CheckboxSelectMultiple):
     """
     Format the choices of the evaluation elements in order to transform markdown symbols into html tags
     """
+
     def _render(self, template_name, context, renderer=None):
         if renderer is None:
             renderer = get_default_renderer()
-        return markdownify_italic(markdownify_bold(mark_safe(renderer.render(template_name, context))))
+        text = renderer.render(template_name, context)
+        for value in select_label_choice(renderer.render(template_name, context)):
+            text = text.replace(value, markdownify_italic(markdownify_bold(value)))
+        return mark_safe(text)
 
 
 class RadioResultsWidget(widgets.CheckboxSelectMultiple):

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from assessment.utils import markdownify_italic, markdownify_bold
+from assessment.utils import markdownify_italic, markdownify_bold, select_label_choice
 
 
 class TestMarkdownify(TestCase):
@@ -53,3 +53,19 @@ class TestMarkdownify(TestCase):
             "There <strong>are</strong> <strong>bold</strong> <i>text</i> <strong>EVERYWHERE</strong> !!",
             markdownify_italic(markdownify_bold(self.text6)),
         )
+
+
+class TestSelectLabelChoice(TestCase):
+    def setUp(self):
+        self.text1 = ' <input type="checkbox" name="29" value="6.4.a Notre organisation' \
+                     ' n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage automatique" id="id_29_0">' \
+                     'Notre organisation n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage' \
+                     ' automatique</label>'
+        self.text2 = " Random text "
+
+    def test_select_label_choice(self):
+        # Catch the pattern
+        self.assertIn('Notre organisation n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage'
+                      ' automatique', select_label_choice(self.text1))
+        # Case the pattern is not found in the regex of select_label_choice, so the function returns empty list
+        self.assertEqual([], select_label_choice(self.text2))
