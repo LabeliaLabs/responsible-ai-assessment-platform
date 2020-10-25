@@ -15,7 +15,9 @@
                 <span class="float-left">{{ field.label}}</span>
                 <p > {{field}} </p>
             {% endfor %}
-            <p class="float-left">{% trans "Version" %} : {{last_version}}</p>
+            <p class="float-left" title="{% trans 'This number corresponds to the version of the assessment that is currently in use.' %}">
+                {% trans "Version" %} : {{last_version}}
+            </p>
             </div>
         </div>
         <div class="modal-footer center" style="columns: 1;">

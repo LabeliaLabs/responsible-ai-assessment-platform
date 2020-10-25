@@ -19,12 +19,14 @@
                 <p > {{field}} </p>
             {% endfor %}
             <p class="text-form-bis">{% trans "Version" %}</p>
-            <p class="attribute-form-bis">{{last_version}}</p>
+            <p class="attribute-form-bis" title="{% trans 'This number corresponds to the version of the assessment that is currently in use.' %}">
+                {{last_version}}
+            </p>
 
         </div>
 
-            <input type="submit" class="btn btn-primary same-size-250"
-                   value="{% trans 'Create the evaluation' %}" style="margin: auto" />
+            <input type="submit" class="btn btn-primary same-size-250 margin-auto"
+                   value="{% trans 'Create the evaluation' %}" />
 
     </form>
      </div>
