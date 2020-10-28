@@ -8,7 +8,10 @@
 Run this command but check packages to be updated before accepting!!
 
 ```sh
-sudo apt update && sudo apt upgrade && sudo apt autoremove
+sudo apt update && \
+        sudo apt upgrade && \
+        sudo apt autoremove --purge && \
+        sudo apt autoclean
 ```
 
 ## Git
@@ -234,7 +237,6 @@ Ran 92 tests in 12.213s
 FAILED (failures=1)
 Destroying test database for alias 'default' ('test_platform_db')...
 ```
-
 
 ### Prod
 
