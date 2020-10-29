@@ -21,7 +21,7 @@
             </div>
 
         </div>
-        <div id="section-description" style="margin-bottom: 50px; text-align: justify; margin-top: 50px;">
+        <div id="section-description" class="section-description">
             {{section.master_section.description|markdownify}}
         </div>
 
@@ -29,7 +29,7 @@
 
         <div class="element">
 
-            <div class="pagination-top" style="margin-bottom: 20px;">
+            <div class="pagination-top margin-bot-30">
             {% include "assessment/pagination.html" %}
             </div>
 
@@ -110,16 +110,16 @@
 
                                 <div class="choices" id="{{element}}">
                                     {% if element.master_evaluation_element.question_type == "radio" %}
-                                            <p style="font-style:italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                                            <p class="italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
                                             {% trans ": Please select one answer which best matches to your organisation situation" %}</p>
 
                                       {% elif element.master_evaluation_element.question_type == "checkbox"%}
-                                        <p style="font-style:italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                                        <p class="italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
                                             {% trans ": Please select all the answers which best match to your organisation situation. Be careful, some combinations are not coherent" %}</p>
 
                                       {% endif %}
 
-                                    {% if evaluation.organisation|get_role:user == "admin" %}
+                                    {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "edit" %}
                                         {% if element.has_condition_on and element|is_not_applicable %}
                                             <fieldset id="disable_element_{{element.id}}" disabled >
 
@@ -139,7 +139,7 @@
                                     {% endif %}
 
 <!--                                    Reset the answers -->
-                                    {% if evaluation.organisation|get_role:user == "admin" %}
+                                    {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "edit" %}
                                         {% if element.has_condition_on and element|is_not_applicable %}
                                             <a id="reset_{{element.id}}" class="reset-response float-right" title="Inactive">
                                                 {% trans "Reset the answer" %}</a>
@@ -153,20 +153,20 @@
 
                             </div>
                               <div class="wrapper">
-                                  {% if evaluation.organisation|get_role:user == "admin" %}
+                                  {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "edit" %}
                                       {% if element.has_condition_on and element|is_not_applicable %}
-                                        <button type="button" style="width:20%"
-                                                 disabled class="btn btn-primary" id="validate_{{element.id}}" >
+                                        <button type="button"
+                                                 disabled class="btn btn-primary same-size-220" id="validate_{{element.id}}" >
                                             {% trans "Validate" %}
                                         </button>
                                       {% else %}
-                                          <button type="button" onclick="submitForm('form{{element.id}}')" style="width:20%"
-                                                     class="btn btn-primary" id="validate{{element.id}}" >{% trans "Validate" %}
+                                          <button type="button" onclick="submitForm('form{{element.id}}')"
+                                                     class="btn btn-primary same-size-220" id="validate{{element.id}}" >{% trans "Validate" %}
                                           </button>
                                       {% endif %}
                                   {% else %}
-                                      <button type="button" style="width:20%"
-                                                 disabled class="btn btn-primary"
+                                      <button type="button"
+                                                 disabled class="btn btn-primary same-size-220"
                                                 title="{% trans 'You do not have the right to do this action' %}" >
                                             {% trans "Validate" %}
                                         </button>
@@ -180,10 +180,9 @@
 
                         </form>
                             {% if element.master_evaluation_element.has_resources %}
-                                  <div id="accordion-{{element.id}}" class="accordion-resource" style="margin-top:20px;">
+                                  <div id="accordion-{{element.id}}" class="accordion-resource margin-20">
                                         <div class="card mb-0">
-                                            <div class="card-header collapsed" data-toggle="collapse" href="#collapse-{{element.id}}"
-                                                style="background-color:white;">
+                                            <div class="card-header collapsed background-white" data-toggle="collapse" href="#collapse-{{element.id}}">
                                                 <a class="card-title">{% trans "Resources" %}</a>
                                             </div>
                                             <div id="collapse-{{element.id}}" class="card-body collapse" data-parent="#accordion-{{element.id}}">

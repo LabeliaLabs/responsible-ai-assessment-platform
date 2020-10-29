@@ -13,8 +13,12 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.core.mail import EmailMessage
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404, get_list_or_404, render
+from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.utils.translation import gettext as _
 
@@ -36,7 +40,8 @@ from .forms import (
     SectionFeedbackForm,
     section_feedback_list,
 )
-from home.models import Organisation
+from assessment.forms_.member_forms import AddMemberForm, EditRoleForm
+from home.models import Organisation, User, Membership, PendingInvitation
 from django.conf import settings
 
 private_token = settings.PRIVATE_TOKEN
@@ -51,11 +56,7 @@ logger = logging.getLogger('monitoring')
 def membership_security_check(request, *args, **kwargs):
     """
     This function checks that the user is member of the organisation.
-    It gets the user in the request and the organisation in the kwargs.
-    If the organisation doesn't exist, it renders a 404.
-    If the user is not member, it renders a 403.
-    If the user is member of the organisation, the function returns nothing
-    This is used in all the CBV where we need to be sure the user is member of the organisation
+    :returns boolean
     """
     user = request.user
     organisation = kwargs.get("organisation", None)
@@ -70,12 +71,7 @@ def membership_security_check(request, *args, **kwargs):
 def membership_admin_security_check(request, *args, **kwargs):
     """
     This function checks that the user is member as ADMIN of the organisation.
-    It gets the user in the request and the organisation in the kwargs.
-    If the organisation doesn't exist, it renders a 404.
-    If the user is not an admin member, it renders a 403.
-    If the user is an admin member of the organisation, the function returns nothing
-    This is used in all the CBV where we need to be sure the user is an admin member of the organisation (evaluation
-    deletion, accept other users, ...)
+    :returns: boolean
     """
     user = request.user
     organisation = kwargs.get("organisation", None)
@@ -85,6 +81,21 @@ def membership_admin_security_check(request, *args, **kwargs):
         organisation = get_object_or_404(Organisation, id=organisation_id)
     is_member_as_admin = organisation.check_user_is_member_as_admin(user=user)
     return is_member_as_admin
+
+
+def can_edit_security_check(request, *args, **kwargs):
+    """
+    This function checks that the user is member as ADMIN or EDIT of the organisation.
+    Returns boolean True if he is, else False
+    """
+    user = request.user
+    organisation = kwargs.get("organisation", None)
+    # If we don't have the organisation in the kwargs
+    if organisation is None:
+        organisation_id = kwargs.get("orga_id", None)
+        organisation = get_object_or_404(Organisation, id=organisation_id)
+    is_member_allowed_to_edit = organisation.check_user_is_member_and_can_edit_evaluations(user=user)
+    return is_member_allowed_to_edit
 
 
 def upgradeView(request, *args, **kwargs):
@@ -191,7 +202,7 @@ def upgradeView(request, *args, **kwargs):
 
 class SummaryView(LoginRequiredMixin, DetailView):
     model = Organisation
-    template_name = "assessment/organisation.html"
+    template_name = "assessment/organisation/organisation.html"
     form_class = EvaluationForm
     login_url = "home:login"
     redirect_field_name = "home:homepage"
@@ -221,6 +232,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
             organisation=organisation
         ).order_by("-created_at")
         context["form"] = EvaluationForm()
+        context["add_member_form"] = AddMemberForm()
         # The last assessment created is necessarily the last version as it must be strictly croissant
         if get_last_assessment_created():
             context[
@@ -230,6 +242,15 @@ class SummaryView(LoginRequiredMixin, DetailView):
             context["last_version"] = get_last_assessment_created()
         # print("GEEEET", self.object_list, context)
         context["member_list"] = organisation.get_list_members_not_staff()
+        context["pending_member_list"] = organisation.get_pending_list()
+        # Dictionary of forms to edit the role of members of the organisation
+        context["edit_member_role_form_dic"] = {}
+        for member in context["member_list"]:
+            context["edit_member_role_form_dic"][str(member.id)] = EditRoleForm(member=member)
+        # Dictionary of the forms to edit the role of the invitations sent to join the organisation
+        context["edit_invitation_role_form_dic"] = {}
+        for invitation in context["pending_member_list"]:
+            context["edit_invitation_role_form_dic"][str(invitation.id)] = EditRoleForm(invitation=invitation)
         return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
@@ -242,51 +263,259 @@ class SummaryView(LoginRequiredMixin, DetailView):
                            f"{organisation} while not member")
             return redirect('home:homepage')
 
-        # Check if the user is an admin member of the orga, if not, return to the same page
-        if not membership_admin_security_check(
+        # Check if the user is an admin/edit member of the orga, if not, return to the same page
+        if not can_edit_security_check(
                 request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have the right to do this action."))
             return redirect("assessment:orga-summary", organisation.id)
 
-        # When creating an evaluation
         if request.method == "POST":
             user = request.user
-            # create a form instance and populate it with data from the request:
-            form = EvaluationForm(request.POST)
-            # print("FORM POST", request.POST.dict())
-            dic_form = request.POST.dict()
-            # check whether it's valid:
-            if form.is_valid():
-                name = dic_form.get("name")
-                # Store the last evaluation version before the evaluation creation
-                last_version_in_organisation = (
-                    organisation.get_last_assessment_version()
-                )
-                eval = Evaluation.create_evaluation(
-                    name=name,
-                    assessment=get_last_assessment_created(),
-                    organisation=organisation,
-                    user=user,
-                )
-                eval.create_evaluation_body()
-                logger.info(f"[evaluation_creation] The user {user.email} created an evaluation {eval.name}")
-                # Check if we need to fetch the evaluation
-                if (
-                    last_version_in_organisation
-                    and last_version_in_organisation
-                    < float(get_last_assessment_created().version)
-                ):
-                    origin_assessment = get_object_or_404(
-                        Assessment, version=str(last_version_in_organisation)
-                    )
-                    eval.fetch_the_evaluation(origin_assessment=origin_assessment)
 
-                # redirect to a new URL:
-                response = redirect(
-                    "assessment:evaluation", organisation.id, eval.slug, eval.pk,
-                )
-                return response
+            # case it is an evaluation creation
+            if "name" in request.POST:
+                # create a form instance and populate it with data from the request:
+                form = EvaluationForm(request.POST)
+                # print("FORM POST", request.POST.dict())
+                dic_form = request.POST.dict()
+                # check whether it's valid:
+                if form.is_valid():
+                    name = dic_form.get("name")
+                    # Store the last evaluation version before the evaluation creation
+                    last_version_in_organisation = (
+                        organisation.get_last_assessment_version()
+                    )
+                    eval = Evaluation.create_evaluation(
+                        name=name,
+                        assessment=get_last_assessment_created(),
+                        organisation=organisation,
+                        user=user,
+                    )
+                    eval.create_evaluation_body()
+                    logger.info(f"[evaluation_creation] The user {user.email} created an evaluation {eval.name}")
+                    # Check if we need to fetch the evaluation
+                    if (
+                        last_version_in_organisation
+                        and last_version_in_organisation
+                        < float(get_last_assessment_created().version)
+                    ):
+                        origin_assessment = get_object_or_404(
+                            Assessment, version=str(last_version_in_organisation)
+                        )
+                        eval.fetch_the_evaluation(origin_assessment=origin_assessment)
+
+                    # redirect to a new URL:
+                    response = redirect(
+                        "assessment:evaluation", organisation.id, eval.slug, eval.pk,
+                    )
+                    return response
+
+            # Case there are actions on the members with ajax post methods
+            # These actions are only possible with "admin" role
+            if request.is_ajax():
+                data_update = {"success": False, "message": _("An error occurred")}
+                if not membership_admin_security_check(
+                        request, organisation=organisation, *args, **kwargs
+                ):
+                    data_update["message"] = _("You don't have the right to do this action.")
+                    messages.warning(request, _("You don't have the right to do this action."))
+                    return HttpResponse(json.dumps(data_update), content_type="application/json")
+
+                # Case the user wants to add another member to the organisation
+                if "email" in request.POST:
+                    form = AddMemberForm(request.POST)
+                    if form.is_valid():
+                        email_address = form.cleaned_data.get("email")
+                        role = form.cleaned_data.get("role")
+                        list_user_invited = list(User.object.filter(email=email_address))
+                        if len(list_user_invited) == 1:
+                            user_invited = list_user_invited[0]
+                            # Check if the user is already a member, in this case, the role just need to be edited
+                            if organisation.check_user_is_member(user=user_invited) and not user_invited.staff:
+                                logger.warning(f"[add_member_failed] Invitation to join an organisation failed, "
+                                               f"the user invited {user_invited.email} is already member of the "
+                                               f"organisation {organisation} with the role "
+                                               f"{organisation.get_role_user(user_invited)}")
+                                data_update["message"] = _("The user is already member. Please, "
+                                                           "edit his rights instead")
+                            # Case the user is staff so he has already a membership in the organisation
+                            # with role "read_only"
+                            if organisation.check_user_is_member(user=user_invited) \
+                                    and user_invited.staff and role != "read_only":
+                                membership_user_invited = organisation.get_membership_user(user_invited)
+                                membership_user_invited.role = role
+                                membership_user_invited.save()
+                                logger.info(f"[add_member_organisation] The user {user.email} has invited "
+                                            f"{user_invited.email} to join the organisation {organisation.name} "
+                                            f"(id {organisation_id}) with the role {role}")
+                                data_update["message"] = _("The user has been added to the organisation")
+                                data_update["success"] = True
+                                # Be careful if the structure of the array changes
+                                data_update["data_user"] = {"0": user_invited.get_full_name(),
+                                                            "1": user_invited.email,
+                                                            "2": role,
+                                                            "3": ""}  # User can not already have created evaluations
+                            # Case the user exists and he his not a member of the organisation
+                            if not organisation.check_user_is_member(user=user_invited) and not user_invited.staff:
+                                Membership.create_membership(user=user_invited,
+                                                             organisation=organisation,
+                                                             role=role)
+                                logger.info(f"[add_member_organisation] The user {user.email} has invited "
+                                            f"{user_invited.email} to join the organisation {organisation.name} "
+                                            f"(id {organisation_id}) with the role {role}")
+                                data_update["message"] = _("The user has been added to the organisation")
+                                data_update["success"] = True
+                                # To update without refresh the array of members
+                                # Be careful if the structure of the array changes
+                                data_update["data_user"] = {"0": user_invited.get_full_name(),
+                                                            "1": user_invited.email,
+                                                            "2": role,
+                                                            "3": ""}  # User can not already have created evaluations
+                        # Case the user invited has not an account, so we sent an email to the user and we create a
+                        # pending membership
+                        # No token or uid required as the link is just a link to signup
+                        elif len(list_user_invited) == 0:
+                            current_site = get_current_site(request)
+                            mail_subject = _(f"Substra - Invitation to join the organisation {organisation}")
+                            message = render_to_string('assessment/organisation/member/add-member-email.html', {
+                                'user': user,
+                                'organisation': organisation,
+                                'domain': current_site.domain,
+                                'protocol': "https" if request.is_secure() else "http",
+                            })
+                            email = EmailMessage(
+                                mail_subject, message, to=[email_address]
+                            )
+                            email.send()
+                            PendingInvitation.create_pending_invitation(email=email_address,
+                                                                        organisation=organisation,
+                                                                        role=role)
+                            data_update["success"] = True
+                            data_update["data_user"] = {"0": email_address,
+                                                        "1": email_address,
+                                                        "2": role+" (pending)",
+                                                        "3": ""}
+                            data_update["message"] = _("The user does not yet have an account on the platform. "
+                                                       "An invitation has been sent to him.")
+                            logger.info(f"[add_member_invitation_sent] The user {request.user.email} has sent an email "
+                                        f" invitation to {email} to join the organisation (id {organisation.id})"
+                                        f" with the role '{role}'")
+                    # Invalid form
+                    else:
+                        data_update["message"] = _("Please enter a valid email")
+
+                # Case an admin member wants to remove another user which should not be admin member
+                # Check user is member with admin role already done
+                elif "removed_member_id" in request.POST:
+                    member_id = request.POST.get("removed_member_id")
+                    try:
+                        member = Membership.objects.get(id=member_id, organisation=organisation)
+                    except (MultipleObjectsReturned, ObjectDoesNotExist, ValueError) as e:
+                        logger.warning(f"[member_removed_error] The user {user.email} wants to remove the member with "
+                                       f"id {member_id} from the organisation {organisation.name} "
+                                       f"(id {organisation.id}) but there is an error with the query, error {e}")
+                        member = None
+                    if member:
+                        # An admin member cannot be removed from the organisation, normally no button to remove
+                        if not member.role == "admin" and member.organisation == organisation:
+                            logger.info(f"[member_removed] The user {user.email} removed the membership of the user"
+                                        f" {member.user.email} from the organisation {organisation.name} (id "
+                                        f"{organisation.id})")
+                            member_deleted_email = member.user.email
+                            member.delete()
+                            data_update["success"] = True
+                            data_update["message"] = _(f"The user {member_deleted_email} is no longer a member of the "
+                                                       f"organisation and cannot access to it.")
+                        else:
+                            data_update["message"] = _("You cannot remove an admin member from the organisation.")
+
+                # Case the user wants to remove an invitation to join the organisation
+                elif "removed_pending_member_id" in request.POST:
+                    pending_member_id = request.POST.get("removed_pending_member_id")
+                    try:
+                        invitation = PendingInvitation.objects.get(id=pending_member_id, organisation=organisation)
+                    except (MultipleObjectsReturned, ObjectDoesNotExist, ValueError) as e:
+                        logger.warning(f"[invitation_deleted_error] The user {user.email} wants to remove the "
+                                       f"invitation with id {pending_member_id} of the organisation {organisation.name}"
+                                       f" (id {organisation.id}) but there is an error with the query, error {e}")
+                        invitation = None
+                    if invitation:
+                        invitation_deleted_email = invitation.email
+                        invitation.delete()
+                        data_update["success"] = True
+                        data_update["message"] = _(f"The invitation to {invitation_deleted_email} has been deleted")
+                        logger.info(f"[invitation_deleted] The user {user.email} deleted the invitation for the email"
+                                    f" {invitation.email} to join the organisation {organisation.name} (id "
+                                    f"{organisation.id})")
+
+                # If the user edit the role of another member (which cannot be admin)
+                elif "edit_member_id" in request.POST:
+                    member_id = request.POST.get("edit_member_id")
+                    try:
+                        member = Membership.objects.get(id=member_id, organisation=organisation)
+                    except (MultipleObjectsReturned, ObjectDoesNotExist, ValueError) as e:
+                        logger.warning(f"[member_edit_role_error] The user {user.email} wants to edit the role of the "
+                                       f"member with id {member_id} in the organisation {organisation.name} "
+                                       f"(id {organisation.id}) but there is an error with the query, error {e}")
+                        member = None
+
+                    if member:
+                        # An admin member cannot have his role changed, normally no button to edit
+                        if not member.role == "admin" and member.organisation == organisation:
+                            new_role = request.POST.get("role")  # role or None
+                            # Check that the new role is a role defined by the class Membership
+                            if Membership.check_role(new_role):
+                                former_role = member.role
+                                member.role = new_role
+                                member.save()
+                                data_update["new_role"] = new_role
+                                data_update["success"] = True
+                                data_update["message"] = _(f"The user {member.user.email} has now the {new_role} "
+                                                           f"rights in the organisation.")
+                                logger.info(f"[member_role_edited] The user {user.email} edited the role of the user"
+                                            f" {member.user.email}, from {former_role} to {new_role} in the "
+                                            f"organisation {organisation.name} (id {organisation.id})")
+                            # Role is not a valid one
+                            else:
+                                logger.warning(f"[member_role_edited_error] The user {user.email} tried to edit the "
+                                               f"role of the user {member.user.email}, from {member.role} to {new_role}"
+                                               f" which not a valid one, "
+                                               f"in the organisation {organisation.name} (id {organisation.id})")
+                        else:
+                            data_update["message"] = _("You cannot change the rights of an admin member.")
+
+                elif "edit_pending_member_id" in request.POST:
+                    invitation_id = request.POST.get("edit_pending_member_id")
+                    try:
+                        invitation = PendingInvitation.objects.get(id=invitation_id, organisation=organisation)
+                    except (MultipleObjectsReturned, ObjectDoesNotExist, ValueError) as e:
+                        logger.warning(f"[invitation_edit_role_error] The user {user.email} wants to edit the role of "
+                                       f"the invitation with id {invitation_id} in the organisation {organisation.name}"
+                                       f" (id {organisation.id}) but there is an error with the query, error {e}")
+                        invitation = None
+
+                    if invitation:
+                        new_role = request.POST.get("role")  # role or None
+                        # Check that the new role is a role defined by the class Membership
+                        if Membership.check_role(new_role):
+                            former_role = invitation.role
+                            invitation.role = new_role
+                            invitation.save()
+                            data_update["new_role"] = new_role + " (pending)"
+                            data_update["success"] = True
+                            data_update["message"] = _(f"The invitation to {invitation.email} to join the organisation"
+                                                       f" is now with the {new_role} rights in the organisation.")
+                            logger.info(f"[invitation_role_edited] The user {user.email} edited the role of the "
+                                        f"invitation to {invitation.email} to join the organisation {organisation.name}"
+                                        f"(id {organisation.id}), from {former_role} to {new_role},")
+                        # Role is not a valid one
+                        else:
+                            logger.warning(f"[invitation_role_edited_error] The user {user.email} tried to edit the "
+                                           f"role of the invitation to {invitation.email}, from {invitation.role} to "
+                                           f"{new_role} which not a valid one, "
+                                           f"in the organisation {organisation.name} (id {organisation.id})")
+                return HttpResponse(json.dumps(data_update), content_type="application/json")
 
 
 class EvaluationCreationView(LoginRequiredMixin, CreateView):
@@ -330,8 +559,8 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
                                f"{organisation} while not member")
                 return redirect("home:homepage")
 
-            # Check if the user is an admin member of the orga, if not, return to the same page
-            if not membership_admin_security_check(
+            # Check if the user is an admin/edit member of the orga, if not, return to the same page
+            if not can_edit_security_check(
                     request, organisation=organisation, *args, **kwargs
             ):
                 messages.warning(request, _("You don't have the right to do this action."))
@@ -384,7 +613,8 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
             return redirect("home:homepage")
 
         # Check if the user is an admin member of the orga, if not, return to the same page
-        if not membership_admin_security_check(
+        # TODO check if we want to limit the right to delete evaluation (edit role can only delete their own eval ?)
+        if not can_edit_security_check(
                 request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have the right to do this action."))
@@ -392,6 +622,7 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
 
         self.object = self.get_object()
         logger.info(f"[evaluation_deletion] The user {request.user.email} deleted an evaluation {self.object.name}")
+        messages.success(request, _(f"The evaluation {self.object} has been deleted"))
         self.object.delete()
 
         # Manage the redirection, if the user delete the evaluation from his profile, it redirect to his profile
@@ -439,7 +670,7 @@ class EvaluationView(LoginRequiredMixin, DetailView):
         if request.method == 'POST':
             organisation_id = kwargs.get("orga_id")
             organisation = get_object_or_404(Organisation, id=organisation_id)
-            if not membership_admin_security_check(
+            if not can_edit_security_check(
                     request, organisation=organisation, *args, **kwargs
             ):
                 messages.warning(request, _("You don't have the right to do this action."))
@@ -573,8 +804,9 @@ class SectionView(LoginRequiredMixin, ListView):
                 # Get ids of the objects Section and Evaluation from the url
                 evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"))
 
-                # Check if the user is an admin member of the orga, if not, he is redirected to the evaluation summary
-                if not membership_admin_security_check(
+                # Check if the user is an admin/edit member of the orga, if not, he is redirected to the evaluation
+                # summary
+                if not can_edit_security_check(
                         request, organisation=organisation, *args, **kwargs
                 ):
                     # This is a security with an error message telling the user he cannot do the action (validate an

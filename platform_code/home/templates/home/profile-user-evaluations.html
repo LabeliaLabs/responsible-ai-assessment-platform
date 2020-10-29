@@ -23,7 +23,7 @@
                       <th scope="col" class="col-array">{% trans "Progression" %}</th>
                       <th scope="col" class="col-array">{% trans "Score" %}</th>
                       <th scope="col" class="col-array">{% trans "Action" %}</th>
-                      <th scope="col" class="col-array" style="display:none"></th>
+                      <th scope="col" class="col-array display-none"></th>
                     </tr>
                   </thead>
                 <tbody>
@@ -99,7 +99,7 @@
                               {% endif %}
                             {% endif %}
 
-                          <td class="div-trash" id="div-trash{{evaluation.id}}" style="border-top:0px; background-color: white;" >
+                          <td class="div-hidden-icons" id="div-hidden-icons{{evaluation.id}}" >
                               <button class="btn btn-primary small-btn" data-toggle="modal" data-target="#modal-edit{{evaluation.id}}">
                                   <i class="fa fa-edit"></i>
                               </button>

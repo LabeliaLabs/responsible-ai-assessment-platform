@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load static %}
+
+<div class="content-modal-remove-member">
+    <div class="modal-header">
+        <h4 class="modal-title" >{% trans "Are you sure you want to remove the user from the organisation?" %} </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="modal-body-delete">
+        <p>{% trans "The user will not be able to consult the evaluations anymore. You may also edit his role within the organisation to limit the actions he can take." %}</p>
+
+    </div>
+
+    <div class="modal-footer self-center">
+        <form action="{% url 'assessment:orga-summary' organisation.id %}"
+              method="post" id="removeMember{{member.id}}">
+            {% csrf_token %}
+            <button class="btn btn-primary same-size-250 margin-auto" type="button"
+                    onclick="removeMember('removeMember{{member.id}}', '{{member.id}}', false)">
+                {% trans 'Yes' %}
+            </button>
+            <button type="button" class="btn btn-danger same-size-250 margin-auto right-button"
+                data-dismiss="modal">{% trans 'Cancel' %}
+        </button>
+        </form>
+
+    </div>
+</div>

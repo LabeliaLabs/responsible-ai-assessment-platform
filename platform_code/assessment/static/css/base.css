@@ -72,6 +72,11 @@ a:hover {
 .margin-10 {
     margin-top: 10px;
 }
+
+.margin-20 {
+    margin-top: 20px;
+}
+
 .margin-50 {
     margin-top: 50px;
 }
@@ -85,6 +90,10 @@ a:hover {
 
 .margin-150 {
     margin-top: 150px;
+}
+
+.margin-bot-30{
+    margin-bottom: 30px;
 }
 
 .margin-bot-50{
@@ -150,6 +159,10 @@ a:hover {
 
 .waiting-cursor:hover{
     cursor: wait;
+}
+
+.one-column{
+    columns: 1;
 }
 
 /***** END GLOBAL PROPERTIES *****/
@@ -789,6 +802,7 @@ tr.spaceUnder>td {
 
 .self-center{
     align-self: center;
+    justify-content: center;
 }
 
 .object-linked:hover .hidden-div {

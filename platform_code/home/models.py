@@ -150,6 +150,36 @@ class User(AbstractBaseUser, PermissionsMixin):
             .order_by("-created_at")
         )
 
+    def get_list_pending_invitation(self):
+        """
+        :return: list of pending invitations
+        """
+        return list(PendingInvitation.objects.filter(email=self.email))
+
+
+class PendingInvitation(models.Model):
+    """
+    The PendingInvitation class is used to manage the invitations on organisations when the user has no account
+    on the platform. The information of the invitation are stored in this class (email address, role, organisation)
+
+    When a user creates an account, we check if his email address has pending invitations. If yes, merberships are
+    created for the user in the organisations with the defined role. After the creation, the invitation are destroyed
+
+    """
+
+    email = models.EmailField(unique=False)
+    organisation = models.ForeignKey("home.Organisation", on_delete=models.CASCADE)
+    role = models.CharField(max_length=255)
+
+    @classmethod
+    def create_pending_invitation(cls, email, organisation, role):
+        if organisation in Organisation.objects.all() and Membership.check_role(role):
+            invitation = cls(email=email, organisation=organisation, role=role)
+            invitation.save()
+
+    def __str__(self):
+        return "Invitation for "+self.email+" in the organisation "+self.organisation.name+" with the role "+self.role
+
 
 class UserResources(models.Model):
     """
@@ -173,14 +203,20 @@ class UserResources(models.Model):
 class Membership(models.Model):
     """
     The class Membership
+
+    ADMIN manages the evaluations and the members of the organisation
+    EDITOR manages the evaluations (creation edit and delete with conditions) of the organisation
+    READ_ONLY can only consult the evaluations
     """
 
     ADMIN = "admin"
-    READ_ONLY = "simple_user"
+    READ_ONLY = _("read_only")
+    EDITOR = _("editor")
 
     ROLES = (
+        (READ_ONLY, _("read_only")),
+        (EDITOR, _("editor")),
         (ADMIN, "admin"),
-        (READ_ONLY, "simple_user"),
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -191,8 +227,35 @@ class Membership(models.Model):
 
     @classmethod
     def create_membership(cls, user, organisation, role):
-        member = cls(user=user, organisation=organisation, role=role,)
-        member.save()
+        if cls.check_role(role):
+            member = cls(user=user, organisation=organisation, role=role,)
+            member.save()
+
+    @classmethod
+    def create_membership_pending_invitations(cls, user):
+        """
+        For a user, create all the membership objects which was pending
+        This is used when the user creates his account on the platform
+        :param user: user
+        :return:
+        """
+        # Get all the invitations for the user address email
+        list_pending_invitations = user.get_list_pending_invitation()
+        for invitation in list_pending_invitations:
+            organisation = invitation.organisation
+            # Check if user is not already member of the organisation (should not happen)
+            if not organisation.check_user_is_member(user):
+                cls.create_membership(user, organisation, role=invitation.role)
+                invitation.delete()
+
+    @classmethod
+    def check_role(cls, role_to_check):
+        """
+        Check that a string 'role_to_check' is a defined role
+        :param role_to_check: string
+        :return:
+        """
+        return (role_to_check, role_to_check) in cls.ROLES
 
     def __str__(self):
         return str(self.user) + " in " + str(self.organisation) + " (" + self.role + ")"
@@ -328,24 +391,24 @@ class Organisation(models.Model):
         Membership.create_membership(
             user=created_by, role="admin", organisation=organisation
         )
-        # Give the simple_user right to all the platform staff to allow them to see the evaluations
+        # Give the read_only right to all the platform staff to allow them to see the evaluations
         list_staff_platform = get_list_all_staff_admin_platform()
         for staff_user in list_staff_platform:
-            # If the user who created the organisation is admin, it is useless to give him a "simple_user" right
+            # If the user who created the organisation is admin, it is useless to give him a "read_only" right
             if staff_user != created_by:
                 Membership.create_membership(
-                    user=staff_user, role="simple_user", organisation=organisation
+                    user=staff_user, role="read_only", organisation=organisation
                 )
         return organisation
 
     def __str__(self):
         return self.name
 
-    def add_user_to_organisation(self, user, role="simple_user"):
+    def add_user_to_organisation(self, user, role="read_only"):
         """
-        Add an user to the organisation, with a defined role (by default simple_user)
+        Add an user to the organisation, with a defined role (by default read_only)
         :param user: user
-        :param role: Membership.ROLE: string, "admin" or "simple_user"
+        :param role: Membership.ROLE: string, "admin" or "read_only"
         :return: None
         """
         # If the user is not already in the organisation
@@ -373,7 +436,7 @@ class Organisation(models.Model):
         list_members = list(Membership.objects.filter(organisation=self))
         for member in list_members:
             # We need to keep the user if he created the organisation, so he is admin of the organisation
-            if member.user.staff and member.role == "simple_user":
+            if member.user.staff and member.role == "read_only":
                 list_members.remove(member)
         return list_members
 
@@ -439,6 +502,13 @@ class Organisation(models.Model):
         else:
             return False
 
+    def check_user_is_member_and_can_edit_evaluations(self, user):
+        membership = self.get_membership_user(user=user)
+        if membership is not None:
+            return membership.role == "admin" or membership.role == "editor"
+        else:
+            return False
+
     def get_list_evaluations(self):
         """
         Return the list of the evaluations for the organisation
@@ -470,6 +540,14 @@ class Organisation(models.Model):
             return max([float(i) for i in list_version])
         else:
             return None
+
+    def get_pending_list(self):
+        """
+        This method returns the list of the pending invitations to join the organisation
+        This is used to create rows for pending user invitations of the member array in orga-members.html
+        :return: list of dictionaries
+        """
+        return list(PendingInvitation.objects.filter(organisation=self))
 
 
 def turn_list_orga_into_tuple(list_orga):

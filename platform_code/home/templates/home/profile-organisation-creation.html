@@ -7,9 +7,9 @@
 <h1>{% trans "Organisation creation" %}</h1>
 
 {% if messages %}
-<ul class="messages center">
+<ul class="messages">
     {% for message in messages %}
-    <li  class="alert-warning center">{{ message }}</li>
+    <li {% if message.tags %} class=" alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
 </ul>
 {% endif %}

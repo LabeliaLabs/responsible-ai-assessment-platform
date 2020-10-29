@@ -45,6 +45,11 @@ h5.card-title-section {
     margin: auto;
 }
 
+.align-left-description{
+    text-align: left;
+     height: 15%;
+}
+
 .card-text-section{
   text-align: justify;
   text-justify: auto;

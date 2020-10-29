@@ -47,38 +47,38 @@
 
                <div class="tab-pane active large-array" id="content-eval"
                   role="tabpanel" aria-labelledby="tab-eval">
-                   {% include "assessment/orga-evaluation.html" %}
+                   {% include "assessment/organisation/orga-evaluation.html" %}
 
                </div>
                <div class="tab-pane fade" id="content-members"
                   role="tabpanel" aria-labelledby="tab-members">
-                   {% include "assessment/orga-members.html" %}
+                   {% include "assessment/organisation/member/orga-members.html" %}
                </div>
                 <div class="tab-pane fade" id="content-settings"
                   role="tabpanel" aria-labelledby="tab-settings">
-                   {% include "assessment/orga-settings.html" %}
+                   {% include "assessment/organisation/orga-settings.html" %}
                </div>
             </div>
             </div>
     </div>
 
 
-<div class="row bottom-page-button" style="margin-top:80px" >
-    <form action="{% url 'home:user-profile'  %}" style="margin:auto;" >
+<div class="row bottom-page-button margin-70" >
+    <form action="{% url 'home:user-profile'  %}" class="margin-auto">
         <input type="submit" value="{% trans 'Back to your dashboard' %}"
                class="btn btn-primary same-size-280 " />
     </form>
-    {% if organisation|get_role:user == "admin" %}
+    {% if organisation|get_role:user == "admin" or organisation|get_role:user == "edit"%}
         {% if last_version %}
             <!-- Button to Open the Modal -->
-            <button type="button" class="btn btn-primary float-right same-size-280"
+            <button type="button" class="btn btn-primary float-right same-size-280 margin-auto"
                     data-toggle="modal"
-                    data-target="#modal-create-eval" style="margin:auto;">
+                    data-target="#modal-create-eval">
                     {% trans "Start a new evaluation" %}
             </button>
         {% else %}
-            <button type="button" class="btn btn-primary float-right same-size-280" disabled
-                   style="margin:auto;" title="{% trans 'We are sorry, there is no assessment available yet.' %}">
+            <button type="button" class="btn btn-primary float-right same-size-280 margin-auto" disabled
+                    title="{% trans 'We are sorry, there is no assessment available yet.' %}">
                     {% trans "Start a new evaluation" %}
             </button>
         {% endif %}

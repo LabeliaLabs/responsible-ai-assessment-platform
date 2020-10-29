@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
             name='Membership',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('role', models.CharField(choices=[('admin', 'admin'), ('simple_user', 'simple_user')], default='admin', max_length=200)),
+                ('role', models.CharField(choices=[('admin', 'admin'), ('read_only', 'read_only')], default='admin', max_length=200)),
                 ('organisation', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='home.Organisation')),
                 ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
             ],

@@ -471,3 +471,125 @@ function upgrade(modal_id, form_id, evaluation_id){
         }
     });
 }
+
+function send_invitation(form_id){
+    $("#sendInvitationButton").attr("disabled", "true");
+    var form = document.getElementById(form_id);
+    $.ajax({
+        data: $(form).serialize(),
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        success: function(response) {
+            console.log("response", response);
+             if(response['success']) {
+                 console.log("response success", response);
+                 var tabMembers = document.getElementById("arrayMembers");
+                 var newRow = tabMembers.insertRow();
+                 for (var i = 0; i < tabMembers.rows[0].cells.length; i++){
+                    var newCell  = newRow.insertCell(i);
+                    $(newCell).addClass("case-array");
+                    var newText  = document.createTextNode(response["data_user"][i]);
+                    newCell.appendChild(newText);
+                 }
+                 $("#confirmationInvitation").html("<div class='alert alert-success'>"+response['message']+"</div>");
+                 $(".alert-success").delay(4000).slideUp(200, function() {
+                    $(this).remove();
+                    $(form)[0].reset();
+                    $("#sendInvitationButton").removeAttr("disabled");
+                    $("#modal-add-member .close").click();
+                  });
+             } else {
+             console.log("response fail", response);
+             $("#confirmationInvitation").html("<div class='alert alert-danger'>"+response['message']+"</div>");
+             $(".alert-danger").delay(5000).slideUp(200, function() {
+                    $(this).remove();
+                    $("#sendInvitationButton").removeAttr("disabled");
+                    $("#modal-add-member .close").click();
+                  });
+             }
+        }
+    });
+
+}
+
+function removeMember(form_id, object_id, is_pending){
+// This function is used to remove a member or invitation from an organisation
+// It is called in assessment/organisation/member in remove-member.html and remove-pending-member.html
+// It creates an ajax request managed by SummaryView
+    var form = document.getElementById(form_id);
+    if(is_pending) {
+        var object_removed = "removed_pending_member_id";
+    } else {
+        var object_removed = "removed_member_id";
+    }
+    $.ajax({
+        data: $(form).serialize() +"&"+object_removed+"=" + object_id,
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        success: function(response) {
+             if(response['success']) {
+                 var tabMembers = document.getElementById("arrayMembers");
+                 if(is_pending) {
+                       var row = document.getElementById("rowPendingMember"+ object_id);
+                 } else {
+                        var row = document.getElementById("rowMember"+ object_id);
+                 }
+                 var indexRemoved = row.rowIndex;
+                 indexRemoved = indexRemoved - 1;
+                 $(tabMembers.deleteRow(indexRemoved));
+                 $("#messagesMember").html("<div class='alert alert-success'>"+response['message']+"</div>");
+                 $(".modal").delay(1000).slideUp(200, function() {
+                     $("#modal-remove-member"+object_id+" .close").click();
+                     $("#modal-remove-member-pending"+object_id+" .close").click();
+                  });
+             } else {
+                 $("#messagesMember").html("<div class='alert alert-danger'>"+response['message']+"</div>");
+                 $(".modal").delay(1000).slideUp(200, function() {
+                    $("#modal-remove-member"+object_id+" .close").click();
+                    $("#modal-remove-member-pending"+object_id+" .close").click();
+             });
+             }
+        }
+    });
+}
+
+function editRoleMember(form_id, object_id, is_pending){
+// This function is used to edit the role of members or pending invitations to join the organisation
+// It creates an ajax request managed by SummaryView
+// It is called in assessment/organisation/member in edit-role-member.html and edit_role-pending-member.html
+    var form = document.getElementById(form_id);
+    if(is_pending) {
+        var object_edited = "edit_pending_member_id";
+    } else {
+        console.log("IS PENDING else", is_pending);
+        var object_edited = "edit_member_id";
+    }
+    $.ajax({
+        data: $(form).serialize() +"&"+object_edited+"=" + object_id,
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        success: function(response) {
+             if(response['success']) {
+                 var tabMembers = document.getElementById("arrayMembers");
+                 if(is_pending) {
+                       var row = document.getElementById("rowPendingMember"+ object_id);
+                 } else {
+                        var row = document.getElementById("rowMember"+ object_id);
+                 }
+                 var cell = row.cells[2]
+                 cell.textContent = response["new_role"]
+                 $("#messagesMember").html("<div class='alert alert-success'>"+response['message']+"</div>");
+                 $(".modal").delay(1000).slideUp(200, function() {
+                     $("#modal-edit-role"+object_id+" .close").click();
+                     $("#modal-edit-role-pending"+object_id+" .close").click();
+                  });
+             } else {
+                 $("#messagesMember").html("<div class='alert alert-danger'>"+response['message']+"</div>");
+                 $(".modal").delay(1000).slideUp(200, function() {
+                    $("#modal-edit-role"+object_id+" .close").click();
+                    $("#modal-edit-role-pending"+object_id+" .close").click();
+             });
+             }
+        }
+    });
+}
