@@ -2,7 +2,7 @@
 {% load add_attr %}
 {% load static %}
 
-<div class="content-modal-delete">
+<div>
 
   <form  method='post' class="form" role="form" id="changeNameEval{{evaluation.id}}"
         action="">
@@ -13,7 +13,7 @@
         <div class="modal-body create-form">
             <div class="column">
             {% csrf_token %}
-            {% with eval_form=evaluation_form_dic|get_evaluation_form:evaluation.id %}
+            {% with eval_form=evaluation_form_dic|get_item_converted_str:evaluation.id %}
                 {% for field in eval_form %}
                 <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
                     <span class="float-left">{{ field.label}}</span>

@@ -3,32 +3,8 @@
 {% load static %}
 {% load i18n %}
 
-<!--<html>-->
-<!--  <head>-->
-<!--    <title>Section card</title>-->
-<!--&lt;!&ndash;    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">&ndash;&gt;-->
-<!--&lt;!&ndash;    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap-theme.min.css">&ndash;&gt;-->
-
-<!--            <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>-->
-<!--    <script src="{% static 'vendor/jquery/jquery.slim.min.js' %}"></script>-->
-
-<!--&lt;!&ndash;    <link href="{% static 'vendor/bootstrap/css/bootstrap.css' %}" type="text/css" rel="stylesheet" >&ndash;&gt;-->
-<!--    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" >-->
-<!--    <link href="{% static 'vendor/bootstrap/css/bootstrap-grid.min.css' %}" type="text/css" rel="stylesheet" >-->
-<!--    <link href="{% static 'vendor/bootstrap/css/bootstrap-reboot.min.css' %}" type="text/css" rel="stylesheet" >-->
-
-<!--    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>-->
-<!--    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>-->
-
-<!--    <link href="{% static 'css/section-card.css' %}" type="text/css" rel="stylesheet" >-->
-
-
-<!--  </head>-->
-
-<!--  <body>-->
-
     <article class="card-section text-center " >
-        <div class="row" style="margin-bottom: 30px">
+        <div class="row margin-bot-30">
             <h5 class="section-card-title" title="Section {{section.master_section.order_id}}">
                 Section {{section.master_section.order_id}}
             </h5>
@@ -43,7 +19,7 @@
                 </div>
             </div>
          </div>
-        <p class="card-title-section" style="text-align: left; height: 15%;" title="{% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}">
+        <p class="card-title-section align-left-description" title="{% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}">
             {% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}
         </p>
        <div id="image"  >

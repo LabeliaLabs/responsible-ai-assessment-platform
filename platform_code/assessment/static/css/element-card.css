@@ -127,6 +127,15 @@ div.evaluation-title: h3 {
     font-size: 20px;
 }
 
+.background-white{
+    background-color: white;
+}
+
+.section-description{
+    margin-bottom: 50px;
+     text-align: justify;
+      margin-top: 50px;
+}
 
 .content-resource {
   padding: 0 18px;

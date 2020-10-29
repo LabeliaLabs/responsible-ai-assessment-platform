@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load static %}
+
+<div class="content-modal-remove-pending-member">
+    <div class="modal-header">
+        <h4 class="modal-title" >{% trans "Are you sure you want to delete the invitation?" %} </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="modal-body-delete">
+        <p>{% trans "The user will not automatically join the organisation when his account is created." %}</p>
+
+    </div>
+
+    <div class="modal-footer self-center">
+        <form action="{% url 'assessment:orga-summary' organisation.id %}"
+              method="post" id="remove_pending_member{{pending_member.id}}">
+            {% csrf_token %}
+            <button class="btn btn-primary same-size-250 margin-auto" type="button"
+                    onclick="removeMember('remove_pending_member{{pending_member.id}}', '{{pending_member.id}}', true)">
+                {% trans 'Yes' %}
+            </button>
+            <button type="button" class="btn btn-danger same-size-250 margin-auto right-button"
+                data-dismiss="modal">{% trans 'Cancel' %}
+        </button>
+        </form>
+
+    </div>
+</div>

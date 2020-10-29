@@ -29,7 +29,7 @@
 {% endif %}
 
 <div class="head-page">
-    {% if organisation|get_role:user == "admin" %}
+    {% if organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
     <ul id='listTitle'>
         <li class="flex">
             <h1 class="h1-section" id="evaluationName" >{{ evaluation.name }}

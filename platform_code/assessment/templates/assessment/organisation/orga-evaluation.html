@@ -17,7 +17,7 @@
           <th scope="col" class="col-array">{% trans "Progression" %}</th>
           <th scope="col" class="col-array">{% trans "Score" %}</th>
           <th scope="col" class="col-array">{% trans "Action" %}</th>
-          <th scope="col" class="col-array" style="display:none"></th>
+          <th scope="col" class="col-array" class="display-none"></th>
         </tr>
       </thead>
       <tbody>
@@ -57,7 +57,7 @@
                        href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
                       >{% trans "Results" %}</a>
                     <!-- If the user is an admin of the organisation so he has the right to upgrade && evaluation finished && upgradable  -->
-                    {% if organisation|get_role:user == "admin" %}
+                    {% if organisation|get_role:user == "admin" or organisation|get_role:user == "edit" %}
                       <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
                          class="btn btn-primary medium-button margin-10"
                           >{% trans "Upgrade" %}</a>
@@ -74,7 +74,7 @@
                   <td class="case-array">
                     <a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}">{% trans "Modify" %}</a>
                     <!-- If the user is an organisation admin -->
-                    {% if organisation|get_role:user == "admin" %}
+                    {% if organisation|get_role:user == "admin" or organisation|get_role:user == "edit" %}
                       <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
                          class="btn btn-primary medium-button margin-10"
                           >{% trans "Upgrade" %}</a>
@@ -111,8 +111,8 @@
               <!-- Endif the evaluation is upgradable and end of the case -->
               {% endif %}
 
-              <td class="div-trash" id="div-trash{{evaluation.id}}" style="border-top:0px; background-color: white;" >
-                  {% if organisation|get_role:user == "admin" %}
+              <td class="div-hidden-icons background-white" id="div-hidden-icons{{evaluation.id}}" >
+                  {% if organisation|get_role:user == "admin" or organisation|get_role:user == "edit" %}
                     <button class="btn btn-danger" data-toggle="modal" data-target="#modal-delete{{evaluation.id}}"><span class="fa fa-trash"></span></button>
                     <!-- The Modal delete evaluation -->
                     <!-- The modal is inside the for loop because we need to catch the evaluation id -->

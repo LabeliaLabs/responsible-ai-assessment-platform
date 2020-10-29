@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import UserResources, Organisation, Membership, User
+from .models import UserResources, Organisation, Membership, User, PendingInvitation
 from .forms import UserAdminCreationForm, UserAdminChangeForm
 
 # Register your models here.
@@ -10,7 +10,7 @@ from .forms import UserAdminCreationForm, UserAdminChangeForm
 admin.site.register(Organisation)
 admin.site.register(Membership)
 admin.site.register(UserResources)
-
+admin.site.register(PendingInvitation)
 
 # USER PART #
 

@@ -10,7 +10,7 @@ def get_role(organisation, user):
     Get the role of the user membership in the organisation
     :param organisation: organisation
     :param user: user
-    :return: string : "admin" or "simple_user"
+    :return: string : "admin" or "read_only"
     """
     member = Membership.objects.get(user=user, organisation=organisation)
     return member.role

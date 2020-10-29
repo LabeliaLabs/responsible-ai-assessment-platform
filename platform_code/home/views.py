@@ -10,6 +10,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.core.mail import EmailMessage
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
 from django.template.loader import render_to_string
@@ -23,7 +24,7 @@ from django.contrib.auth.views import (
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import views as auth_views
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, ngettext
 from django.conf import settings
 
 from assessment.views import treat_resources, error_500_view_handler, error_400_view_handler
@@ -102,10 +103,39 @@ def activate(request, uidb64, token):
         user.active = True
         user.save()
         login(request, user)
-        # return redirect('home')
-        messages.success(request, _("Thank you for the verification, your account has been activated!"))
-        logger.info(f"[account_activated] The user {user.email} activated his account")
-        return redirect("home:user-profile")
+        # If the user has pending invitations
+        if user.get_list_pending_invitation():
+            list_pending_invitation = user.get_list_pending_invitation()
+            count = len(list_pending_invitation)
+            list_organisations = [x.organisation.name for x in list_pending_invitation]
+            name = str(list_organisations).replace('[', '').replace(']', '').replace('\'', '')
+            Membership.create_membership_pending_invitations(user=user)
+            logger.info(f"[account_creation][join_organisation] The user {user.email} created an account and has "
+                        f"joined the organisations where he was invited, {list_pending_invitation}")
+            messages.success(request, ngettext("Thank you for your verification, your account have been activated."
+                                               "You had %(count)d pending "
+                                               "invitation to join the organisation: %(name)s. "
+                                               "You have automatically joined it.",
+                                               "Thank you for your verification, your account have been activated."
+                                               "You had %(count)d pending "
+                                               "invitations to join the organisations: %(name)s. "
+                                               "You have automatically joined them.",
+                                               count
+                                               ) % {
+                                 'count': count,
+                                 'name': name
+                             }
+                             )
+            return redirect("home:user-profile")
+        else:
+            # The user is redirected to orga-creation but can skip this action
+            logger.info(f"[account_activated] The user {user.email} activated his account")
+            messages.success(request, _("Your account has been activated! \n Do you want to create your organisation"
+                                        " now? "
+                                        "You could do it later but it is required to do an evaluation."))
+
+            return redirect("home:orga-creation")
+
     else:
         messages.error(request, _("An issue occured with the link."))
         logger.error(f"[account_activation_error] The activation of the account failed, request {request}"
@@ -341,8 +371,11 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         # This can be modified if we want all the evaluations of the organisations the user belong to
         # Can be empty
         # Todo tests
-        list_evaluations = Evaluation.objects.filter(organisation__membership__user=user,
-                                                     organisation__membership__role="admin").order_by("-created_at")
+        list_evaluations = Evaluation.objects.filter(Q(organisation__membership__user=user,
+                                                       organisation__membership__role="admin")
+                                                     | Q(organisation__membership__user=user,
+                                                         organisation__membership__role="edit"))
+
         context["evaluations"] = list_evaluations
         context["evaluation_form_dic"] = {}
         for evaluation in list_evaluations:
@@ -404,7 +437,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             elif "organisation" in request.POST:
 
                 # If the user belongs to multiple organisation, it is a form with a field organisation
-                if len(user.get_list_organisations_where_user_as_role(role="admin")) >= 1:
+                if len(user.get_list_organisations_where_user_as_role(role="admin")) >= 1 or \
+                        len(user.get_list_organisations_where_user_as_role(role="edit")) >= 1:
                     form = EvaluationMutliOrgaForm(
                         request.POST,
                         user=user,
@@ -555,16 +589,10 @@ class OrganisationCreationView(LoginRequiredMixin, FormView):
 
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
-        previous_url = request.META.get("HTTP_REFERER")
-
-        if (
-            previous_url is not None and "signup" in previous_url
-        ):  # TODO check if it is logic (refresh page)
+        # If there already is a message, this means the user activated his account before so no need to display warning
+        # message
+        if messages:
             context["skip_button"] = True
-            context["message"] = {
-                "alert-success": _("Your account has been created! \n Do you want to create your organisation now? "
-                                   "You could do it later but it is required to do an evaluation.")
-            }
         else:
             organisation_required_message(
                 context

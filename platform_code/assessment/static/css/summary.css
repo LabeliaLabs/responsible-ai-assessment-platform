@@ -109,11 +109,13 @@ h1{
     margin: auto;
 }
 
-.row-array:hover .div-trash {
+.row-array:hover .div-hidden-icons {
     visibility: visible;
 }
 
-.div-trash{
+.div-hidden-icons{
     visibility: hidden;
+    border-top:0px;
+     background-color: white;
 }
 

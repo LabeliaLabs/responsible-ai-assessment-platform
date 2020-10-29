@@ -8,21 +8,21 @@ register = template.Library()
 @register.filter
 def get_key_by_position(dictionary, i):
     print("get key", dictionary, i)
-    if type(dictionary) == dict and type(i) == int and i <= len(dictionary.keys()):
+    if isinstance(dictionary, dict) and type(i) == int and i <= len(dictionary.keys()):
         list_keys = list(dictionary.keys())
         return list_keys[i]
 
 
 @register.filter
 def get_value_by_position(dictionary, i):
-    if type(dictionary) == dict and type(int(i)) == int and i <= len(dictionary.keys()):
+    if isinstance(dictionary, dict) and type(int(i)) == int and i <= len(dictionary.keys()):
         list_values = list(dictionary.values())
         return list_values[i]
 
 
 @register.filter
 def get_item(dictionary, key):
-    if type(dictionary) == dict and key in dictionary.keys():
+    if isinstance(dictionary, dict) and key in dictionary.keys():
         return dictionary.get(key)
     else:
         return None
@@ -41,7 +41,6 @@ def get_type_form(dictionary, key):
 @register.filter
 def get_element_list_by_id(list_, i):
     # todo comment, used for what ?
-    print("LIST ID", i, type(i))
     if i > 1:
         return list_[i - 1]
     else:
@@ -80,7 +79,6 @@ def order_elements_of_section(section):
             "master_evaluation_element__order_id"
         )
     )
-    print(list_element)
     return list_element
 
 
@@ -110,7 +108,6 @@ def evaluation_created_by(member, evaluation_list):
         if eval.created_by == user:
             string_to_display += eval.name + ", "
     if len(string_to_display) > 0:
-        print(string_to_display[-5:])
         string_to_display = string_to_display[:-2]
     return string_to_display
 
@@ -144,9 +141,9 @@ def count_finished(list_evaluation):
 
 
 @register.filter
-def get_evaluation_form(dictionary, key):
+def get_item_converted_str(dictionary, key):
     key = str(key)
-    if type(dictionary) == dict and key in dictionary.keys():
+    if isinstance(dictionary, dict) and key in dictionary.keys():
         return dictionary.get(key)
     else:
         return None

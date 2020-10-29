@@ -6,6 +6,7 @@ from django.forms import widgets
 from django.forms.renderers import get_default_renderer
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
 
 from .models import (
     Assessment,
@@ -164,8 +165,9 @@ class EvaluationElementWeightForm(forms.ModelForm):
 
 class EvaluationForm(forms.ModelForm):
     """
-    This from is used when the organisation attached to the evaluation is clearly defined: organisation view
+    This form is used when the organisation attached to the evaluation is clearly defined: organisation view
     or after the user created his organisation
+    It is used to create evaluations or to edit evaluation name
     """
     class Meta:
         model = Evaluation
@@ -175,6 +177,7 @@ class EvaluationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         is_name = False
+        # If the evaluation name is edited
         if "name" in kwargs:
             name = kwargs.pop("name")
             is_name = True
@@ -205,7 +208,7 @@ class EvaluationMutliOrgaForm(ModelForm):
         self.fields["name"].widget.attrs = {"class": "name-eval-field"}
         self.fields["organisation"].label = _("Organisation")
         queryset = Organisation.objects.distinct().filter(
-            membership__user=user, membership__role="admin"
+            Q(membership__user=user, membership__role="admin") | Q(membership__user=user, membership__role="edit")
         )
         self.fields["organisation"].queryset = queryset
         self.fields["name"].widget.attrs = {"class": "full-width"}
