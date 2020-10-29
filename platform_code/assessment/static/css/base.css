@@ -104,6 +104,10 @@ a:hover {
     margin: auto;
 }
 
+.margin-left-em{
+    margin-left: 0.2em;
+}
+
 .margin-left-signup{
     margin-left: 10%;
 }
@@ -796,7 +800,6 @@ tr.spaceUnder>td {
 }
 
 .help-tip{
-    top: 13%;
     right: 18px;
     text-align: center;
     background-color: #5550FF;
@@ -806,6 +809,7 @@ tr.spaceUnder>td {
     font-size: 14px;
     line-height: 26px;
     cursor: default;
+    font-size: 18px;
 }
 
 .help-tip:before{
