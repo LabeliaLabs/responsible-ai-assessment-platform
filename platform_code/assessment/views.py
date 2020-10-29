@@ -765,7 +765,9 @@ class SectionView(LoginRequiredMixin, ListView):
             )
 
             # Test if the are conditions inside the evaluation element and if there are verified
-            if evaluation_element.are_conditions_between_choices_satisfied(list_choices_ticked):
+            if evaluation_element.are_conditions_between_choices_satisfied(
+                list_choices_ticked
+            ):
 
                 # For all the choices of the evaluation element
                 for choice in list_choices_element:

@@ -7,13 +7,17 @@ app_name = "home"
 urlpatterns = [
     path("", views.LoginView.as_view(), name="homepage"),
     path("signup/", views.signup, name="signup"),
+    re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z\_\.\-]+)/$',
+            views.activate,
+            name='activate'
+            ),
     path("login/", views.login_view, name="login"),  # login page when redirect
     path("about/", views.about_view, name="about"),
     path("legal-notices/", views.legal_notices_view, name="legal-notices"),
     path(
         "accounts/",
         include(
-            [  # we need to add user id in the url for ProfileView
+            [
                 path("profile/", views.ProfileView.as_view(), name="user-profile"),
                 path(
                     "profile-settings/",

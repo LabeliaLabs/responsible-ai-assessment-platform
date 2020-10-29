@@ -2,11 +2,19 @@
 
 import json
 import logging
+from datetime import datetime, timedelta
+
+import jwt
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import MultipleObjectsReturned
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.core.mail import EmailMessage
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib import messages
+from django.template.loader import render_to_string
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import generic
 from django.contrib.auth.views import (
     login_required, LoginView, LogoutView, PasswordChangeForm, AuthenticationForm, auth_login,
@@ -16,6 +24,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import views as auth_views
 from django.utils.translation import gettext as _
+from django.conf import settings
 
 from assessment.views import treat_resources, error_500_view_handler, error_400_view_handler
 from assessment.forms import EvaluationMutliOrgaForm, EvaluationForm
@@ -43,15 +52,65 @@ def signup(request):
             email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(email=email, password=raw_password)
-            login(request, user)
-            UserResources.create_user_resources(
-                user=user
-            )  # create user_resources so the user can access resources
+            user.active = False
+            user.save()
+            # create user_resources so the user can access resources, this could be integrated to user creation ?
+            UserResources.create_user_resources(user=user)
+            current_site = get_current_site(request)
+            mail_subject = _("Activate your Substra account.")
+            message = render_to_string('home/account/acc_activate_email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'protocol': "https" if request.is_secure() else "http",
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': jwt.encode({"user": user.email,
+                                     "exp": datetime.now()+timedelta(days=5)},  # You can edit the delay token validity
+                                    settings.SECRET_KEY, algorithm='HS256').decode("utf-8"),
+            })
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                mail_subject, message, to=[to_email]
+            )
+            email.send()
             logger.info(f"[account_creation] The user {email} created an account")
-            return redirect("home:orga-creation")
+            return render(request, "home/account/acc_activate_done.html")
     else:
         form = SignUpForm()
     return render(request, "home/signup.html", {"form": form})
+
+
+def activate(request, uidb64, token):
+    # Activate the account
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.object.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, ObjectDoesNotExist) as e:
+        user = None
+        # Todo find better log item to display
+        logger.error(f"[account_activation_error] The user with uidb64 {uidb64} does not exist, error {e}.")
+    try:
+        token_decoded = jwt.decode(token, settings.SECRET_KEY, algorithm='HS256')["user"]
+    except (KeyError, NameError, jwt.InvalidSignatureError, jwt.InvalidAlgorithmError, jwt.InvalidTokenError) as e:
+        token_decoded = None
+        logger.error(f"[account_activation_error] There is an issue to decode the token for the request {request},"
+                     f" with uid {uidb64}, error {e}")
+    except jwt.ExpiredSignatureError as e:
+        messages.error(request, _("The link has expired."))
+        logger.error(f"[account_activation_error] The token of an account validation has expired, "
+                     f"uid {uidb64}, error {e}")
+    if user is not None and token_decoded == user.email:
+        user.active = True
+        user.save()
+        login(request, user)
+        # return redirect('home')
+        messages.success(request, _("Thank you for the verification, your account has been activated!"))
+        logger.info(f"[account_activated] The user {user.email} activated his account")
+        return redirect("home:user-profile")
+    else:
+        messages.error(request, _("An issue occured with the link."))
+        logger.error(f"[account_activation_error] The activation of the account failed, request {request}"
+                     f", uidb64 {uidb64}")
+        return redirect("home:homepage")
 
 
 @login_required(login_url="/login/")
@@ -107,7 +166,7 @@ def login_view(request):
         email = request.POST["username"]  # Which is actually the email
         password = request.POST["password"]
         user = authenticate(email=email, password=password)
-        if user is not None and user.is_active:
+        if user is not None and user.active:
             login(request, user)
             logger.info(f"[user_connection] The user {user.email} has logged in")
             return redirect("home:user-profile")
@@ -179,7 +238,7 @@ class LoginView(LoginView):
                 password = form.cleaned_data.get("password")
                 # Ensure the user-originating redirection url is safe.
                 user = authenticate(email=email, password=password)
-                if user is not None and user.is_active:
+                if user is not None and user.active:
                     login(self.request, user)
                     logger.info(f"[user_connection] The user {user.email} has logged in")
                     return HttpResponseRedirect(self.get_success_url())
