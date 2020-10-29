@@ -15,6 +15,7 @@ from .models import (
     Evaluation,
     EvaluationElementWeight,
     get_last_assessment_created,
+    Section,
 )
 from .scoring import check_and_valid_scoring_json
 from home.models import Organisation
@@ -215,6 +216,53 @@ class EvaluationMutliOrgaForm(ModelForm):
         self.fields["organisation"].widget.attrs = {"class": "full-width"}
 
 
+class SectionNotesForm(ModelForm):
+    """
+
+    """
+    class Meta:
+        model = Section
+        fields = ["user_notes"]
+
+    def __init__(self, *args, **kwargs):
+        if "section" in kwargs:
+            section = kwargs.pop("section")
+        else:
+            section = None
+        super(SectionNotesForm, self).__init__(*args, **kwargs)
+        if section:
+            # If the notes are empty
+            if section.user_notes is None or section.user_notes == "":
+                self.fields["user_notes"] = forms.CharField(
+                                                label=_("My notes on the section"),
+                                                widget=forms.Textarea(
+                                                    attrs={
+                                                        "rows": 4,
+                                                        "size": 100,
+                                                        "width": "100%",
+                                                        "class": "textarea textarea-empty",
+                                                        "placeholder": _("Enter your notes on the section here."),
+                                                    }
+                                                ),
+                                                required=False,
+                                            )
+            # If there are already some notes for the section
+            elif section.user_notes:
+                self.fields["user_notes"] = forms.CharField(
+                                                label=_("My notes on the section"),
+                                                widget=forms.Textarea(
+                                                    attrs={
+                                                        "rows": 4,
+                                                        "size": 100,
+                                                        "width": "100%",
+                                                        "class": "textarea textarea-data",
+                                                    }
+                                                ),
+                                                initial=section.user_notes,
+                                                required=False,
+                                            )
+
+
 class ChoiceForm(ModelForm):
     """
     The class ChoiceForm defines the form object used for each evaluation element of the user evaluation
@@ -267,7 +315,7 @@ class ChoiceForm(ModelForm):
                         "size": 100,
                         "width": "100%",
                         "class": "textarea textarea-empty",
-                        "placeholder": "Entrez vos notes en lien avec la question...",
+                        "placeholder": _("Enter your notes on the evaluation element here."),
                     }
                 ),
                 required=False,

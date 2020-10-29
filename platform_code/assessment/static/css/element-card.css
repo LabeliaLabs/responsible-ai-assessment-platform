@@ -95,6 +95,10 @@ div.evaluation-title: h3 {
     border: 1px solid lightsteelblue;
 }
 
+.textarea{
+    color: #4D566B;
+}
+
 .btn-primary{
     background-color: #FFBE3C;
     border-color: #FFBE3C;

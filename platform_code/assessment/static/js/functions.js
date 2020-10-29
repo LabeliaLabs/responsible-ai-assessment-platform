@@ -593,3 +593,30 @@ function editRoleMember(form_id, object_id, is_pending){
         }
     });
 }
+
+function submitSectionNotes(form_id, section_id){
+// this function is used to save the notes of the section
+// the call is made in content-section.html
+// the ajax request is managed in SectionView
+   var form = document.getElementById(form_id);
+    $.ajax({ data: $(form).serialize()+ "&notes_section_id=" + section_id,
+             type: $(form).attr('method'),
+             url: $(form).attr('action'),
+             success: function(response) {
+                 console.log("response", response);
+                 if(response['success']) {
+                     $("#messageSectionNotes"+section_id).removeClass("display-none")
+                     $("#messageSectionNotes"+section_id).html("<div class='alert alert-success margin-10'>"+response['message']+"</div>");
+                     $(".alert").delay(3000).slideUp(200, function() {
+                        $(this).addClass("display-none");
+                        });
+                 } else {
+                    $("#messageSectionNotes"+section_id).html("<div class='alert alert-danger margin-10'>"+response['message']+"</div>");
+                    $(".alert").delay(3000).slideUp(200, function() {
+                        $(this).addClass("display-none");
+                        });
+                 }
+             }
+    });
+
+}

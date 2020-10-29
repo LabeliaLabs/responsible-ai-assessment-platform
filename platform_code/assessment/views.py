@@ -39,6 +39,7 @@ from .forms import (
     element_feedback_list,
     SectionFeedbackForm,
     section_feedback_list,
+    SectionNotesForm,
 )
 from assessment.forms_.member_forms import AddMemberForm, EditRoleForm
 from home.models import Organisation, User, Membership, PendingInvitation
@@ -48,6 +49,7 @@ private_token = settings.PRIVATE_TOKEN
 project_id = str(settings.PROJECT_ID)
 
 logger = logging.getLogger('monitoring')
+
 
 # As we get the organisation id in the url, we need to be sure that the user is a member of the organisation called
 # in the url
@@ -107,7 +109,7 @@ def upgradeView(request, *args, **kwargs):
     )  # Get 404 if orga_id doesn't exist
     # Check if the user is member of the organisation (caught in the url), if not, return HttpResponseForbidden
     if not membership_security_check(
-        request, organisation=organisation, *args, **kwargs
+            request, organisation=organisation, *args, **kwargs
     ):
         messages.warning(request, _("You don't have access to this content."))
         logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
@@ -167,9 +169,9 @@ def upgradeView(request, *args, **kwargs):
                 url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
                 messages.success(request, _("Your evaluation has been upgraded!"))
             elif (
-                "organisation" in previous_url
-                and not str(evaluation_id) in previous_url
-                and not new_eval.is_finished
+                    "organisation" in previous_url
+                    and not str(evaluation_id) in previous_url
+                    and not new_eval.is_finished
             ):
                 url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
                 messages.success(request, _("Your evaluation has been upgraded!"))
@@ -217,7 +219,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
         )  # Get 404 if orga_id doesn't exist
         # Check if the user is member of the organisation (caught in the url), if not, return HttpResponseForbidden
         if not membership_security_check(
-            request, organisation=organisation, *args, **kwargs
+                request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
             logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
@@ -535,7 +537,7 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
         organisation = get_object_or_404(Organisation, id=organisation_id)
         # Check if the user is member of the orga, if not, return HttpResponseForbidden
         if not membership_security_check(
-            request, organisation=organisation, *args, **kwargs
+                request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
             logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
@@ -644,7 +646,7 @@ class EvaluationView(LoginRequiredMixin, DetailView):
         organisation = get_object_or_404(Organisation, id=organisation_id)
         # Check if the user is member of the orga, if not, return HttpResponseForbidden
         if not membership_security_check(
-            request, organisation=organisation, *args, **kwargs
+                request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
             logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
@@ -707,7 +709,7 @@ class ResultsView(LoginRequiredMixin, DetailView):
         organisation = get_object_or_404(Organisation, id=organisation_id)
         # Check if the user is member of the orga, if not, return HttpResponseForbidden
         if not membership_security_check(
-            request, organisation=organisation, *args, **kwargs
+                request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
             logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
@@ -799,6 +801,29 @@ class SectionView(LoginRequiredMixin, ListView):
                 logger.info(f"[section_feedback] The user {request.user.email} sent a section feedback")
                 return treat_feedback(request, "section")
 
+            # If the user writes notes for the section
+            elif "notes_section_id" in request.POST:
+                data_update = {"message": _("An error occurred"), "success": False}
+                form = SectionNotesForm(request.POST)
+                if form.is_valid():
+                    notes = form.cleaned_data.get("user_notes")
+                    section_id = request.POST.get("notes_section_id")
+                    try:
+                        section = Section.objects.get(id=section_id)
+                    except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
+                        section = None
+                        logger.warning(f"[section_notes_error] The section with id {section_id} does not exist, "
+                                       f"error {e} ")
+                    if section:
+                        # To be sure the notes are for the section the user is dealing with
+                        if section.id == kwargs.get("id"):
+                            section.user_notes = notes
+                            section.save()
+                            data_update["success"] = True
+                            data_update["message"] = _("Your notes have been saved!")
+
+                return HttpResponse(json.dumps(data_update), content_type="application/json")
+
             # Else, it s when the user validates an answer
             else:
                 # Get ids of the objects Section and Evaluation from the url
@@ -865,7 +890,7 @@ class SectionView(LoginRequiredMixin, ListView):
         organisation = get_object_or_404(Organisation, id=organisation_id)
         # Check if the user is member of the orga, if not, return HttpResponseForbidden
         if not membership_security_check(
-            request, organisation=organisation, *args, **kwargs
+                request, organisation=organisation, *args, **kwargs
         ):
             messages.warning(request, _("You don't have access to this content."))
             logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
@@ -898,6 +923,9 @@ class SectionView(LoginRequiredMixin, ListView):
                 "master_evaluation_element__order_id"
             )
         )
+
+        # Get the form for section notes
+        context["section_notes_form"] = SectionNotesForm(section=section)
 
         # Manage dynamic conditions between evaluation elements in a dictionary depends_on_dic
         # This dictionary is used in the case an element is not available to inform the user that this is due
@@ -968,13 +996,13 @@ class SectionView(LoginRequiredMixin, ListView):
 
         # Check if the element currently disable other elements
         if (
-            evaluation_element.condition_on_other_elements()
-            and evaluation_element.get_choice_setting_conditions_on_other_elements().is_ticked
+                evaluation_element.condition_on_other_elements()
+                and evaluation_element.get_choice_setting_conditions_on_other_elements().is_ticked
         ):
             # So at this point we know that the element disable another element and the choice doing this is ticked
             # So we need to check if this choice is still ticked or not
             if evaluation_element.get_choice_setting_conditions_on_other_elements() not in request.POST.getlist(
-                str(evaluation_element.id)
+                    str(evaluation_element.id)
             ):
                 data_update["no_more_condition_inter"] = True
 
@@ -998,7 +1026,7 @@ class SectionView(LoginRequiredMixin, ListView):
 
             # Test if the are conditions inside the evaluation element and if there are verified
             if evaluation_element.are_conditions_between_choices_satisfied(
-                list_choices_ticked
+                    list_choices_ticked
             ):
 
                 # For all the choices of the evaluation element
@@ -1057,14 +1085,14 @@ class SectionView(LoginRequiredMixin, ListView):
                 # We add this information in data_update and in the jquery, we will remove the warning messages
                 # And set the conditioned elements not to disabled
                 if (
-                    evaluation_element.get_choice_setting_conditions_on_other_elements()
-                    in evaluation_element.get_list_choices_ticked()
+                        evaluation_element.get_choice_setting_conditions_on_other_elements()
+                        in evaluation_element.get_list_choices_ticked()
                 ):
                     choice_setting_conditions = (
                         evaluation_element.get_choice_setting_conditions_on_other_elements()
                     )
                     for (
-                        element_
+                            element_
                     ) in choice_setting_conditions.get_list_element_depending_on():
                         data_update["conditional_elements_list"].append(
                             str(element_.id)
@@ -1076,8 +1104,8 @@ class SectionView(LoginRequiredMixin, ListView):
             data_update["message_reset"] = "Votre réponse a bien été réinitialisée."
             # If the notes have changed
             if (
-                "notes" in dic_choices
-                and dic_choices["notes"] != form.fields["notes"].initial
+                    "notes" in dic_choices
+                    and dic_choices["notes"] != form.fields["notes"].initial
             ):
                 # Get and save the notes
                 evaluation_element.user_notes = form.cleaned_data.get("notes")
@@ -1125,7 +1153,7 @@ class SectionView(LoginRequiredMixin, ListView):
             "conditional_elements_list": [],
             "success": False,
             "conditions_respected": True,
-            "message": _("An issue occured, please try again."),
+            "message": _("An issue occurred, please try again."),
         }
         logger.warning(f"[form_issue] Issue with the request {request} to validate the "
                        f" answers of an element {kwargs.get('evaluation_element')}")
@@ -1160,7 +1188,7 @@ def set_form_for_results(evaluation):
     dic_form = {}
     for section in evaluation.section_set.all().order_by("master_section__order_id"):
         for evaluation_element in section.evaluationelement_set.all().order_by(
-            "master_evaluation_element__order_id"
+                "master_evaluation_element__order_id"
         ):
             dic_form[evaluation_element] = ResultsForm(
                 evaluation_element=evaluation_element
@@ -1285,23 +1313,23 @@ def treat_feedback(request, *args, **kwargs):
         headers = {"PRIVATE-TOKEN": private_token}
         data = {
             "title": "Feedback sur "
-            + str(feedback_object)
-            + " ("
-            + object_type
-            + " id="
-            + str(master_id)
-            + ")",
+                     + str(feedback_object)
+                     + " ("
+                     + object_type
+                     + " id="
+                     + str(master_id)
+                     + ")",
             "labels": "feedback",
             "description": "["
-            + str(feedback_text)
-            + "] de "
-            + user_name
-            + ", "
-            + user_email
-            + " sur l'objet "
-            + str(feedback_object)
-            + ".\n\n Message de l'utilisateur : "
-            + text,
+                           + str(feedback_text)
+                           + "] de "
+                           + user_name
+                           + ", "
+                           + user_email
+                           + " sur l'objet "
+                           + str(feedback_object)
+                           + ".\n\n Message de l'utilisateur : "
+                           + text,
         }
 
         # If the user doesn't spam the feedback, ie he doesn't send more than max_feedback (19)
@@ -1310,7 +1338,7 @@ def treat_feedback(request, *args, **kwargs):
             try:
                 response = requests.post(url, headers=headers, data=data)
                 if (
-                    response.status_code == 200 or response.status_code == 201
+                        response.status_code == 200 or 201
                 ):  # if 200 or 201 for created
                     data_update["success"] = True
                     data_update["message"] = _(
