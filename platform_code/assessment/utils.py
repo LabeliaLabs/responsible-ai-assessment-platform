@@ -41,4 +41,4 @@ def select_label_choice(text):
     :param text:
     :return:
     """
-    return re.findall(r"[0-9]\"\>\r?\n?(.*?)\<\/label", text)
+    return re.findall(r"\>\r?\n?(.*?\<\/label)", text)

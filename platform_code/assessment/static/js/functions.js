@@ -200,7 +200,7 @@ function submitForm(id_form){
     var form = document.getElementById(id_form);
     var name = $(form).attr("element");
     var element_id = $(form).attr("name");
-    console.log("form", form);
+//    console.log("form", form);
     $.ajax({ data: $(form).serialize() + "&element_id=" + element_id,
              type: $(form).attr('method'),
              url: $(form).attr('action'),

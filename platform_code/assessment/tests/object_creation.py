@@ -188,20 +188,20 @@ def create_evaluation_element(
 
 
 def create_master_choice(
-    master_evaluation_element, answer_text, order_id, depends_on=None
+    master_evaluation_element, answer_text, order_id, is_concerned_switch=False
 ):
     """
+    :param is_concerned_switch:
     :param master_evaluation_element:
     :param answer_text:
     :param order_id:
-    :param depends_on:
     :return:
     """
     return MasterChoice.objects.create(
         master_evaluation_element=master_evaluation_element,
         answer_text=answer_text,
         order_id=order_id,
-        depends_on=depends_on,
+        is_concerned_switch=is_concerned_switch,
     )
 
 
@@ -261,6 +261,7 @@ def create_assessment_body(
         master_evaluation_element=master_evaluation_element1,
         answer_text="answer",
         order_id="a",
+        is_concerned_switch=True,
     )
 
     master_evaluation_element2 = create_master_evaluation_element(
@@ -282,18 +283,17 @@ def create_assessment_body(
         master_evaluation_element=master_evaluation_element1,
         answer_text="answer",
         order_id="b",
-        depends_on=master_choice_1,
     )
-    master_choice_3 = create_master_choice(
+    create_master_choice(
         master_evaluation_element=master_evaluation_element2,
         answer_text="answer",
         order_id="a",
+        is_concerned_switch=True,
     )
     create_master_choice(
         master_evaluation_element=master_evaluation_element2,
         answer_text="answer",
         order_id="b",
-        depends_on=master_choice_3,
     )
     create_master_choice(
         master_evaluation_element=master_evaluation_element3,

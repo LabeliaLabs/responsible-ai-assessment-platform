@@ -765,9 +765,7 @@ class SectionView(LoginRequiredMixin, ListView):
             )
 
             # Test if the are conditions inside the evaluation element and if there are verified
-            if evaluation_element.are_conditions_between_choices_satisfied(
-                list_choices_ticked
-            ):
+            if evaluation_element.are_conditions_between_choices_satisfied(list_choices_ticked):
 
                 # For all the choices of the evaluation element
                 for choice in list_choices_element:
@@ -777,7 +775,6 @@ class SectionView(LoginRequiredMixin, ListView):
                         # It is saved with the value 'is_ticked' as True
                         choice.is_ticked = True
                         choice.save()
-
                         # And if this choice turns other evaluation elements not applicable The id of the evaluation
                         # elements which won't be available due to this choice are added to list
 
@@ -896,7 +893,7 @@ class SectionView(LoginRequiredMixin, ListView):
             "conditions_respected": True,
             "message": _("An issue occured, please try again."),
         }
-        logger.warning(f"[form_issue] The user {request.user.email} validated an invalid form for "
+        logger.warning(f"[form_issue] Issue with the request {request} to validate the "
                        f" answers of an element {kwargs.get('evaluation_element')}")
         return HttpResponse(json.dumps(data_update), content_type="application/json")
 

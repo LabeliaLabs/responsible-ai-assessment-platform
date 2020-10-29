@@ -71,7 +71,8 @@ class ImportAssessmentTestCase(TestCase):
         master_choice2b = MasterChoice.objects.get(
             master_evaluation_element=master_evaluation_element2, answer_text="answer b"
         )
-        self.assertEqual(master_choice2b.depends_on, master_choice2a)
+        self.assertTrue(master_choice2a.is_concerned_switch)
+        self.assertFalse(master_choice2b.is_concerned_switch)
 
     def test_import_assessment_element_resources(self):
         self.assertTrue(treat_and_save_dictionary_data(self.assessment_data)[0])
@@ -299,10 +300,10 @@ class ImportAssessmentTestCase(TestCase):
     def test_import_assessment_bad_condition_intra_element(self):
         self.assessment_data["sections"]["section 1"]["elements"]["element 2"][
             "answer_items"
-        ]["1.2.b"]["depends_on"] = "c"
+        ]["1.2.b"]["is_concerned_switch"] = "c"
         self.assertFalse(treat_and_save_dictionary_data(self.assessment_data)[0])
         self.assertIn(
-            "You have set a condition inter choices on a choice which does not exist",
+            "The choice has not a boolean value for is_concerned_switch",
             treat_and_save_dictionary_data(self.assessment_data)[1],
         )
         with self.assertRaises(Exception):
