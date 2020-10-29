@@ -27,6 +27,21 @@
 
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+<!--    User section notes -->
+        <div class="margin-10, margin-bot-50">
+                    <form id="sectionNotes{{section.id}}" action="{{ section.get_absolute_url }}" method="POST">
+                    {% csrf_token %}
+                        {{section_notes_form}}
+                        <div class="wrapper">
+                            <button type="button" onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
+                                    class="btn btn-primary same-size-220"
+                                    title="{% trans 'Save the notes' %}">{% trans "Save" %}
+                            </button>
+                        </div>
+                    </form>
+            <div class="display-none margin-bot-top-20" id="messageSectionNotes{{section.id}}"></div>
+        </div>
+
         <div class="element">
 
             <div class="pagination-top margin-bot-30">
