@@ -8,11 +8,10 @@
     <div class="margin-bot-top-20">
         <a data-toggle="modal" data-target="#modal-create-eval" href="#"
            class="btn btn-primary ">{% trans "Create a new evaluation" %}</a>
-
     </div>
 
-        <div id="table-eval-user">
-                  <table class="table table-striped">
+    <div id="table-eval-user">
+              <table class="table table-striped">
                   <thead>
                     <tr>
                       <th scope="col" class="col-array">{% trans "Evaluation name" %}</th>
@@ -27,11 +26,10 @@
                       <th scope="col" class="col-array" style="display:none"></th>
                     </tr>
                   </thead>
-                  <tbody>
-                    {% for evaluation in evaluations %}
-                        <div  >
+                <tbody>
+                {% for evaluation in evaluations %}
+                    <div>
                         <tr class="row-array" >
-
                           <td class="case-array" >{{evaluation.name}}</td>
                           <td class="case-array" >V{{evaluation.assessment.version}}</td>
                           <td class="case-array" >{{evaluation.organisation}}</td>
@@ -125,17 +123,14 @@
                                     </div>
                                   </div>
                                 </div>
-
                           </td>
-
-
                         </tr>
-                        </div>
+                    </div>
 
-                       {% endfor %}
-                  </tbody>
-                </table>
-        </div>
+                   {% endfor %}
+              </tbody>
+            </table>
+    </div>
 
 
     {% else %}

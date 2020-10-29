@@ -6,19 +6,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Substra Assessment</title>
-    <!-- TODO: cleanup-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{% static 'image/favicon.ico' %}" rel="shortcut icon" type="image/png">
+
+    <!-- TODO: cleanup!-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{% static 'js/jquery-3.5.1.min.js' %}" >
-    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-    <script src="{% static 'vendor/jquery/jquery.slim.min.js' %}"></script>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}" defer></script>
+    <script src="{% static 'vendor/jquery/jquery.slim.min.js' %}" defer></script>
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" type="text/css" rel="stylesheet" >
     <link href="{% static 'vendor/bootstrap/css/bootstrap-grid.min.css' %}" type="text/css" rel="stylesheet" >
     <link href="{% static 'vendor/bootstrap/css/bootstrap-reboot.min.css' %}" type="text/css" rel="stylesheet" >
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.modal.js' %}"></script>
-    <script src="{% static 'js/functions.js' %}" ></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}" defer></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}" defer></script>
+    <script src="{% static 'js/bootstrap.modal.js' %}" defer></script>
+    <script src="{% static 'js/functions.js' %}" defer></script>
     <link href="{% static 'css/element-card.css' %}" type="text/css" rel="stylesheet" >
     <link href="{% static 'css/base.css' %}" type="text/css" rel="stylesheet" >
     <link href="{% static 'css/summary.css' %}" type="text/css" rel="stylesheet" >
@@ -27,83 +28,84 @@
     <link href="{% static 'css/ubuntu-family.css' %}" type="text/css" rel="stylesheet" >
 </head>
 <body class="navbar-is-fixed-top">
-<header>
 
-<!--    Beta banner -->
-
-   <div class="ribbon"><span>Beta</span></div>
-
-     <nav class="navbar navbar-expand-lg  is-fixed-top" >
-    <div class="container">
-      <a class="navbar-brand" title="home" href="{% url 'home:homepage' %}" style="color: #FFF;">
-          <img class="logo-navbar" src="{% static 'image/Substra Foundation_Logo horizontal_fond.png' %}">
-      </a>
-      <button class="navbar-toggler icon-navbar" type="button" data-toggle="collapse"
-              data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
-              aria-label="Toggle navigation" id="navbar-button">
-        <i class="fa fa-bars" aria-hidden="true"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarResponsive" >
-        <ul class="navbar-nav ml-auto" >
-            {% if user.is_authenticated %}
-                {% if user.is_staff %}
+    <header>
+    <!--    Beta banner -->
+        <div class="ribbon"><span>Beta</span></div>
+        <nav class="navbar navbar-expand-lg  is-fixed-top" >
+        <div class="container">
+          <a class="navbar-brand" title="home" href="{% url 'home:homepage' %}" style="color: #FFF;">
+              <img class="logo-navbar" src="{% static 'image/Substra Foundation_Logo horizontal_fond.png' %}">
+          </a>
+          <button class="navbar-toggler icon-navbar" type="button" data-toggle="collapse"
+                  data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                  aria-label="Toggle navigation" id="navbar-button">
+            <i class="fa fa-bars" aria-hidden="true"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive" >
+            <ul class="navbar-nav ml-auto" >
+                {% if user.is_authenticated %}
+                    {% if user.is_staff %}
+                        <li class="nav-item navbar-item">
+                         <a class="nav-link" href="{% url 'admin:index' %}"
+                            >{% trans "Admin" %}
+                         </a>
+                        </li>
+                    {% endif %}
                     <li class="nav-item navbar-item">
-                     <a class="nav-link" href="{% url 'admin:index' %}"
-                        >{% trans "Admin" %}
+                     <a class="nav-link" href="{% url 'home:user-profile' %}"
+                        >{% trans "My dashboard" %}
                      </a>
                     </li>
-                {% endif %}
-                <li class="nav-item navbar-item">
-                 <a class="nav-link" href="{% url 'home:user-profile' %}"
-                    >{% trans "My dashboard" %}
-                 </a>
-                </li>
-                <li class="nav-item navbar-item">
-                    <a class="nav-link" href="{% url 'home:resources' %}"
-                    >{% trans "Resources" %}</a>
-                </li>
-                <li class="nav-item navbar-item">
-                 <a class="nav-link" href="{% url 'home:logout' %}"
-                    >{% trans "Logout" %}
-                 </a>
-                </li>
-            {% else %}
-                <li class="nav-item navbar-item">
-                    <a class="nav-link" href="{% url 'home:about' %}"
-                        >{% trans "About" %}
-                    </a>
-                </li>
-                {% if request.get_full_path == "/signup/" or request.get_full_path == "/legal-notices/" or request.get_full_path == "/about/"%}
-                <li class="nav-item navbar-item">
-                 <a class="nav-link" href="{% url 'home:login' %}"
-                    >{% trans "Login" %}
-                 </a>
-                </li>
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'home:resources' %}"
+                        >{% trans "Resources" %}</a>
+                    </li>
+                    <li class="nav-item navbar-item">
+                     <a class="nav-link" href="{% url 'home:logout' %}"
+                        >{% trans "Logout" %}
+                     </a>
+                    </li>
                 {% else %}
                     <li class="nav-item navbar-item">
-                         <a class="nav-link" data-toggle="modal" href="{% url 'home:homepage' %}"
-                            data-target="#modal-login-user" >{% trans "Login" %}</a>
+                        <a class="nav-link" href="{% url 'home:about' %}"
+                            >{% trans "About" %}
+                        </a>
                     </li>
-                {% endif %}
-                {% endif %}
-            </ul>
-          </div>
-    </div>
-  </nav>
-        </header>
-<div class="modal" id="modal-login-user" aria-hidden="true">
-  <div class="modal-dialog ">
-    <div class="modal-content">
-      {% include "home/login-modal.html" %}
-    </div>
-  </div>
-</div>
-<div id="page-container">
-    <div class="content container" id="content-wrap">
-            {% block content %}
-            {% endblock %}
+                    {% if request.get_full_path == "/signup/" or request.get_full_path == "/legal-notices/" or request.get_full_path == "/about/"%}
+                    <li class="nav-item navbar-item">
+                     <a class="nav-link" href="{% url 'home:login' %}"
+                        >{% trans "Login" %}
+                     </a>
+                    </li>
+                    {% else %}
+                        <li class="nav-item navbar-item">
+                             <a class="nav-link" data-toggle="modal" href="{% url 'home:homepage' %}"
+                                data-target="#modal-login-user" >{% trans "Login" %}</a>
+                        </li>
+                    {% endif %}
+                    {% endif %}
+                </ul>
+              </div>
         </div>
-</div>
+      </nav>
+    </header>
+
+    <div class="modal" id="modal-login-user" aria-hidden="true">
+      <div class="modal-dialog ">
+        <div class="modal-content">
+          {% include "home/login-modal.html" %}
+        </div>
+      </div>
+    </div>
+
+    <div id="page-container">
+        <div class="content container" id="content-wrap">
+                {% block content %}
+                {% endblock %}
+        </div>
+    </div>
+
   <!-- Footer -->
   <footer class="py-2 footer">
         <div class="col-md-3 col-md-3-footer">
@@ -128,6 +130,7 @@
         </div>
     <!-- /.container -->
   </footer>
-  <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+  <script src="{% static 'js/jquery-3.5.1.min.js' %}" defer></script>
+
 </body>
 </html>
