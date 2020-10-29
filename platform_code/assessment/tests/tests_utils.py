@@ -61,11 +61,12 @@ class TestSelectLabelChoice(TestCase):
                      ' n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage automatique" id="id_29_0">' \
                      'Notre organisation n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage' \
                      ' automatique</label>'
-        self.text2 = " Random text "
+        self.text2 = '<li><label for="id_30_1"><input type="radio" name="30" value="6.5.b Nous communiquons sur nos' \
+                     ' résultats" id="id_30_1">'
 
     def test_select_label_choice(self):
         # Catch the pattern
         self.assertIn('Notre organisation n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage'
-                      ' automatique', select_label_choice(self.text1))
+                      ' automatique</label', select_label_choice(self.text1))
         # Case the pattern is not found in the regex of select_label_choice, so the function returns empty list
         self.assertEqual([], select_label_choice(self.text2))

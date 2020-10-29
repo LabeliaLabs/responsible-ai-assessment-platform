@@ -448,6 +448,12 @@ class EvaluationElementTestCase(TestCase):
         self.assertTrue(self.evaluation_element2.has_condition_between_choices())
         self.assertFalse(self.evaluation_element3.has_condition_between_choices())
 
+    def test_element_get_choice_condition_intra(self):
+        # Test the method get_choice_condition_intra from EvaluationElement class
+        self.assertEqual(self.choice1, self.evaluation_element1.get_choice_condition_intra())
+        self.assertNotEqual(self.choice2, self.evaluation_element1.get_choice_condition_intra())
+        self.assertIsNone(self.evaluation_element3.get_choice_condition_intra())
+
     def test_element_get_list_choices_with_condition(self):
         self.assertEqual(
             self.evaluation_element1.get_list_choices_with_condition(), [self.choice2]

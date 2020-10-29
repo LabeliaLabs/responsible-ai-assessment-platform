@@ -845,9 +845,19 @@ class EvaluationElement(models.Model):
         :return boolean
         """
         for choice in self.choice_set.all():
-            if choice.master_choice.depends_on is not None:
+            if choice.master_choice.is_concerned_switch:
                 return True
         return False
+
+    def get_choice_condition_intra(self):
+        """
+        For condition intra evaluation element, get the choice which set condition on other, else None
+        :return: choice or None
+        """
+        for choice in self.choice_set.all():
+            if choice.master_choice.is_concerned_switch:
+                return choice
+        return None
 
     def get_list_choices_with_condition(self):
         """
@@ -876,28 +886,13 @@ class EvaluationElement(models.Model):
         :return: boolean
 
         """
-        list_choices = self.choice_set.all()
-        list_choices_ticked = self.get_list_choices_ticked()
-        print("WANTED CHOCE TICKED", list_choices_wanted_ticked)
-        print("CHOCE TICKED", list_choices_ticked)
         # If the evaluation element has conditions between choices
         if self.has_condition_between_choices():
-            # For all the choices of the evaluation element
-            for choice in list_choices:
-                # If the choice has a condition on,
-                # we need to look if the choice setting the condition is not ticked
-                # or is not gonna be ticked with the POST request
-                if choice.has_condition_on():
-                    # Get the choice which sets conditions on the current choice of the loop
-                    choice_setting_conditions = choice.get_choice_depending_on()
-                    # If the two choices are gonna be ticked, it is not possible
-                    if (
-                        str(choice_setting_conditions) in list_choices_wanted_ticked
-                        and str(choice) in list_choices_wanted_ticked
-                    ):
-                        print("FALSE WANT TICK BOTH")
-                        return False
-
+            choice_setting_condition = self.get_choice_condition_intra()
+            # If the choice setting condition intra is in the list (already ticked or wanted to be)
+            # It must be alone, other way the combination is not valid
+            if str(choice_setting_condition) in list_choices_wanted_ticked and len(list_choices_wanted_ticked) > 1:
+                return False
         return True
 
     def set_points(self):
@@ -968,7 +963,6 @@ class EvaluationElement(models.Model):
         :return: dictionary
         """
         scoring_system = self.get_scoring_system()
-        print("SCORING SYS",)
         return scoring_system.master_choices_weight_json
 
     def get_master_evaluation_element_weight(self):
@@ -1123,10 +1117,8 @@ class MasterChoice(models.Model):
     )
     answer_text = models.TextField()
     order_id = models.CharField(blank=True, null=True, max_length=200)  # can be letters
-    # When a master choice can be disabled due to another one in the same evaluation element
-    depends_on = models.ForeignKey(
-        "MasterChoice", null=True, blank=True, on_delete=models.SET_NULL
-    )
+    # When a master choice can disable the other master choices of the evaluation element, it is set to True
+    is_concerned_switch = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -1270,12 +1262,15 @@ class Choice(models.Model):
         Used for conditions inside an evaluation element
         For a choice, if one choice in the same evaluation element sets condition on this one, True is return
         Else False
+        A choice setting conditions on other choices returns False value
         :return: boolean
         """
-        if self.master_choice.depends_on is None:
-            return False
-        else:
-            return True
+
+        master_evaluation_element = self.master_choice.master_evaluation_element
+        for master_choice in master_evaluation_element.masterchoice_set.all():
+            if master_choice.is_concerned_switch and master_choice != self.master_choice:
+                return True
+        return False
 
     def get_choice_depending_on(self):
         """
@@ -1284,16 +1279,10 @@ class Choice(models.Model):
         else None
         :return:
         """
-        evaluation_id = self.get_evaluation_id()
+
         # if this choice has an other choice which sets condition on this one
         if self.has_condition_on():
-            # The master choice setting the conditions on the master choice of this choice (self)
-            master_choice_setting_conditions = self.master_choice.depends_on
-            choice_setting_conditions = Choice.objects.get(
-                evaluation_element__section__evaluation__id=evaluation_id,
-                master_choice=master_choice_setting_conditions,
-            )
-            return choice_setting_conditions
+            return self.evaluation_element.get_choice_condition_intra()
         # If the choice has no condition on, so there is no choice to return, normally this case shouldn't happen
         else:
             return None
@@ -1301,16 +1290,13 @@ class Choice(models.Model):
     def set_conditions_on_other_choices(self):
         """
         Used for conditions inside the evaluation element
-        It will return True if this choice sets conditions on other choices and if it is ticked, other choices
+        It will return True if this choice sets conditions on other choices and , other choices
         inside the evaluation element are disabled, else it returns False
         :return: boolean
         """
-        master_evaluation_element = self.master_choice.master_evaluation_element
-        # For all the master choices of this evaluation element
-        for master_choices in master_evaluation_element.masterchoice_set.all():
-            # if it has as condition choice this one, it means this choice can disable other choices
-            if master_choices.depends_on == self.master_choice:
-                return True
+
+        if self.master_choice.is_concerned_switch:
+            return True
         return False
 
     def is_applicable(self):
@@ -1320,19 +1306,12 @@ class Choice(models.Model):
         it returns False (this choice is not applicable). Else, the choice is applicable and True is returned
         :return: boolean
         """
-        evaluation_id = self.get_evaluation_id()
+
         if self.has_element_conditioned_on():
-            master_choice = self.master_choice.depends_on
-            choice = master_choice.choice_set.filter(
-                evaluation_element__section__evaluation__id=evaluation_id
-            )[0]
-            if choice is not None:
-                if choice.is_ticked:
-                    return False
-            else:
-                return True
-        else:
-            return True
+            choice_setting_conditions = self.evaluation_element.get_choice_condition_intra()
+            if choice_setting_conditions is not None and choice_setting_conditions.is_ticked:
+                return False
+        return True
 
 
 class ScoringSystem(models.Model):

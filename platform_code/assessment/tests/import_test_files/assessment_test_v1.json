@@ -26,14 +26,12 @@
                         "1.1.a": {
                             "order_id": "a",
                             "answer_text": "answer a",
-                            "is_concerned_switch": 0,
-                            "depends_on": ""
+                            "is_concerned_switch": 1
                         },
                         "1.1.b": {
                             "order_id": "b",
                             "answer_text": "answer b",
-                            "is_concerned_switch": 0,
-                            "depends_on": ""
+                            "is_concerned_switch": 0
                         }
                     }
                 },
@@ -50,14 +48,12 @@
                         "1.2.a": {
                             "order_id": "a",
                             "answer_text": "answer a",
-                            "is_concerned_switch": 0,
-                            "depends_on": ""
+                            "is_concerned_switch": 1
                         },
                         "1.2.b": {
                             "order_id": "b",
                             "answer_text": "answer b",
-                            "is_concerned_switch": 0,
-                            "depends_on": "a"
+                            "is_concerned_switch": 0
                         }
                     }
                 }
@@ -81,14 +77,12 @@
                         "2.1.a": {
                             "order_id": "a",
                             "answer_text": "answer a",
-                            "is_concerned_switch": 0,
-                            "depends_on": ""
+                            "is_concerned_switch": 0
                         },
                         "2.1.b": {
                             "order_id": "b",
                             "answer_text": "answer b",
-                            "is_concerned_switch": 0,
-                            "depends_on": ""
+                            "is_concerned_switch": 0
                         }
                     }
                 }

@@ -204,22 +204,10 @@ def treat_and_save_dictionary_data(dic):
 
             for choice in list(dic_choice.keys()):
                 choice_data = dic_choice.get(choice)  # dic of the choice data
-                # print("CHOICE DATA", choice_data)
-                depends_on = None
-                if choice_data.get("depends_on"):
-                    try:
-                        depends_on = MasterChoice.objects.get(
-                            master_evaluation_element=master_evaluation_element,
-                            order_id=choice_data.get("depends_on"),
-                            master_evaluation_element__master_section__assessment=assessment,
-                        )
-                    except (ObjectDoesNotExist, MultipleObjectsReturned):
-                        clean_failed_assessment_import(name, version)
-                        return success, f"You have set a condition inter choices on a choice which does not exist " \
-                                        f"or which is not before the choices. Choice {element_data.get('condition')}"
-
+                # Test if all the fields are present for a master choice
                 if not all(x in choice_data.keys() for x in ["order_id",
                                                              "answer_text",
+                                                             "is_concerned_switch",
                                                              ]):
                     clean_failed_assessment_import(name, version)
                     return success, f"You have missing fields for the choice {element_data}"
@@ -231,11 +219,18 @@ def treat_and_save_dictionary_data(dic):
                         f"The order_id is not a letter for this choice {choice_data}",
                     )
 
+                if not choice_data.get("is_concerned_switch") in [0, 1, "True", "False"]:
+                    clean_failed_assessment_import(name, version)
+                    return (
+                        success,
+                        f"The choice has not a boolean value for is_concerned_switch {choice_data}",
+                    )
+
                 master_choice = MasterChoice(
                     master_evaluation_element=master_evaluation_element,
                     order_id=choice_data.get("order_id"),
                     answer_text=choice_data.get("answer_text"),
-                    depends_on=depends_on,
+                    is_concerned_switch=choice_data.get("is_concerned_switch"),
                 )
                 master_choice.save()
                 # The choice should be unique, so it shouldn't exist yet
