@@ -18,7 +18,7 @@
             <h4 class="modal-title absolute-position" id="myModalLabel">{% trans "Login" %}</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <div class="modal-body create-form">
+        <div class="modal-body create-form width-50">
             <div class="column">
                 {% csrf_token %}
                 <span class="margin-right: 9em;">{{ login_form.username.label_tag }}</span>

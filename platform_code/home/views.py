@@ -113,11 +113,11 @@ def activate(request, uidb64, token):
             Membership.create_membership_pending_invitations(user=user)
             logger.info(f"[account_creation][join_organisation] The user {user.email} created an account and has "
                         f"joined the organisations where he was invited, {list_pending_invitation}")
-            messages.success(request, ngettext("Thank you for your verification, your account have been activated."
+            messages.success(request, ngettext("Thank you for your verification, your account has been activated."
                                                "You had %(count)d pending "
                                                "invitation to join the organisation: %(name)s. "
                                                "You have automatically joined it.",
-                                               "Thank you for your verification, your account have been activated."
+                                               "Thank you for your verification, your account has been activated."
                                                "You had %(count)d pending "
                                                "invitations to join the organisations: %(name)s. "
                                                "You have automatically joined them.",

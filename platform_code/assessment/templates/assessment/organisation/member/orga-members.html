@@ -46,7 +46,7 @@
                                 <i class="fa fa-edit"></i>
                             </button>
                             <div class="modal" id="modal-edit-role{{member.id}}" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="large-modal-dialog">
                                     <div class="modal-content">
                                         {% include "assessment/organisation/member/edit-role-member.html" %}
                                     </div>
@@ -83,7 +83,7 @@
                                 <i class="fa fa-edit"></i>
                             </button>
                             <div class="modal" id="modal-edit-role-pending{{pending_member.id}}" aria-hidden="true">
-                                <div class="modal-dialog">
+                                <div class="large-modal-dialog">
                                     <div class="modal-content">
                                         {% include "assessment/organisation/member/edit-role-pending-member.html" %}
                                     </div>
@@ -112,7 +112,7 @@
 
 <!-- The Modal create evaluation -->
 <div class="modal" id="modal-add-member" aria-hidden="true">
-  <div class="modal-dialog ">
+  <div class="large-modal-dialog">
     <div class="modal-content">
 
       {% include "assessment/organisation/member/add-member-modal.html" %}

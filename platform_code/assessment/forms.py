@@ -218,7 +218,7 @@ class EvaluationMutliOrgaForm(ModelForm):
 
 class SectionNotesForm(ModelForm):
     """
-
+    This form edit the section user_notes, used in SectionView
     """
     class Meta:
         model = Section

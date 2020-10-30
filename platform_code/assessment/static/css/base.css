@@ -141,6 +141,10 @@ a:hover {
     width: 35%
 }
 
+.width-50{
+    width: 50%
+}
+
 .full-width{
     width: 100%;
 }
@@ -762,7 +766,6 @@ tr.spaceUnder>td {
 }
 
 .create-form{
-    width: 50%;
     columns: 1;
     margin: auto;
     text-align: center;
@@ -897,6 +900,15 @@ tr.spaceUnder>td {
 
 .middle-width{
     width: 65%;
+}
+
+.large-modal-dialog{
+    max-width: 80%;
+    position: relative;
+    width: auto;
+    pointer-events: none;
+    margin: auto;
+    margin-top: 20px;
 }
 
 /******* MEDIA *******/
