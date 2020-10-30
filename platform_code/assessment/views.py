@@ -1292,7 +1292,7 @@ def treat_feedback(request, *args, **kwargs):
     data_update = {
         "success": False,
         "message": _(
-            "We are sorry but the message hasn't been sent. "
+            "We are sorry but the message has not been sent. "
             "Try again or contact the Substra team through another channel."
         ),
     }

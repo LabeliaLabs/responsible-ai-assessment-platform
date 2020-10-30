@@ -6,7 +6,7 @@
             <h4 class="modal-title absolute-position" id="myModalLabel">{% trans "Create a new organisation" %}</h4>
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
-        <div class="modal-body create-form">
+        <div class="modal-body create-form width-50">
             {% csrf_token %}
             <div class="column">
             {% for field in new_orga_form %}

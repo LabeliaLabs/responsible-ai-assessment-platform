@@ -7,6 +7,6 @@
 <p>{% trans "Name:" %} {{organisation.name}}</p>
 <p>{% trans "Activity:" %} {{organisation.sector}}</p>
 <p>{% trans "Size:"%} {{organisation.size}}</p>
-<p>{% trans "Number of members:" %} {{organisation.count_members}}</p>
-<p>{% trans "Number of in progress evaluations:" %} {{organisation.get_list_evaluations|count_in_progress}}</p>
-<p>{% trans "Number of finished evaluations:" %} {{organisation.get_list_evaluations|count_finished}}</p>
+<p>{% trans "Number of member(s):" %} {{organisation.count_members}}</p>
+<p>{% trans "Number of in progress evaluation(s):" %} {{organisation.get_list_evaluations|count_in_progress}}</p>
+<p>{% trans "Number of finished evaluation(s):" %} {{organisation.get_list_evaluations|count_finished}}</p>

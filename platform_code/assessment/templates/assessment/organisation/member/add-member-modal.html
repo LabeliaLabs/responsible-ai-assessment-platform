@@ -11,18 +11,18 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body margin-auto">
-            <p>{% trans "You can send an invitation to another user to join your organisation. The user must have an account with his email address on the platform." %}
+            <p>{% trans "You can add another user to your organisation. If the user does not already have an account on the platform, an invitation email will be sent to him to join your organisation." %}
             </p>
             <p>{% trans "You can chose the rights you want to give to the user:" %}</p>
             <ul>
-                <li class="li-with-disc">{% trans "<strong>Simple user</strong>: the user can only consult the evaluations, he cannot create, edit or delete one." %}</li>
-                <li class="li-with-disc">{% trans "<strong>Editor</strong>: the user can create, modify or delete evaluations." %}</li>
-                <li class="li-with-disc">{% trans "<strong>Admin</strong>: the user can create, modify or delete evaluations. He also can edit rights of other members and add/remove users to the organisation." %}</li>
+                <li class="li-with-disc">{% trans "<strong>Read-only user</strong>: the read-only user can only consult the evaluations, he cannot create, edit or delete one." %}</li>
+                <li class="li-with-disc">{% trans "<strong>Editor</strong>: the editor can create, modify or delete evaluations." %}</li>
+                <li class="li-with-disc">{% trans "<strong>Admin</strong>: the admin user can create, modify or delete evaluations. He also can edit rights of other members and add/remove users to the organisation." %}</li>
             </ul>
             <p>{% trans "<strong>Note that you cannot remove an user with admin rights from the organisation, neither change its rights. It is recommended to add user with edit rights</strong>." %}</p>
-            <div class="create-form">
-                <div class="column">
-                    <div>
+            <div class="create-form width-35">
+<!--                <div>-->
+<!--                    <div class="column">-->
                     {% csrf_token %}
                     {% for field in add_member_form %}
                     <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
@@ -30,8 +30,8 @@
                         <p> {{field}} </p>
                     {% endfor %}
 
-                    </div>
-                </div>
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
         <div class="modal-footer center one-column">

@@ -10,16 +10,16 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
         <div class="modal-body">
-            <p>{% trans "You can chose the rights you want to give to the user:" %}</p>
+            <p>{% trans "You can edit the rights of the members, except those who are 'admin':" %}</p>
             <ul>
-                <li class="li-with-disc">{% trans "<strong>Simple user</strong>: the user can only consult the evaluations, he cannot create, edit or delete one." %}</li>
-                <li class="li-with-disc">{% trans "<strong>Editor</strong>: the user can create, modify or delete evaluations" %}</li>
-                <li class="li-with-disc">{% trans "<strong>Admin</strong>: the user can create, modify or delete evaluations and members." %}</li>
+                <li class="li-with-disc">{% trans "<strong>Read-only user</strong>: the read-only user can only consult the evaluations, he cannot create, edit or delete one." %}</li>
+                <li class="li-with-disc">{% trans "<strong>Editor</strong>: the editor can create, modify and delete evaluations" %}</li>
+                <li class="li-with-disc">{% trans "<strong>Admin</strong>: the admin user can create, modify and delete evaluations and members." %}</li>
             </ul>
             <p>{% trans "Note that you cannot remove an user with admin rights from the organisation." %}</p>
             {% csrf_token %}
-            <div class="create-form">
-                <div class="column full-width">
+            <div class="create-form width-35">
+                <div class="full-width padding-1">
                     <div>
                         {% with edit_form=edit_member_role_form_dic|get_item_converted_str:member.id %}
                             {% for field in edit_form %}

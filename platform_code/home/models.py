@@ -442,11 +442,12 @@ class Organisation(models.Model):
 
     def get_list_members_not_staff(self):
         """
-        Get the list of the members of the organisation, admin or simple user, but which
+        Get the list of the members of the organisation (admin, editor or read-only) who
         are not staff of the platform
         :return: list
         """
-        # List all the members of the orga, admin and simple users, but we don t want the platform staff in this list
+        # List all the members of the organisation (admin, editor or read-only) who are not staff of the platform
+
         list_members = list(Membership.objects.filter(organisation=self))
         for member in list_members:
             # We need to keep the user if he created the organisation, so he is admin of the organisation

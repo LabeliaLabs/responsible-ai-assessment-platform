@@ -8,7 +8,9 @@ class AddMemberForm(forms.Form):
     """
     This form is used to add a new member to the organisation
     """
-    email = forms.EmailField(max_length=254)
+    email = forms.EmailField(max_length=254,
+                             widget=forms.Select(attrs={'class': 'full-width'}),
+                             )
     role = forms.ChoiceField(choices=Membership.ROLES,
                              label=_("rights"),
                              initial="read_only",
