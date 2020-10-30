@@ -1,5 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.db import models
+from django.db.models import Q
 from django_countries.fields import CountryField
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import PermissionsMixin
@@ -148,6 +149,19 @@ class User(AbstractBaseUser, PermissionsMixin):
             Organisation.objects.distinct()
             .filter(membership__user=self, membership__role=role)
             .order_by("-created_at")
+        )
+
+    def get_list_organisations_user_can_edit(self):
+        """
+        This function returns the list of organisations where the user is member as editor or admin
+        Used in security check (when changing evaluations' names)
+        :return: list of organisations
+        """
+        # todo tests
+        return list(
+            Organisation.objects.distinct()
+            .filter(Q(membership__user=self, membership__role="admin")
+                    | Q(membership__user=self, membership__role="editor"))
         )
 
     def get_list_pending_invitation(self):

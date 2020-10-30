@@ -45,6 +45,8 @@ from assessment.forms_.member_forms import AddMemberForm, EditRoleForm
 from home.models import Organisation, User, Membership, PendingInvitation
 from django.conf import settings
 
+from .utils import get_client_ip
+
 private_token = settings.PRIVATE_TOKEN
 project_id = str(settings.PROJECT_ID)
 
@@ -118,7 +120,7 @@ def upgradeView(request, *args, **kwargs):
         return redirect("home:homepage")
 
     evaluation_id = kwargs.get("pk")
-    evaluation = get_object_or_404(Evaluation, id=evaluation_id)
+    evaluation = get_object_or_404(Evaluation, id=evaluation_id, organisation=organisation)
     evaluation_version = evaluation.assessment.version
     latest_version = get_last_assessment_created().version
     # print("compare versions", evaluation_version, latest_version)
@@ -337,7 +339,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
                             if organisation.check_user_is_member(user=user_invited) and not user_invited.staff:
                                 logger.warning(f"[add_member_failed] Invitation to join an organisation failed, "
                                                f"the user invited {user_invited.email} is already member of the "
-                                               f"organisation {organisation} with the role "
+                                               f"organisation {organisation.name} with the role "
                                                f"{organisation.get_role_user(user_invited)}")
                                 data_update["message"] = _("The user is already member. Please, "
                                                            "edit his rights instead")
@@ -684,14 +686,24 @@ class EvaluationView(LoginRequiredMixin, DetailView):
                 if form.is_valid():
                     name = form.cleaned_data.get("name")
                     evaluation_id = int(request.POST.dict().get("evaluation_id"))
-                    evaluation = get_object_or_404(Evaluation, id=evaluation_id)
-                    evaluation.name = name
-                    evaluation.save()
-                    data_update["success"] = True
-                    data_update["message"] = _("The evaluation's name has been changed")
-                    logger.info(f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
-                                f"evaluation (id: {evaluation_id})")
+                    evaluation = get_object_or_404(Evaluation, id=evaluation_id, organisation=organisation)
+                    if evaluation.organisation not in request.user.get_list_organisations_user_can_edit():
+                        logger.warning(f"[html_forced] The user {request.user.email}, with IP address "
+                                       f"{get_client_ip(request)} tried to modify the name of an "
+                                       f"evaluation (id {evaluation_id} he should not be able to edit")
+                        data_update["message"] = _("You cannot edit this evaluation.")
+                    else:
+                        evaluation.name = name
+                        evaluation.save()
+                        data_update["success"] = True
+                        data_update["message"] = _("The evaluation's name has been changed")
+                        logger.info(f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
+                                    f"evaluation (id: {evaluation_id})")
+                else:
+                    logger.warning(f"[form_issue] There is an issue with the form to edit the name of an evaluation, "
+                                   f"request {request}")
                 return HttpResponse(json.dumps(data_update), content_type="application/json")
+
             return HttpResponseRedirect(self.request.path_info)
 
 
@@ -715,7 +727,7 @@ class ResultsView(LoginRequiredMixin, DetailView):
             logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
                            f"{organisation} while not member")
             return redirect('home:homepage')
-        evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"))
+        evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
         # If the evaluation is finished, which should always be the case here, set the score of the evaluation
         if evaluation.is_finished:
             # print("SET SCOREEEE")
@@ -738,15 +750,21 @@ class ResultsView(LoginRequiredMixin, DetailView):
                 coeff_scoring_system,
                 max_possible_points,
             )
-        self.object = self.get_object()
-        context = self.get_context_data(object=self.object)
-        context["dic_form_results"] = set_form_for_results(evaluation=evaluation)
-        context["section_list"] = list(
-            evaluation.section_set.all().order_by("master_section__order_id")
-        )
-        context["evaluation_element_list"] = evaluation.get_list_all_elements()
-        context["organisation"] = organisation
-        return self.render_to_response(context)
+            self.object = self.get_object()
+            context = self.get_context_data(object=self.object)
+            context["dic_form_results"] = set_form_for_results(evaluation=evaluation)
+            context["section_list"] = list(
+                evaluation.section_set.all().order_by("master_section__order_id")
+            )
+            context["evaluation_element_list"] = evaluation.get_list_all_elements()
+            context["organisation"] = organisation
+            return self.render_to_response(context)
+        else:
+            logger.warning(f"[html_forced] The user {request.user.email}, with IP address {get_client_ip(request)} "
+                           f"forced the button to valid the evaluation"
+                           f" (id {evaluation.id}) to access the results")
+            messages.warning(request, _("You cannot do this action!"))
+            return redirect("home:user-profile")
 
 
 class SectionView(LoginRequiredMixin, ListView):
@@ -787,6 +805,17 @@ class SectionView(LoginRequiredMixin, ListView):
                                f"{organisation} while not member")
                 return redirect("home:homepage")
 
+            # Evaluation must have this organisation in its fields organisation
+            evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
+
+            # The section is both used in section notes POST and
+            section_id_url = kwargs.get("id")  # Used to check the section in POST
+            try:
+                section = Section.objects.get(id=section_id_url, evaluation=evaluation)
+            except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
+                section = None
+                logger.warning(f"[section_view_post_error] The section with id {section_id_url} does not exist, "
+                               f"for the evaluation (id {evaluation.id}), error {e} ")
             # If the ajax, if when the user likes/unlikes a resource
             if "resource_id" in request.POST.dict():
                 return treat_resources(request)
@@ -794,33 +823,32 @@ class SectionView(LoginRequiredMixin, ListView):
             # If in the ajax post is for element feedback
             elif "element_feedback_type" in request.POST.dict():
                 logger.info(f"[element_feedback] The user {request.user.email} sent an element feedback")
-                return treat_feedback(request, "element")
+                return treat_feedback(request, "element", evaluation=evaluation)
 
             # If in the ajax post is for element feedback
             elif "section_feedback_type" in request.POST.dict():
                 logger.info(f"[section_feedback] The user {request.user.email} sent a section feedback")
-                return treat_feedback(request, "section")
+                return treat_feedback(request, "section", evaluation=evaluation)
 
             # If the user writes notes for the section
             elif "notes_section_id" in request.POST:
                 data_update = {"message": _("An error occurred"), "success": False}
-                form = SectionNotesForm(request.POST)
-                if form.is_valid():
-                    notes = form.cleaned_data.get("user_notes")
-                    section_id = request.POST.get("notes_section_id")
-                    try:
-                        section = Section.objects.get(id=section_id)
-                    except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
-                        section = None
-                        logger.warning(f"[section_notes_error] The section with id {section_id} does not exist, "
-                                       f"error {e} ")
-                    if section:
-                        # To be sure the notes are for the section the user is dealing with
-                        if section.id == kwargs.get("id"):
+                if can_edit_security_check(
+                        request, organisation=organisation, *args, **kwargs
+                ):
+                    form = SectionNotesForm(request.POST)
+                    if form.is_valid():
+                        notes = form.cleaned_data.get("user_notes")
+                        # The section is get above, according to the url
+                        if section:
+                            # To be sure the notes are for the section the user is dealing with
                             section.user_notes = notes
                             section.save()
                             data_update["success"] = True
                             data_update["message"] = _("Your notes have been saved!")
+                # If the user has not the right to edit the evaluation
+                else:
+                    data_update["message"] = _("You do not have the right to do this action.")
 
                 return HttpResponse(json.dumps(data_update), content_type="application/json")
 
@@ -851,8 +879,18 @@ class SectionView(LoginRequiredMixin, ListView):
                 )  # List or 404
                 evaluation_element_id = request.POST.get("element_id")
                 evaluation_element = get_object_or_404(
-                    EvaluationElement, id=int(evaluation_element_id)
+                    EvaluationElement, id=int(evaluation_element_id), section=section
                 )
+
+                # If the evaluation element does not belong to the evaluation (user edited the html)
+                # This should not happen with the query(section=section)
+                if evaluation_element not in section.evaluationelement_set.all():
+                    logger.warning(f"[html_forced] The user {request.user.email}, with IP address "
+                                   f"{get_client_ip(request)} modified the js function to do "
+                                   f"a POST request {request.POST} on an evaluation element which does not belong to"
+                                   f"the current evaluation (id {evaluation.id})")
+                    data_update = {"success": False, "message": _("An error occurred. Please, do not modify the html!")}
+                    return HttpResponse(json.dumps(data_update), content_type="application/json")
 
                 # Process the form
                 form = ChoiceForm(request.POST, evaluation_element=evaluation_element)
@@ -1250,6 +1288,7 @@ def treat_feedback(request, *args, **kwargs):
     :param request:
     :return:
     """
+    evaluation = kwargs.get("evaluation")  # Evaluation or None
     data_update = {
         "success": False,
         "message": _(
@@ -1286,6 +1325,18 @@ def treat_feedback(request, *args, **kwargs):
                 logger.error(f"[feedback_error] The element id {object_id} is not an id of an element in the database,"
                              f" from the feedback post")
                 error_500_view_handler(request, exception=e)
+
+            # If the user forced the html, and tried to sent element feedback for an evaluation element which does not
+            # belong to the evaluation
+            if feedback_object and evaluation:
+                if feedback_object not in evaluation.get_list_all_elements():
+                    logger.warning(f"[html_forced] The user {request.user.email}, with IP address "
+                                   f"{get_client_ip(request)} modified the html to do "
+                                   f"a POST request {request.POST} for an element feedback on an evaluation element "
+                                   f"which does not belong to the current evaluation (id {evaluation.id})")
+                    data_update["message"] = _("An error occurred. The feedback does not have been sent.")
+                    return HttpResponse(json.dumps(data_update), content_type="application/json")
+
         # If the function is called by a post in the section feedback
         else:
             feedback_section_type = form.cleaned_data.get("section_feedback_type")
@@ -1303,6 +1354,16 @@ def treat_feedback(request, *args, **kwargs):
                 logger.error(f"[feedback_error] The section id {object_id} is not an id of a section in the database,"
                              f" from the feedback post")
                 error_500_view_handler(request, exception=e)
+            # If the user forced the html, and tried to sent section feedback for a section which does not
+            # belong to the evaluation
+            if feedback_object and evaluation:
+                if feedback_object not in evaluation.section_set.all():
+                    logger.warning(f"[html_forced] The user {request.user.email}, with IP address "
+                                   f"{get_client_ip(request)} modified the html to do "
+                                   f"a POST request {request.POST} for a section feedback on a section which "
+                                   f"does not belong to the current evaluation (id {evaluation.id})")
+                    data_update["message"] = _("An error occurred. The feedback does not have been sent.")
+                    return HttpResponse(json.dumps(data_update), content_type="application/json")
         # Process variables to sent to the framagit API to create the issue
         text = form.cleaned_data.get("text")
         user = request.user

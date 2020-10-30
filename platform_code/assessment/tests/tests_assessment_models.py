@@ -229,7 +229,7 @@ class EvaluationTestCase(TestCase):
     def test_list_all_elements(self):
         list_evaluation_elements = []
         for section in self.evaluation.section_set.all():
-            for evaluation_element in section.evaluation_element_set.all():
+            for evaluation_element in section.evaluationelement_set.all():
                 list_evaluation_elements.append(evaluation_element)
         self.assertEqual(
             list_evaluation_elements, self.evaluation.get_list_all_elements()
