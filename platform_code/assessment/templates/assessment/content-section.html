@@ -33,10 +33,17 @@
                     {% csrf_token %}
                         {{section_notes_form}}
                         <div class="wrapper">
-                            <button type="button" onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
-                                    class="btn btn-primary same-size-220"
-                                    title="{% trans 'Save the notes' %}">{% trans "Save" %}
-                            </button>
+                            {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "edit" %}
+                                <button type="button" onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
+                                        class="btn btn-primary same-size-220"
+                                        title="{% trans 'Save the notes' %}">{% trans "Save" %}
+                                </button>
+                            {% else %}
+                                <button type="button" onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
+                                        class="btn btn-primary same-size-220" disabled
+                                        title="{% trans 'You do not have the right to do this action' %}">{% trans "Save" %}
+                                </button>
+                            {% endif %}
                         </div>
                     </form>
             <div class="display-none margin-bot-top-20" id="messageSectionNotes{{section.id}}"></div>

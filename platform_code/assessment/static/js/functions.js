@@ -92,7 +92,6 @@ function remove(x, resource_id){
                     $("#error_messages").delay(4000).slideUp(200, function() {
                     $(this).hide();
                     });
-
                  }
              }
     });
@@ -133,7 +132,7 @@ function feedback(id, feedback_object){
                  }
              }
     });
-};
+}
 
 function resetChoice(id_form){
     var element_id = id_form;
@@ -182,7 +181,6 @@ function resetChoice(id_form){
                             $(permanent_button).attr("disabled", "true");
                             $(permanent_button).removeClass("display-none");
                         }
-
                     }
                      $("#confirmationform"+element_id).html("<div class='alert alert-success'>"+response['message_reset']+"</div>");
                      $(".alert-success").delay(4000).slideUp(200, function() {
@@ -191,7 +189,7 @@ function resetChoice(id_form){
                  }
              }
      });
-};
+}
 
 // Validation of an evaluation element
 
@@ -234,8 +232,6 @@ function submitForm(id_form){
                      $(".alert-success").delay(3000).slideUp(200, function() {
                         $(this).remove();
                         });
-
-
                  } else {
                    console.log("response", response);
                    if (response['conditions_respected']){
@@ -250,7 +246,6 @@ function submitForm(id_form){
                         });
                     }
                  }
-
                  if(response['conditional_elements_list'].length > 0) {
                     for (var i=0; i < response['conditional_elements_list'].length; i++) {
                         var id_evaluation_element = response['conditional_elements_list'][i];
@@ -261,11 +256,9 @@ function submitForm(id_form){
                         $("#reset"+id_evaluation_element).attr("onclick", "");
                     }
                  }
-
              }
     });
-
-};
+}
 
 function submitUserSettingsDataForm(id_form){
     console.log("enter submit function", id_form);
@@ -290,15 +283,10 @@ function submitUserSettingsDataForm(id_form){
                     $("#error_messages").delay(4000).slideUp(200, function() {
                     $(this).hide();
                     });
-
-
                  }
-
-
              }
     });
-
-};
+}
 
 function submitUserSettingsPasswordForm(id_form){
     console.log("enter submit function", id_form);
@@ -310,7 +298,6 @@ function submitUserSettingsPasswordForm(id_form){
              success: function(response) {
                  console.log("response", response);
                  if(response['success']) {
-<!--                 $('#id_form').trigger("reset");-->
                  $('input[name="old_password"]').val("");
                  $('input[name="new_password1"]').val("");
                  $('input[name="new_password2"]').val("");
@@ -329,15 +316,10 @@ function submitUserSettingsPasswordForm(id_form){
                     $("#error_messages_password").delay(4000).slideUp(200, function() {
                     $(this).hide();
                     });
-
-
                  }
-
-
              }
     });
-
-};
+}
 
 
 function setSectionProgressBar(response){
@@ -348,7 +330,6 @@ function setSectionProgressBar(response){
     progress_bar_content.setAttribute("style", "width:"+response["section_progression"]+"%;");
     progress_bar_content.setAttribute("aria-valuenow", response['section_progression']);
     progress_bar_content.setAttribute("title", "Progression de "+response['section_progression']+"%");
-
 }
 
 function setElementEvaluationStatusDone(element_id){
@@ -424,8 +405,7 @@ function changeNameEvaluation(form_id, evaluation_id){
                  }
              }
     });
-
-};
+}
 
 // upgrade function used to upgrade an evaluation and block the popin from closing
 function upgrade(modal_id, form_id, evaluation_id){
@@ -599,7 +579,7 @@ function submitSectionNotes(form_id, section_id){
 // the call is made in content-section.html
 // the ajax request is managed in SectionView
    var form = document.getElementById(form_id);
-    $.ajax({ data: $(form).serialize()+ "&notes_section_id=" + section_id,
+    $.ajax({ data: $(form).serialize()+ "&notes_section_id=" + section_id,  // the id is not used but "notes_section_id" to know the context of the ajax
              type: $(form).attr('method'),
              url: $(form).attr('action'),
              success: function(response) {
@@ -611,6 +591,7 @@ function submitSectionNotes(form_id, section_id){
                         $(this).addClass("display-none");
                         });
                  } else {
+                    $("#messageSectionNotes"+section_id).removeClass("display-none")
                     $("#messageSectionNotes"+section_id).html("<div class='alert alert-danger margin-10'>"+response['message']+"</div>");
                     $(".alert").delay(3000).slideUp(200, function() {
                         $(this).addClass("display-none");
