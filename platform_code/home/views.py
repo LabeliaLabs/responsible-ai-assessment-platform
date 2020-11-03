@@ -599,7 +599,7 @@ class OrganisationCreationView(LoginRequiredMixin, FormView):
         context = self.get_context_data()
         # If there already is a message, this means the user activated his account before so no need to display warning
         # message
-        if messages:
+        if list(messages.get_messages(request)):
             context["skip_button"] = True
         else:
             organisation_required_message(
