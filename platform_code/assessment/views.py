@@ -836,7 +836,10 @@ class SectionView(LoginRequiredMixin, ListView):
                 if can_edit_security_check(
                         request, organisation=organisation, *args, **kwargs
                 ):
-                    form = SectionNotesForm(request.POST)
+                    form = SectionNotesForm(
+                        request.POST,
+                        user_can_edit=organisation.check_user_is_member_and_can_edit_evaluations(user=request.user)
+                    )
                     if form.is_valid():
                         notes = form.cleaned_data.get("user_notes")
                         # The section is get above, according to the url
@@ -963,7 +966,10 @@ class SectionView(LoginRequiredMixin, ListView):
         )
 
         # Get the form for section notes
-        context["section_notes_form"] = SectionNotesForm(section=section)
+        context["section_notes_form"] = SectionNotesForm(
+            section=section,
+            user_can_edit=organisation.check_user_is_member_and_can_edit_evaluations(user=request.user)
+        )
 
         # Manage dynamic conditions between evaluation elements in a dictionary depends_on_dic
         # This dictionary is used in the case an element is not available to inform the user that this is due

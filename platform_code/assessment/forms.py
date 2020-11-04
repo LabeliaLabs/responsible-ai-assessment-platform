@@ -225,6 +225,10 @@ class SectionNotesForm(ModelForm):
         fields = ["user_notes"]
 
     def __init__(self, *args, **kwargs):
+        if "user_can_edit" in kwargs:
+            user_can_edit = kwargs.pop("user_can_edit")
+        else:
+            user_can_edit = False
         if "section" in kwargs:
             section = kwargs.pop("section")
         else:
@@ -261,6 +265,8 @@ class SectionNotesForm(ModelForm):
                                                 initial=section.user_notes,
                                                 required=False,
                                             )
+        if not user_can_edit:
+            self.fields["user_notes"].disabled = True
 
 
 class ChoiceForm(ModelForm):
