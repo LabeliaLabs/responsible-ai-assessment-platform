@@ -1084,13 +1084,10 @@ class SectionView(LoginRequiredMixin, ListView):
                                     str(element_.id)
                                 )
                                 element_.reset_choices()
-                                element_.status = False
-                                element_.save()
 
                     # If the choice is not ticked, we ensure to have his attribute 'is_ticked' to False and save it
                     else:
-                        choice.is_ticked = False
-                        choice.save()
+                        choice.set_choice_unticked()
 
                 # The choices have been successfully updated
                 data_update["success"] = True

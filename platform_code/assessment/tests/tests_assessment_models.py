@@ -29,8 +29,12 @@ from .object_creation import (
 
 # a master evaluation element can not depends on itself -> need to see for choice.depends_on in this case
 
-# todo : test the assessment version during import (convert to float, no higher)
-# todo : test that no duplicate order_id during import (for section, evaluation element, choice)
+"""
+In this file, we test the creation of the different objects (Assessment, MS, MEE, MC, Evaluation, Section, EE, Choice),
+their properties (name, suppression, numbering, get_absolute_url).
+For the EE (Evaluation Element) and the Choice classes, we test all the logic and interactions between the objects
+(conditions intra, inter EE, conditions on choices, etc).
+"""
 
 
 class AssessmentTestCase(TestCase):
@@ -554,22 +558,6 @@ class ChoiceTestCase(TestCase):
         self.assertFalse(self.choice2.set_conditions_on_other_choices())
 
 
-# todo test the logic of the progression of the assessment
-
-# class EvaluationProgressionTestCase(TestCase):
-#
-# choice.is_applicable()
-# choice.set_choice_to_ticked()
-# element.are_conditions_between_choices_satisfied
-# element.is_applicable()
-# element.get_list_choice_ticked
-# element.set_status
-# element.reset_choices
-
-
-# class EvaluationProgressionTest(TestCase):
-#     def setUp(self):
-
 # todo test the scoring evolution
 
 # class ScoringTest(TestCase):
@@ -580,3 +568,4 @@ class ChoiceTestCase(TestCase):
 # class UpgradeTest(TestCase):
 #     def setUp(self):
 #
+# todo test that we cannot check multiple choices for radio items (modifying html)

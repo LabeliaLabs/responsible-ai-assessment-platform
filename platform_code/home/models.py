@@ -224,8 +224,8 @@ class Membership(models.Model):
     """
 
     ADMIN = "admin"
-    READ_ONLY = _("read_only")
-    EDITOR = _("editor")
+    READ_ONLY = "read_only"
+    EDITOR = "editor"
 
     ROLES = (
         (READ_ONLY, _("read_only")),
@@ -265,11 +265,13 @@ class Membership(models.Model):
     @classmethod
     def check_role(cls, role_to_check):
         """
-        Check that a string 'role_to_check' is a defined role
+        Check that a string 'role_to_check' is a defined role (always check the 1st value of the tuple of ROLES)
+        Do not use French version ('editeur', 'lecteur' in the code)
         :param role_to_check: string
         :return:
         """
-        return (role_to_check, role_to_check) in cls.ROLES
+        list_roles = [cls.ROLES[i][0] for i in range(len(cls.ROLES))]
+        return role_to_check in list_roles
 
     def __str__(self):
         return str(self.user) + " in " + str(self.organisation) + " (" + self.role + ")"
@@ -418,7 +420,7 @@ class Organisation(models.Model):
     def __str__(self):
         return self.name
 
-    def add_user_to_organisation(self, user, role="read_only"):
+    def add_user_to_organisation(self, user, role=Membership.ROLES[0][0]):
         """
         Add an user to the organisation, with a defined role (by default read_only)
         :param user: user
