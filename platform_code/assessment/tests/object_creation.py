@@ -261,7 +261,7 @@ def create_assessment_body(
         master_evaluation_element=master_evaluation_element1,
         answer_text="answer",
         order_id="a",
-        is_concerned_switch=True,
+        is_concerned_switch=True,  # Todo change because it is a radio item so pointless
     )
 
     master_evaluation_element2 = create_master_evaluation_element(

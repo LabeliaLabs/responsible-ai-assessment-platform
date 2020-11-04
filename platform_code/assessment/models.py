@@ -571,7 +571,7 @@ class Section(models.Model):
             for element in evaluation_element_list:
                 if (
                     element.status or not element.is_applicable()
-                ):  # the element has been answered
+                ):  # the element has been answered or is not applicable
                     count_element_done += 1
             self.user_progression = int(
                 round(count_element_done * 100 / len(evaluation_element_list), 0)
@@ -737,8 +737,8 @@ class EvaluationElement(models.Model):
         """ Set for all the choices of an evaluation element the attribute 'is_ticked' to False """
         list_choices = list(self.choice_set.all())
         for choice in list_choices:
-            choice.is_ticked = False
-            choice.save()
+            choice.set_choice_unticked()
+        self.set_status()
         self.save()
 
     def are_notes_filled(self):
@@ -809,7 +809,11 @@ class EvaluationElement(models.Model):
         return None
 
     def is_applicable(self):
-        """False id the choice this evaluation element depends on is ticked, else True"""
+        """
+        For condition inter evaluation elements
+        False if the choice this evaluation element depends on is ticked, else True
+        :returns boolean
+        """
         # print("IS APPLICABLE", self, self.has_condition_on())
         if self.has_condition_on():
             choice = self.get_choice_depending_on()
@@ -1198,11 +1202,13 @@ class Choice(models.Model):
         choice.save()
         return choice
 
-    def set_choice_to_ticked(self):
+    def set_choice_ticked(self):
         self.is_ticked = True
+        self.save()
 
-    def set_choice_to_not_ticked(self):
+    def set_choice_unticked(self):
         self.is_ticked = False
+        self.save()
 
     def convert_order_id_to_int(self):
         """ Convert the order id (letter) of the master choice into an int
@@ -1307,7 +1313,7 @@ class Choice(models.Model):
         :return: boolean
         """
 
-        if self.has_element_conditioned_on():
+        if self.has_condition_on():
             choice_setting_conditions = self.evaluation_element.get_choice_condition_intra()
             if choice_setting_conditions is not None and choice_setting_conditions.is_ticked:
                 return False
