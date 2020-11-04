@@ -48,6 +48,7 @@
               {% else %}
                 <td class="case-array">-</td>
               {% endif %}
+<!--              TODO refactor-->
               <!-- If the evaluation is upgradable, which means a new assessment version exists-->
               {% if evaluation.is_upgradable %}
                 <!-- If the evaluation is finished && upgradable -->
@@ -72,17 +73,18 @@
                 <!-- Else the evaluation is not finished ( && upgradable )-->
                 {% else %}
                   <td class="case-array">
-                    <a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}">{% trans "Modify" %}</a>
                     <!-- If the user is an organisation admin -->
                     {% if organisation|get_role:user == "admin" or organisation|get_role:user == "edit" %}
                       <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
                          class="btn btn-primary medium-button margin-10"
                           >{% trans "Upgrade" %}</a>
+                      <a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}">{% trans "Modify" %}</a>
                     <!--Else the user is not an organisation admin, ie simple user, so he cannot upgrade the evaluation  -->
                     {% else %}
                       <button class="btn btn-primary medium-button margin-10" disabled
                               title="{% trans 'You do not have the right to do this action' %}">{% trans "Upgrade" %}
                       </button>
+                      <a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}">{% trans "Browse" %}</a>
                     <!-- Endif role user -->
                     {% endif %}
                   </td>
@@ -105,8 +107,13 @@
                        name="resultat-no-modif" href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
                     >{% trans "Results" %}</a></td>
                 {% else %}
-                  <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
-                  >{% trans "Modify" %}</a></td>
+                  {% if organisation|get_role:user == "admin" or organisation|get_role:user == "edit" %}
+                    <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
+                    >{% trans "Modify" %}</a></td>
+                  {% else %}
+                    <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
+                    >{% trans "Browse" %}</a></td>
+                  {% endif %}
                 {% endif %}
               <!-- Endif the evaluation is upgradable and end of the case -->
               {% endif %}
