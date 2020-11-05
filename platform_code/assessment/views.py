@@ -204,6 +204,57 @@ def upgradeView(request, *args, **kwargs):
     return HttpResponse(json.dumps(data_update), content_type="application/json")
 
 
+def leave_organisation(request, *args, **kwargs):
+    """
+    This function is used when user wants to leave an organisation
+    :param request:
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    user = request.user
+    organisation_id = kwargs.get("orga_id")
+    organisation = get_object_or_404(
+        Organisation, id=organisation_id
+    )  # Get 404 if orga_id doesn't exist
+    # Check if the user is member of the organisation (caught in the url), if not, return HttpResponseForbidden
+    if not membership_security_check(
+            request, organisation=organisation, *args, **kwargs
+    ):
+        messages.warning(request, _("You don't have access to this content."))
+        logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                       f"{organisation} while not member")
+        return redirect("home:homepage")
+    try:
+        member = organisation.get_membership_user(user=user)
+    except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
+        logger.warning(f"[member_issue] The user {user.email} wants to leave the organisation {organisation.name},"
+                       f"id {organisation_id} but the query to get the membership failed, error {e}")
+        messages.warning(request, _("An issue occurred."))
+        member = None
+    if member:
+        # If the user is the only admin member (it should not happen except if both user do the action without refresh
+        if member.role == "admin" and organisation.count_admin_members() == 1:
+            messages.warning(request, _("You cannot leave the organisation %(organisation_name)s because you are"
+                                        " the unique admin member.") % {"organisation_name": organisation.name})
+            logger.info(f"[user_left_organisation_refused] The user {user.email} wanted to leave the organisation "
+                        f"{organisation.name} (id {organisation.id}) but he cannot because he is the only admin.")
+            return redirect("assessment:orga-summary", organisation_id)
+        else:
+            # A staff member does not really leave the organisation but become hidden and read_only member
+            if member.user.staff:
+                member.role = "read_only"
+                member.hide_membership = True
+                member.save()
+            else:
+                member_role = member.role
+                member.delete()
+                logger.info(f"[user_left_organisation] The user {user.email} left the organisation {organisation.name} "
+                            f"(id {organisation.id}) in which he was member as {member_role}.")
+            messages.success(request, _(f"You are no longer member of the organisation {organisation.name}."))
+    return redirect("home:user-profile")
+
+
 class SummaryView(LoginRequiredMixin, DetailView):
     model = Organisation
     template_name = "assessment/organisation/organisation.html"
@@ -244,8 +295,8 @@ class SummaryView(LoginRequiredMixin, DetailView):
             ] = get_last_assessment_created().version  # get last version
         else:
             context["last_version"] = get_last_assessment_created()
-        # print("GEEEET", self.object_list, context)
-        context["member_list"] = organisation.get_list_members_not_staff()
+
+        context["member_list"] = organisation.get_list_members_to_display()
         context["pending_member_list"] = organisation.get_pending_list()
         # Dictionary of forms to edit the role of members of the organisation
         context["edit_member_role_form_dic"] = {}
@@ -335,6 +386,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
                         list_user_invited = list(User.object.filter(email=email_address))
                         if len(list_user_invited) == 1:
                             user_invited = list_user_invited[0]
+                            # TODO refactor: case staff/not staff and in the case not staff: is already member/or not
                             # Check if the user is already a member, in this case, the role just need to be edited
                             if organisation.check_user_is_member(user=user_invited) and not user_invited.staff:
                                 logger.warning(f"[add_member_failed] Invitation to join an organisation failed, "
@@ -343,13 +395,22 @@ class SummaryView(LoginRequiredMixin, DetailView):
                                                f"{organisation.get_role_user(user_invited)}")
                                 data_update["message"] = _("The user is already member. Please, "
                                                            "edit his rights instead")
-                            # Case the user is staff so he has already a membership in the organisation
-                            # with role "read_only"
-                            if organisation.check_user_is_member(user=user_invited) \
-                                    and user_invited.staff and role != "read_only":
-                                membership_user_invited = organisation.get_membership_user(user_invited)
-                                membership_user_invited.role = role
-                                membership_user_invited.save()
+                            # Case the user is STAFF so normally he has already a membership in the organisation
+                            # with role "read_only", except if he left it
+                            if user_invited.staff:
+                                # if the staff user is already member of the organisation but the other members are not
+                                # aware of this, just edit his role and change hide_membership
+                                if organisation.get_membership_user(user_invited):
+                                    membership_user_invited = organisation.get_membership_user(user_invited)
+                                    membership_user_invited.role = role
+                                    membership_user_invited.hide_membership = False
+                                    membership_user_invited.save()
+                                # the staff user left the organisation
+                                else:
+                                    Membership.create_membership(user=user_invited,
+                                                                 organisation=organisation,
+                                                                 role=role,
+                                                                 hide_membership=False)
                                 logger.info(f"[add_member_organisation] The user {user.email} has invited "
                                             f"{user_invited.email} to join the organisation {organisation.name} "
                                             f"(id {organisation_id}) with the role {role}")
@@ -423,14 +484,24 @@ class SummaryView(LoginRequiredMixin, DetailView):
                     if member:
                         # An admin member cannot be removed from the organisation, normally no button to remove
                         if not member.role == "admin" and member.organisation == organisation:
-                            logger.info(f"[member_removed] The user {user.email} removed the membership of the user"
-                                        f" {member.user.email} from the organisation {organisation.name} (id "
-                                        f"{organisation.id})")
                             member_deleted_email = member.user.email
-                            member.delete()
+                            # If the user is staff of the platform, it is not deleted but hidden and set to "read_only"
+                            if member.user.staff:
+                                member.hide_membership = True
+                                member.role = "read_only"
+                                member.save()
+                            # If the user is not staff, we just delete its membership
+                            else:
+                                member.delete()
+                                logger.info(f"[member_removed] The user {user.email} removed the membership of the user"
+                                            f" {member.user.email} from the organisation {organisation.name} (id "
+                                            f"{organisation.id})")
+                            # In both cases we tell the user it succeeded
                             data_update["success"] = True
-                            data_update["message"] = _(f"The user {member_deleted_email} is no longer a member of the "
-                                                       f"organisation and cannot access to it.")
+                            data_update["message"] = _("The user %(member_deleted_email)s is no longer a member of the "
+                                                       "organisation and cannot access to it.") % {
+                                "member_deleted_email": member_deleted_email
+                            }
                         else:
                             data_update["message"] = _("You cannot remove an admin member from the organisation.")
 
@@ -453,11 +524,12 @@ class SummaryView(LoginRequiredMixin, DetailView):
                                     f" {invitation.email} to join the organisation {organisation.name} (id "
                                     f"{organisation.id})")
 
-                # If the user edit the role of another member (which cannot be admin)
+                # If the user edit the role of another member (which cannot be an admin member)
                 elif "edit_member_id" in request.POST:
                     member_id = request.POST.get("edit_member_id")
                     try:
-                        member = Membership.objects.get(id=member_id, organisation=organisation)
+                        # Hide_membership = False because the user is not suppose to be able a hidden member
+                        member = Membership.objects.get(id=member_id, organisation=organisation, hide_membership=False)
                     except (MultipleObjectsReturned, ObjectDoesNotExist, ValueError) as e:
                         logger.warning(f"[member_edit_role_error] The user {user.email} wants to edit the role of the "
                                        f"member with id {member_id} in the organisation {organisation.name} "

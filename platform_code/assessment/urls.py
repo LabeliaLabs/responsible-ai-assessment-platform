@@ -16,6 +16,7 @@ urlpatterns = [
                     name="creation-evaluation",
                 ),
                 path("", views.SummaryView.as_view(), name="orga-summary"),
+                path("leave-organisation", views.leave_organisation, name="leave-organisation"),
                 path(
                     "<slug:slug>/<int:pk>/",
                     include(

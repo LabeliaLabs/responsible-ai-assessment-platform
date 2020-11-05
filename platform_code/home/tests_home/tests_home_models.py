@@ -104,7 +104,8 @@ class OrganisationMembershipTestCAse(TestCase):
         # Test the methods of the Organisation class for the user who created the organisation
         member_user1 = self.user1.membership_set.get(organisation=self.organisation)
         self.assertEqual(self.organisation.get_list_members_not_staff(), [member_user1])
-        self.assertEqual(self.organisation.count_members(), 1)
+        self.assertEqual(self.organisation.get_list_members_to_display(), [member_user1])
+        self.assertEqual(self.organisation.count_displayed_members(), 1)
         self.assertEqual(self.organisation.get_list_admin_members(), [member_user1])
         self.assertEqual(self.organisation.count_admin_members(), 1)
         self.assertEqual(self.organisation.get_membership_user(self.user1), member_user1)
@@ -137,6 +138,7 @@ class OrganisationMembershipTestCAse(TestCase):
         self.assertIn(self.organisation, self.user2.get_list_organisations_where_user_as_role("read_only"))
         member_user2 = self.user2.membership_set.get(organisation=self.organisation, user=self.user2)
         self.assertEqual(self.organisation.get_list_members_not_staff(), [member_user1, member_user2])
+        self.assertEqual(self.organisation.get_list_members_to_display(), [member_user1, member_user2])
         self.assertIn(member_user2, self.user2.get_list_all_memberships_user())
 
     def test_organisation_two_members(self):
@@ -145,7 +147,8 @@ class OrganisationMembershipTestCAse(TestCase):
         member_user1 = self.user1.membership_set.get(organisation=self.organisation, user=self.user1)
         member_user2 = Membership.objects.get(organisation=self.organisation, user=self.user2)
         self.assertEqual(self.organisation.get_list_members_not_staff(), [member_user1, member_user2])
-        self.assertEqual(self.organisation.count_members(), 2)
+        self.assertEqual(self.organisation.get_list_members_to_display(), [member_user1, member_user2])
+        self.assertEqual(self.organisation.count_displayed_members(), 2)
         self.assertEqual(self.organisation.get_list_admin_members(), [member_user1])
         self.assertEqual(self.organisation.count_admin_members(), 1)
         self.assertEqual(self.organisation.get_membership_user(self.user1), member_user1)
@@ -155,6 +158,7 @@ class OrganisationMembershipTestCAse(TestCase):
         self.assertTrue(self.organisation.check_user_is_member_as_admin(self.user1))
         self.assertTrue(self.organisation.check_user_is_member(self.user2))
         self.assertFalse(self.organisation.check_user_is_member_as_admin(self.user2))
+        self.assertFalse(self.organisation.check_user_is_member_and_can_edit_evaluations(self.user2))  # Cannot edit
         self.assertEqual(self.organisation.get_role_user(self.user2), "read_only")
 
     def test_organisation_remove_user(self):
@@ -171,16 +175,16 @@ class OrganisationMembershipTestCAse(TestCase):
 
     def test_organisation_remove_user_bis(self):
         # Test that the user is not removed when it is the last one in the organisation
-        self.assertEqual(self.organisation.count_members(), 1)
+        self.assertEqual(self.organisation.count_displayed_members(), 1)
         self.organisation.remove_user_to_organisation(user=self.user1)
-        self.assertEqual(self.organisation.count_members(), 1)
+        self.assertEqual(self.organisation.count_displayed_members(), 1)
         self.assertTrue(self.organisation.check_user_is_member_as_admin(self.user1))
 
     def test_organisation_add_already_member(self):
         # Test that the user is not added to the organisation because he is already a member
-        self.assertEqual(self.organisation.count_members(), 1)
+        self.assertEqual(self.organisation.count_displayed_members(), 1)
         self.organisation.add_user_to_organisation(user=self.user1, role="read_only")
-        self.assertEqual(self.organisation.count_members(), 1)
+        self.assertEqual(self.organisation.count_displayed_members(), 1)
         self.assertTrue(self.organisation.check_user_is_member_as_admin(self.user1))
 
     def test_organisation_deletion_and_members(self):
@@ -197,13 +201,13 @@ class OrganisationMembershipTestCAse(TestCase):
         self.assertIn(self.organisation, self.user_admin.get_list_organisations_where_user_as_role("read_only"))
         self.assertNotIn(member_user_admin, self.organisation.get_list_members_not_staff())
         self.assertEqual([member_user1], self.organisation.get_list_members_not_staff())
-        self.assertEqual(self.organisation.count_members(), 1)
+        self.assertEqual(self.organisation.count_displayed_members(), 1)
         self.assertEqual("read_only", self.organisation.get_role_user(self.user_admin))
 
     def test_editor_membership_role(self):
         # Test edit membership privilege and the method check_user_is_member_and_can_edit_evaluations
         self.organisation.add_user_to_organisation(user=self.user2, role="editor")
-        self.assertEqual(self.organisation.count_members(), 2)
+        self.assertEqual(self.organisation.count_displayed_members(), 2)
         self.assertEqual(self.organisation.get_role_user(self.user2), "editor")
         self.assertTrue(self.organisation.check_user_is_member_and_can_edit_evaluations(self.user2))
         self.assertTrue(self.organisation.check_user_is_member_and_can_edit_evaluations(self.user1))

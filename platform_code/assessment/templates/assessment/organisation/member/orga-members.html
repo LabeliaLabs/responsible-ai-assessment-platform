@@ -40,6 +40,25 @@
                     <td class="case-array" >{{member.user.email}}</td>
                     <td class="case-array">{{member.role}}</td>
                     <td class="case-array">{{member|evaluation_created_by:evaluation_list}}</td>
+<!--                To allow the user to leave the organisation-->
+                    {% if member.user == user %}
+<!--                        Unique case where the user cannot leave the organisation, he is the only admin member-->
+                        {% if organisation|get_role:user == "admin" and organisation.count_admin_members == 1 %}
+                        {% else %}
+                        <td class="div-hidden-icons" >
+                            <button class="btn btn-danger small-btn" data-toggle="modal" data-target="#modal-leave-orga{{member.id}}">
+                                <i class="fa fa-sign-in"></i>
+                            </button>
+                            <div class="modal" id="modal-leave-orga{{member.id}}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        {% include "assessment/organisation/member/leave-organisation.html" %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
                     {% if organisation|get_role:user == "admin" and not member.role == "admin" %}
                         <td class="div-hidden-icons" id="member{{member.id}}" >
                             <button class="btn btn-primary small-btn" data-toggle="modal" data-target="#modal-edit-role{{member.id}}">
@@ -53,7 +72,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-danger small-btn margin-10" data-toggle="modal" data-target="#modal-remove-member{{member.id}}">
+                            <button class="btn btn-danger small-btn" data-toggle="modal" data-target="#modal-remove-member{{member.id}}">
                                 <span class="fa fa-trash"></span>
                             </button>
                             <div class="modal" id="modal-remove-member{{member.id}}" aria-hidden="true">

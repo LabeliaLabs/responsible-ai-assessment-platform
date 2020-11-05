@@ -89,8 +89,8 @@
     {% else %}
     <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
         <input type="submit" value="{% trans 'Validate and see the results' %}" disabled="True"
-               alt="{% trans 'Please you have to finish the evaluation before it can be validated' %}"
-               title="{% trans 'Please you have to finish the evaluation before it can be validated' %}"
+               alt="{% trans 'Please finish the evaluation before validating it' %}"
+               title="{% trans 'Please finish the evaluation before validating it' %}"
                class="btn btn-primary float-right bottom-page-button"/>
     </form>
     {% endif %}

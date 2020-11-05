@@ -6,7 +6,7 @@
   <form  method='post' class="form" role="form" id="editRoleMember{{member.id}}"
         action="{% url 'assessment:orga-summary' organisation.id %}">
     <div class="modal-header">
-        <h4 class="modal-title absolute-position" >{% trans "Edit member rights" %} </h4>
+        <h4 class="modal-title absolute-position" >{% trans "Edit the rights of" %} {{member.user.email}}</h4>
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
         <div class="modal-body">

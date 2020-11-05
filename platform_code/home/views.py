@@ -375,7 +375,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         list_evaluations = Evaluation.objects.filter(Q(organisation__membership__user=user,
                                                        organisation__membership__role="admin")
                                                      | Q(organisation__membership__user=user,
-                                                         organisation__membership__role="edit"))
+                                                         organisation__membership__role="editor"))
 
         context["evaluations"] = list_evaluations
         context["evaluation_form_dic"] = {}
@@ -439,7 +439,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
                 # If the user belongs to multiple organisation, it is a form with a field organisation
                 if len(user.get_list_organisations_where_user_as_role(role="admin")) >= 1 or \
-                        len(user.get_list_organisations_where_user_as_role(role="edit")) >= 1:
+                        len(user.get_list_organisations_where_user_as_role(role="editor")) >= 1:
                     form = EvaluationMutliOrgaForm(
                         request.POST,
                         user=user,
