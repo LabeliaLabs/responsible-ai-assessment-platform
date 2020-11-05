@@ -33,7 +33,7 @@
                     {% csrf_token %}
                         {{section_notes_form}}
                         <div class="wrapper">
-                            {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "edit" %}
+                            {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                 <button type="button" onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
                                         class="btn btn-primary same-size-220"
                                         title="{% trans 'Save the notes' %}">{% trans "Save" %}
@@ -141,7 +141,7 @@
 
                                       {% endif %}
 
-                                    {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "edit" %}
+                                    {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                         {% if element.has_condition_on and element|is_not_applicable %}
                                             <fieldset id="disable_element_{{element.id}}" disabled >
 
@@ -161,7 +161,7 @@
                                     {% endif %}
 
 <!--                                    Reset the answers -->
-                                    {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "edit" %}
+                                    {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                         {% if element.has_condition_on and element|is_not_applicable %}
                                             <a id="reset_{{element.id}}" class="reset-response float-right" title="Inactive">
                                                 {% trans "Reset the answer" %}</a>
@@ -175,7 +175,7 @@
 
                             </div>
                               <div class="wrapper">
-                                  {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "edit" %}
+                                  {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                       {% if element.has_condition_on and element|is_not_applicable %}
                                         <button type="button"
                                                  disabled class="btn btn-primary same-size-220" id="validate_{{element.id}}" >

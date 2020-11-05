@@ -1,4 +1,5 @@
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django.db.models import Q
 from django_countries.fields import CountryField
@@ -238,11 +239,12 @@ class Membership(models.Model):
         "home.Organisation", blank=True, null=True, on_delete=models.CASCADE
     )
     role = models.CharField(max_length=200, choices=ROLES, default=ADMIN)
+    hide_membership = models.BooleanField(default=False)
 
     @classmethod
-    def create_membership(cls, user, organisation, role):
+    def create_membership(cls, user, organisation, role, hide_membership=False):
         if cls.check_role(role):
-            member = cls(user=user, organisation=organisation, role=role,)
+            member = cls(user=user, organisation=organisation, role=role, hide_membership=hide_membership)
             member.save()
 
     @classmethod
@@ -413,7 +415,7 @@ class Organisation(models.Model):
             # If the user who created the organisation is admin, it is useless to give him a "read_only" right
             if staff_user != created_by:
                 Membership.create_membership(
-                    user=staff_user, role="read_only", organisation=organisation
+                    user=staff_user, role="read_only", organisation=organisation, hide_membership=True
                 )
         return organisation
 
@@ -438,7 +440,7 @@ class Organisation(models.Model):
         :param user:
         :return:
         """
-        if self.count_members() > 1 and self.check_user_is_member(user):
+        if self.count_displayed_members() > 1 and self.check_user_is_member(user):
             membership = self.get_membership_user(user=user)
             membership.delete()
 
@@ -446,6 +448,8 @@ class Organisation(models.Model):
         """
         Get the list of the members of the organisation (admin, editor or read-only) who
         are not staff of the platform
+
+        Not used anymore in SummaryView to get the list of members
         :return: list
         """
         # List all the members of the organisation (admin, editor or read-only) who are not staff of the platform
@@ -457,12 +461,20 @@ class Organisation(models.Model):
                 list_members.remove(member)
         return list_members
 
-    def count_members(self):
+    def get_list_members_to_display(self):
+        """
+        Get the list of the organisation members which can be displayed (field hide_membership=False)
+        to not display staff users which are automatically read_only members
+        :return:
+        """
+        return list(Membership.objects.filter(organisation=self, hide_membership=False))
+
+    def count_displayed_members(self):
         """
         Count the number of member in the organisation, used in the organisation view for the organisation settings
         :return: int
         """
-        return len(self.get_list_members_not_staff())
+        return len(self.get_list_members_to_display())
 
     def get_list_admin_members(self):
         """
@@ -483,7 +495,7 @@ class Organisation(models.Model):
         """
         try:
             membership = Membership.objects.get(user=user, organisation=self)
-        except Membership.DoesNotExist:
+        except (Membership.DoesNotExist, MultipleObjectsReturned):
             membership = None
         return membership
 

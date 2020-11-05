@@ -209,7 +209,7 @@ class EvaluationMutliOrgaForm(ModelForm):
         self.fields["name"].widget.attrs = {"class": "name-eval-field"}
         self.fields["organisation"].label = _("Organisation")
         queryset = Organisation.objects.distinct().filter(
-            Q(membership__user=user, membership__role="admin") | Q(membership__user=user, membership__role="edit")
+            Q(membership__user=user, membership__role="admin") | Q(membership__user=user, membership__role="editor")
         )
         self.fields["organisation"].queryset = queryset
         self.fields["name"].widget.attrs = {"class": "full-width"}

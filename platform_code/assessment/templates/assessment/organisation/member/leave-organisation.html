@@ -1,0 +1,28 @@
+{% load i18n %}
+{% load static %}
+
+<div class="content-modal-leave-organisation">
+    <div class="modal-header">
+        <h4 class="modal-title" >{% trans "Are you sure you want to leave the organisation?" %} </h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+    </div>
+    <div class="modal-body-delete">
+        <p>{% trans "If you leave the organisation, you will not be able to access its evaluations." %}</p>
+
+    </div>
+
+    <div class="modal-footer self-center">
+        <form action="{% url 'assessment:leave-organisation' organisation.id %}"
+              method="post" id="leaveOrganisation{{member.id}}">
+            {% csrf_token %}
+            <button class="btn btn-primary same-size-250 margin-auto"
+                    type="submit">
+                {% trans 'Yes' %}
+            </button>
+            <button type="button" class="btn btn-danger same-size-250 margin-auto right-button"
+                data-dismiss="modal">{% trans 'Cancel' %}
+        </button>
+        </form>
+
+    </div>
+</div>
