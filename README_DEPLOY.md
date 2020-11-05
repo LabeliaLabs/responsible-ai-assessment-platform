@@ -57,6 +57,7 @@ sudo ln -s /etc/nginx/sites-available/preprod.assessment.substra.ai /etc/nginx/s
 
 # Test config & reload nginx: will provide feedbacks in case of errors
 sudo nginx -t && sudo nginx -s reload
+sudo nginx -T
 ```
 
 ### Debug
@@ -82,6 +83,7 @@ curl --insecure -I -k localhost:443
 # From your local machine
 nmap -F preprod.assessment.substra.ai # Fast
 nmap -A preprod.assessment.substra.ai # longer
+nmap -sV preprod.assessment.substra.ai # version
 
 # nginx logs path
 tail -f /var/log/nginx/access.log
@@ -90,13 +92,11 @@ tail -f /var/log/nginx/error.log
 
 ## Certbot
 
-TODO:
-
-- fix cert volumes for docker
-- cronjob
+TODO: cronjob renew but faut pas que ça dérape...
 
 ```sh
-# Ubuntu install
+# Ubuntu snap install, as advised on certbot website
+# https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx
 sudo snap install --classic certbot
 
 # First config
@@ -104,7 +104,7 @@ sudo certbot --nginx
 
 # Test renew
 sudo certbot renew --dry-run
-
+sudo certbot renew --dry-run --verbose
 # Renew
 sudo certbot renew
 ```
@@ -121,6 +121,7 @@ TODO:
 ```sh
 # Status/On/Off
 sudo ufw status
+sudo ufw status verbose
 sudo ufw enable
 sudo ufw disable
 
@@ -131,6 +132,7 @@ sudo ufw status numbered
 # Allow web connections, only
 sudo ufw allow http
 sudo ufw allow https
+sudo ufw allow 'Nginx Full'
 
 # Custom
 sudo ufw delete <ID>
@@ -146,8 +148,30 @@ As of now, available applications:
 - Nginx HTTP
 - Nginx HTTPS
 - OpenSSH
+- 22
+- 587 (email)
 
-TODO: add port 587 for email
+### [WIP] Port forward
+
+Enable `sysctl net.ipv4.forward` by editing `/etc/sysctl.conf` & `/etc/ufw/sysctl.conf` and running `sysctl -p`.
+
+Ufw: `/etc/ufw/before.rules`:
+
+```sh
+*nat
+:PREROUTING ACCEPT [0:0]
+-A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8000
+COMMIT
+```
+
+And reload ufw
+
+```sh
+sudo ufw disable && sudo ufw enable
+sudo service ufw restart
+sudo ufw reload
+sudo systemctl restart ufw
+```
 
 ## Fail2ban: IP ban for script kiddies
 
@@ -178,20 +202,19 @@ Note that all the content should be written in english. Currently, the languages
 French and English. The site is deployed in french. To realize the translation (refer to the
  [django documentation](https://docs.djangoproject.com/en/3.1/topics/i18n/translation/)
 to implement it ), you need to use `gettext_lazy` or `i18n` or even `ngettext` to manage plurial.
- For example, in python files, use the syntax
-`_("English message to translate in French")` with the **underscore** for `gettext_lazy`.
-In the html files, at the beginning of the file, add `{% load i18n %}` and for the text 
-you want to translate, use the tags `{% trans "English message to translate in French" %}`.
+
+For example, in Python files, use the syntax: `_("English message to translate in French")` with the **underscore** for `gettext_lazy`.
+
+In the html files, at the beginning of the file, add `{% load i18n %}` and for the text you want to translate, use the tags `{% trans "English message to translate in French" %}`.
+
 Then you can do the command:
 
 ```sh
 django-admin makemessages -l fr
+>>> processing locale fr
 ```
 
-This will gather all the text between the tags in the file `django.po`. 
-Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`.
-You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`
-Be careful to the 'fuzzy' translations which are inaccurate. Make all your translations and then do the command:
+This will gather all the text between the tags in the file `django.po`. Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`. You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`. Be careful to the 'fuzzy' translations which are inaccurate (Tips: use `Ctrl + f "fuzzy"`). Make all your translations and then do the command:
 
 ```sh
 django-admin compilemessages
@@ -220,7 +243,7 @@ OK
 Destroying test database for alias 'default' ('test_platform_db')...
 ```
 
-If one or more of the tests failed, you should have a message like this: 
+If one or more of the tests failed, you should have a message like this:
 
 ```sh
 ======================================================================
@@ -239,6 +262,8 @@ Destroying test database for alias 'default' ('test_platform_db')...
 ```
 
 ### Prod
+
+Use, **with caution**, the `deploy.sh` script
 
 ```sh
 # Power up Docker & build image, in detached mode
@@ -260,6 +285,15 @@ docker-compose -f docker-compose.prod.yml exec web python manage.py createsuperu
 docker-compose -f docker-compose.prod.yml down
 # or
 docker-compose -f docker-compose.prod.yml down -v # --volumes /!\ Removes volumes, including db!
+```
+
+## Logs
+
+```sh
+tail -f /var/log/nginx/access.log;
+tail -f /var/log/nginx/error.log;
+tail -f /var/log/ufw.log
+tail -f /var/log/letsencrypt/letsencrypt.log
 ```
 
 ## Plateform admin account
