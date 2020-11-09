@@ -75,7 +75,7 @@
                         {% trans "Modify" %}
                       </a>
                   {% else %}
-                    <a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}">{% trans "Browse" %}</a>
+                    <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">{% trans "Browse" %}</a>
                   {% endif %}
               {% else %}
                   {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor" %}
@@ -83,7 +83,7 @@
                         {% trans "Continue" %}
                       </a>
                   {% else %}
-                    <a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}">{% trans "Browse" %}</a>
+                    <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">{% trans "Browse" %}</a>
                   {% endif %}
               {% endif %}
 
