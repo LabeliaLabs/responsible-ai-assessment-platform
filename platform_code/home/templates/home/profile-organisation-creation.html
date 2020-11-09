@@ -26,7 +26,7 @@
 
     {% for field in form %}
 
-        <span class="float-left">{{ field.label_tag }}</span><br>
+        <span>{{ field.label_tag }}</span><br>
 
           <p >{{ field }}</p>
         {% if field.help_text %}

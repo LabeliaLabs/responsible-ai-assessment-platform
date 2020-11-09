@@ -194,7 +194,7 @@ function resetChoice(id_form){
 // Validation of an evaluation element
 
 function submitForm(id_form){
-    console.log("enter submit function", "confirmation"+id_form);
+
     var form = document.getElementById(id_form);
     var name = $(form).attr("element");
     var element_id = $(form).attr("name");
@@ -204,7 +204,7 @@ function submitForm(id_form){
              url: $(form).attr('action'),
              success: function(response) {
                  if(response['success']) {
-                     console.log("response", response);
+
                      setSectionProgressBar(response);
                      if (response["element_status_changed"]){
                         setElementEvaluationStatusDone(element_id);
@@ -338,9 +338,11 @@ function setElementEvaluationStatusDone(element_id){
     console.log("elements older and then new", element_status_to_disable, new_element_status);
     if (document.getElementsByName("element_status_not_done"+element_id).length ===0){
         $(new_element_status).html('<i class="fa fa-circle fa-stack-2x"></i></span>');
+        $(new_element_status).attr("title", "You have answered this evaluation element"); // todo translation
     } else {
         element_status_to_disable[0].setAttribute("style", "display: none;");
         $(new_element_status).attr("style", "display: block;");
+        $(new_element_status).attr("title", "You have answered this evaluation element"); // todo translation
         $(new_element_status).html('<i class="fa fa-circle fa-stack-2x"></i></span>');
     }
 
@@ -353,11 +355,13 @@ function setElementEvaluationStatusNotDone(element_id){
 //    case the element has been validated then reset without page refresh, so it is temporary div
     if (document.getElementsByName("element_status_done"+element_id).length ===0){
         $(new_element_status).html('<i class="fa fa-circle-o fa-stack-2x"></i></span>');
+        $(new_element_status).attr("title", "You have not answered this evaluation element yet"); // todo translation
     } else {
         element_status_to_disable[0].setAttribute("style", "display: none;");
         console.log("elements older and then new", element_status_to_disable, new_element_status);
         $(new_element_status).attr("style", "display: block;");
         $(new_element_status).html('<i class="fa fa-circle-o fa-stack-2x"></i></span>');
+        $(new_element_status).attr("title", "You have not answered this evaluation element yet"); // todo translation
     }
 }
 // not used
@@ -599,5 +603,47 @@ function submitSectionNotes(form_id, section_id){
                  }
              }
     });
+}
 
+function changeIconResource(divHeader) {
+    var children = divHeader.children;
+    if(children) {
+        var divIcon = children[0];
+        if(divIcon.classList.contains("fa-plus")){
+            divIcon.classList.replace("fa-plus", "fa-minus");
+        } else {
+            divIcon.classList.replace("fa-minus", "fa-plus");
+        }
+    }
+}
+
+$(function() {
+  $(".progress").each(function() {
+    var value = $(this).attr('data-value');
+    if (typeof value === "string"){
+        value = parseFloat(value);
+        console.log("value changed", value, typeof value);
+    }
+    var left = $(this).find('.progress-left .progress-bar');
+    var right = $(this).find('.progress-right .progress-bar');
+    console.log("value", value, typeof value);
+
+    if (value > 0) {
+      if (value <= 50) {
+        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
+      } else {
+        right.css('transform', 'rotate(180deg)')
+        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
+      }
+    }
+  })
+
+  function percentageToDegrees(percentage) {
+    return percentage / 100 * 360
+  }
+});
+
+function topFunction() {
+  document.body.scrollTop = 0; // For Safari
+  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }

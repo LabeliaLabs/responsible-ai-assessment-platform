@@ -300,81 +300,23 @@ class Organisation(models.Model):
         (PLUS, ">5000"),
     )
 
-    # todo : if we keep this field, we need to work on translation
-    AGRICULTURE = "Agriculture"
-    AUDIO = "Audiovisuel / Spectacle"
-    SOCIAL = "Social"
-    ENERGIE = "Energie"
-    CONSTRUCTION = "Construction aéronautique, ferroviaire et navale"
-    PUBLIQUE = "Fonction publique"
-    JOURNALISME = "Edition / Journalisme"
-    RECHERCHE = "Recherche"
-    ARMEE = "Armée / sécurité"
-    SPORT = "Sport / Loisirs / Tourisme"
-    EDUCTION = "Enseignement"
-    CULTURE = "Culture / Artisanat d'art"
-    HOTELLERIE = "Hôtellerie / Restauration"
-    ART = "Art / Design"
-    SANTE = "Santé"
-    TRADUCTION = "Traduction / Interprétariat"
-    AUTO = "Automobile"
-    ENVIRONNEMENT = "Environnement"
-    DROIT = "Droit / Justice"
-    AGROALIMENTAIRE = "Agroalimentaire"
-    BANQUE = "Banque / Assurance"
-    BOIS = "Bois / Papier / Carton / Imprimerie"
-    BTP = "BTP / Architecture / Matériaux de construction"
-    CHIMIE = "Chimie / Parachimie"
-    COMMERCE = "Commerce / Négoce / Distribution"
-    COM = "Marketing / Communication / Multimédia"
-    ELECTRONIQUE = "Électronique / Électricité"
-    CONSEIL = "Gestion / Conseil / Audit"
-    PHARMA = "Industrie pharmaceutique"
-    INFORMATIQUE = "Informatique / Télécoms"
-    MACHINE = "Machines et équipements / Mécanique"
-    METALLURGIE = "Métallurgie / Travail du métal"
-    PLASTIQUE = "Plastique / Caoutchouc"
-    TEXTILE = "Textile / Habillement / Chaussure"
-    TRANSPORT = "Transports / Logistique"
-    AUTRE = "Autre"
+    # TODO translation
+    LARGE_COMPANY = "Industriel - Grande entreprise"
+    MIDSIZE_COMPANY = "Industriel - ETI"
+    SMB = "Industriel - PME"
+    SOFTWARE_COMPANY = "Prestataire B2B - Editeur de logiciels"
+    CONSULTING_AGENCY = "Prestataire B2B - Cabinet de conseil"
+    RESEARCH_ORGANISATION = "Organisme de recherche"
+    OTHER = "autres"
 
     SECTOR = (
-        (AGRICULTURE, "Agriculture"),
-        (AGROALIMENTAIRE, "Industrie Agroalimentaire"),
-        (ARMEE, "Armée / sécurité"),
-        (ART, "Art / Design"),
-        (AUDIO, "Audiovisuel / Spectacle"),
-        (AUTO, "Automobile"),
-        (BANQUE, "Banque / Assurance"),
-        (BOIS, "Bois / Papier / Carton / Imprimerie"),
-        (BTP, "BTP / Architecture / Matériaux de construction"),
-        (CHIMIE, "Chimie / Parachimie"),
-        (COMMERCE, "Commerce / Négoce / Distribution"),
-        (COM, "Communication / Marketing / Multimédia"),
-        (CONSTRUCTION, "Construction aéronautique, ferroviaire et navale"),
-        (CULTURE, "Culture / Artisanat d'art"),
-        (DROIT, "Droit / Justice"),
-        (ELECTRONIQUE, "Électronique / Électricité"),
-        (ENERGIE, "Energie"),
-        (EDUCTION, "Enseignement"),
-        (ENVIRONNEMENT, "Environnement"),
-        (PUBLIQUE, "Fonction publique"),
-        (CONSEIL, "Gestion / Conseil / Audit"),
-        (HOTELLERIE, "Hôtellerie / Restauration"),
-        (PHARMA, "Industrie pharmaceutique"),
-        (INFORMATIQUE, "Informatique / Télécoms"),
-        (JOURNALISME, "Journalisme / Edition"),
-        (MACHINE, "Machines et équipements / Mécanique"),
-        (METALLURGIE, "Métallurgie / Travail du métal"),
-        (PLASTIQUE, "Plastique / Caoutchouc"),
-        (RECHERCHE, "Recherche"),
-        (SANTE, "Santé"),
-        (SOCIAL, "Social"),
-        (SPORT, "Sport / Loisirs / Tourisme"),
-        (TEXTILE, "Textile / Habillement / Chaussure"),
-        (TRADUCTION, "Traduction / Interprétariat"),
-        (TRANSPORT, "Transports / Logistique"),
-        (AUTRE, "Autre"),
+        (LARGE_COMPANY, "Industriel - Grande entreprise"),
+        (MIDSIZE_COMPANY, "Industriel - ETI"),
+        (SMB, "Industriel - PME"),
+        (SOFTWARE_COMPANY, "Prestataire B2B - Editeur de logiciels"),
+        (CONSULTING_AGENCY, "Prestataire B2B - Cabinet de conseil"),
+        (RESEARCH_ORGANISATION, "Organisme de recherche"),
+        (OTHER, "autres"),
     )
 
     name = models.CharField(max_length=200)

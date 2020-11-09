@@ -8,10 +8,10 @@
         </div>
         <div class="modal-body create-form width-50">
             {% csrf_token %}
-            <div class="column">
+            <div class="one-column">
             {% for field in new_orga_form %}
             <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                <span class="float-left">{{ field.label}}</span>
+                <span>{{ field.label }}</span>
                 <p> {{field}} </p>
             {% endfor %}
                 </div>

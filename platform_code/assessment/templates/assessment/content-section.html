@@ -35,7 +35,7 @@
                         <div class="wrapper">
                             {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                 <button type="button" onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
-                                        class="btn btn-primary same-size-220"
+                                        class="btn btn-primary same-size-220 margin-10"
                                         title="{% trans 'Save the notes' %}">{% trans "Save" %}
                                 </button>
                             {% else %}
@@ -59,11 +59,11 @@
             {% for element in element_list %}
                       <div class="card">
                         <div class="card-header row grid-container-3-cols " id="heading{{element.id}}">
-                            <div class="display-line">
-                              <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left " type="button" data-toggle="collapse"
+                            <div class="display-line div-button" data-toggle="collapse"
                                         data-target="#collapse{{element.id}}" aria-expanded="true"
                                         aria-controls="collapse{{element.id}}">
+                              <h2 class="mb-0" >
+                                <button class="btn btn-link btn-block text-left " type="button" >
                                     Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.name|markdownify}}
                                 </button>
 
@@ -74,33 +74,34 @@
                               {% endif %}
                                 </div>
                             {% include "assessment/element-feedback.html" %}
+                            <div class="margin-auto">
+                                <span name="element_status_temporary{{element.id}}" class="fa-stack-evaluation fa-stack fa-lg"
+                                      style="display: none;"
+                                      title="">
+                                </span>
 
-                            <span name="element_status_temporary{{element.id}}" class="fa-stack fa-lg"
-                                  style="display: none;"
-                                  title="">
-                            </span>
+                                {% if element.status %}
+                                <span name="element_status_done{{element.id}}" class="fa-stack-evaluation fa-stack fa-lg "
+                                       title="{% trans 'You have already answered to this evaluation element' %}">
+                                      <i class="fa fa-circle fa-stack-2x"></i>
+                                </span>
 
-                            {% if element.status %}
-                            <span name="element_status_done{{element.id}}" class="fa-stack fa-lg "
-                                   title="{% trans 'You have already answered to this evaluation element' %}">
-                                  <i class="fa fa-circle fa-stack-2x"></i>
-                            </span>
+                                {% elif not element.status %}
+                                    {% if element.has_condition_on and element|is_not_applicable %}
+                                        <span name="element_status_invalid{{element.id}}" class="fa-stack-evaluation fa-stack fa-lg answer"
+                                              title="{% trans 'You are not concerned by this evaluation element due to your answer to this evaluation element' %} {{depends_on_dic|get_item:element}}">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                         </span>
 
-                            {% elif not element.status %}
-                                {% if element.has_condition_on and element|is_not_applicable %}
-                                    <span name="element_status_invalid{{element.id}}" class="fa-stack fa-lg answer"
-                                          title="{% trans 'You are not concerned by this evaluation element due to your answer to this evaluation element' %} {{depends_on_dic|get_item:element}}">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                     </span>
+                                    {% else %}
+                                        <span name="element_status_not_done{{element.id}}" class="fa-stack-evaluation fa-stack fa-lg answer"
+                                              title="{% trans 'You have not yet answered to this evaluation element' %}">
+                                              <i class="fa fa-circle-o fa-stack-2x" ></i>
+                                        </span>
+                                    {% endif %}
 
-                                {% else %}
-                                    <span name="element_status_not_done{{element.id}}" class="fa-stack fa-lg answer"
-                                          title="{% trans 'You have not yet answered to this evaluation element' %}">
-                                          <i class="fa fa-circle-o fa-stack-2x" ></i>
-                                    </span>
                                 {% endif %}
-
-                            {% endif %}
+                             </div>
                         </div>
 
                         <div id="collapse{{element.id}}" class="collapse" aria-labelledby="heading{{element.id}}" >
@@ -120,7 +121,7 @@
 
                                 <div id="question-text" class="sub-question-headers grid-container-2-cols row margin-left-em">
                                     <div id="question-name" class="question-name">
-                                        Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.question_text|markdownify}}
+                                        {{element.master_evaluation_element.question_text|markdownify}}
                                     </div>
                                     {% if element.master_evaluation_element.explanation_text %}
                                     <div class="help-tip help-tip-explanation absolute-position">
@@ -132,12 +133,14 @@
 
                                 <div class="choices" id="{{element}}">
                                     {% if element.master_evaluation_element.question_type == "radio" %}
-                                            <p class="italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
-                                            {% trans ": Please select one answer which best matches to your organisation situation" %}</p>
+                                            <p class="italic margin-bottom-1em">
+                                                {% trans "Please select one answer which best matches to your organisation situation." %}
+                                            </p>
 
                                       {% elif element.master_evaluation_element.question_type == "checkbox"%}
-                                        <p class="italic"> R{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
-                                            {% trans ": Please select all the answers which best match to your organisation situation. Be careful, some combinations are not coherent" %}</p>
+                                        <p class="italic margin-bottom-1em">
+                                            {% trans "Please select all the answers which best match to your organisation situation. Be careful, some combinations are not coherent." %}
+                                        </p>
 
                                       {% endif %}
 
@@ -203,7 +206,7 @@
                         </form>
                             {% if element.master_evaluation_element.has_resources %}
                                   <div id="accordion-{{element.id}}" class="accordion-resource margin-20">
-                                        <div class="card mb-0">
+                                        <div class="resource-card mb-0">
                                             <div class="card-header collapsed background-white" data-toggle="collapse" href="#collapse-{{element.id}}">
                                                 <a class="card-title">{% trans "Resources" %}</a>
                                             </div>

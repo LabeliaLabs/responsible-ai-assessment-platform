@@ -10,6 +10,10 @@ h1-section {
     font-size: 3em;
 }
 
+.height-title{
+    height: 3em;
+}
+
 .centered {
     margin: 0 auto;
     padding: 0 1em;
@@ -21,6 +25,7 @@ h1-section {
     margin: 1rem .25em;
     padding: 10px;
     border: solid 1px lightgrey;
+    height: fit-content;
 }
 
 .cards-section {
@@ -45,13 +50,9 @@ h5.card-title-section {
     margin: auto;
 }
 
-.align-left-description{
-    text-align: left;
-     height: 15%;
-}
 
 .card-text-section{
-  text-align: justify;
+  float: left;
   text-justify: auto;
   margin-top: 30px;
   margin-bottom: 20px;

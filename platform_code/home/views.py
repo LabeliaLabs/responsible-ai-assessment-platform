@@ -59,7 +59,8 @@ def signup(request):
             # create user_resources so the user can access resources, this could be integrated to user creation ?
             UserResources.create_user_resources(user=user)
             current_site = get_current_site(request)
-            mail_subject = _("Activate your Substra account.")
+            # Activez votre compte Assessment Data science responsable et de confiance
+            mail_subject = _("Activate your trustworthy Data Science Assessment account.")
             message = render_to_string('home/account/acc_activate_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -377,7 +378,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                                                      | Q(organisation__membership__user=user,
                                                          organisation__membership__role="editor"))
 
-        context["evaluations"] = list_evaluations
+        context["evaluations"] = sorted(list(list_evaluations), key=lambda x: x.created_at, reverse=True)
         context["evaluation_form_dic"] = {}
         for evaluation in list_evaluations:
             context["evaluation_form_dic"][str(evaluation.id)] = EvaluationForm(name=evaluation.name)

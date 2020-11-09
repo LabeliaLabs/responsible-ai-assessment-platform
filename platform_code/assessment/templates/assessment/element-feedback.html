@@ -5,7 +5,11 @@
 <!-- Feedback for each evaluation element -->
 
 <a class="feedback" href="#" data-toggle="modal"
-   data-target="#modal-feedback-element{{element.id}}" type="button">{% trans "Give a feedback" %}</a>
+   data-target="#modal-feedback-element{{element.id}}" type="button"
+   title="{% trans 'You can give a feedback on this evaluation element to the Substra team.' %}" >
+    {% trans "Give a feedback" %}
+
+</a>
 
 <!-- The Modal create feedback -->
 

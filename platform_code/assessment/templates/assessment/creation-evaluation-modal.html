@@ -8,15 +8,15 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body create-form width-50">
-            <div class="column">
+            <div class="one-column">
             {% csrf_token %}
             {% for field in form %}
             <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                <span class="float-left">{{ field.label}}</span>
+                <span class="">{{ field.label}}</span>
                 <p > {{field}} </p>
             {% endfor %}
-            <p class="float-left" title="{% trans 'This number corresponds to the version of the assessment that is currently in use.' %}">
-                {% trans "Version" %} : {{last_version}}
+            <p class="" title="{% trans 'This number corresponds to the version of the assessment that is currently in use.' %}">
+                {% trans "Version of the assessment" %} : {{last_version}}
             </p>
             </div>
         </div>

@@ -5,7 +5,7 @@
 {% if last_version %}
 
     {% if evaluations %}
-    <div class="margin-bot-top-20">
+    <div class="margin-30 margin-bot-30">
         <a data-toggle="modal" data-target="#modal-create-eval" href="#"
            class="btn btn-primary ">{% trans "Create a new evaluation" %}</a>
     </div>
@@ -54,27 +54,29 @@
                           {% else %}
                             <td class="case-array">-</td>
                           {% endif %}
+                          <td class="case-array">
                           <!-- Actions buttons -->
-                            {% if evaluation.is_upgradable %}
-                                <!-- If the evaluation is upgradable && finished  -->
-                                {% if evaluation.is_finished %}
-                                <td class="case-array">
-                                    <a name="resultat-no-modif" class="btn btn-results medium-button"
-                                       href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}"
-                                    >{% trans "Results" %}</a>
-                                      <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
-                                       class="btn btn-primary medium-button margin-10"
-                                        >{% trans "Upgrade" %}</a>
-                                </td>
-                                <!-- If the evaluation is upgradable but not finished -->
-                               {% else %}
-                                <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
-                                    >{% trans "Modify" %}</a>
-                                     <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
-                                       class="btn btn-primary medium-button margin-10"
-                                        >{% trans "Upgrade" %}</a>
-                                </td>
-                              {% endif %}
+                          {% if evaluation.is_upgradable %}
+                              <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
+                                 class="btn btn-primary medium-button margin-10">
+                                  {% trans "Upgrade" %}
+                              </a>
+                          {% endif %}
+                          <!-- If the evaluation is finished  -->
+                          {% if evaluation.is_finished %}
+                              <a name="resultat-no-modif" class="btn btn-results medium-button margin-10"
+                                 href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}">
+                                  {% trans "Results" %}
+                              </a>
+                              <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                                {% trans "Modify" %}
+                              </a>
+                          {% else %}
+                            <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                                {% trans "Continue" %}
+                            </a>
+                          {% endif %}
+                          </td>
                             <!--  Modal to upgrade for all cases finished/not finished-->
                                 <div class="modal" id="modal-upgrade-eval{{evaluation.id}}" aria-hidden="true"
                                      data-backdrop="static" data-keyboard="false">
@@ -84,20 +86,6 @@
                                       </div>
                                     </div>
                                 </div>
-                            <!-- Else the evaluation is not upgradable -->
-                            {% else %}
-                              {% if evaluation.is_finished %}
-                                <td class="case-array">
-                                    <a name="resultat-no-modif" class="btn btn-results medium-button"
-                                       href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}">
-                                        {% trans "Results" %}</a>
-                                </td>
-                              {% else %}
-                                <td class="case-array"><a class="btn btn-modify medium-button" href="{{ evaluation.get_absolute_url}}"
-                                    >{% trans "Modify" %}</a>
-                                </td>
-                              {% endif %}
-                            {% endif %}
 
                           <td class="div-hidden-icons" id="div-hidden-icons{{evaluation.id}}" >
                               <button class="btn btn-primary small-btn" data-toggle="modal" data-target="#modal-edit{{evaluation.id}}">
@@ -135,7 +123,7 @@
 
     {% else %}
 
-     <section class="cards">
+     <section class="cards margin-30">
          <article class="card text-center " >
             <h5 class="card-title" >{% trans "Create my evaluation" %}</h5>
 

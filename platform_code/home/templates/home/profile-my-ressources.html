@@ -12,7 +12,7 @@
        href="#nav-favorite" role="tab" aria-controls="nav-favorite"
        aria-selected="true">{% trans "My favorite resources" %}</a>
     <a class="nav-item nav-link title-nav" id="nav-resources-tab" data-toggle="tab"
-       href="#nav-resources" role="tab" aria-controls="nav-resources" aria-selected="false">{% trans "Resources" %}</a>
+       href="#nav-resources" role="tab" aria-controls="nav-resources" aria-selected="false">{% trans "All the resources" %}</a>
 <!--      The glossary is temporary removed as long as the content is not ready to be deployed -->
 <!--    <a class="nav-item nav-link title-nav" id="nav-glossary-tab" data-toggle="tab"-->
 <!--       href="#nav-glossary" role="tab" aria-controls="nav-glossary" aria-selected="false">{% trans "Glossary" %}</a>-->
@@ -54,13 +54,18 @@
   </div>
   <div class="tab-pane fade" id="nav-resources" role="tabpanel" aria-labelledby="nav-resources-tab">
       {% for master_section in last_assessment.mastersection_set.all %}
-        <div id="accordion-{{master_section.id}}" class="accordion-master-section margin-10" >
+        <div id="accordion-{{master_section.id}}" class="accordion-resource-section margin-10" >
             <div class="card mb-0">
-                <div class="card-header collapsed" data-toggle="collapse" href="#collapse-{{master_section.id}}"
-                    style="background-color:white;">
-                    <li class="list-with-disc">
-                        <span class="fake-link" >Section {{master_section.order_id}}: {{master_section.name}}</span>
-                    </li>
+                <div id="cardHeader{{master_section.id}}"
+                     onclick="changeIconResource(this)"
+                     class="grid-2-cols-resource-section card-header collapsed background-white"
+                     data-toggle="collapse" href="#collapse-{{master_section.id}}">
+                    <div id="iconResource{{master_section.id}}" class="resource-section-icon fa fa-plus">
+
+                    </div>
+                    <div class="" >
+                        <span class="fake-link">Section {{master_section.order_id}}: {{master_section.name}}</span>
+                    </div>
                 </div>
                 <div id="collapse-{{master_section.id}}" class="card-body collapse"
                      data-parent="#accordion-{{master_section.id}}">
@@ -120,4 +125,3 @@
 <!--      </ul>-->
 <!--  </div>-->
 </div>
-
