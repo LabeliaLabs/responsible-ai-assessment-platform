@@ -38,15 +38,18 @@ body{
 h1 {
     text-align: center;
     margin: 0 auto;
-    margin-top: 50px;
+    margin-top: 70px;
     margin-bottom: 50px;
-    color: #1962E5;
+    color: #5550FF;
     position:relative;
     font-size: 2rem;
 }
 
+.center-select{
+    text-align-last: center;
+}
+
 select {
-    min-height: 30px;
     border-radius: 0.25em;
     border: 1px solid lightsteelblue;
 }
@@ -73,8 +76,16 @@ a:hover {
     margin-top: 10px;
 }
 
+.margin-3em{
+    margin-top: 3em;
+}
+
 .margin-20 {
     margin-top: 20px;
+}
+
+.margin-30 {
+    margin-top: 30px;
 }
 
 .margin-50 {
@@ -92,7 +103,11 @@ a:hover {
     margin-top: 150px;
 }
 
-.margin-bot-30{
+.margin-bottom-1em {
+    margin-bottom: 1em;
+}
+
+.margin-bot-30 {
     margin-bottom: 30px;
 }
 
@@ -240,7 +255,7 @@ a:hover {
 
 .logo-navbar{
     height: 50px;
-     width: 150px;
+     width: 140px;
 }
 
 .navbar-item a{
@@ -436,8 +451,17 @@ li {
 }
 
 .grid-container-feedback-section {
-  display: grid;
-  grid-template-columns: 90% 10%;
+    display: grid;
+    grid-template-columns: 90% 10%;
+}
+
+.grid-2-cols-resource-section {
+    display: grid;
+    grid-template-columns: 5% 95%;
+}
+
+.grid-2-cols-resource-section:hover {
+    cursor: pointer;
 }
 
 .progress-bar-text{
@@ -470,7 +494,6 @@ h1 img {
 .pagination {
   display: inline-block;
   text-align: center;
-  margin: 0 auto;
   position:relative;
   overflow:hidden;
   width: 100%;
@@ -647,7 +670,10 @@ a[name="column-button"]:hover{
 
 .breadcrumbs{
     font-size: 16px;
-    margin-top: -30px;
+    position: absolute;
+    top: 9.5em;
+    left: 3em;
+}
 }
 
 .active-breadcrumb{
@@ -657,12 +683,6 @@ a[name="column-button"]:hover{
 .active-breadcrumb:hover{
     color: #8985FF;
     text-decoration: none;
-}
-
-@media screen and (min-width: 1300px) {
-    .breadcrumbs {
-       margin-left: -150px;
-    }
 }
 
 /****** END BREADCRUMBS ******/
@@ -910,6 +930,42 @@ tr.spaceUnder>td {
     margin: auto;
     margin-top: 20px;
 }
+
+/******* CONTAINER ******/
+
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 1700px)
+    .container {
+        max-width: 1500px;
+}
+
+@media (min-width: 1200px)
+.container {
+    max-width: 1140px;
+}
+@media (min-width: 992px)
+.container {
+    max-width: 960px;
+}
+@media (min-width: 768px)
+.container {
+    max-width: 720px;
+}
+@media (min-width: 576px)
+.container {
+    max-width: 540px;
+}
+
+
+/******* END CONTAINER*******/
+
 
 /******* MEDIA *******/
 

@@ -7,6 +7,33 @@
 
 }
 
+.accordion>.card:first-of-type{
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.accordion>.card:not(:first-of-type):not(:last-of-type) {
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.accordion>.card:last-of-type{
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.resource-card{
+    border-top: 1px solid rgba(0,0,0,.125);
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.resource-card:hover {
+    cursor: pointer;
+}
+
+
 .card_title {
 }
 
@@ -32,11 +59,11 @@ div.evaluation-title: h3 {
     margin-left: 5px;
     margin-bottom: auto;
     margin-top: auto;
-    color: #5550FF
+    color: #007BFF
 }
 
 .feedback:hover {
-    color: #8985FF;
+    color: #278BF7;
     text-decoration: underline;
     cursor: pointer;
 }
@@ -120,8 +147,7 @@ div.evaluation-title: h3 {
 
 }
 
-.fa-stack{
-    float: right;
+.fa-stack-evaluation{
     margin-left: auto;
     color: green;
     font-size:18px;
@@ -129,6 +155,17 @@ div.evaluation-title: h3 {
 
 .fa-stack-2x{
     font-size: 20px;
+    position: relative;
+}
+
+.div-button:hover {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.div-button:hover button {
+    color: #0056b3;
 }
 
 .background-white{
@@ -156,6 +193,18 @@ div.evaluation-title: h3 {
 .accordion-resource .card-header.collapsed:after {
     /* symbol for "collapsed" panels */
     content: "\f067";
+}
+
+.resource-section-icon {
+    color: #5550FF;
+    margin-right: 20px;
+    float: left;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.resource-section-icon:hover {
+    cursor: pointer;
 }
 
 .sidenav {

@@ -9,12 +9,11 @@
             <a href="{{ previous_section.get_absolute_url }}">{% trans "Previous section" %}</a>
 
         {% else %}
-            <a href="{{ evaluation.get_absolute_url }}" >{% trans "Back to the organisation summary" %}</a>
+            <a href="{{ evaluation.get_absolute_url }}" >{% trans "Back to the evaluation summary" %}</a>
 
         {% endif %}
 
-        <span class="current">
-            Page {{ page_obj.number }} {% trans "of" %} {{ page_obj.paginator.num_pages }}.
+        <span class="current"> - {% trans "Section" %} {{ page_obj.number }} -
         </span>
 
         {% if page_obj.has_next %}

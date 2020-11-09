@@ -61,7 +61,7 @@
 
                     {% if organisation|get_role:user == "admin" and not member.role == "admin" %}
                         <td class="div-hidden-icons" id="member{{member.id}}" >
-                            <button class="btn btn-primary small-btn" data-toggle="modal" data-target="#modal-edit-role{{member.id}}">
+                            <button class="btn btn-primary small-btn margin-10" data-toggle="modal" data-target="#modal-edit-role{{member.id}}">
                                 <i class="fa fa-edit"></i>
                             </button>
                             <div class="modal" id="modal-edit-role{{member.id}}" aria-hidden="true">
@@ -72,7 +72,7 @@
                                 </div>
                             </div>
 
-                            <button class="btn btn-danger small-btn" data-toggle="modal" data-target="#modal-remove-member{{member.id}}">
+                            <button class="btn btn-danger small-btn margin-10" data-toggle="modal" data-target="#modal-remove-member{{member.id}}">
                                 <span class="fa fa-trash"></span>
                             </button>
                             <div class="modal" id="modal-remove-member{{member.id}}" aria-hidden="true">

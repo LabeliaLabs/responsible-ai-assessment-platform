@@ -3,9 +3,9 @@
 {% load static %}
 {% load i18n %}
 
-    <article class="card-section text-center " >
+    <article class="card-section" >
         <div class="row margin-bot-30">
-            <h5 class="section-card-title" title="Section {{section.master_section.order_id}}">
+            <h5 class="section-card-title center" title="Section {{section.master_section.order_id}}">
                 Section {{section.master_section.order_id}}
             </h5>
 
@@ -19,10 +19,10 @@
                 </div>
             </div>
          </div>
-        <p class="card-title-section align-left-description" title="{% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}">
+        <p class="card-title-section center height-title" title="{% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}">
             {% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}
         </p>
-       <div id="image"  >
+       <div id="image" class="center" >
       {% if forloop.counter == 1 %}
           <img src="{% static 'image/section1.png' %}" class="card-img-top" title="card image" alt="Card image">
       {% elif forloop.counter == 2 %}

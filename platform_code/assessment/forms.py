@@ -186,7 +186,7 @@ class EvaluationForm(forms.ModelForm):
         if is_name:
             self.fields["name"].initial = name
         self.fields["name"].label = _("Evaluation title")
-        self.fields["name"].widget.attrs = {"class": "full-width"}
+        self.fields["name"].widget.attrs = {"class": "full-width center"}
 
 
 class EvaluationMutliOrgaForm(ModelForm):
@@ -212,8 +212,8 @@ class EvaluationMutliOrgaForm(ModelForm):
             Q(membership__user=user, membership__role="admin") | Q(membership__user=user, membership__role="editor")
         )
         self.fields["organisation"].queryset = queryset
-        self.fields["name"].widget.attrs = {"class": "full-width"}
-        self.fields["organisation"].widget.attrs = {"class": "full-width"}
+        self.fields["name"].widget.attrs = {"class": "full-width center"}
+        self.fields["organisation"].widget.attrs = {"class": "full-width center-select"}
 
 
 class SectionNotesForm(ModelForm):
@@ -317,7 +317,7 @@ class ChoiceForm(ModelForm):
                 label=_("My notes"),
                 widget=forms.Textarea(
                     attrs={
-                        "rows": 6,
+                        "rows": 5,
                         "size": 100,
                         "width": "100%",
                         "class": "textarea textarea-empty",
@@ -333,7 +333,7 @@ class ChoiceForm(ModelForm):
                 label=_("My notes"),
                 widget=forms.Textarea(
                     attrs={
-                        "rows": 6,
+                        "rows": 5,
                         "size": 100,
                         "width": "100%",
                         "class": "textarea textarea-data",

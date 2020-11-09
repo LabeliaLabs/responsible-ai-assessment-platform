@@ -15,7 +15,7 @@
 <h1>{% trans "Organisation: " %}{{organisation.name}} </h1>
 
 {% if messages %}
-<ul class="messages">
+<ul class="messages margin-3em">
     {% for message in messages %}
     <li {% if message.tags %} class=" alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
