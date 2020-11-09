@@ -251,7 +251,9 @@ def leave_organisation(request, *args, **kwargs):
                 member.delete()
                 logger.info(f"[user_left_organisation] The user {user.email} left the organisation {organisation.name} "
                             f"(id {organisation.id}) in which he was member as {member_role}.")
-            messages.success(request, _(f"You are no longer member of the organisation {organisation.name}."))
+            messages.success(request, _("You are no longer member of the organisation %(organisation_name)s.") % {
+                "organisation_name": organisation.name
+            })
     return redirect("home:user-profile")
 
 
@@ -351,9 +353,9 @@ class SummaryView(LoginRequiredMixin, DetailView):
                     logger.info(f"[evaluation_creation] The user {user.email} created an evaluation {eval.name}")
                     # Check if we need to fetch the evaluation
                     if (
-                        last_version_in_organisation
-                        and last_version_in_organisation
-                        < float(get_last_assessment_created().version)
+                            last_version_in_organisation
+                            and last_version_in_organisation
+                            < float(get_last_assessment_created().version)
                     ):
                         origin_assessment = get_object_or_404(
                             Assessment, version=str(last_version_in_organisation)
@@ -394,7 +396,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
                                                f"organisation {organisation.name} with the role "
                                                f"{organisation.get_role_user(user_invited)}")
                                 data_update["message"] = _("The user is already member. Please, "
-                                                           "edit his rights instead")
+                                                           "edit his rights instead.")
                             # Case the user is STAFF so normally he has already a membership in the organisation
                             # with role "read_only", except if he left it
                             if user_invited.staff:
@@ -414,7 +416,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
                                 logger.info(f"[add_member_organisation] The user {user.email} has invited "
                                             f"{user_invited.email} to join the organisation {organisation.name} "
                                             f"(id {organisation_id}) with the role {role}")
-                                data_update["message"] = _("The user has been added to the organisation")
+                                data_update["message"] = _("The user has been added to the organisation.")
                                 data_update["success"] = True
                                 # Be careful if the structure of the array changes
                                 data_update["data_user"] = {"0": user_invited.get_full_name(),
@@ -429,7 +431,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
                                 logger.info(f"[add_member_organisation] The user {user.email} has invited "
                                             f"{user_invited.email} to join the organisation {organisation.name} "
                                             f"(id {organisation_id}) with the role {role}")
-                                data_update["message"] = _("The user has been added to the organisation")
+                                data_update["message"] = _("The user has been added to the organisation.")
                                 data_update["success"] = True
                                 # To update without refresh the array of members
                                 # Be careful if the structure of the array changes
@@ -442,7 +444,8 @@ class SummaryView(LoginRequiredMixin, DetailView):
                         # No token or uid required as the link is just a link to signup
                         elif len(list_user_invited) == 0:
                             current_site = get_current_site(request)
-                            mail_subject = _(f"Substra - Invitation to join the organisation {organisation}")
+                            mail_subject = _("Substra - Invitation to join an organisation")
+
                             message = render_to_string('assessment/organisation/member/add-member-email.html', {
                                 'user': user,
                                 'organisation': organisation,
@@ -459,7 +462,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
                             data_update["success"] = True
                             data_update["data_user"] = {"0": email_address,
                                                         "1": email_address,
-                                                        "2": role+" (pending)",
+                                                        "2": role + " (pending)",
                                                         "3": ""}
                             data_update["message"] = _("The user does not yet have an account on the platform. "
                                                        "An invitation has been sent to him.")
@@ -468,7 +471,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
                                         f" with the role '{role}'")
                     # Invalid form
                     else:
-                        data_update["message"] = _("Please enter a valid email")
+                        data_update["message"] = _("Please enter a valid email.")
 
                 # Case an admin member wants to remove another user which should not be admin member
                 # Check user is member with admin role already done
@@ -519,7 +522,9 @@ class SummaryView(LoginRequiredMixin, DetailView):
                         invitation_deleted_email = invitation.email
                         invitation.delete()
                         data_update["success"] = True
-                        data_update["message"] = _(f"The invitation to {invitation_deleted_email} has been deleted")
+                        data_update["message"] = _("The invitation to %(invitation)s has been deleted.") % {
+                            "invitation": invitation_deleted_email
+                        }
                         logger.info(f"[invitation_deleted] The user {user.email} deleted the invitation for the email"
                                     f" {invitation.email} to join the organisation {organisation.name} (id "
                                     f"{organisation.id})")
@@ -547,8 +552,11 @@ class SummaryView(LoginRequiredMixin, DetailView):
                                 member.save()
                                 data_update["new_role"] = new_role
                                 data_update["success"] = True
-                                data_update["message"] = _(f"The user {member.user.email} has now the {new_role} "
-                                                           f"rights in the organisation.")
+                                data_update["message"] = _("The user %(member_email)s has now the %(new_role)s "
+                                                           "rights in the organisation.") % {
+                                    "member_email": member.user.email,
+                                    "new_role": new_role
+                                }
                                 logger.info(f"[member_role_edited] The user {user.email} edited the role of the user"
                                             f" {member.user.email}, from {former_role} to {new_role} in the "
                                             f"organisation {organisation.name} (id {organisation.id})")
@@ -580,8 +588,12 @@ class SummaryView(LoginRequiredMixin, DetailView):
                             invitation.save()
                             data_update["new_role"] = new_role + " (pending)"
                             data_update["success"] = True
-                            data_update["message"] = _(f"The invitation to {invitation.email} to join the organisation"
-                                                       f" is now with the {new_role} rights in the organisation.")
+                            data_update["message"] = _("The invitation to %(invitation_email)s to join the organisation"
+                                                       " is now with the %(new_role)s rights in the organisation.") % {
+                                "invitation_email": invitation.email,
+                                "new_role": new_role
+                            }
+
                             logger.info(f"[invitation_role_edited] The user {user.email} edited the role of the "
                                         f"invitation to {invitation.email} to join the organisation {organisation.name}"
                                         f"(id {organisation.id}), from {former_role} to {new_role},")
@@ -698,7 +710,7 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
 
         self.object = self.get_object()
         logger.info(f"[evaluation_deletion] The user {request.user.email} deleted an evaluation {self.object.name}")
-        messages.success(request, _(f"The evaluation {self.object} has been deleted"))
+        messages.success(request, _("The evaluation %(evaluation)s has been deleted.") % {"evaluation": self.object})
         self.object.delete()
 
         # Manage the redirection, if the user delete the evaluation from his profile, it redirect to his profile
@@ -753,7 +765,7 @@ class EvaluationView(LoginRequiredMixin, DetailView):
                 return HttpResponseRedirect(self.request.path_info)
             # Edit the name of the evaluation
             if "name" in request.POST.dict() and request.is_ajax():
-                data_update = {"success": False, "message": _("An error occurred")}
+                data_update = {"success": False, "message": _("An error occurred.")}
                 form = EvaluationForm(request.POST)
                 if form.is_valid():
                     name = form.cleaned_data.get("name")
@@ -768,7 +780,7 @@ class EvaluationView(LoginRequiredMixin, DetailView):
                         evaluation.name = name
                         evaluation.save()
                         data_update["success"] = True
-                        data_update["message"] = _("The evaluation's name has been changed")
+                        data_update["message"] = _("The evaluation's name has been changed.")
                         logger.info(f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
                                     f"evaluation (id: {evaluation_id})")
                 else:
@@ -904,7 +916,7 @@ class SectionView(LoginRequiredMixin, ListView):
 
             # If the user writes notes for the section
             elif "notes_section_id" in request.POST:
-                data_update = {"message": _("An error occurred"), "success": False}
+                data_update = {"message": _("An error occurred."), "success": False}
                 if can_edit_security_check(
                         request, organisation=organisation, *args, **kwargs
                 ):
@@ -1169,24 +1181,15 @@ class SectionView(LoginRequiredMixin, ListView):
 
                 # The choices have been successfully updated
                 data_update["success"] = True
-                # todo : bug with ugettext (no translation), and I tried gettext_lazy with LazyEncoder class but not
-                #  working either .. When I check the string in the view, it is still in english.
-                #  I checked the translation in django.po and no pb seen
-                # data_update["message"] = _("Your answer has been saved!")
-                data_update["message"] = "Votre réponse a bien été sauvegardée !"
+                data_update["message"] = _("Your answer has been saved!")
 
             # the conditions between choices inside the evaluation element are not respected, we return an alert
             # message
             else:
                 data_update["success"] = False
                 data_update["conditions_respected"] = False
-                # todo : solve bug
-                # data_update["message"] = (
-                #    _("You can not combine these answers. The answer hasn't been saved. ")
-                # )
                 data_update["message"] = (
-                    "Vous ne pouvez pas combiner ces deux choix, "
-                    "votre réponse n'a pas été sauvegardée."
+                   _("You can not combine these answers. The answer hasn't been saved. ")
                 )
 
         # If there is no choice ticked (unselect all for checkbox or reset choices)
@@ -1212,9 +1215,7 @@ class SectionView(LoginRequiredMixin, ListView):
                         )
 
             evaluation_element.reset_choices()
-            # todo : solve bug
-            # data_update["message_reset"] = _("Your answers have been reset!")
-            data_update["message_reset"] = "Votre réponse a bien été réinitialisée."
+            data_update["message_reset"] = _("Your answers have been reset!")
             # If the notes have changed
             if (
                     "notes" in dic_choices
@@ -1225,8 +1226,7 @@ class SectionView(LoginRequiredMixin, ListView):
                 evaluation_element.save()
 
             data_update["success"] = True
-            # data_update["message"] = _("Your answer has been updated.")
-            data_update["message"] = "Votre réponse a bien été mise à jour."
+            data_update["message"] = _("Your answer has been updated.")
 
         # Update the section status and the evaluation status
         evaluation_element.set_status()
@@ -1479,7 +1479,7 @@ def treat_feedback(request, *args, **kwargs):
                     data_update["success"] = True
                     data_update["message"] = _(
                         "Thank you for your feedback, it helps us a lot!"
-                        " We will take it into consideration as soon as possible"
+                        " We will take it into consideration as soon as possible."
                     )
             except requests.exceptions.RequestException as e:
                 logger.error(f"[feedback_error] There is an issue with the feedback API, the request has "

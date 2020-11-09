@@ -60,7 +60,7 @@ def signup(request):
             UserResources.create_user_resources(user=user)
             current_site = get_current_site(request)
             # Activez votre compte Assessment Data science responsable et de confiance
-            mail_subject = _("Activate your trustworthy Data Science Assessment account.")
+            mail_subject = _("Activate your trustworthy Data Science Assessment account")
             message = render_to_string('home/account/acc_activate_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -139,7 +139,7 @@ def activate(request, uidb64, token):
             return redirect("home:orga-creation")
 
     else:
-        messages.error(request, _("An issue occured with the link."))
+        messages.error(request, _("An issue occurred with the link."))
         logger.error(f"[account_activation_error] The activation of the account failed, request {request}"
                      f", uidb64 {uidb64}")
         return redirect("home:homepage")
@@ -172,18 +172,19 @@ def delete_user(request):
     # Membership is deleted on CASCADE
     logger.info(f"[account_deletion] The user {user.email} has deleted his account")
     user.delete()
-    # Todo use django.utils.translation.ngettext for the plurial
+
     if len(list_orga_user_is_admin) == 0:
-        messages.success(request, _("Your account has been deleted"))
-    elif len(list_orga_user_is_admin) == 1:
-        messages.success(request, _(f"Your account has been deleted as well as"
-                                    f" the organisation {list_orga_user_is_admin[0]} and its evaluations."))
+        messages.success(request, _("Your account has been deleted."))
     else:
-        messages.success(
-            request,
-            _(f"Your account has been deleted as well as the organisations:"
-              f" {str(list_orga_user_is_admin).replace('[', '').replace(']', '')} and their linked evaluations."),
-        )
+        messages.success(request, ngettext("Your account has been deleted as well as the organisation"
+                                           " %(list_organisations)s and its evaluations.",
+                                           "Your account has been deleted as well as the organisations: "
+                                           "%(list_organisations)s and their evaluations associated.",
+                                           len(list_orga_user_is_admin)
+                                           ) % {
+                             'list_organisation': str(list_orga_user_is_admin).replace('[', '').replace(']', '')
+                         }
+                         )
     return redirect("home:homepage")
 
 
@@ -493,7 +494,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
             # If the user edits the name of the evaluation
             elif "name" in request.POST.dict():
-                data_update = {"success": False, "message": _("An error occurred")}
+                data_update = {"success": False, "message": _("An error occurred.")}
                 form = EvaluationForm(request.POST)
                 if form.is_valid():
                     name = form.cleaned_data.get("name")
@@ -509,7 +510,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                         evaluation.name = name
                         evaluation.save()
                         data_update["success"] = True
-                        data_update["message"] = _("The evaluation's name has been changed")
+                        data_update["message"] = _("The evaluation's name has been changed.")
                         logger.info(f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
                                     f"evaluation (id: {evaluation_id})")
                 return HttpResponse(json.dumps(data_update), content_type="application/json")
@@ -550,8 +551,7 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
                     data_update["success"] = True
                     logger.info(f"[password_changed] The user {user.email} has changed his password.")
                     # todo solve bug translation
-                    # data_update["message_success"] = _("Your password has been changed!")
-                    data_update["message_success"] = "Votre mot de passe a bien été changé !"
+                    data_update["message_success"] = _("Your password has been changed!")
                 else:
                     all_error_data = json.loads(
                         form.errors.as_json()
@@ -570,14 +570,10 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
                     user.first_name = first_name
                     user.save()
                     data_update["success"] = True
-                    # todo : solve bug translation
-                    # data_update["message_success"] = _("Your personnal data have well been updated!")
-                    data_update["message_success"] = "Vos données personnelles ont bien été mises à jour."
+                    data_update["message_success"] = _("Your personal data have been updated!")
                 else:
-                    # data_update["message_fail"] = _("The validation failed. Please check you have well filled all the"
-                    #                                "fields")
-                    data_update["message_fail"] = "La validation a échouée. Vérifiez que vous avez bien rempli" \
-                                                  " tous les champs."
+                    data_update["message_fail"] = _("The validation failed. Please check you have filled all the"
+                                                    " fields.")
 
             return HttpResponse(
                 json.dumps(data_update), content_type="application/json"
@@ -656,14 +652,12 @@ def manage_message_login_page(request):
     # Case it s a redirection because the user wanted to access content where as he is not login
     if previous_url is None:
         message = {
-            # todo : solve bug translation
-            "alert-danger": _("You must be connected to access this content")
+            "alert-danger": _("You must be connected to access this content.")
         }
         return message  # break the function
     # Case the user failed to provide a good combination of email and password
     elif "/login/" in previous_url or previous_url == "http://127.0.0.1:8000/":  # todo will need to be changed
         message = {
-            # todo : solve bug translation
             "alert-warning": _("The attempt to connect with this combination email/password failed. Please try again!")
         }
 
@@ -672,9 +666,8 @@ def manage_message_login_page(request):
     # Case "/signup/" in previous_url
     else:
         message = {
-            # todo : solve bug translation
             " alert-info": _("Please, enter your email and your password to login to your account.\n "
-                             "If you don't have an account, click on the 'I do not have an account' button")
+                             "If you don't have an account, click on the 'I do not have an account' button.")
         }
     return message
 
@@ -687,6 +680,5 @@ def organisation_required_message(context):
     :return:
     """
     context["message"] = {
-        # todo : solve bug translation
         "alert-warning": _("You first need to create your organisation before creating your evaluation.")
     }
