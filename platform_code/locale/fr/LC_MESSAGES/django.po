@@ -790,7 +790,7 @@ msgstr ""
 "Le score synthétique est sur un total de 100 points maximum théoriques. Il "
 "offre une indication sur le niveau de maturité de l'organisation quant à une "
 "approche responsable et de confiance de la data science. À fin 2020, le "
-"seuilde 50/100 peut être considéré comme un niveau de maturité très avancé."
+"seuil de 50/100 peut être considéré comme un niveau de maturité très avancé."
 
 #: .\platform_code\assessment\templates\assessment\results.html:66
 msgid ""
