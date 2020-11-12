@@ -15,6 +15,12 @@ services:
       - db
     links:
       - db
+    # Debug
+    # docker ps | grep web
+    # docker attach <container_id>
+    # you can now use import pdb; pdb.set_trace()
+    stdin_open: true
+    tty: true
 
   db:
     container_name: postgres
