@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from home.models import User, Organisation, Membership, PendingInvitation
 from assessment.models import Assessment, Evaluation
-from assessment.tests.object_creation import create_assessment_body, create_evaluation
+from assessment.tests.object_creation import create_assessment_body, create_evaluation, create_scoring
 
 
 class UserTestCase(TestCase):
@@ -227,6 +227,7 @@ class OrganisationEvaluationTestCAse(TestCase):
                                                              created_by=self.user1)
         create_assessment_body(version="1.0")
         self.assessment = Assessment.objects.get(version="1.0")
+        create_scoring(assessment=self.assessment)
         self.evaluation = create_evaluation(
             assessment=self.assessment,
             name="evaluation",
@@ -240,6 +241,7 @@ class OrganisationEvaluationTestCAse(TestCase):
     def test_organisation_assessment_last_version(self):
         create_assessment_body(version="2.5")
         assessment = Assessment.objects.get(version="2.5")
+        create_scoring(assessment=assessment)
         create_evaluation(
             assessment=assessment,
             name="evaluation2",

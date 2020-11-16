@@ -12,6 +12,7 @@ from assessment.models import (
 from .object_creation import (
     create_evaluation,
     create_assessment_body,
+    create_scoring,
 )
 
 """
@@ -25,6 +26,7 @@ class EvaluationProgressionTestCase(TestCase):
     def setUp(self):
         create_assessment_body(version="1.0")
         self.assessment = Assessment.objects.get(version="1.0")
+        create_scoring(assessment=self.assessment)
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(
             assessment=self.assessment, name="evaluation"

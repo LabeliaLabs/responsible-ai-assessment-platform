@@ -44,7 +44,7 @@
               <td class="case-array">{{evaluation.calculate_progression}} %</td>
 
               {% if evaluation.is_finished %}
-                <td class="case-array">{{evaluation.score}}</td>
+                <td class="case-array">{{evaluation_score_dic|get_item:evaluation.id}}</td>
               {% else %}
                 <td class="case-array">-</td>
               {% endif %}

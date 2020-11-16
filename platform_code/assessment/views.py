@@ -21,6 +21,7 @@ from django.shortcuts import redirect, get_object_or_404, get_list_or_404, rende
 from django.template.loader import render_to_string
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.utils.translation import gettext as _
+from django.conf import settings
 
 from .models import (
     Assessment,
@@ -30,6 +31,7 @@ from .models import (
     EvaluationElement,
     ExternalLink,
     get_last_assessment_created,
+    EvaluationScore,
 )
 from .forms import (
     EvaluationForm,
@@ -41,10 +43,8 @@ from .forms import (
     section_feedback_list,
     SectionNotesForm,
 )
-from assessment.forms_.member_forms import AddMemberForm, EditRoleForm
+from .forms_.member_forms import AddMemberForm, EditRoleForm
 from home.models import Organisation, User, Membership, PendingInvitation
-from django.conf import settings
-
 from .utils import get_client_ip
 
 private_token = settings.PRIVATE_TOKEN
@@ -69,6 +69,10 @@ def membership_security_check(request, *args, **kwargs):
         organisation_id = kwargs.get("orga_id", None)
         organisation = get_object_or_404(Organisation, id=organisation_id)
     is_member = organisation.check_user_is_member(user=user)
+    if not is_member:
+        messages.warning(request, _("You don't have access to this content."))
+        logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
+                       f"{organisation} while not member")
     return is_member
 
 
@@ -113,10 +117,6 @@ def upgradeView(request, *args, **kwargs):
     if not membership_security_check(
             request, organisation=organisation, *args, **kwargs
     ):
-        messages.warning(request, _("You don't have access to this content."))
-        logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                       f"{organisation} while not member")
-
         return redirect("home:homepage")
 
     evaluation_id = kwargs.get("pk")
@@ -221,9 +221,6 @@ def leave_organisation(request, *args, **kwargs):
     if not membership_security_check(
             request, organisation=organisation, *args, **kwargs
     ):
-        messages.warning(request, _("You don't have access to this content."))
-        logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                       f"{organisation} while not member")
         return redirect("home:homepage")
     try:
         member = organisation.get_membership_user(user=user)
@@ -276,18 +273,23 @@ class SummaryView(LoginRequiredMixin, DetailView):
         if not membership_security_check(
                 request, organisation=organisation, *args, **kwargs
         ):
-            messages.warning(request, _("You don't have access to this content."))
-            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                           f"{organisation} while not member")
             return redirect("home:homepage")
 
         self.object = organisation
         context = self.get_context_data(object=self.object)
         context["organisation"] = organisation
         # Can be empty
-        context["evaluation_list"] = Evaluation.objects.filter(
-            organisation=organisation
-        ).order_by("-created_at")
+        context["evaluation_list"] = list(Evaluation.objects.filter(organisation=organisation).order_by("-created_at"))
+
+        # If the scoring system has changed, it set the max points again for the evaluation, sections, EE
+        success_max_points = manage_evaluation_max_points(request=request, evaluation_list=context["evaluation_list"])
+        if not success_max_points:
+            return redirect("home:user-profile")
+
+        # Process the evaluation score if needed for each evaluation
+        context["evaluation_score_dic"] =\
+            manage_evaluation_score(request=request, evaluation_list=context["evaluation_list"])
+
         context["form"] = EvaluationForm()
         context["add_member_form"] = AddMemberForm()
         # The last assessment created is necessarily the last version as it must be strictly croissant
@@ -315,9 +317,6 @@ class SummaryView(LoginRequiredMixin, DetailView):
         organisation = get_object_or_404(Organisation, id=organisation_id)
         # Check if the user is member of the orga, if not, return HttpResponseForbidden
         if not membership_security_check(request, organisation=organisation, *args, **kwargs):
-            messages.warning(request, _("You don't have access to this content."))
-            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                           f"{organisation} while not member")
             return redirect('home:homepage')
 
         # Check if the user is an admin/edit member of the orga, if not, return to the same page
@@ -625,9 +624,6 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
         if not membership_security_check(
                 request, organisation=organisation, *args, **kwargs
         ):
-            messages.warning(request, _("You don't have access to this content."))
-            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                           f"{organisation} while not member")
             return redirect("home:homepage")
         self.object = None
         context = self.get_context_data()
@@ -642,9 +638,6 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
             if not membership_security_check(
                     request, organisation=organisation, *args, **kwargs
             ):
-                messages.warning(request, _("You don't have access to this content."))
-                logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                               f"{organisation} while not member")
                 return redirect("home:homepage")
 
             # Check if the user is an admin/edit member of the orga, if not, return to the same page
@@ -695,9 +688,6 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
         if not membership_security_check(
                 request, organisation=organisation, *args, **kwargs
         ):
-            messages.warning(request, _("You don't have access to this content."))
-            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                           f"{organisation} and delete an evaluation while not admin member")
             return redirect("home:homepage")
 
         # Check if the user is an admin member of the orga, if not, return to the same page
@@ -734,9 +724,6 @@ class EvaluationView(LoginRequiredMixin, DetailView):
         if not membership_security_check(
                 request, organisation=organisation, *args, **kwargs
         ):
-            messages.warning(request, _("You don't have access to this content."))
-            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                           f"{organisation} while not member")
             return redirect('home:homepage')
 
         evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"))
@@ -792,50 +779,45 @@ class EvaluationView(LoginRequiredMixin, DetailView):
 
 
 class ResultsView(LoginRequiredMixin, DetailView):
-    # Results of the evaluation with the score
+    """
+    Results of the evaluation with the score
+    """
     model = Evaluation
     template_name = "assessment/results.html"
     login_url = "home:login"
     redirect_field_name = "home:homepage"
 
     def get(self, request, *args, **kwargs):
-        # TODO only if evaluation is finished
         # TODO change way the score is calculated (on change)
         organisation_id = kwargs.get("orga_id")
         organisation = get_object_or_404(Organisation, id=organisation_id)
-        # Check if the user is member of the orga, if not, return HttpResponseForbidden
+
+        # Check if the user is member of the org, if not, return HttpResponseForbidden
         if not membership_security_check(
                 request, organisation=organisation, *args, **kwargs
         ):
-            messages.warning(request, _("You don't have access to this content."))
-            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                           f"{organisation} while not member")
             return redirect('home:homepage')
+
         evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
+
         # If the evaluation is finished, which should always be the case here, set the score of the evaluation
         if evaluation.is_finished:
-            # print("SET SCOREEEE")
-            points_not_concerned = evaluation.calculate_sum_points_not_concerned()
-            coeff_scoring_system = evaluation.get_coefficient_scoring_system()
-            points_obtained = evaluation.calculate_points_obtained(
-                points_not_concerned, coeff_scoring_system
-            )
-            points_to_dilate = evaluation.calculate_points_to_dilate(
-                coeff_scoring_system, points_obtained, points_not_concerned
-            )
-            max_possible_points = evaluation.calculate_max_points()
-            dilatation_factor = evaluation.calculate_dilatation_factor(
-                coeff_scoring_system, max_possible_points, points_not_concerned
-            )
-            evaluation.set_score(
-                dilatation_factor,
-                points_to_dilate,
-                points_not_concerned,
-                coeff_scoring_system,
-                max_possible_points,
-            )
+
             self.object = self.get_object()
             context = self.get_context_data(object=self.object)
+
+            # If the scoring system has changed, it set the max points again for the evaluation, sections, EE
+            success_max_points = manage_evaluation_max_points(request=request, evaluation_list=[evaluation])
+            if not success_max_points:
+                return redirect("home:user-profile")
+
+            evaluation_score_dic = manage_evaluation_score(request=request, evaluation_list=[evaluation])
+            if evaluation_score_dic[evaluation.id]:
+                context["evaluation_score"] = evaluation_score_dic[evaluation.id]
+            # The score is None
+            else:
+                return redirect("home:user-profile")
+
             context["dic_form_results"] = set_form_for_results(evaluation=evaluation)
             context["section_list"] = list(
                 evaluation.section_set.all().order_by("master_section__order_id")
@@ -884,9 +866,6 @@ class SectionView(LoginRequiredMixin, ListView):
             if not membership_security_check(
                     request, organisation=organisation, *args, **kwargs
             ):
-                messages.warning(request, _("You don't have access to this content."))
-                logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                               f"{organisation} while not member")
                 return redirect("home:homepage")
 
             # Evaluation must have this organisation in its fields organisation
@@ -1017,9 +996,6 @@ class SectionView(LoginRequiredMixin, ListView):
         if not membership_security_check(
                 request, organisation=organisation, *args, **kwargs
         ):
-            messages.warning(request, _("You don't have access to this content."))
-            logger.warning(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                           f"{organisation} while not member")
             return redirect('home:homepage')
 
         # Get ids and objects form the url
@@ -1238,15 +1214,25 @@ class SectionView(LoginRequiredMixin, ListView):
         # If all the other evaluation element are answered and this one is the last
         # The evaluation.is_finished attribute is set to True, else False
         evaluation = context["evaluation"]
+        evaluation_already_finished = evaluation.is_finished
         evaluation.set_finished()
+
+        # Set that the score will have to be calculated again as we suppose the evaluation has changed
+        evaluation_score = get_object_or_404(EvaluationScore, evaluation=evaluation)
+        if not evaluation_score.need_to_calculate:
+            evaluation_score.need_to_calculate = True
+            evaluation_score.save()
 
         # The progression and status are added to the data_update dictionary
         data_update["section_progression"] = section.user_progression
         data_update["evaluation_element_treated"] = evaluation_element.status
         data_update["evaluation_finished"] = evaluation.is_finished
-        if evaluation.is_finished:
-            logger.info(f"[evaluation_finished] The user {request.user.email} have finished his evaluation "
+
+        # First time the evaluation is finished
+        if not evaluation_already_finished and evaluation.is_finished:
+            logger.info(f"[evaluation_finished] The user {request.user.email} has finished his evaluation "
                         f"(id: {evaluation.id}) of the organisation {evaluation.organisation}")
+
         if evaluation_element.status != initial_element_status:
             data_update["element_status_changed"] = True
 
@@ -1307,6 +1293,56 @@ def set_form_for_results(evaluation):
                 evaluation_element=evaluation_element
             )
     return dic_form
+
+
+def manage_evaluation_score(request, evaluation_list):
+    """
+    This function is used in Results to manage the evaluation score
+    It get the object evaluation score and if needed, calculates and set the score
+
+    :params evaluation_list: list of evaluation
+
+    :returns: dictionary or None, dic with evaluation id as keys (int) and evaluation score as values
+    """
+
+    evaluation_score_dic = {}
+    for evaluation in evaluation_list:
+        try:
+            evaluation_score = EvaluationScore.objects.get(evaluation=evaluation)
+            # If the evaluation has changed or is finished for the first time, the score need to be set
+            if evaluation_score.need_to_calculate:
+                # This calculates the score and other parameters. The field need_to_calculate is set to False
+                evaluation_score.process_score_calculation()
+            evaluation_score_dic[evaluation.id] = evaluation_score.score
+        except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
+            logger.warning(f"[evaluation_score_error] The query to return the evaluation score for the evaluation "
+                           f"{evaluation.id} failed, error {e}")
+            messages.warning(request, _("An error occurred."))
+            evaluation_score_dic[evaluation.id] = None
+
+    return evaluation_score_dic
+
+
+def manage_evaluation_max_points(request, evaluation_list):
+    """
+    This function is used to set the evaluation max points if needed (after the scoring has been modified)
+    It returns boolean, True if the operation succeeded, else False
+    :param request:
+    :param evaluation_list: list of evaluations
+    :return: Boolean
+    """
+    success = True
+    for evaluation in evaluation_list:
+        try:
+            evaluation_score = EvaluationScore.objects.get(evaluation=evaluation)
+            if evaluation_score.need_to_set_max_points:
+                evaluation_score.calculate_max_points()
+        except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
+            logger.warning(f"[evaluation_score_error] The query to return the evaluation score for the evaluation "
+                           f"(id {evaluation.id}) failed, error {e}, request {request}")
+            messages.warning(request, _("An error occurred."))
+            success = False
+    return success
 
 
 def treat_resources(request):

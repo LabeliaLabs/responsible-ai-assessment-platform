@@ -9,7 +9,6 @@ The dynamic part won't store many information, just the progression/status, time
 and the score.
 """
 
-import random
 import re
 
 from django.conf import settings
@@ -95,7 +94,8 @@ class Evaluation(models.Model):
 
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     name = models.CharField(
-        max_length=200, default="Evaluation " + str(timezone.now().strftime("%d/%m/%Y"))
+        max_length=200,
+        default="Evaluation " + str(timezone.now().strftime("%d/%m/%Y"))
     )
     slug = models.SlugField()
     # Set to null if the user delete is account because other users in the orga could still use the evaluation
@@ -108,7 +108,6 @@ class Evaluation(models.Model):
     # There are only 2 status choices for an evaluation: done or not done, by default the evaluation is not done
     is_finished = models.BooleanField(default=False)
     # No score by default, the object will be created when the evaluation is validated by the user
-    score = models.FloatField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     # This attribute will store the date when the user will validate his evaluation
@@ -134,6 +133,7 @@ class Evaluation(models.Model):
         :param organisation: organisation
         :return:
         """
+
         evaluation = cls(
             name=name,
             assessment=assessment,
@@ -154,6 +154,7 @@ class Evaluation(models.Model):
         Test if an evaluation is upgradable. True if there is an assessment with a latest version
         :return: boolean
         """
+
         if get_last_assessment_created():
             last_version = float(get_last_assessment_created().version)
             version = float(self.assessment.version)
@@ -203,6 +204,13 @@ class Evaluation(models.Model):
                     # Useless as it is already saved in create_choice but we need to use choice for flake
                     choice.save()
 
+                # Set the max points for the evaluation element, after the choices are created
+                evaluation_element.set_max_points()
+            # After the creation of the evaluation elements, sets max points for the section
+            section.set_max_points()
+        # Create evaluation score object
+        EvaluationScore.create_evaluation_score(evaluation=self)
+
     def fetch_the_evaluation(self, *args, **kwargs):
         """
         For an evaluation (self), we compare with an other version of assessment and we modify the fetch values for
@@ -241,28 +249,29 @@ class Evaluation(models.Model):
 
     def upgrade(self, **kwargs):
         """
-        The evaluation is upgrade from the current version to the latest. All the notes and the answers are retrieved,
+        The evaluation is upgraded from the current version to the latest. All the notes and the answers are retrieved,
         fetched from the origin version.
         Return the new evaluation (and DO NOT delete the older)
         :return:
         """
-        print("upgrade")
+
         user_request = kwargs.get("user")
         origin_assessment = self.assessment
         final_assessment = get_last_assessment_created()
 
         # The final assessment must be more recent than the origin, this is check in the views
-
         upgrade = Upgrade.objects.get(
-            origin_assessment=origin_assessment, final_assessment=final_assessment
+            origin_assessment=origin_assessment,
+            final_assessment=final_assessment
         )
         upgrade_dic = upgrade.upgrade_json
 
-        # Case the user who created the eval deleted his account but the orga has still users, they retrieved it
+        # Case: the user who created the eval deleted his account but the orga has still users
         if self.created_by:
             user_eval = self.created_by
         else:
             user_eval = user_request
+
         new_eval = Evaluation.create_evaluation(
             name=self.name + _(" (new version)"),
             assessment=final_assessment,
@@ -292,7 +301,6 @@ class Evaluation(models.Model):
                     new_element.fetch = False
                     new_element.save()
                 else:
-
                     older_element_order_id = upgrade_dic["elements"][new_element_number][-1]
                     older_element_section_order_id = upgrade_dic["elements"][new_element_number][-3]
                     older_element = EvaluationElement.objects.get(
@@ -308,7 +316,6 @@ class Evaluation(models.Model):
                     if upgrade_dic["answer_items"][new_choice_number] == "no_fetch":
                         new_choice.fetch = False
                         new_choice.save()
-
                     else:
                         older_choice_order_id = upgrade_dic["answer_items"][new_choice_number][-1]
                         older_choice_element_order_id = upgrade_dic["answer_items"][new_choice_number][-3]
@@ -321,13 +328,16 @@ class Evaluation(models.Model):
                         )
                         new_choice.is_ticked = older_choice.is_ticked
                         new_choice.save()
+
                 new_element.set_points()
                 new_element.set_status()
-                new_element.save()  # Not sure it is useful to save as already done in the methods
+                # Not sure it is useful to save as already done in the methods
+                new_element.save()
+
             new_section.set_points()
             new_section.set_progression()
             new_section.save()
-        # Normally, as we create new items, it wont occur
+
         new_eval.set_finished()
         # we don't set the score here as it is already implemented in the views so we will redirect
         return new_eval
@@ -336,13 +346,16 @@ class Evaluation(models.Model):
         """
         If all section are completed, the evaluation is set to finished and the user can validate it
         """
-        list_section = self.section_set.all()
+
         # We assume the evaluation is not finished
         self.is_finished = False
+
+        list_section = self.section_set.all()
         for section in list_section:
+            # If the loop for has no break (all section are 100 % done)
             if section.user_progression < 100:
                 break
-        # If the loop for has no break (all section are 100 % done)
+        # If there is no break encountered in the for loop, which means all sections have progression equal to 100
         else:
             self.is_finished = True
             # If the field is empty, it is the first time the evaluation is finished so it is set to now
@@ -355,8 +368,8 @@ class Evaluation(models.Model):
         Calculate the progression of the evaluation as percentage
         Used in progression bars
         """
+
         list_section = self.section_set.all()
-        print("CALCULATE EVALUATION PROGRE", list_section)
         sum_progression = 0
         if len(list_section) > 0:
             for section in list_section:
@@ -365,121 +378,210 @@ class Evaluation(models.Model):
         else:
             return 0
 
-    def calculate_max_points(self):
+
+class EvaluationScore(models.Model):
+    """
+    This class is used to store the evaluation scoring data
+
+    need_to_set_max_points is a boolean field used to trigger or not the calculation the max points
+    of the evaluation (so section and EE too).
+    This field is used when the scoring is modified while the evaluation is already created.
+    By default, set to False as the max points is set when the evaluation is created so no need to change it.
+
+    need_to_calculate is a boolean field used to trigger or not the calculation of the different fields used to
+    calculate the score (points obtained, dilatation factor, etc), in the method process_score_calculation.
+    This is done only when the evaluation is finished.
+    By default, this field is set to True as the score need to be calculated at least once. When the score is set,
+    the value switches to False.
+    When a modification is done while evaluation is finished, the value is set to True and the score will require to
+    be calculated again.
+
+    """
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE)
+    # Boolean field to know if all the fields need to be calculated
+    # if there are modifications after the 1st validation for example, the field switch from False to true
+    need_to_set_max_points = models.BooleanField(default=False)
+    need_to_calculate = models.BooleanField(default=True)
+
+    # Static fields, do not depend on the evaluation choices
+    max_points = models.FloatField(default=0, blank=True, null=True)
+    coefficient_scoring_system = models.FloatField(default=0, blank=True, null=True)
+
+    # Dynamic fields, depend on the evaluation choices
+    points_not_concerned = models.FloatField(default=0, blank=True, null=True)
+    points_obtained = models.FloatField(default=0, blank=True, null=True)
+    points_to_dilate = models.FloatField(default=0, blank=True, null=True)
+    dilatation_factor = models.FloatField(default=0, blank=True, null=True)
+
+    score = models.FloatField(default=0, blank=True, null=True)
+
+    def __str__(self):
+        return "Scoring data for the evaluation " + str(self.evaluation.id)
+
+    @classmethod
+    def create_evaluation_score(cls, evaluation):
+        evaluation_score = cls(evaluation=evaluation)
+        evaluation_score.save()
+        evaluation_score.set_max_points()
+        evaluation_score.coefficient_scoring_system = evaluation_score.set_coefficient_scoring_system()
+        return evaluation_score
+
+    def get_element_weight(self):
         """
-        Calculate the max points possible, used to calculate the score of an evaluation
-        (this method could be in assessment class as it dosen t depend of the evaluation)
+        This method is used to get the element_weight object associated to the evaluation (and the assessment)
         :return:
         """
-        max_points = 0
-        for section in self.section_set.all():
-            max_points += section.calculate_max_points()
-        return max_points
+        # todo set the logic of organisation type
+        organisation_type = "entreprise"
+        # todo manage cases there are multiple objects
+        evaluation_element_weight = EvaluationElementWeight.objects.filter(
+            assessment=self.evaluation.assessment, organisation_type=organisation_type
+        )[0]
+        return evaluation_element_weight
 
-    def calculate_sum_points_not_concerned(self):
+    def set_coefficient_scoring_system(self):
+        # TODO work on the organisation_type and see how to define it
+        # organisation_type = self.section.evaluation.orga_id.type_orga  # Not implemented yet
+        organisation_type = "entreprise"
+        query_scoring_system = ScoringSystem.objects.filter(
+            assessment=self.evaluation.assessment,
+            organisation_type=organisation_type
+        )
+        if len(list(query_scoring_system)) == 1:
+            self.coefficient_scoring_system = query_scoring_system[0].attributed_points_coefficient
+        else:
+            # Todo see how we should manage communication with this case
+            self.coefficient_scoring_system = 0.5
+        self.save()
+
+    def set_max_points(self):
+        """
+        Calculate the max points possible, used to calculate the score of an evaluation
+
+        :return:
+        """
+
+        max_points = 0
+        for section in self.evaluation.section_set.all():
+            max_points += section.max_points
+        self.max_points = max_points
+        self.save()
+
+    def calculate_max_points(self):
+        """
+        This method is used to set the max points of the whole evaluation (sections, EE)
+        This is used after the scoring has been modified by a staff of the platform
+
+        As the evaluation can be blank, in progress or finished, the points for each evaluation element already
+        done need to be calculated again
+        :return:
+        """
+        if self.need_to_set_max_points:
+            max_points = 0
+            for section in self.evaluation.section_set.all():
+                for evaluation_element in section.evaluationelement_set.all():
+                    evaluation_element.set_max_points()
+                    # If the evaluation element is already answered, need to calculate again the points
+                    if evaluation_element.status:
+                        evaluation_element.set_points()
+                section.set_max_points()
+                max_points += section.max_points
+                section.set_points()
+            self.max_points = max_points
+            self.need_to_set_max_points = False
+            self.save()
+
+    def set_points_not_concerned(self):
         """
         This method calculates for an evaluation the total of the points that are considered as not concerned due to
         the choices ticked by the user, either an choice that disabled an other evaluation element or choices not
         possible inside the same evaluation element
         :return: float
         """
+        # todo test element weight with values not equal to 1
+        evaluation_element_weight = self.get_element_weight()
         sum_points_not_concerned = 0
-        for section in self.section_set.all():
+        for section in self.evaluation.section_set.all():
             for element in section.evaluationelement_set.all():
-                sum_points_not_concerned += element.calculate_points_not_concerned()
-        print("POINTS NOT CONCERNED", sum_points_not_concerned)
-        return sum_points_not_concerned
+                # Check this is useful to calculate points not concerned (condition intra or inter)
+                if element.has_condition_between_choices() or not element.is_applicable():
+                    element_weight = evaluation_element_weight.get_master_element_weight(
+                        element.master_evaluation_element
+                    )
+                    sum_points_not_concerned += element.calculate_points_not_concerned() * element_weight
+        self.points_not_concerned = sum_points_not_concerned
+        self.save()
 
-    def calculate_points_obtained(self, points_not_concerned, coeff_scoring_system):
+    def set_points_obtained(self):
         """
-        This method calculates the points obtained
+        This method calculates the points obtained in all the sections
         """
+
         points_obtained = 0
-        for section in self.section_set.all():
+        for section in self.evaluation.section_set.all():
             points_obtained += section.points
-        # TO VERIFY IF
-        # points_obtained += self.calculate_sum_points_not_concerned() * self.get_coefficient_scoring_system()
-        points_obtained += points_not_concerned * coeff_scoring_system
-        return points_obtained
 
-    def get_coefficient_scoring_system(self):
-        # TODO work on the organisation_type and see how to define it
-        # organisation_type = self.section.evaluation.orga_id.type_orga  # Not implemented yet
-        organisation_type = (
-            "entreprise"  # set the default value in the existing scoring system
-        )
-        scoring_system = ScoringSystem.objects.filter(
-            assessment=self.assessment, organisation_type=organisation_type
-        )[0]
-        return scoring_system.attributed_points_coefficient
+        # Add the points not concerned * the coefficient (half points not concerned usually)
+        points_obtained += self.points_not_concerned * self.coefficient_scoring_system
 
-    def calculate_points_to_dilate(
-        self, coeff_scoring_system, points_obtained, points_not_concerned
-    ):
+        self.points_obtained = round(points_obtained, 4)
+        self.save()
+
+    def set_points_to_dilate(self):
         """
-        This method calculates the points to dilate : nb obtained points - not concerned points * coeff scoring system
+        This method calculates the points to dilate: nb obtained points - not concerned points * coeff scoring system
+        which is just the sum of the points of the ticked choices according to the scoring
 
-        :param coeff_scoring_system:
-        :param points_obtained:
-        :param points_not_concerned:
         :return: float
         """
-        # return self.calculate_points_obtained() - self.calculate_sum_points_not_concerned() * coeff_scoring_system
-        return points_obtained - points_not_concerned * coeff_scoring_system
+        coefficient = self.coefficient_scoring_system
 
-    def calculate_dilatation_factor(
-        self, coeff_scoring_system, max_points_possible, points_not_concerned
-    ):
+        self.points_to_dilate = round(self.points_obtained - self.points_not_concerned * coefficient, 4)
+        self.save()
+
+    def set_dilatation_factor(self):
         """
         Calculate the dilatation factor, used to calculate the score of the evaluation
-        :param coeff_scoring_system:
-        :param max_points_possible:
-        :param points_not_concerned:
+
         :return:
         """
+        max_points = self.max_points
+        pts_not_concerned = self.points_not_concerned
+        coeff = self.coefficient_scoring_system
+        self.dilatation_factor = round((max_points - pts_not_concerned * coeff) / (max_points - pts_not_concerned), 6)
+        self.save()
 
-        return (max_points_possible - points_not_concerned * coeff_scoring_system) / (
-            max_points_possible - points_not_concerned
-        )
-
-    def set_score(
-        self,
-        dilatation_factor,
-        points_to_dilate,
-        points_not_concerned,
-        coeff_scoring_system,
-        max_possible_points,
-    ):
+    def set_score(self):
         """
-        This method sets the score for the evaluation
-
-        :param dilatation_factor: float, from calculate_dilatation_factor()
-        :param points_to_dilate: float, calculate_points_to_dilate()
-        :param points_not_concerned: float, from calculate_points_obtained()
-        :param coeff_scoring_system: float, from get_coefficient_scoring_system()
+        This method sets the score for the evaluation score object
 
         :return: None, save the score of the evaluation (float)
         """
-        if self.is_finished:
-            score_after_dilatation = (
-                dilatation_factor * points_to_dilate
-                + points_not_concerned * coeff_scoring_system
-            )
-            # If it s the first time the evaluation is finished, set the score and finished_atto now
-            if self.score is None:
-                self.score = round(
-                    score_after_dilatation * 100 / max_possible_points, 1
-                )
-                self.finished_at = timezone.now()
-            # Else, the evaluation is already finished, so the finished at attribute won't change
-            else:
-                self.score = round(
-                    score_after_dilatation * 100 / max_possible_points, 1
-                )
-            self.save()
+
+        score_after_dilatation = (
+            self.dilatation_factor * self.points_to_dilate
+            + self.points_not_concerned * self.coefficient_scoring_system
+        )
+        self.score = round(score_after_dilatation * 100 / self.max_points, 1)
+        self.save()
+
+    def process_score_calculation(self):
+        """
+        Calculate the values for the dynamic fields if the field need_to_calculate is True, which means this is the
+        1st calculation or the user modified a choice of a finished evaluation
+        """
+        if self.evaluation.is_finished:
+            if self.need_to_calculate:
+                # Order is important
+                self.set_points_not_concerned()
+                self.set_points_obtained()
+                self.set_points_to_dilate()
+                self.set_dilatation_factor()
+                self.set_score()
+                self.need_to_calculate = False
         else:
-            # later create pop in or smth but normally condition must be verified to call this method
-            print("EVALUATION MUST BE FINISHED TO SET THE SCORE")
+            self.score = 0
+        self.save()
 
 
 class MasterSection(models.Model):
@@ -525,6 +627,7 @@ class Section(models.Model):
         default=0
     )  # progression of user inside this section, as percentage
     points = models.FloatField(default=0)
+    max_points = models.FloatField(default=0, blank=True, null=True)
     # This field "fetch" is used for the versioning of assessments
     fetch = models.BooleanField(default=True)
     user_notes = models.TextField(blank=True, null=True, max_length=20000)
@@ -563,7 +666,7 @@ class Section(models.Model):
         Update the status of the section which is a float number calculated by dividing
         the number of evaluation_element treated by the global number of evaluation_element
         """
-        before = self.user_progression
+
         evaluation_element_list = self.evaluationelement_set.all()
         count_element_done = 0
         # If not empty
@@ -577,7 +680,6 @@ class Section(models.Model):
                 round(count_element_done * 100 / len(evaluation_element_list), 0)
             )
         self.save()
-        print("SET PROGRESSION SECTION", before, self.user_progression)
 
     def set_points(self):
         """ Set the points for a section according to the points set by each evaluation element of the section"""
@@ -590,16 +692,15 @@ class Section(models.Model):
         self.points = sum_points
         self.save()
 
-    def calculate_max_points(self):
+    def set_max_points(self):
         """
-        Calculate the max possible points for a section if no condition has been encountered
-
-        NEED TO CHECK IF IT DOES SENSE 'NO CONDITION ENCOUNTERED'
+        Calculate the max possible points for a section
         """
         max_points = 0
         for element in self.evaluationelement_set.all():
-            max_points += element.calculate_max_points_if_concerned_by_everything()
-        return max_points
+            max_points += element.max_points
+        self.max_points = max_points
+        self.save()
 
 
 class MasterEvaluationElement(models.Model):
@@ -684,6 +785,8 @@ class EvaluationElement(models.Model):
     user_notes = models.TextField(blank=True, null=True, max_length=20000)
     status = models.BooleanField(default=False)
     points = models.FloatField(default=0)
+    # Max points of this evaluation elements according to the scoring used
+    max_points = models.FloatField(default=0, blank=True, null=True)
     # This field "fetch" is used for the versioning of assessments
     fetch = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -906,11 +1009,11 @@ class EvaluationElement(models.Model):
         and then by multiplying the sum by the weight of the evaluation element in
         the dic of EvaluationElementWeight
         """
-        # dic_weight_choice = self.get_dic_weight_scoring_system()
-        # dic_weight_element = self.get_dic_weight_evaluation_element()
+
         scoring_system = self.get_scoring_system()
         master_evaluation_element_weight = self.get_master_evaluation_element_weight()
         points_element = 0
+
         # If the evaluation element is applicable
         if self.is_applicable():
             for choice in self.choice_set.all():
@@ -918,22 +1021,22 @@ class EvaluationElement(models.Model):
                     points_element += scoring_system.get_master_choice_points(
                         choice.master_choice
                     )
+
                     # Manage the case the choice disable other evaluation element to set their points to 0
-                    if (
-                        choice.has_element_conditioned_on()
-                    ):  # todo check if it is this if which cause flake issue
+                    if choice.has_element_conditioned_on():
+                        # todo check if it is this if which cause flake issue
                         list_element_disabled = choice.get_list_element_depending_on()
                         for element in list_element_disabled:
                             element.points = 0
-                            element.reset_choices()  # reset the choices of the elements disabled
+                            # reset the choices of the elements disabled
+                            element.reset_choices()
                             element.save()
+
             # Multiply the sum of the choices weight by the evaluation element weight
-            points_element = (
-                points_element
-                * master_evaluation_element_weight.get_master_element_weight(
-                    self.master_evaluation_element
-                )
+            element_weight = master_evaluation_element_weight.get_master_element_weight(
+                self.master_evaluation_element
             )
+            points_element = points_element * element_weight
 
             # check if it works
             # case there are conditions : no choice is ticked or the choice ticked sets conditions on other choice
@@ -947,17 +1050,18 @@ class EvaluationElement(models.Model):
         self.save()
 
     def get_scoring_system(self):
-        """:return scoring system object"""
+        """
+        :return scoring system object
+        """
+
         assessment = self.section.evaluation.assessment
         # organisation_type = self.section.evaluation.orga_id.type_orga  # Not implemented yet
-        organisation_type = (
-            "entreprise"  # set the default value in the existing scoring system
-        )
+        organisation_type = "entreprise"
+        # set the default value in the existing scoring system
         scoring_system = ScoringSystem.objects.filter(
             assessment=assessment, organisation_type=organisation_type
-        )[
-            0
-        ]  # check if get is not better
+        )[0]
+        # check if get is not better
         return scoring_system
 
     def get_dic_weight_scoring_system(self):
@@ -966,15 +1070,15 @@ class EvaluationElement(models.Model):
         it as a dictionary
         :return: dictionary
         """
+
         scoring_system = self.get_scoring_system()
         return scoring_system.master_choices_weight_json
 
     def get_master_evaluation_element_weight(self):
         assessment = self.section.evaluation.assessment
         # organisation_type = self.section.evaluation.orga_id.type_orga  # Not implemented yet
-        organisation_type = (
-            "entreprise"  # set the default value in the existing scoring system
-        )
+        # set the default value in the existing scoring system
+        organisation_type = "entreprise"
         evaluation_element_weight = EvaluationElementWeight.objects.filter(
             assessment=assessment, organisation_type=organisation_type
         )[0]
@@ -986,95 +1090,38 @@ class EvaluationElement(models.Model):
          of points non concerned attributed
         :return: float
         """
+
         scoring_system = self.get_scoring_system()
         return scoring_system.attributed_points_coefficient
 
-    def calculate_points_disabled_choices(self):
-        """
-        This method calculates, for an evaluation element, the sum of the points attributed to the choices
-        which can be disabled
-        It takes into consideration the cases of a radioselect or a checkbox
-        :return: float
-        """
-        # dic_weight_choice = self.get_dic_weight_scoring_system()
-        scoring_system = self.get_scoring_system()
-        sum_points = 0
-        if self.has_condition_between_choices():
-            if self.master_evaluation_element.question_type == "checkbox":
-                for choice in self.get_list_choices_with_condition():
-                    # sum_points += dic_weight_choice[choice.master_choice]
-                    sum_points += scoring_system.get_master_choice_points(
-                        choice.master_choice
-                    )
-            # case it s a radio evaluation element, the poitns of disabled choices is the max
-            # of those which can be disabled
-            elif self.master_evaluation_element.question_type == "radio":
-                for choice in self.get_list_choices_with_condition():
-                    if sum_points < scoring_system.get_master_choice_points(
-                        choice.master_choice
-                    ):
-                        sum_points = scoring_system.get_master_choice_points(
-                            choice.master_choice
-                        )
-        return sum_points
-
-    def calculate_max_points_if_concerned_by_everything(self):
+    def set_max_points(self):
         """
         Initiate a method to calculate the max points possible to an element of evaluation if the user is concerned by
-        everything
-        Exclude the points of a choice which sets conditions on other choices OR on other evaluation element
+        everything.
+        Note that choices which have conditions inter/intra have necessarily 0 points associated
 
         :return: float
         """
+
         max_points = 0
-        # dic_weight_choice = self.get_dic_weight_scoring_system()
         scoring_system = self.get_scoring_system()
+
         if self.master_evaluation_element.question_type == "radio":
             for choice in self.choice_set.all():
-                # if this choice doesn't set condition on other choice or other evaluation element
-                # else, we don't take this choice into consideration for the calculation
-                if (
-                    not choice.set_conditions_on_other_choices()
-                    and not choice.has_element_conditioned_on()
-                ):
-                    # We take the max of the weight attributed to a choice of this evaluation element
-                    if (
-                        scoring_system.get_master_choice_points(choice.master_choice)
-                        > max_points
-                    ):
-                        max_points = scoring_system.get_master_choice_points(
-                            choice.master_choice
-                        )
+                # We take the max of the weight attributed to a choice of this evaluation element
+                if scoring_system.get_master_choice_points(choice.master_choice) > max_points:
+                    max_points = scoring_system.get_master_choice_points(
+                        choice.master_choice
+                    )
 
-        # it is either an radio select or a checkbox so it's like an else
+        # it is a checkbox
         elif self.master_evaluation_element.question_type == "checkbox":
-            # if there is no conditions inside the evaluation element
-            if not self.has_condition_between_choices():
-                # for all the choices of this evaluation element
-                for choice in self.choice_set.all():
-                    # if they don't set conditions on other evaluation elements, else it is skipped
-                    if not choice.has_element_conditioned_on():
-                        # we sum their weight
-                        max_points += scoring_system.get_master_choice_points(
-                            choice.master_choice
-                        )
+            for choice in self.choice_set.all():
+                # we sum their weight
+                max_points += scoring_system.get_master_choice_points(choice.master_choice)
 
-            # If the evaluation element has choice(s) which disable other choices
-            else:
-                # We know one choice disables other choices so we must not add its weight to the sum
-                # We need to find it, it s the one whose the master choice has NO condition on
-                # so we get the list of choices which have conditions on, and we add their weight
-                # The one which disables others won't have the weight added because it won't be in the list
-                # and we are sure that the list is not empty because self.has_condition_between_choices() is True
-                for choice in self.get_list_choices_with_condition():
-                    # we just ensure that the choice doesn't set condition on other evaluation element
-                    if not choice.has_element_conditioned_on():
-                        max_points += scoring_system.get_master_choice_points(
-                            choice.master_choice
-                        )
-        # return the max_points multiplied the weight of the evaluation element
-        # print("MAX POINTS IF CONCERNED BY EVERY THING", self, max_points)
-        return max_points
+        self.max_points = max_points
+        self.save()
 
     def calculate_points_not_concerned(self):
         """
@@ -1083,25 +1130,26 @@ class EvaluationElement(models.Model):
         And apply the fact that the evaluation element can be weighted
         :return: float
         """
-        # if the evaluation element is applicable and there are conditions between choices inside this
-        # evaluation element
+
         sum_points_not_concerned = 0
         master_evaluation_element_weight = self.get_master_evaluation_element_weight()
+
+        # if the evaluation element is applicable and there are conditions between choices inside this
+        # evaluation element
         if self.is_applicable() and self.has_condition_between_choices():
-            # print("CHOICE WITH CONDI INTRA", self)
             for choice in self.choice_set.all():
                 # if the choice which sets conditions on other choices is ticked
                 if choice.set_conditions_on_other_choices() and choice.is_ticked:
-                    # we calculate the sum of the points (case it s radio or checkbox taken into consideration)
-                    sum_points_not_concerned = self.calculate_points_disabled_choices()
-                    # print("POINTS FOR THIS CHOICE", self.calculate_points_disabled_choices(), self )
+                    # the points not concerned are the max points possible for this evaluation element
+                    sum_points_not_concerned = self.max_points
 
-        # If the choice is not applicable, this means that it is due to an answer in a previous evaluation element
+        # If the evaluation element is not applicable,
+        # this means that it is due to an answer in a previous evaluation element
         elif not self.is_applicable():
-            # we just calculate the max possible points if the case would have been possible
-            sum_points_not_concerned = (
-                self.calculate_max_points_if_concerned_by_everything()
-            )
+            # we calculate the max possible points of this evaluation element
+            sum_points_not_concerned = self.max_points
+
+        # We return the sum_points_not_concerned weighted by the evaluation element weight
         return (
             sum_points_not_concerned
             * master_evaluation_element_weight.get_master_element_weight(
@@ -1163,6 +1211,19 @@ class MasterChoice(models.Model):
         # Search if the format is respected in the numbering
         regex = re.findall(r"[0-9].[0-9]{1,2}.[a-zA-Z]", numbering)
         return regex != []
+
+    def get_list_master_element_depending_on(self):
+        """
+        Returns the list of master evaluation elements depending on this master choice
+        :returns list
+        """
+        return list(self.conditioned_by.all())
+
+    def has_master_element_conditioned_on(self):
+        """
+        Returns boolean, True if this master choice sets conditions on other master evaluation elements, else False
+        """
+        return self.get_list_master_element_depending_on()
 
 
 class Choice(models.Model):
@@ -1332,7 +1393,10 @@ class ScoringSystem(models.Model):
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     version = models.CharField(max_length=255, blank=True, null=True)
     organisation_type = models.CharField(
-        max_length=1000, blank=True, null=True, default="entreprise"
+        max_length=1000,
+        blank=True,
+        null=True,
+        default="entreprise"
     )  # todo change this field
     master_choices_weight_json = JSONField()
     # this coefficient is used to split the points for elements not applicable
@@ -1383,7 +1447,10 @@ class EvaluationElementWeight(models.Model):
     name = models.CharField(max_length=500)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     organisation_type = models.CharField(
-        max_length=1000, blank=True, null=True, default="entreprise"
+        max_length=1000,
+        blank=True,
+        null=True,
+        default="entreprise"
     )
     # todo change organisation_type field
     master_evaluation_element_weight_json = JSONField()
@@ -1454,29 +1521,3 @@ def replace_special_characters(sentence):
     """
     sentence_modified = sentence.replace("é", "e")
     return sentence_modified.replace(" ", "-")
-
-
-def dic_string_to_object(dic_str, class_obj):
-    # TODO comments
-    time = timezone.now()
-    dic_obj = {}
-    list_obj = list(class_obj.objects.all())
-    for obj_str in dic_str.keys():
-        for obj in list_obj:
-            if obj_str == str(obj):
-                dic_obj[obj] = dic_str[obj_str]
-                break
-        else:
-            print("THERE IS AN ISSUE")
-            dic_obj[obj] = 0
-    print(timezone.now() - time)
-    return dic_obj
-
-
-def create_random_weight_dic(class_obj):
-    # TODO comment this function and see if it used
-    dic_weight = {}
-    list_obj = list(class_obj.objects.all())
-    for obj in list_obj:
-        dic_weight[str(obj)] = random.uniform(0, 1)
-    return dic_weight
