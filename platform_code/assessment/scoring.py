@@ -9,15 +9,18 @@ def check_and_valid_scoring_json(*args, **kwargs):
 
     # Case: we test the json
     success = False
-    json_data = kwargs.get("decoded_file")
-    if json_data is not None:
-        try:
-            dict_data = json.loads(json_data)
-        except json.JSONDecodeError as e:
-            return (
-                success,
-                f"There is an issue in your json architecture. Please verify you file. Error {e}",
-            )
+    if "json" in kwargs:
+        dict_data = kwargs.get("json")
+    else:
+        json_data = kwargs.get("decoded_file")
+        if json_data is not None:
+            try:
+                dict_data = json.loads(json_data)
+            except json.JSONDecodeError as e:
+                return (
+                    success,
+                    f"There is an issue in your json architecture. Please verify you file. Error {e}",
+                )
 
     assessment = kwargs.get("assessment")
 
@@ -43,6 +46,16 @@ def check_and_valid_scoring_json(*args, **kwargs):
                         success,
                         f"The value {dict_data[numbering]} must be convertible into a float like '0.5', error {e}",
                     )
+                # If the master_choice sets conditions intra or inter, it must has not points associated
+                if master_choice.is_concerned_switch or master_choice.has_master_element_conditioned_on():
+                    # TODO tests
+                    # numbering should exist in dict_data
+                    if float(dict_data[numbering]) != 0.0:
+                        return (
+                            success,
+                            f"The master_choice {numbering} has conditions intra/inter but has points associated "
+                            f"({dict_data[numbering]}), should be 0.",
+                        )
 
     # Reverse test, check if all the json keys (items) are well in the assessment's choices database
     for key in dict_data.keys():

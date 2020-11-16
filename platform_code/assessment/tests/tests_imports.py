@@ -476,6 +476,42 @@ class ScoringImportTestCase(TestCase):
             )[1],
         )
 
+    def test_scoring_import_bad_weight_conditions_inter(self):
+        """
+        Test the import scoring when a choice with conditions inter evaluation element has a weight not null
+        """
+        json_data = json.loads(self.decoded_file)
+        json_data["1.1.a"] = "1"
+        self.assertFalse(
+            check_and_valid_scoring_json(
+                decoded_file=json.dumps(json_data), assessment=self.assessment
+            )[0]
+        )
+        self.assertIn(
+            "has conditions intra/inter but has points associated",
+            check_and_valid_scoring_json(
+                decoded_file=json.dumps(json_data), assessment=self.assessment
+            )[1],
+        )
+
+    def test_scoring_import_bad_weight_conditions_intra(self):
+        """
+        Test the import scoring when a choice with conditions intra evaluation element has a weight not null
+        """
+        json_data = json.loads(self.decoded_file)
+        json_data["1.2.a"] = "1"
+        self.assertFalse(
+            check_and_valid_scoring_json(
+                decoded_file=json.dumps(json_data), assessment=self.assessment
+            )[0]
+        )
+        self.assertIn(
+            "has conditions intra/inter but has points associated",
+            check_and_valid_scoring_json(
+                decoded_file=json.dumps(json_data), assessment=self.assessment
+            )[1],
+        )
+
 # todo test the scoring and evaluation element weight creation while importing assessment
 
 # todo test the upgrade table

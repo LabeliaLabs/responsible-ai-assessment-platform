@@ -33,6 +33,7 @@ from .models import (
     EvaluationElementWeight,
     Upgrade,
     get_last_assessment_created,
+    EvaluationScore,
 )
 
 from assessment.scoring import check_and_valid_scoring_json
@@ -69,6 +70,7 @@ admin.site.register(Section)
 admin.site.register(EvaluationElement)
 admin.site.register(Choice)
 admin.site.register(Upgrade)
+admin.site.register(EvaluationScore)
 
 # Import json Assessment #
 
@@ -271,6 +273,8 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                 assessment.delete()
                 return redirect("admin/")
             try:
+                # The scoring has been automatically created with the assessment import
+                # We just set the json weight now
                 scoring = ScoringSystem.objects.get(assessment=assessment)
                 scoring.master_choices_weight_json = literal_eval(decoded_scoring_file)
                 scoring.save()
@@ -388,7 +392,7 @@ class ScoringAdmin(admin.ModelAdmin):
             if form_validated:
                 try:
                     new_object = self.save_form(request, form, change=not add)
-                except ValidationError as e:
+                except (ValidationError, MultipleObjectsReturned, ObjectDoesNotExist) as e:
                     self.message_user(
                         request,
                         f"There was an error during the saving of the scoring: {e}",

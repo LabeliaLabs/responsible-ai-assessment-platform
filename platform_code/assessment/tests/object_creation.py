@@ -8,35 +8,7 @@ from assessment.models import (
     MasterChoice,
     Choice,
     ExternalLink,
-)
-
-
-RADIO = "radio"
-CHECKBOX = "checkbox"
-
-QUESTION_TYPES = (
-    (RADIO, "radio"),
-    (CHECKBOX, "checkbox"),
-)
-
-WEB_ARTICLE = "web article"
-ACADEMIC_PAPER = "academic paper"
-SOFTWARE = "software"
-TECHNICAL_GUIDE = "technical guide"
-TOOL = "tool"
-CODE_REPOSITORY = "code repository"
-PUBLIC_DECLARATION = "public declaration"
-OFFICIAL_REPORT = "official report"
-
-RESOURCE_TYPES = (
-    (WEB_ARTICLE, "web article"),
-    (ACADEMIC_PAPER, "academic paper"),
-    (SOFTWARE, "software"),
-    (TECHNICAL_GUIDE, "technical guide"),
-    (TOOL, "tool"),
-    (CODE_REPOSITORY, "code repository"),
-    (PUBLIC_DECLARATION, "public declaration"),
-    (OFFICIAL_REPORT, "official report"),
+    ScoringSystem,
 )
 
 
@@ -56,7 +28,6 @@ def create_evaluation(
     created_by=None,
     organisation=None,
     is_finished=False,
-    score=None,
     finished_at=None,
 ):
     """
@@ -66,7 +37,6 @@ def create_evaluation(
     :param created_by:
     :param organisation:
     :param is_finished:
-    :param score:
     :param finished_at:
     :return:
     """
@@ -76,7 +46,6 @@ def create_evaluation(
             created_by=created_by,
             organisation=organisation,
             is_finished=is_finished,
-            score=score,
             finished_at=finished_at,
         )
 
@@ -127,7 +96,7 @@ def create_master_evaluation_element(
     name,
     master_section,
     order_id,
-    question_type=RADIO,
+    question_type=MasterEvaluationElement.RADIO,
     question_text="",
     explanation_text="",
     depends_on=None,
@@ -221,7 +190,7 @@ def create_choice(master_choice, evaluation_element, is_ticked=False, fetch=True
     )
 
 
-def create_external_link(text, type_link=WEB_ARTICLE):
+def create_external_link(text, type_link=ExternalLink.WEB_ARTICLE):
     """
     Create an external link (resource)
     :param type_link:
@@ -254,14 +223,17 @@ def create_assessment_body(
     resource = create_external_link(text=resource_text)
     # Create the master evaluation elements
     master_evaluation_element1 = create_master_evaluation_element(
-        name="master_element1", master_section=master_section1, order_id="1"
+        name="master_element1",
+        master_section=master_section1,
+        order_id="1",
+        question_type=MasterEvaluationElement.CHECKBOX
     )
 
     master_choice_1 = create_master_choice(
         master_evaluation_element=master_evaluation_element1,
         answer_text="answer",
         order_id="a",
-        is_concerned_switch=True,  # Todo change because it is a radio item so pointless
+        is_concerned_switch=True,
     )
 
     master_evaluation_element2 = create_master_evaluation_element(
@@ -270,13 +242,14 @@ def create_assessment_body(
         order_id="2",
         external_links=resource,
         depends_on=master_choice_1,
-        question_type=CHECKBOX,
+        question_type=MasterEvaluationElement.CHECKBOX,
     )
     master_evaluation_element3 = create_master_evaluation_element(
         name="master_element3",
         master_section=master_section2,
         order_id="1",
         external_links=resource,
+        question_type=MasterEvaluationElement.RADIO,
     )
 
     create_master_choice(
@@ -300,3 +273,27 @@ def create_assessment_body(
         answer_text="answer",
         order_id="a",
     )
+
+
+def create_scoring(assessment, **kwargs):
+    """
+    This function is used to create a scoring for the tests when no one is imported
+    Because the evaluation_create_body function requires a scoring to calculate max_points
+
+    kwargs: dic_choices, dictionary with master choice numbering (string, '1.1.a') as keys
+            and weight (float/string, 0.5) as values
+    """
+    if "dic_choices" in kwargs:
+        dic_choices = kwargs.get("dic_choices")
+    else:
+        dic_choices = {}
+        for master_section in assessment.mastersection_set.all():
+            for master_element in master_section.masterevaluationelement_set.all():
+                for i, master_choice in enumerate(master_element.masterchoice_set.all()):
+                    dic_choices[master_choice.get_numbering()] = str(i)
+    scoring = ScoringSystem(
+        assessment=assessment,
+        name="choice_scoring_of_" + assessment.name,
+        master_choices_weight_json=dic_choices,
+    )
+    scoring.save()

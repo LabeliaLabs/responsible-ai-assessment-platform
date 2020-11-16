@@ -18,8 +18,14 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import generic
 from django.contrib.auth.views import (
-    login_required, LoginView, LogoutView, PasswordChangeForm, AuthenticationForm, auth_login,
-    FormView, update_session_auth_hash,
+    login_required,
+    LoginView,
+    LogoutView,
+    PasswordChangeForm,
+    AuthenticationForm,
+    auth_login,
+    FormView,
+    update_session_auth_hash,
     )
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
@@ -28,7 +34,13 @@ from django.utils.translation import gettext as _, ngettext
 from django.conf import settings
 
 from assessment.utils import get_client_ip
-from assessment.views import treat_resources, error_500_view_handler, error_400_view_handler
+from assessment.views import (
+    treat_resources,
+    error_500_view_handler,
+    error_400_view_handler,
+    manage_evaluation_score,
+    manage_evaluation_max_points,
+)
 from assessment.forms import EvaluationMutliOrgaForm, EvaluationForm
 from assessment.models import Assessment, Evaluation, get_last_assessment_created
 from .forms import SignUpForm, OrganisationCreationForm, RegisterForm, DataSettingsForm, PasswordResetForm_
@@ -383,6 +395,14 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         context["evaluation_form_dic"] = {}
         for evaluation in list_evaluations:
             context["evaluation_form_dic"][str(evaluation.id)] = EvaluationForm(name=evaluation.name)
+
+        # If the scoring system has changed, it set the max points again for the evaluation, sections, EE
+        success_max_points = manage_evaluation_max_points(request=request, evaluation_list=context["evaluations"])
+        if not success_max_points:
+            return redirect("home:user-profile")
+
+        context["evaluation_score_dic"] = \
+            manage_evaluation_score(request=request, evaluation_list=context["evaluations"])
         context["new_orga_form"] = OrganisationCreationForm()
         context["new_evaluation_form"] = EvaluationMutliOrgaForm(user=user)
 

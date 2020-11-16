@@ -3,6 +3,7 @@ from django.test import TestCase
 from assessment.models import (
     Assessment,
     Evaluation,
+    EvaluationScore,
     Section,
     MasterSection,
     MasterEvaluationElement,
@@ -23,6 +24,7 @@ from .object_creation import (
     create_master_evaluation_element,
     create_master_section,
     create_assessment_body,
+    create_scoring,
 )
 
 # Create your tests here.
@@ -148,6 +150,9 @@ class MasterChoiceTestcase(TestCase):
         self.master_element1 = MasterEvaluationElement.objects.get(
             name="master_element1"
         )
+        self.master_element2 = MasterEvaluationElement.objects.get(
+            name="master_element2"
+        )
         self.master_element3 = MasterEvaluationElement.objects.get(
             name="master_element3"
         )
@@ -190,6 +195,22 @@ class MasterChoiceTestcase(TestCase):
         self.assertTrue(master_choice1.test_numbering())
         self.assertTrue(master_choice5.test_numbering())
 
+    def test_master_choice_get_list_master_element_depending_on(self):
+        master_choice1 = MasterChoice.objects.get(
+            master_evaluation_element=self.master_element1, order_id="a"
+        )
+        master_choice5 = MasterChoice.objects.get(
+            master_evaluation_element=self.master_element3, order_id="a"
+        )
+        self.assertEqual(master_choice1.get_list_master_element_depending_on(), [self.master_element2])
+        self.assertEqual(master_choice5.get_list_master_element_depending_on(), [])
+
+    def test_master_choice_has_master_element_conditioned_on(self):
+        master_choice1 = MasterChoice.objects.get(master_evaluation_element=self.master_element1, order_id="a")
+        master_choice5 = MasterChoice.objects.get(master_evaluation_element=self.master_element3, order_id="a")
+        self.assertTrue(master_choice1.has_master_element_conditioned_on())
+        self.assertFalse(master_choice5.has_master_element_conditioned_on())
+
 
 class EvaluationTestCase(TestCase):
     """
@@ -200,7 +221,7 @@ class EvaluationTestCase(TestCase):
     def setUp(self):
         create_assessment_body(version="1.0")
         self.assessment = Assessment.objects.get(version="1.0")
-
+        create_scoring(assessment=self.assessment)
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(
             assessment=self.assessment, name="evaluation"
@@ -225,6 +246,16 @@ class EvaluationTestCase(TestCase):
         self.assertEqual(len(query_sections), 2)
         self.assertEqual(len(query_evaluation_element), 3)
         self.assertEqual(len(query_choice), 5)
+
+    def test_evaluation_create_body_score(self):
+        """
+        Test the Evaluation score creation
+        The scoring is test in the file tests_scoring.py
+        """
+        with self.assertRaises(Exception):
+            EvaluationScore.objects.get(evaluation=self.evaluation)
+        self.evaluation.create_evaluation_body()
+        self.assertTrue(EvaluationScore.objects.get(evaluation=self.evaluation))  # Get the object barely created
 
     def test_evaluation_slugify(self):
         self.evaluation.save()
@@ -279,6 +310,7 @@ class SectionTestCase(TestCase):
     def setUp(self):
         create_assessment_body(version="1.0")
         self.assessment = Assessment.objects.get(version="1.0")
+        create_scoring(assessment=self.assessment)
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(
             assessment=self.assessment, name="evaluation"
@@ -346,6 +378,7 @@ class EvaluationElementTestCase(TestCase):
     def setUp(self):
         create_assessment_body(version="1.0")
         self.assessment = Assessment.objects.get(version="1.0")
+        create_scoring(assessment=self.assessment)
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(
             assessment=self.assessment, name="evaluation"
@@ -404,8 +437,11 @@ class EvaluationElementTestCase(TestCase):
         self.assertTrue(self.evaluation_element1.are_notes_filled())
 
     def test_evaluation_element_possible_answers(self):
-        self.assertEqual(self.evaluation_element1.get_number_possible_answers(), 1)
+        self.assertEqual(self.evaluation_element1.get_number_possible_answers(), 2)
         self.assertEqual(self.evaluation_element2.get_number_possible_answers(), 2)
+        self.evaluation_element1.master_evaluation_element.question_type = "radio"
+        self.evaluation_element1.master_evaluation_element.save()
+        self.assertEqual(self.evaluation_element1.get_number_possible_answers(), 1)
 
     def test_element_get_master_choice_depending_on(self):
         self.assertEqual(
@@ -490,6 +526,7 @@ class ChoiceTestCase(TestCase):
     def setUp(self):
         create_assessment_body(version="1.0")
         self.assessment = Assessment.objects.get(version="1.0")
+        create_scoring(assessment=self.assessment)
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(
             assessment=self.assessment, name="evaluation"
