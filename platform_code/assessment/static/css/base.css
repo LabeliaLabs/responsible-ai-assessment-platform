@@ -490,6 +490,9 @@ h1 img {
      width: 200px;
   }
 
+.image-faq {
+    height: 11em;
+}
 
 .pagination {
   display: inline-block;

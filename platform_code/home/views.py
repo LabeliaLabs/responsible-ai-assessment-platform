@@ -246,6 +246,12 @@ def legal_notices_view(request):
     """ Render the legal notices page which has only static content. This page is accessible without login required"""
     return render(request, "home/legal-notices.html", {})
 
+
+def faq_view(request):
+    """ Render the FAQ page which has only static content. This page is accessible without login required"""
+    return render(request, "home/faq.html", {})
+
+
 # CBV #
 
 
