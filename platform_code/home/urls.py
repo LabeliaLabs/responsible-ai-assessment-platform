@@ -14,6 +14,7 @@ urlpatterns = [
     path("login/", views.login_view, name="login"),  # login page when redirect
     path("about/", views.about_view, name="about"),
     path("legal-notices/", views.legal_notices_view, name="legal-notices"),
+    path("faq/", views.faq_view, name="faq"),
     path(
         "accounts/",
         include(

@@ -1,0 +1,46 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+{% block content %}
+
+
+<div class="container">
+    <h1>{% trans "FAQ" %}</h1>
+<img class="img-fluid d-block mx-auto image-faq" src="{% static 'image/Illustration_10.png' %}" alt="image">
+    <h3 class="about-subtitle">{% trans "The assessment" %}</h3>
+    <p>{% trans "Who is this evaluation intended for?" %}</p>
+    <ul><li class="li-with-disc margin-10">{% trans "This assessment is aimed at all organisations wishing to evaluate their level of maturity on Responsible and Trusted Data Science." %}</li></ul>
+    <p>{% trans "On what basis was this evaluation constructed?" %}</p>
+    <ul><li class="li-with-disc margin-10">{% trans 'This evaluation was built on a participatory and open approach led by Substra Foundation. This approach is explained in this '%}<a href="https://www.substra.ai/fr/blog/evaluation-data-science-responsable" title="https://www.substra.ai/fr/blog/evaluation-data-science-responsable">{%trans "blog article." %}</a></li></ul>
+
+    <h3 class="about-subtitle">{% trans "Score" %}</h3>
+
+    <p>{% trans "The synthetic score is on a total of 100 theoretical maximum points for your full assessment. It provides an indication of the organization maturity level concerning a responsible and trustworthy data science. At the end of 2020, the 50/100 threshold can be considered a very advanced maturity level." %} </p><br>
+
+           <p>{% trans "The mechanism for calculating the score is relatively simple:" %}<br></p>
+            <ul>
+                <li class="li-with-disc margin-10">{% trans "with each version of the assessment we define a number of points for each response item of each evaluation element, as well as a so-called <i>importance weighting</i> calibrated to ensure that the theoretical maximum total is exactly 100." %}</li>
+                <li class="li-with-disc margin-10">{% trans "for single response evaluation elements, the number of points of the selected item is retained, while for multiple response evaluation elements, the number of points of all selected items are summed." %}</li>
+                <li class="li-with-disc margin-10">{% trans "the total score obtained is the sum of the number of points for each evaluation element, weighted by the importance weighting." %}</li>
+            </ul>
+        </div>
+    <br>
+    <p>{% trans "There is, however, a subtlety in cases where one is <i>not concerned</i> by certain evaluation elements and the risk universes corresponding to them. Indeed, it would be illogical to deprive the organisation of points associated with evaluation elements that do not concern it but which other organisations concerned by this risk can obtain. Similarly, it would be illogical to immediately obtain all possible points, at the risk otherwise of automatically having a very high score as soon as little is actually done. The mechanism for dealing with this point is as follows:" %}</p>
+    <ul>
+        <li class="li-with-disc margin-10">{% trans "If you are <i>not concerned</i> by an evaluation element, you are automatically awarded half of the maximum number of points for the element. The other half is added to a temporary variable, the <i>number of points that cannot be obtained</i>." %}</li>
+        <li class="li-with-disc margin-10">{% trans "Once all the assessment items that do not concern you have been dealt with, an intermediate score is calculated by summing the points for each item. This intermediate score is therefore not out of 100, but out of an intermediate maximum = (100 - the number of points that cannot be obtained)." %}</li>
+        <li class="li-with-disc margin-10">{% trans "This intermediate score is then <i>dilated</i> to be brought back to 100; dilated by a factor (100 / maximum intermediate)." %}</li>
+        <li class="li-with-disc margin-10">{% trans "This mechanism is a compromise to ensure : (i) that not being affected by certain risks is taken into account; (ii) that the score of any assessment is always out of 100." %}</li>
+    </ul>
+    <br>
+    <p>{% trans "Finally, here is some additional information in the form of answers to frequently asked questions:" %}</p>
+    <ul>
+        <li class="li-with-disc margin-10">{% trans "Why is the value of each response item not seen during the assessment? In studying several systems for evaluating professional practices in different sectors, it has become apparent that it is rather good practice not to show these values. The aim is to give priority to the content, and to limit the risk of distracting the user by constantly putting before his eyes the numerical elements that can lead to an attempt to <i>optimise</i> his answers." %}</li>
+        <li class="li-with-disc margin-10">{% trans "Why don't we get a score per section? We are working on this feature, be patient!" %}</li>
+    </ul>
+</div>
+
+
+{% endblock %}

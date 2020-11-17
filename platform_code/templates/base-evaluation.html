@@ -62,6 +62,11 @@
                         >{% trans "Resources" %}</a>
                     </li>
                     <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'home:faq' %}"
+                            >{% trans "FAQ" %}
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-item">
                      <a class="nav-link" href="{% url 'home:logout' %}"
                         >{% trans "Logout" %}
                      </a>
@@ -72,7 +77,12 @@
                             >{% trans "About" %}
                         </a>
                     </li>
-                    {% if request.get_full_path == "/signup/" or request.get_full_path == "/legal-notices/" or request.get_full_path == "/about/"%}
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'home:faq' %}"
+                            >{% trans "FAQ" %}
+                        </a>
+                    </li>
+                    {% if request.get_full_path == "/signup/" or request.get_full_path == "/legal-notices/" or request.get_full_path == "/about/" or request.get_full_path == "/FAQ/" or request.get_full_path == "/login/"%}
                     <li class="nav-item navbar-item">
                      <a class="nav-link" href="{% url 'home:login' %}"
                         >{% trans "Login" %}
@@ -118,6 +128,9 @@
         </div>
         <div class="col-md-3 col-md-3-footer">
             <a href="{% url 'home:about' %}" class="link-with-border">{% trans "About" %}</a>
+        </div>
+        <div class="col-md-3 col-md-3-footer">
+            <a href="{% url 'home:faq' %}" class="link-with-border" >{% trans "FAQ" %}</a>
         </div>
         <div class="col-md-3 col-md-3-footer">
             <a href="{% url 'home:legal-notices' %}" class="link-with-border" >{% trans "Legal notices" %}</a>
