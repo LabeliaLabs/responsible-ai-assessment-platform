@@ -215,7 +215,9 @@ class Evaluation(models.Model):
         """
         For an evaluation (self), we compare with an other version of assessment and we modify the fetch values for
         the objects of the evaluation.
-        This function can be used to create a new evaluation while having other with previous version
+        This function is used to create a new evaluation while having other with previous version.
+        This only set new objects field "fetch" to False in order to have the visual element "NEW"
+
         :param args:
         :param kwargs: original_assessment (previous assessment)
         :return:
@@ -287,7 +289,11 @@ class Evaluation(models.Model):
                 new_section.save()
             else:
                 # We rely on the upgrade dic to find the matching
-                older_section_order_id = upgrade_dic["sections"][new_section_number]
+                # Tow cases: 1 if it fetches itself, or "id" (ex "2") if it fetches an other section
+                if upgrade_dic["sections"][new_section_number] == 1:
+                    older_section_order_id = new_section.master_section.order_id
+                else:
+                    older_section_order_id = upgrade_dic["sections"][new_section_number]
                 new_section.user_notes = self.section_set.get(
                     master_section__order_id=older_section_order_id
                 ).user_notes
@@ -301,8 +307,13 @@ class Evaluation(models.Model):
                     new_element.fetch = False
                     new_element.save()
                 else:
-                    older_element_order_id = upgrade_dic["elements"][new_element_number][-1]
-                    older_element_section_order_id = upgrade_dic["elements"][new_element_number][-3]
+                    # Two cases: "1" if it fetches itself, or "id" (ex "1.1") if it fetches an other EE
+                    if upgrade_dic["elements"][new_element_number] != 1:
+                        older_element_order_id = upgrade_dic["elements"][new_element_number][-1]
+                        older_element_section_order_id = upgrade_dic["elements"][new_element_number][-3]
+                    else:
+                        older_element_order_id = new_element.master_evaluation_element.order_id
+                        older_element_section_order_id = new_element.master_evaluation_element.master_section.order_id
                     older_element = EvaluationElement.objects.get(
                         master_evaluation_element__order_id=older_element_order_id,
                         section__master_section__order_id=older_element_section_order_id,
@@ -317,9 +328,17 @@ class Evaluation(models.Model):
                         new_choice.fetch = False
                         new_choice.save()
                     else:
-                        older_choice_order_id = upgrade_dic["answer_items"][new_choice_number][-1]
-                        older_choice_element_order_id = upgrade_dic["answer_items"][new_choice_number][-3]
-                        older_choice_section_order_id = upgrade_dic["answer_items"][new_choice_number][-5]
+                        # Two cases: "1" if it fetches itself, or "id" (ex "1.1.a") if it fetches an other choice
+                        if upgrade_dic["answer_items"][new_choice_number] != 1:
+                            older_choice_order_id = upgrade_dic["answer_items"][new_choice_number][-1]
+                            older_choice_element_order_id = upgrade_dic["answer_items"][new_choice_number][-3]
+                            older_choice_section_order_id = upgrade_dic["answer_items"][new_choice_number][-5]
+                        else:
+                            # Fetch self
+                            older_choice_order_id = new_choice.master_choice.order_id
+                            older_choice_element_order_id = new_choice.master_choice.master_evaluation_element.order_id
+                            older_choice_section_order_id = \
+                                new_choice.master_choice.master_evaluation_element.master_section.order_id
                         older_choice = Choice.objects.get(
                             master_choice__order_id=older_choice_order_id,
                             evaluation_element__master_evaluation_element__order_id=older_choice_element_order_id,
