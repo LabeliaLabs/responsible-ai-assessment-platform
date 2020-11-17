@@ -84,6 +84,13 @@ h5.card-title-section {
     width: 100px
 }
 
+.progress-eval{
+    width: 50%;
+    margin-top: -2.5em;
+    margin-bottom: 2em;
+    height: 1.5em;
+}
+
 .progress-section{
     height: 14px;
     margin: auto;

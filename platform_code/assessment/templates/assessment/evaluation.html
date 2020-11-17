@@ -51,8 +51,8 @@
         </div>
       </div>
     </div>
-    <div class="progress" title="{% blocktrans with progression=evaluation.calculate_progression %}{{ progression }}% done{% endblocktrans %}"
-          style="width: 50%; margin: auto;">
+    <div class="progress progress-eval margin-auto"
+         title="{% blocktrans with progression=evaluation.calculate_progression %}{{ progression }}% done{% endblocktrans %}">
       <div class="progress-bar " role="progressbar" aria-valuenow="{{evaluation.calculate_progression}}"
            style="width:{{evaluation.calculate_progression}}%; background-color: #28a745;"
            title="{% blocktrans with progression=evaluation.calculate_progression %}{{ progression }}% done{% endblocktrans %}"

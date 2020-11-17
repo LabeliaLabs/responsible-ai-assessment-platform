@@ -12,7 +12,7 @@
     <span> ></span>
     <a href="{{ evaluation.get_absolute_url }}">{% trans 'Evaluation' %}</a>
     <span> ></span>
-    <a href="#" class="active-breadcrumb">{% trans 'Section' %}</a>
+    <a href="#" class="active-breadcrumb">{% trans 'Section' %} {{ page_obj.number }}</a>
 </div>
 
 {% if evaluation.is_upgradable %}
