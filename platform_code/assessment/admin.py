@@ -153,9 +153,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             # Process the import of the upgrade json
                             dict_upgrade_data = json.loads(decoded_upgrade_file)
                             # Verify the validity of the upgrade json and if it s ok, save it in Upgrade
-                            upgrade_success, upgrade_message = check_upgrade(
-                                dict_upgrade_data
-                            )
+                            upgrade_success, upgrade_message = check_upgrade(dict_upgrade_data)
                             if not upgrade_success:
                                 self.message_user(
                                     request, upgrade_message, level=messages.ERROR,

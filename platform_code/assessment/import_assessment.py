@@ -303,8 +303,8 @@ def check_upgrade(dict_upgrade_data):
     """
     success = False
     message = ""
-    # dic differences like {'1.0': {'sections': {'1': '1', '2': '2', '3': '3', '4': 'no_fetch', '5': 'no_fetch',
-    # '6': '5', '7': '7'}, 'elements': {'1.1': '1.1'}, 'answer_items': {'1.1.a': '1.1.a', '1.1.b': 'no_fetch'}}}
+    # dic differences like {'1.0': {'sections': {'1': '1', '2': '1', '3': '1', '4': 'no_fetch', '5': 'no_fetch',
+    # '6': '5', '7': '1'}, 'elements': {'1.1': '1'}, 'answer_items': {'1.1.a': '1', '1.1.b': 'no_fetch'}}}
     list_dic_differences = [
         {key: val} for key, val in dict_upgrade_data["diff_per_version"].items()
     ]
@@ -342,8 +342,8 @@ def check_object_within(object_type, object_assessment, dic_diff):
     We check that the object_assessment (section, element or choice) is within the dic_diff
     :param object_type: string, ("sections", "elements", 'choices")
     :param object_assessment: object of the assessment (section, element, choice)
-    :param dic_diff: dictionary, like {'sections': {'1': '1', '2': '2', '3': '3', '4': 'no_fetch',
-     '5': 'no_fetch', '6': '5', '7': '7'}, 'elements': {'1.1': '1.1'},
+    :param dic_diff: dictionary, like {'sections': {'1': '1', '2': '1', '3': '1', '4': 'no_fetch',
+     '5': 'no_fetch', '6': '5', '7': '1'}, 'elements': {'1.1': '1'},
       'answer_items': {'1.1.a': '1.1.a', '1.1.b': 'no_fetch'}}
     :return:
     """
