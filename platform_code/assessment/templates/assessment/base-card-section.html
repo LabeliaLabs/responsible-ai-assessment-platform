@@ -4,26 +4,24 @@
 {% load i18n %}
 {% load markdownify %}
 
-    <article class="card-section" >
-        <div class="row margin-bot-30">
-            <h5 class="section-card-title center" title="Section {{section.master_section.order_id}}">
-                Section {{section.master_section.order_id}}
-            </h5>
-
-            <div class="progress progress-section margin-right-8"
-                 title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done{% endblocktrans %}">
-                <div class="progress-bar progress-bar-section" role="progressbar"
-                     aria-valuenow="{{section.user_progression}}" style="width: {{section.user_progression}}%; background-color: #28a745;"
-                     title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done {% endblocktrans %}"
-                     aria-valuemin="0" aria-valuemax="100" >
-
-                </div>
+<article class="card-section" >
+    <div class="row margin-bot-30">
+        <h5 class="section-card-title center" title="Section {{section.master_section.order_id}}">
+            Section {{section.master_section.order_id}}
+        </h5>
+        <div class="progress progress-section margin-right-8"
+             title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done{% endblocktrans %}">
+            <div class="progress-bar progress-bar-section" role="progressbar"
+                 aria-valuenow="{{section.user_progression}}" style="width: {{section.user_progression}}%; background-color: #28a745;"
+                 title="{% blocktrans with progression=section.user_progression %}{{ progression }}% done {% endblocktrans %}"
+                 aria-valuemin="0" aria-valuemax="100" >
             </div>
-         </div>
-        <p class="card-title-section center height-title" title="{% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}">
-            {% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}
-        </p>
-       <div id="image" class="center" >
+        </div>
+    </div>
+    <p class="card-title-section center height-title" title="{% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}">
+        {% blocktrans with name=section.master_section.name %}{{name}}{% endblocktrans %}
+    </p>
+    <div id="image" class="center" >
       {% if forloop.counter == 1 %}
           <img src="{% static 'image/section1.png' %}" class="card-img-top" title="card image" alt="Card image">
       {% elif forloop.counter == 2 %}
@@ -39,14 +37,10 @@
       {% else %}
           <img src="{% static 'image/section7.png' %}" class="card-img-top" title="card image" alt="Card image">
       {% endif %}
-        </div>
-      <div class="card-body-section">
+    </div>
+    <div class="card-body-section">
         <p class="card-text-section">{{section.master_section.description|markdownify}}</p>
         <a href="{{ section.get_absolute_url }}"
-           class="btn btn-primary card-button-section">{% trans "Go to the section" %}</a>
-      </div>
-    </article>
-<!--  </body>-->
-
-<!--</html>-->
-
+       class="btn btn-primary card-button-section">{% trans "Go to the section" %}</a>
+    </div>
+</article>
