@@ -13,7 +13,7 @@ services:
     volumes:
       - static_volume:/home/app/web/static
     expose:
-      - 8000
+      - 8080
     env_file:
       - .env.prod
     depends_on:
