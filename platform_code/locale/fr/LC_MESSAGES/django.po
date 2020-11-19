@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-19 16:28+0100\n"
+"POT-Creation-Date: 2020-11-19 17:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,48 +33,48 @@ msgstr "Changer %s"
 msgid "View %s"
 msgstr "Voir %s"
 
-#: .\platform_code\assessment\forms.py:26
+#: .\platform_code\assessment\forms.py:27
 msgid "No evaluation element fits to my case"
 msgstr "Aucun élément de réponse ne me convient"
 
-#: .\platform_code\assessment\forms.py:27
+#: .\platform_code\assessment\forms.py:28
 msgid "This evaluation element is poorly formulated"
 msgstr "Cet élément est mal formulé ou mal expliqué"
 
-#: .\platform_code\assessment\forms.py:30
+#: .\platform_code\assessment\forms.py:31
 msgid "My organisation is not concerned by this evaluation element"
 msgstr "Cela ne s’applique pas à mon organisation ou mon secteur"
 
-#: .\platform_code\assessment\forms.py:32
+#: .\platform_code\assessment\forms.py:33
 msgid "There is an issue or a typo in the element"
 msgstr "Il y a une erreur ou une typo dans la question"
 
-#: .\platform_code\assessment\forms.py:33
+#: .\platform_code\assessment\forms.py:34
 msgid "I have a new resource to add to this evaluation element"
 msgstr "J’ai une ressource supplémentaire à proposer"
 
-#: .\platform_code\assessment\forms.py:34
+#: .\platform_code\assessment\forms.py:35
 msgid "A resource is not available"
 msgstr "Une ressource n'est pas disponible"
 
-#: .\platform_code\assessment\forms.py:35
-#: .\platform_code\assessment\forms.py:43
+#: .\platform_code\assessment\forms.py:36
+#: .\platform_code\assessment\forms.py:44
 msgid "Other"
 msgstr "Autres"
 
-#: .\platform_code\assessment\forms.py:40
+#: .\platform_code\assessment\forms.py:41
 msgid "I find that an evaluation element is not appropriated"
 msgstr "Un élément d’évaluation ne me semble pas approprié"
 
-#: .\platform_code\assessment\forms.py:41
+#: .\platform_code\assessment\forms.py:42
 msgid "I would like to propose a new evaluation element"
 msgstr "J’ai une suggestion d’un nouvel élément d’évaluation"
 
-#: .\platform_code\assessment\forms.py:42
+#: .\platform_code\assessment\forms.py:43
 msgid "I would like to propose a new resource to this section"
 msgstr "J’ai une ressource à proposer pour cette section"
 
-#: .\platform_code\assessment\forms.py:66
+#: .\platform_code\assessment\forms.py:67
 msgid ""
 "The json file has to contain the choice ids as keys ('1.1.a' for exemple) "
 "and the weight as value"
@@ -88,12 +88,12 @@ msgstr ""
 # msgstr ""
 # "Le json doit contenir les id des choix comme clés ('1.1.a' par exemple) "
 # "et les poids comme valeur"
-#: .\platform_code\assessment\forms.py:231
-#: .\platform_code\assessment\forms.py:251
+#: .\platform_code\assessment\forms.py:232
+#: .\platform_code\assessment\forms.py:252
 msgid "Evaluation title"
 msgstr "Titre de l'évaluation"
 
-#: .\platform_code\assessment\forms.py:253
+#: .\platform_code\assessment\forms.py:254
 #: .\platform_code\assessment\templates\assessment\evaluation.html:12
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:12
 #: .\platform_code\assessment\templates\assessment\section.html:11
@@ -102,32 +102,32 @@ msgstr "Titre de l'évaluation"
 msgid "Organisation"
 msgstr "Organisation"
 
-#: .\platform_code\assessment\forms.py:284
-#: .\platform_code\assessment\forms.py:299
+#: .\platform_code\assessment\forms.py:285
+#: .\platform_code\assessment\forms.py:300
 msgid "My notes on the section"
 msgstr "Mes notes sur la section"
 
-#: .\platform_code\assessment\forms.py:291
+#: .\platform_code\assessment\forms.py:292
 msgid "Enter your notes on the section here."
 msgstr "Entrer vos notes sur la section ici."
 
-#: .\platform_code\assessment\forms.py:360
-#: .\platform_code\assessment\forms.py:376
-#: .\platform_code\assessment\forms.py:602
+#: .\platform_code\assessment\forms.py:361
+#: .\platform_code\assessment\forms.py:377
+#: .\platform_code\assessment\forms.py:603
 msgid "My notes"
 msgstr "Mes notes"
 
-#: .\platform_code\assessment\forms.py:367
+#: .\platform_code\assessment\forms.py:368
 msgid "Enter your notes on the evaluation element here."
 msgstr "Entrer vos notes sur l'élément d'évaluation ici."
 
-#: .\platform_code\assessment\forms.py:509
-#: .\platform_code\assessment\forms.py:536
+#: .\platform_code\assessment\forms.py:510
+#: .\platform_code\assessment\forms.py:537
 msgid "Your feedback"
 msgstr "Votre avis"
 
-#: .\platform_code\assessment\forms.py:516
-#: .\platform_code\assessment\forms.py:543
+#: .\platform_code\assessment\forms.py:517
+#: .\platform_code\assessment\forms.py:544
 msgid "My feedback"
 msgstr "Mon avis"
 
@@ -637,7 +637,7 @@ msgid "Progression"
 msgstr "Progression"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:18
-#: .\platform_code\home\templates\home\faq.html:48
+#: .\platform_code\home\templates\home\faq.html:41
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:24
 msgid "Score"
 msgstr "Score"
@@ -780,7 +780,7 @@ msgid "Your score"
 msgstr "Votre score"
 
 #: .\platform_code\assessment\templates\assessment\results.html:64
-#: .\platform_code\home\templates\home\faq.html:50
+#: .\platform_code\home\templates\home\faq.html:43
 msgid ""
 "The synthetic score is on a total of 100 theoretical maximum points for your "
 "full assessment. It provides an indication of the organization maturity "
@@ -1329,48 +1329,51 @@ msgid ""
 "and the difficulty of trusting these techniques or their implementation on "
 "the other (whether by private actors such as "
 msgstr ""
-"Reprenons tout de même ici quelques éléments de contexte décrits dans l'article. "
-"Tout d'abord, notre constat est que l'on observe une tension grandissante, entre d’un côté "
-"le potentiel et l’intérêt des techniques d’IA, et de l’autre la difficulté à faire confiance "
-"à ces techniques ou à leurs mises en oeuvres (que ce soit par des acteurs privés comme "
+"Reprenons tout de même ici quelques éléments de contexte décrits dans "
+"l'article. Tout d'abord, notre constat est que l'on observe une tension "
+"grandissante, entre d’un côté le potentiel et l’intérêt des techniques d’IA, "
+"et de l’autre la difficulté à faire confiance à ces techniques ou à leurs "
+"mises en oeuvres (que ce soit par des acteurs privés comme "
 
 #: .\platform_code\home\templates\home\faq.html:18
 msgid "Apple with the Apple Card"
 msgstr "Apple avec l'Apple Card"
 
-#: .\platform_code\home\templates\home\faq.html:20
+#: .\platform_code\home\templates\home\faq.html:18
 msgid ", Tesla in "
 msgstr ", Tesla dans"
 
-#: .\platform_code\home\templates\home\faq.html:23
+#: .\platform_code\home\templates\home\faq.html:21
 msgid "this astonishing example"
 msgstr "cet exemple étonnant"
 
-#: .\platform_code\home\templates\home\faq.html:25
+#: .\platform_code\home\templates\home\faq.html:21
 msgid ", or by public actors such as the States, cf. "
 msgstr ", ou par des acteurs publics comme les Etats, cf. "
 
-#: .\platform_code\home\templates\home\faq.html:30
+#: .\platform_code\home\templates\home\faq.html:24
 msgid ""
-"on conditional release in the USA, the controversies each year on Parcoursup "
-"in France, "
-msgstr "sur les libérations conditionnelles aux USA, les controverses chaque année sur Parcoursup en France, les "
+" on conditional release in the USA, the controversies each year on "
+"Parcoursup in France, "
+msgstr ""
+" sur les libérations conditionnelles aux USA, les controverses chaque année "
+"sur Parcoursup en France, les "
 
-#: .\platform_code\home\templates\home\faq.html:33
+#: .\platform_code\home\templates\home\faq.html:27
 msgid "unemployment benefits in the Netherlands"
 msgstr "allocations chômage aux Pays-Bas"
 
-#: .\platform_code\home\templates\home\faq.html:34
+#: .\platform_code\home\templates\home\faq.html:27
 msgid ""
 ", and many others). In this context, it is becoming increasingly difficult "
 "for an organisation to implement data science approaches in its products and "
 "services and to take this on board publicly."
 msgstr ""
-", et bien d’autres). Et dans ce contexte, il devient de plus en plus délicat pour "
-"une organisation de mettre en œuvre des approches de data science dans ses produits "
-"et services et de l’assumer publiquement."
+", et bien d’autres). Et dans ce contexte, il devient de plus en plus délicat "
+"pour une organisation de mettre en œuvre des approches de data science dans "
+"ses produits et services et de l’assumer publiquement."
 
-#: .\platform_code\home\templates\home\faq.html:35
+#: .\platform_code\home\templates\home\faq.html:28
 msgid ""
 "Obviously this tension is not new, certain risks are very real, and it seems "
 "to us that there is a general consensus on the fact that it is necessary to "
@@ -1381,30 +1384,31 @@ msgid ""
 "we position ourselves? How to evaluate one's organisation? What should you "
 "work on to <i>comply</i> with these principles?"
 msgstr ""
-"Evidemment cette tension ne date pas d’hier, certains risques sont bien réels, "
-"et il nous semble que règne une forme de consensus général sur le fait qu’il "
-"faille faire émerger des cadres structurants et rassurants. Il suffit de taper <i>IA et éthique</i> "
-"ou “<i>A responsable</i> dans un moteur de recherche pour voir le foisonnement "
-"d’initiatives dans ce domaine, et on trouve donc beaucoup de choses en la matière. "
-"Cependant, beaucoup sont des listes de principes cardinaux, et n’offrent pas d’accroche "
-"concrète, opérationnelle. Comment se positionner ? Comment évaluer son organisation ? "
+"Evidemment cette tension ne date pas d’hier, certains risques sont bien "
+"réels, et il nous semble que règne une forme de consensus général sur le "
+"fait qu’il faille faire émerger des cadres structurants et rassurants. Il "
+"suffit de taper <i>IA et éthique</i> ou “<i>A responsable</i> dans un moteur "
+"de recherche pour voir le foisonnement d’initiatives dans ce domaine, et on "
+"trouve donc beaucoup de choses en la matière. Cependant, beaucoup sont des "
+"listes de principes cardinaux, et n’offrent pas d’accroche concrète, "
+"opérationnelle. Comment se positionner ? Comment évaluer son organisation ? "
 "Sur quoi travailler pour se <i>mettre en conformité</i> avec ces principes ?"
 
-#: .\platform_code\home\templates\home\faq.html:36
+#: .\platform_code\home\templates\home\faq.html:29
 msgid ""
 "It is on the basis of this reflection that we wanted to develop a tool that "
 "is intended for practitioners, useful and actionable as soon as possible. "
 "Give it a try and tell us what you think!"
 msgstr ""
-"C'est à partir de cette réflexion que nous avons souhaité élaborer un "
-"outil qui soit à destination des praticiens, utile et actionnable dès que possible. "
-"Essayez et dites-nous ce que vous en pensez !"
+"C'est à partir de cette réflexion que nous avons souhaité élaborer un outil "
+"qui soit à destination des praticiens, utile et actionnable dès que "
+"possible. Essayez et dites-nous ce que vous en pensez !"
 
-#: .\platform_code\home\templates\home\faq.html:39
+#: .\platform_code\home\templates\home\faq.html:32
 msgid "Who is this evaluation intended for?"
 msgstr "À qui s'adresse cette évaluation ?"
 
-#: .\platform_code\home\templates\home\faq.html:40
+#: .\platform_code\home\templates\home\faq.html:33
 msgid ""
 "The self-assessment tool has been developed to suit (and hopefully bring "
 "something!) all organisations (companies, university laboratories, start-"
@@ -1413,34 +1417,38 @@ msgid ""
 "can complete the assessment. The tool also allows several users for the same "
 "organisation to be involved, for example to divide up the subjects."
 msgstr ""
-"L'outil d'auto-évaluation a été élaboré pour convenir (et, on l'espère, apporter "
-"quelque chose !) à toutes les organisations (entreprises, laboratoires universitaires, "
-"start-ups, consultants spécialisés…) ayant des activités de data science, IA, ML, etc. "
-"Un data scientist, un responsable d'équipe, ou un directeur technique par exemple peuvent "
-"compléter l'évaluation. L'outil permet d'ailleurs de s'y atteler à plusieurs utilisateurs "
-"pour une même organisation, pour se répartir les sujets par exemple."
+"L'outil d'auto-évaluation a été élaboré pour convenir (et, on l'espère, "
+"apporter quelque chose !) à toutes les organisations (entreprises, "
+"laboratoires universitaires, start-ups, consultants spécialisés…) ayant des "
+"activités de data science, IA, ML, etc. Un data scientist, un responsable "
+"d'équipe, ou un directeur technique par exemple peuvent compléter "
+"l'évaluation. L'outil permet d'ailleurs de s'y atteler à plusieurs "
+"utilisateurs pour une même organisation, pour se répartir les sujets par "
+"exemple."
 
-#: .\platform_code\home\templates\home\faq.html:42
+#: .\platform_code\home\templates\home\faq.html:35
 msgid "How is the evaluation structured?"
 msgstr "Comment est structurée l'évaluation ?"
 
-#: .\platform_code\home\templates\home\faq.html:43
+#: .\platform_code\home\templates\home\faq.html:36
 msgid ""
 "It is composed of 6 thematic sections. We have chosen not to take up here "
 "the 7 themes of the report of the EU high-level expert group or of its ALTAI "
 "tool, but to prefer a breakdown that we hope will be more pragmatic, aimed "
 "at getting closer to the life cycle of a data science project. See it in use!"
 msgstr ""
-"Elle est composée de 6 sections thématiques. Nous avons choisi de ne pas reprendre "
-"ici les 7 thèmes du rapport du high-level expert group de l'UE ou de son outil ALTAI, "
-"mais de leur préférer un découpage que nous espérons plus pragmatique, visant à se "
-"rapprocher du cycle de vie d'un projet de data science. À voir à l'usage !"
+"Elle est composée de 6 sections thématiques. Nous avons choisi de ne pas "
+"reprendre ici les 7 thèmes du rapport du high-level expert group de l'UE ou "
+"de son outil ALTAI, mais de leur préférer un découpage que nous espérons "
+"plus pragmatique, visant à se rapprocher du cycle de vie d'un projet de data "
+"science. À voir à l'usage !"
 
-#: .\platform_code\home\templates\home\faq.html:45
+#: .\platform_code\home\templates\home\faq.html:38
 msgid "Is the assessment fixed or will you change it over time?"
-msgstr "L'évaluation est-elle figée ou allez-vous la faire évoluer avec le temps ?"
+msgstr ""
+"L'évaluation est-elle figée ou allez-vous la faire évoluer avec le temps ?"
 
-#: .\platform_code\home\templates\home\faq.html:46
+#: .\platform_code\home\templates\home\faq.html:39
 msgid ""
 "Yes, it will continue to evolve. From the very beginning of this project it "
 "was clear that it would be an iterative process, because it seemed "
@@ -1459,24 +1467,26 @@ msgid ""
 "elements will be retained."
 msgstr ""
 "Oui elle va continuer à évoluer. Dès le début de ce projet il était clair "
-"que ce serait une démarche itérative, car il paraissait inimaginable de travailler "
-"pendant une période, publier ce travail et passer à autre chose. Le domaine "
-"évolue vite, les perspectives sont multiples (grande entreprise, organisation "
-"publique, petite start-up, consultants spécialisés, régulateurs…), il allait falloir "
-"démarrer quelque part et améliorer au fil du temps. Maintenant que la plateforme est en "
-"ligne, il ne s'agit cependant pas d'apporter des évolutions toutes les semaines, sans "
-"quoi les évaluations en cours ou juste terminées seront sans cesse obsolètes. On se "
-"fixe donc une constante de temps de l'ordre du trimestre ou du semestre. Pour "
-"accompagner ces mises à jour et en faire quelque chose de positif pour les utilisateurs "
-"et les organisations s'étant déjà évalués, la plateforme comprend une fonctionnalité de "
-"migration. Cela consiste à <i>migrer</i> une évaluation donnée vers la version plus "
-"récente du référentiel d'évaluation : toutes les réponses à des éléments inchangés seront conservés."
+"que ce serait une démarche itérative, car il paraissait inimaginable de "
+"travailler pendant une période, publier ce travail et passer à autre chose. "
+"Le domaine évolue vite, les perspectives sont multiples (grande entreprise, "
+"organisation publique, petite start-up, consultants spécialisés, "
+"régulateurs…), il allait falloir démarrer quelque part et améliorer au fil "
+"du temps. Maintenant que la plateforme est en ligne, il ne s'agit cependant "
+"pas d'apporter des évolutions toutes les semaines, sans quoi les évaluations "
+"en cours ou juste terminées seront sans cesse obsolètes. On se fixe donc une "
+"constante de temps de l'ordre du trimestre ou du semestre. Pour accompagner "
+"ces mises à jour et en faire quelque chose de positif pour les utilisateurs "
+"et les organisations s'étant déjà évalués, la plateforme comprend une "
+"fonctionnalité de migration. Cela consiste à <i>migrer</i> une évaluation "
+"donnée vers la version plus récente du référentiel d'évaluation : toutes les "
+"réponses à des éléments inchangés seront conservés."
 
-#: .\platform_code\home\templates\home\faq.html:52
+#: .\platform_code\home\templates\home\faq.html:45
 msgid "The mechanism for calculating the score is relatively simple:"
 msgstr "Le mécanisme de calcul du score est relativement simple :"
 
-#: .\platform_code\home\templates\home\faq.html:54
+#: .\platform_code\home\templates\home\faq.html:47
 msgid ""
 "with each version of the assessment we define a number of points for each "
 "response item of each evaluation element, as well as a so-called "
@@ -1488,7 +1498,7 @@ msgstr ""
 "pondération dite <i>pondération d'importance</i> calibrée pour assurer que "
 "le total maximal théorique est bien 100 exactement."
 
-#: .\platform_code\home\templates\home\faq.html:55
+#: .\platform_code\home\templates\home\faq.html:48
 msgid ""
 "for single response evaluation elements, the number of points of the "
 "selected item is retained, while for multiple response evaluation elements, "
@@ -1498,7 +1508,7 @@ msgstr ""
 "est retenu, alors que pour les éléments à réponses multiples, les nombres de "
 "points de tous les items sélectionnés sont sommés."
 
-#: .\platform_code\home\templates\home\faq.html:56
+#: .\platform_code\home\templates\home\faq.html:49
 msgid ""
 "the total score obtained is the sum of the number of points for each "
 "evaluation element, weighted by the importance weighting."
@@ -1506,7 +1516,7 @@ msgstr ""
 "le score total obtenu est la somme des nombres de points de chaque élément, "
 "pondérée par la pondération d'importance."
 
-#: .\platform_code\home\templates\home\faq.html:59
+#: .\platform_code\home\templates\home\faq.html:52
 msgid ""
 "There is, however, a subtlety in cases where one is <i>not concerned</i> by "
 "certain evaluation elements and the risk universes corresponding to them. "
@@ -1527,7 +1537,7 @@ msgstr ""
 "élevé dès lors que l'on ne fait en fait pas grand chose. Le mécanisme pour "
 "traiter ce point est le suivant :"
 
-#: .\platform_code\home\templates\home\faq.html:61
+#: .\platform_code\home\templates\home\faq.html:54
 msgid ""
 "If you are <i>not concerned</i> by an evaluation element, you are "
 "automatically awarded half of the maximum number of points for the element. "
@@ -1539,7 +1549,7 @@ msgstr ""
 "l'élément. L'autre moitié vient abonder une variable temporaire, le "
 "<i>nombre de points qui ne peuvent pas être obtenus</i>."
 
-#: .\platform_code\home\templates\home\faq.html:62
+#: .\platform_code\home\templates\home\faq.html:55
 msgid ""
 "Once all the assessment items that do not concern you have been dealt with, "
 "an intermediate score is calculated by summing the points for each item. "
@@ -1552,7 +1562,7 @@ msgstr ""
 "mais sur un maximum intermédiaire = (100 - le nombre de points qui ne "
 "peuvent pas être obtenus)."
 
-#: .\platform_code\home\templates\home\faq.html:63
+#: .\platform_code\home\templates\home\faq.html:56
 msgid ""
 "This intermediate score is then <i>dilated</i> to be brought back to 100; "
 "dilated by a factor (100 / maximum intermediate)."
@@ -1560,7 +1570,7 @@ msgstr ""
 "Ce score intermédiaire est ensuite <i>dilaté</i> pour être ramené sur 100 ; "
 "dilaté d'un facteur (100 / maximum intermédiaire)."
 
-#: .\platform_code\home\templates\home\faq.html:64
+#: .\platform_code\home\templates\home\faq.html:57
 msgid ""
 "This mechanism is a compromise to ensure : (i) that not being affected by "
 "certain risks is taken into account; (ii) that the score of any assessment "
@@ -1570,7 +1580,7 @@ msgstr ""
 "être concerné par certains risques est pris en compte ; (ii) que le score de "
 "n'importe quelle évaluation est toujours sur 100."
 
-#: .\platform_code\home\templates\home\faq.html:67
+#: .\platform_code\home\templates\home\faq.html:60
 msgid ""
 "Finally, here is some additional information in the form of answers to "
 "frequently asked questions:"
@@ -1578,7 +1588,7 @@ msgstr ""
 "Enfin, voici quelques compléments d'information sous forme de réponses à des "
 "questions souvent posées :"
 
-#: .\platform_code\home\templates\home\faq.html:69
+#: .\platform_code\home\templates\home\faq.html:62
 msgid ""
 "Why is the value of each response item not seen during the assessment? In "
 "studying several systems for evaluating professional practices in different "
@@ -1597,32 +1607,32 @@ msgstr ""
 "chiffrés qui pourraient le conduire à chercher à <i>optimiser</i> ses "
 "réponses."
 
-#: .\platform_code\home\templates\home\faq.html:70
+#: .\platform_code\home\templates\home\faq.html:63
 msgid ""
 "Why don't we get a score per section? We are working on this feature, be "
 "patient!"
 msgstr "Pourquoi n'obtient-on pas un score par section ? Nous y travaillons ! "
 
-#: .\platform_code\home\templates\home\faq.html:73
+#: .\platform_code\home\templates\home\faq.html:66
 msgid "About Substra Foundation"
 msgstr "À propos de Substra Foundation"
 
-#: .\platform_code\home\templates\home\faq.html:75
-#: .\platform_code\home\templates\home\faq.html:76
+#: .\platform_code\home\templates\home\faq.html:68
+#: .\platform_code\home\templates\home\faq.html:69
 msgid "https://www.substra.ai/en/about-substra-foundation"
 msgstr "https://www.substra.ai/fr/about-substra-foundation"
 
-#: .\platform_code\home\templates\home\faq.html:78
+#: .\platform_code\home\templates\home\faq.html:71
 msgid ""
 "is a non-profit organisation whose mission is to contribute to the "
 "development of collaborative, responsible and trustworthy data science. It "
 "is dedicated to the following 5 projects:"
 msgstr ""
-"est une association loi 1901 qui s'est donné pour mission "
-"de contribuer au développement de la data science collaborative, responsable "
-"et de confiance. Elle se consacre aux 5 projets suivants :"
+"est une association loi 1901 qui s'est donné pour mission de contribuer au "
+"développement de la data science collaborative, responsable et de confiance. "
+"Elle se consacre aux 5 projets suivants :"
 
-#: .\platform_code\home\templates\home\faq.html:80
+#: .\platform_code\home\templates\home\faq.html:73
 msgid ""
 "Substra Assessment: a self-assessment and self-training tool on risks and "
 "good practices on the theme of responsible and trustworthy data science."
@@ -1631,15 +1641,15 @@ msgstr ""
 "risques et bonnes pratiques sur le thème de la data science responsable et "
 "de confiance."
 
-#: .\platform_code\home\templates\home\faq.html:81
+#: .\platform_code\home\templates\home\faq.html:74
 msgid "https://doc.substra.ai/"
 msgstr "https://doc.substra.ai/"
 
-#: .\platform_code\home\templates\home\faq.html:83
+#: .\platform_code\home\templates\home\faq.html:76
 msgid "Substra Framework: "
 msgstr "Framework Substra :"
 
-#: .\platform_code\home\templates\home\faq.html:84
+#: .\platform_code\home\templates\home\faq.html:77
 msgid ""
 "the association promotes, animates and contributes to the open source "
 "project Substra, a framework for the secure, traceable and decentralised "
@@ -1655,22 +1665,22 @@ msgstr ""
 "publiée sous licence Apache 2.0 pour favoriser l'émergence de nouveaux cas "
 "d'usage et ouvrir les collaborations open source."
 
-#: .\platform_code\home\templates\home\faq.html:87
+#: .\platform_code\home\templates\home\faq.html:80
 msgid "MLPC: "
 msgstr "MLPC :"
 
-#: .\platform_code\home\templates\home\faq.html:88
+#: .\platform_code\home\templates\home\faq.html:81
 msgid ""
-"mplc (for Multi-Partner Learning and Contributivity) is a python library for "
+"mplc (for Multi-Partner Learning and Contributivity) is a Python library for "
 "simulating distributed learning scenarios and benchmarking different "
 "learning methods and different methods of dataset contributivity assessment."
 msgstr ""
 "mplc (pour Multi-Partner Learning and Contributivity) est une librairie "
-"python pour simuler des scenarios d'apprentissage distribué et benchmarker "
+"Python pour simuler des scenarios d'apprentissage distribué et benchmarker "
 "différentes méthodes d'apprentissage et différentes méthodes d'évaluation de "
 "contributivité des datasets."
 
-#: .\platform_code\home\templates\home\faq.html:89
+#: .\platform_code\home\templates\home\faq.html:82
 msgid ""
 "HealthChain: research consortium on federated learning use cases on clinical "
 "data (see description "
@@ -1678,26 +1688,26 @@ msgstr ""
 "HealthChain : consortium de recherche sur des cas d'usage d'apprentissage "
 "fédéré sur des données cliniques (voir description "
 
-#: .\platform_code\home\templates\home\faq.html:89
-#: .\platform_code\home\templates\home\faq.html:90
+#: .\platform_code\home\templates\home\faq.html:82
+#: .\platform_code\home\templates\home\faq.html:83
 msgid "https://www.substra.ai/en/healthchain-project"
 msgstr "https://www.substra.ai/fr/healthchain-project"
 
-#: .\platform_code\home\templates\home\faq.html:91
-#: .\platform_code\home\templates\home\faq.html:94
+#: .\platform_code\home\templates\home\faq.html:84
+#: .\platform_code\home\templates\home\faq.html:87
 msgid "here"
 msgstr "ici"
 
-#: .\platform_code\home\templates\home\faq.html:92
+#: .\platform_code\home\templates\home\faq.html:85
 msgid ""
 "MELLODDY: research consortium on federated learning use cases on chemical "
 "data (see description "
 msgstr ""
 "MELLODDY : consortium de recherche sur des cas d'usage d'apprentissage "
-"fédéré sur des données chimiques (voir description"
+"fédéré sur des données chimiques (voir description "
 
-#: .\platform_code\home\templates\home\faq.html:92
-#: .\platform_code\home\templates\home\faq.html:93
+#: .\platform_code\home\templates\home\faq.html:85
+#: .\platform_code\home\templates\home\faq.html:86
 msgid "https://www.substra.ai/en/melloddy-project"
 msgstr "https://www.substra.ai/fr/melloddy-project"
 
