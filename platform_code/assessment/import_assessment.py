@@ -274,13 +274,13 @@ def test_order_id_number(order_id):
 
 def test_order_id_letter(order_id):
     """Check if the choice order_id is a letter between a and h"""
-    reg = re.findall(r"^[a-h]$", order_id)
+    reg = re.findall(r"^[a-n]$", order_id)
     return reg != []
 
 
 def test_choice_numbering(numbering):
     """Check the numbering for a string. It s almost the same principle of test_numbering in the MasterChoice class"""
-    reg = re.findall(r"^[0-9]\.[0-9]\.[a-h]$", numbering)
+    reg = re.findall(r"^[0-9]\.[0-9]\.[a-n]$", numbering)
     return reg != []
 
 

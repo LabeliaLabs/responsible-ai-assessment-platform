@@ -1312,6 +1312,10 @@ class Choice(models.Model):
             return 6
         elif order_id == "h" or order_id == "H":
             return 7
+        elif order_id == "i" or order_id == "I":
+            return 8
+        elif order_id == "j" or order_id == "J":
+            return 9
 
     def get_evaluation_id(self):
         return self.evaluation_element.section.evaluation.id
