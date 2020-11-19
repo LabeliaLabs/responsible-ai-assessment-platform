@@ -20,7 +20,8 @@ from .models import (
 )
 from .scoring import check_and_valid_scoring_json
 from home.models import Organisation
-from .utils import markdownify_bold, markdownify_italic, select_label_choice
+from .utils import markdownify_bold, markdownify_italic, select_label_choice, remove_markdown_bold, \
+    remove_markdownify_italic
 
 element_feedback_list = [
     ["element_fit", _("No evaluation element fits to my case")],
@@ -437,7 +438,7 @@ class RadioResultsWidget(widgets.CheckboxSelectMultiple):
                     + "_"
                     + str(order_choice)
                     + '" >'
-                    + choice.master_choice.answer_text
+                    + remove_markdown_bold(remove_markdownify_italic(choice.master_choice.answer_text))
                     + "</label></li>"
                 )
             else:
@@ -449,7 +450,7 @@ class RadioResultsWidget(widgets.CheckboxSelectMultiple):
                     + "_"
                     + str(order_choice)
                     + '" >'
-                    + choice.master_choice.answer_text
+                    + remove_markdown_bold(remove_markdownify_italic(choice.master_choice.answer_text))
                     + "</label></li>"
                 )
 
@@ -478,7 +479,7 @@ class CheckboxResultsWidget(widgets.RadioSelect):
                     + "_"
                     + str(order_choice)
                     + '" >'
-                    + choice.master_choice.answer_text
+                    + remove_markdown_bold(remove_markdownify_italic(choice.master_choice.answer_text))
                     + "</label></li>"
                 )
             else:
@@ -490,7 +491,7 @@ class CheckboxResultsWidget(widgets.RadioSelect):
                     + "_"
                     + str(order_choice)
                     + '" >'
-                    + choice.master_choice.answer_text
+                    + remove_markdown_bold(remove_markdownify_italic(choice.master_choice.answer_text))
                     + "</label></li>"
                 )
 

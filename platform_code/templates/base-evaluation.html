@@ -73,28 +73,23 @@
                     </li>
                 {% else %}
                     <li class="nav-item navbar-item">
-                        <a class="nav-link" href="{% url 'home:about' %}"
-                            >{% trans "About" %}
-                        </a>
-                    </li>
-                    <li class="nav-item navbar-item">
                         <a class="nav-link" href="{% url 'home:faq' %}"
                             >{% trans "FAQ" %}
                         </a>
                     </li>
-                    {% if request.get_full_path == "/signup/" or request.get_full_path == "/legal-notices/" or request.get_full_path == "/about/" or request.get_full_path == "/FAQ/" or request.get_full_path == "/login/"%}
-                    <li class="nav-item navbar-item">
-                     <a class="nav-link" href="{% url 'home:login' %}"
-                        >{% trans "Login" %}
-                     </a>
-                    </li>
+                    {% if request.get_full_path == "/signup/" or request.get_full_path == "/legal-notices/" or request.get_full_path == "/faq/" or request.get_full_path == "/login/"%}
+                        <li class="nav-item navbar-item">
+                         <a class="nav-link" href="{% url 'home:login' %}"
+                            >{% trans "Login" %}
+                         </a>
+                        </li>
                     {% else %}
                         <li class="nav-item navbar-item">
                              <a class="nav-link" data-toggle="modal" href="{% url 'home:homepage' %}"
                                 data-target="#modal-login-user" >{% trans "Login" %}</a>
                         </li>
                     {% endif %}
-                    {% endif %}
+                {% endif %}
                 </ul>
               </div>
         </div>
@@ -125,9 +120,6 @@
                 <a href="{% url 'home:signup' %}" class="link-with-border" >{% trans "Sign up" %}</a><br>
                 <a href="{% url 'home:login' %}" class="link-with-border">{% trans "Login" %}</a>
             {% endif %}
-        </div>
-        <div class="col-md-3 col-md-3-footer">
-            <a href="{% url 'home:about' %}" class="link-with-border">{% trans "About" %}</a>
         </div>
         <div class="col-md-3 col-md-3-footer">
             <a href="{% url 'home:faq' %}" class="link-with-border" >{% trans "FAQ" %}</a>

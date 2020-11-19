@@ -10,10 +10,33 @@
     <h1>{% trans "FAQ" %}</h1>
 <img class="img-fluid d-block mx-auto image-faq" src="{% static 'image/Illustration_10.png' %}" alt="image">
     <h3 class="about-subtitle">{% trans "The assessment" %}</h3>
-    <p>{% trans "Who is this evaluation intended for?" %}</p>
-    <ul><li class="li-with-disc margin-10">{% trans "This assessment is aimed at all organisations wishing to evaluate their level of maturity on Responsible and Trusted Data Science." %}</li></ul>
-    <p>{% trans "On what basis was this evaluation constructed?" %}</p>
-    <ul><li class="li-with-disc margin-10">{% trans 'This evaluation was built on a participatory and open approach led by Substra Foundation. This approach is explained in this '%}<a href="https://www.substra.ai/fr/blog/evaluation-data-science-responsable" title="https://www.substra.ai/fr/blog/evaluation-data-science-responsable">{%trans "blog article." %}</a></li></ul>
+    <p><strong>{% trans "How was the evaluation developed?" %}</strong></p>
+    <ul><li class="li-with-disc margin-10"><p>{% trans "It is the result of a participatory work initiated in mid-2019 and carried out by the Substra Foundation association.<strong> This approach is described in this "%}<a href="https://www.substra.ai/fr/blog/evaluation-data-science-responsable" title="https://www.substra.ai/fr/blog/evaluation-data-science-responsable">{%trans "blog article" %}</a>{% trans " that we recommend!" %}</strong></p>
+        <p>{% trans "Nevertheless, let us take up again here some of the contextual elements described in the article. First of all, we can see that there is growing tension between the potential and interest of AI techniques on the one hand, and the difficulty of trusting these techniques or their implementation on the other (whether by private actors such as "%}
+            <a href="https://twitter.com/dhh/status/1192540900393705474?lang=fr"
+               title="https://twitter.com/dhh/status/1192540900393705474?lang=fr" target="_blank"
+                >{% trans "Apple with the Apple Card" %}</a>{% trans ", Tesla in " %}
+            <a href="https://spectrum.ieee.org/cars-that-think/transportation/self-driving/three-small-stickers-on-road-can-steer-tesla-autopilot-into-oncoming-lane"
+               title="https://spectrum.ieee.org/cars-that-think/transportation/self-driving/three-small-stickers-on-road-can-steer-tesla-autopilot-into-oncoming-lane"
+               target="_blank">{% trans "this astonishing example" %}</a>{% trans ", or by public actors such as the States, cf. " %}
+            <a href="https://advances.sciencemag.org/content/4/1/eaao5580"
+               title="https://advances.sciencemag.org/content/4/1/eaao5580"
+               target="_blank">COMPAS</a>{% trans "on conditional release in the USA, the controversies each year on Parcoursup in France, " %}
+            <a href="https://www.theguardian.com/technology/2020/feb/05/welfare-surveillance-system-violates-human-rights-dutch-court-rules"
+               title="https://www.theguardian.com/technology/2020/feb/05/welfare-surveillance-system-violates-human-rights-dutch-court-rules"
+               target="_blank">{% trans "unemployment benefits in the Netherlands" %}</a>{% trans ", and many others). In this context, it is becoming increasingly difficult for an organisation to implement data science approaches in its products and services and to take this on board publicly." %}</p>
+        <p>{% trans "Obviously this tension is not new, certain risks are very real, and it seems to us that there is a general consensus on the fact that it is necessary to develop structuring and reassuring frameworks. You only have to type <i>AI and ethics</i> or <i>responsible AI</i> into a search engine to see the plethora of initiatives in this field. However, many of them are lists of cardinal principles, and do not offer a concrete, operational hook. How can we position ourselves? How to evaluate one's organisation? What should you work on to <i>comply</i> with these principles?" %}</p>
+        <p>{% trans "It is on the basis of this reflection that we wanted to develop a tool that is intended for practitioners, useful and actionable as soon as possible. Give it a try and tell us what you think!" %}</p>
+    </li></ul>
+
+    <p><strong>{% trans "Who is this evaluation intended for?" %}</strong></p>
+    <ul><li class="li-with-disc margin-10">{% trans "The self-assessment tool has been developed to suit (and hopefully bring something!) all organisations (companies, university laboratories, start-ups, specialised consultants, etc.) with activities in data science, AI, ML, etc. A data scientist, a team leader, or a technical director for example can complete the assessment. The tool also allows several users for the same organisation to be involved, for example to divide up the subjects." %}</li></ul>
+
+    <p><strong>{% trans "How is the evaluation structured?" %}</strong></p>
+    <ul><li class="li-with-disc margin-10">{% trans "It is composed of 6 thematic sections. We have chosen not to take up here the 7 themes of the report of the EU high-level expert group or of its ALTAI tool, but to prefer a breakdown that we hope will be more pragmatic, aimed at getting closer to the life cycle of a data science project. See it in use!" %}</li></ul>
+
+    <p><strong>{% trans "Is the assessment fixed or will you change it over time?" %}</strong></p>
+    <ul><li class="li-with-disc margin-10">{% trans "Yes, it will continue to evolve. From the very beginning of this project it was clear that it would be an iterative process, because it seemed unimaginable to work for a period of time, publish this work and move on to something else. The field evolves quickly, the perspectives are multiple (large companies, public organisations, small start-ups, specialised consultants, regulators...), it was going to have to start somewhere and improve over time. Now that the platform is online, however, it is not a question of making changes every week, otherwise the assessments in progress or just completed will be constantly obsolete. We therefore set ourselves a time constant of the order of a quarter or semester. In order to accompany these updates and make them a positive thing for users and organisations that have already evaluated themselves, the platform includes a migration functionality. This consists of <i>migrating</i> a given evaluation to the more recent version of the evaluation repository: all responses to unchanged elements will be retained." %}</li></ul>
 
     <h3 class="about-subtitle">{% trans "Score" %}</h3>
 
@@ -25,7 +48,6 @@
                 <li class="li-with-disc margin-10">{% trans "for single response evaluation elements, the number of points of the selected item is retained, while for multiple response evaluation elements, the number of points of all selected items are summed." %}</li>
                 <li class="li-with-disc margin-10">{% trans "the total score obtained is the sum of the number of points for each evaluation element, weighted by the importance weighting." %}</li>
             </ul>
-        </div>
     <br>
     <p>{% trans "There is, however, a subtlety in cases where one is <i>not concerned</i> by certain evaluation elements and the risk universes corresponding to them. Indeed, it would be illogical to deprive the organisation of points associated with evaluation elements that do not concern it but which other organisations concerned by this risk can obtain. Similarly, it would be illogical to immediately obtain all possible points, at the risk otherwise of automatically having a very high score as soon as little is actually done. The mechanism for dealing with this point is as follows:" %}</p>
     <ul>
@@ -40,6 +62,31 @@
         <li class="li-with-disc margin-10">{% trans "Why is the value of each response item not seen during the assessment? In studying several systems for evaluating professional practices in different sectors, it has become apparent that it is rather good practice not to show these values. The aim is to give priority to the content, and to limit the risk of distracting the user by constantly putting before his eyes the numerical elements that can lead to an attempt to <i>optimise</i> his answers." %}</li>
         <li class="li-with-disc margin-10">{% trans "Why don't we get a score per section? We are working on this feature, be patient!" %}</li>
     </ul>
+
+    <h3 class="about-subtitle">{% trans "About Substra Foundation" %}</h3>
+
+    <p><a href="{% trans 'https://www.substra.ai/en/about-substra-foundation' %}"
+          title="{% trans 'https://www.substra.ai/en/about-substra-foundation' %}"
+          target="_blank">Substra Foundation</a>
+        {% trans "is a non-profit organisation whose mission is to contribute to the development of collaborative, responsible and trustworthy data science. It is dedicated to the following 5 projects:" %}</p>
+    <ul>
+        <li class="li-with-disc margin-10">{% trans "Substra Assessment: a self-assessment and self-training tool on risks and good practices on the theme of responsible and trustworthy data science." %}</li>
+        <li class="li-with-disc margin-10"><a href="{% trans 'https://doc.substra.ai/' %}"
+                                    title="https://doc.substra.ai/"
+                                    target="_blank">{% trans "Substra Framework: " %}</a>
+            {% trans "the association promotes, animates and contributes to the open source project Substra, a framework for the secure, traceable and decentralised orchestration of ML tasks. It is based on Hyperledger Fabric, the reference DLT framework hosted by the Linux Foundation. Substra is developed by Owkin and published under the Apache 2.0 license to foster the emergence of new use cases and open up open source collaborations." %}</li>
+        <li class="li-with-disc margin-10"><a href="https://github.com/SubstraFoundation/distributed-learning-contributivity/"
+                                    title="https://github.com/SubstraFoundation/distributed-learning-contributivity/"
+                                    target="_blank">{% trans "MLPC: " %}</a>
+            {% trans "mplc (for Multi-Partner Learning and Contributivity) is a Python library for simulating distributed learning scenarios and benchmarking different learning methods and different methods of dataset contributivity assessment." %}</li>
+        <li class="li-with-disc margin-10">{% trans "HealthChain: research consortium on federated learning use cases on clinical data (see description " %}<a href="{% trans 'https://www.substra.ai/en/healthchain-project' %}"
+                                                                                                                                                               title="{% trans 'https://www.substra.ai/en/healthchain-project' %}"
+                                                                                                                                                               target="_blank">{% trans "here" %}</a>).</li>
+        <li class="li-with-disc margin-10">{% trans "MELLODDY: research consortium on federated learning use cases on chemical data (see description " %}<a href="{% trans 'https://www.substra.ai/en/melloddy-project' %}"
+                                                                                                                                                            title="{% trans 'https://www.substra.ai/en/melloddy-project' %}"
+                                                                                                                                                            target="_blank">{% trans "here" %}</a>).</li>
+    </ul>
+
 </div>
 
 

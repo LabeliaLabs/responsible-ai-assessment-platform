@@ -16,7 +16,7 @@
     <div class="row" style="columns: 2">
         <div class="column center-content" >
             <h1 class="center">Substra Assessment</h1>
-            <p class="margin-50">Evaluez le niveau de maturité des pratiques de votre organisation de Data Science Responsable et de Confiance</p>
+            <p class="margin-50">{% trans "Are you sensitive to the notion of responsible and trustworthy data science practices? Substra Assessment is a self-assessment and self-training tool: assess your organisation's level of maturity now and access numerous technical references to increase your competence." %}</p>
             <div class="row">
                 {% if user.is_authenticated %}
                      <a class="btn btn-primary margin-auto margin-50" href="{% url 'home:user-profile' %}">{% trans "My dashboard" %}</a>
@@ -31,42 +31,43 @@
     </div>
 
     <div class="homepage-banner margin-50">
-      Entrez dans l'univers de la Data Science Responsable et de Confiance
+      {% trans "Responsible and Trustworthy Data Science: towards a reference framework and a professional community" %}
     </div>
 
     <div class="row" style="columns: 2">
         <div class="column center-content" >
             <img class="img-fluid d-block mx-auto margin-50" style="max-height: 350px;" src="{% static 'image/Illustration_10.png' %}" alt="image">
-            <p class="margin-150">Des solutions techniques et organisationnelles nouvelles sont indispensables pour accorder un cadre de confiance qui manque aujourd'hui et pour rendre possible des collaborations nouvelles, prometteuses et sûres entre les entreprises, les institutions publiques et les citoyens.</p>
+            <p class="margin-150">{% trans "New technical and organisational solutions are essential to provide a framework of trust that is lacking today and to make possible new, promising and secure collaborations between companies, public institutions and citizens." %}</p>
             <img class="centered-image middle-width margin-110"  src="{% static 'image/Illustration_1.png' %}" alt="image">
         </div>
         <div class="column center-content">
-          <p class="margin-50">Un nouvel espace émerge au croisement entre expansion de l'IA dans les organisations et inquiétudes du public sur les données privées, la transparence et la robustesse des algorithmes. Ce sont deux tendances puissantes qui commencent déjà à se percuter. Comment les réconcilier, les conjuguer ensemble ?</p>
+          <p class="margin-50">{% trans "A new space is emerging at the crossroads between the AI expansion in organisations and public concerns about private data, transparency and robustness of algorithms. These are two powerful trends that are already beginning to collide. How can they be reconciled and combined together?" %}</p>
             <img class="img-fluid d-block mx-auto margin-150" style="max-height: 350px;" src="{% static 'image/Illustration_7.png' %}" alt="image">
-          <p class="margin-150">En s'appuyant sur les travaux, cadres et corpus existants, nous avons élaboré un référentiel de bonnes pratiques et d'évaluation permettant aux organisations intéressées d'évaluer leur niveau de maturité.</p>
+          <p class="margin-150">{% trans "Based on an open and participative approach that we initiated in mid-2019 and described in "%}
+              <a href="{% trans 'https://www.substra.ai/en/blog/how-to-solve-the-tension-between-ai-potential-and-associated-concerns' %}" target="_blank">{% trans "this article" %}</a>{% trans ", we have developed a repository of risks and good practices to promote responsible and trustworthy data science. It has given rise to a self-assessment tool accompanied by numerous technical resources." %}</p>
         </div>
     </div>
 
     <div class="homepage-banner margin-50">
-      Evaluez la maturité de votre organisation en data science responsable et de confiance !
+      {% trans "Assess the level of maturity of your organisation and select topics for further study" %}
     </div>
 
     <div class="row" style="columns: 3">
         <div class="column">
             <img class="centered-image middle-width"  src="{% static 'image/picto_homepage_rose.png' %}" alt="image">
-            <p class="text-center"><strong>Evaluez votre organisation</strong></p>
-            <p class="center">Réalisez votre auto-évaluation sur 6 thèmes de la Data Science Responsable et de Confiance</p>
+            <p class="text-center"><strong>{% trans "Evaluate your organisation" %}</strong></p>
+            <p class="center">{% trans "Carry out your self-assessment on 6 themes of Responsible Data Science and Trust" %}</p>
 
         </div>
         <div class="column">
             <img class="centered-image middle-width"  src="{% static 'image/picto_homepage_bleu.png' %}" alt="image">
-            <p class="text-center"><strong>Les ressources techniques</strong></p>
-            <p class="center">Découvrez les ressources qui vous permettrons de progresser, de découvrir de nouveaux outils et d'apprendre de nouvelles techniques</p>
+            <p class="text-center"><strong>{% trans "Technical resources" %}</strong></p>
+            <p class="center">{% trans "Discover the resources that will allow you to progress, discover new tools and learn new techniques." %}</p>
         </div>
         <div class="column">
             <img class="centered-image middle-width"  src="{% static 'image/picto_homepage_vert.png' %}" alt="image">
-            <p class="text-center"><strong>Votre score</strong></p>
-            <p class="center">Analysez votre progression au fil du temps sur les différents axes d'évaluation</p>
+            <p class="text-center"><strong>{% trans "Your score" %}</strong></p>
+            <p class="center">{% trans "Analyse your progress over time on the different assessment axes" %}</p>
         </div>
 
     </div>
