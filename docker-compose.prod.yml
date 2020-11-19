@@ -7,13 +7,13 @@ services:
     build:
       context: ./platform_code
       dockerfile: Dockerfile.prod
-    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8000 --workers=4 --timeout 10
+    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8080 --workers=4 --timeout 10
     networks:
       - main
     volumes:
       - static_volume:/home/app/web/static
     ports:
-      - "8000:8000" # remove if nginx in docker-compose
+      - "8080:8080"
     env_file:
       - .env.prod
     depends_on:
@@ -64,7 +64,6 @@ services:
 volumes:
   postgres_data:
   static_volume:
-  # TODO: add other ssl volumes
 
 networks:
   main:
