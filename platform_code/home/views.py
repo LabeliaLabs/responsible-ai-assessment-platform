@@ -237,11 +237,6 @@ def export_user_data(request):
     return response
 
 
-def about_view(request):
-    """ Render the about page which has only static content. This page is accessible without login required"""
-    return render(request, "home/about.html", {})
-
-
 def legal_notices_view(request):
     """ Render the legal notices page which has only static content. This page is accessible without login required"""
     return render(request, "home/legal-notices.html", {})
