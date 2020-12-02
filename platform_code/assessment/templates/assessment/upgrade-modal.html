@@ -3,28 +3,32 @@
 
 
 <div class="modal-header">
-    <h4 class="modal-title absolute-position" >{% trans 'Upgrade the evaluation' %}</h4>
-    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h4 class="modal-title absolute-position">{% trans 'Upgrade the evaluation' %}</h4>
+    <button class="close" data-dismiss="modal" type="button">&times;</button>
 </div>
 
 <div class="modal-body">
-      <p>{% trans "Do you want to upgrade your evaluation to the latest version? Your answers and your notes will be transferred to the new evaluation. This evaluation won't be deleted by the process." %}
-      </p>
+    <p>{% blocktrans %}
+        Do you want to upgrade your evaluation to the latest version? Your answers and your notes will
+        be transferred to the new evaluation. This evaluation won't be deleted by the process.
+       {% endblocktrans %}
+    </p>
 </div>
 
 <div class="modal-footer self-center">
     <form action="{% url 'assessment:upgrade' evaluation.organisation.id evaluation.slug evaluation.id %}"
-          method="get" id="upgrade_form{{evaluation.id}}">
-        <button class="btn btn-primary same-size-250 margin-auto" type="button"
+          id="upgrade_form{{evaluation.id}}" method="get">
+        <button class="btn btn-primary same-size-250 margin-auto"
                 onclick="upgrade('modal-upgrade-eval{{evaluation.id}}', 'upgrade_form{{evaluation.id}}', '{{evaluation.id}}')"
-            >{% trans 'Yes' %}
+                type="button"
+        >{% trans 'Yes' %}
         </button>
     </form>
-    <button type="button" class="btn btn-danger same-size-250 margin-auto"
-            data-dismiss="modal">{% trans 'Cancel' %}
+    <button class="btn btn-danger same-size-250 margin-auto" data-dismiss="modal"
+            type="button">{% trans 'Cancel' %}
     </button>
 </div>
 
-<div id="upgrade_message{{evaluation.id}}" class="alert margin-10 display-none">
+<div class="alert margin-10 display-none" id="upgrade_message{{evaluation.id}}">
     <p id="upgrade_message_text{{evaluation.id}}"></p>
 </div>

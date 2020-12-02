@@ -8,28 +8,29 @@
 <h1>{% trans "Evaluation creation" %}</h1>
 
 <div class="form-center width-50">
-     <div class="column">
-    <form id="create_evaluation_form" method='post' class="form" role="form">
+    <div class="column">
+        <form class="form" id="create_evaluation_form" method='post' role="form">
 
-        <div class="form-body">
-            {% csrf_token %}
-            {% for field in form %}
-            <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+            <div class="form-body">
+                {% csrf_token %}
+                {% for field in form %}
+                <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
                 <span class="float-left">{{ field.label}}</span>
-                <p > {{field}} </p>
-            {% endfor %}
-            <p class="text-form-bis">{% trans "Assessment version" %} :</p>
-            <p class="attribute-form-bis" title="{% trans 'This number corresponds to the version of the assessment that is currently in use.' %}">
-                {{last_version}}
-            </p>
+                <p> {{field}} </p>
+                {% endfor %}
+                <p class="text-form-bis">{% trans "Assessment version" %} :</p>
+                <p class="attribute-form-bis"
+                   title="{% trans 'This number corresponds to the version of the assessment that is currently in use.' %}">
+                    {{last_version}}
+                </p>
 
-        </div>
+            </div>
 
-            <input type="submit" class="btn btn-primary same-size-250 margin-auto"
-                   value="{% trans 'Create the evaluation' %}" />
+            <input class="btn btn-primary same-size-250 margin-auto" type="submit"
+                   value="{% trans 'Create the evaluation' %}"/>
 
-    </form>
-     </div>
+        </form>
+    </div>
 </div>
 
 {% endblock %}

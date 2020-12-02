@@ -5,36 +5,40 @@
 {% block content %}
 <h1 class="margin-left-signup">{% trans "Sign up" %}</h1>
 <div class="grid-container-2-cols-signup">
-    <img class="img-fluid d-block mx-auto margin-110" style="max-height: 350px;" src="{% static 'image/sign_up.png' %}" alt="image">
+    <img alt="image" class="img-fluid d-block mx-auto margin-110" src="{% static 'image/sign_up.png' %}"
+         style="max-height: 350px;">
     <div class="float-right" style="padding-left: 15%;">
-        <form method="post" id="signup">
+        <form id="signup" method="post">
             {% csrf_token %}
             {% for field in form %}
-                <div class="margin-10">
-                    {{ field.label_tag }}
-                </div>
-                <div class="row margin-10 grid-2-cols-tooltip">
-                  <div class=" form-input">
+            <div class="margin-10">
+                {{ field.label_tag }}
+            </div>
+            <div class="row margin-10 grid-2-cols-tooltip">
+                <div class=" form-input">
                     <p>{{ field }}</p>
-                  </div>
-                    {% if forloop.counter == 4  %}
-                    <div class="help-tip help-tip-right">
-                        <p>{% trans "Your password must contain at least 8 characters, with at least one number and one letter" %}</p>
-                    </div>
-                    {% endif %}
                 </div>
-                {% for error in field.errors %}
-                <p style="color: red">{{ error }}</p>
-                {% endfor %}
+                {% if forloop.counter == 4 %}
+                <div class="help-tip help-tip-right">
+                    <p>{% blocktrans %}
+                        Your password must contain at least 8 characters, with at least one number and one letter
+                        {% endblocktrans %}
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+            {% for error in field.errors %}
+            <p style="color: red">{{ error }}</p>
+            {% endfor %}
 
             {% endfor %}
             <!--Todo to center: use media and margin-left-->
             <div class="margin-left-signup">
-                <button type="submit" class="btn btn-primary margin-bot-top-20">{% trans "Sign up" %}</button>
+                <button class="btn btn-primary margin-bot-top-20" type="submit">{% trans "Sign up" %}</button>
             </div>
         </form>
         <div style="margin-left: 7%;">
-            <a class="margin-10" href="{% url 'home:login' %}">Vous avez déjà un compte ? </a>
+            <a class="margin-10" href="{% url 'home:login' %}">{% trans "already have an account?" %} </a>
         </div>
     </div>
 </div>

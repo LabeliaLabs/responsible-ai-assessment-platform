@@ -2,24 +2,27 @@
 {% load i18n %}
 {% load home_tags %}
 
-<header role="banner" class="upgrade-banner margin-bot-20 margin-3em">{% trans "Your evaluation version is not up to date. Do you want to" %}
+<header class="upgrade-banner margin-bot-20 margin-3em" role="banner">
+    {% trans "Your evaluation version is not up to date. Do you want to" %}
     {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
-        <a href="#" data-toggle="modal" data-target="#modal-upgrade-eval{{evaluation.id}}"
-        >{% trans " upgrade" %}</a>
+    <a data-target="#modal-upgrade-eval{{evaluation.id}}" data-toggle="modal" href="#">
+        {% trans " upgrade" %}
+    </a>
     {% else %}
-        <a href="#" title="{% trans ' You do not have the right to do this action' %}"
-        >{% trans " upgrade" %}</a>
-        {% trans "? Your answers will be preserved." %}
+    <a href="#" title="{% trans ' You do not have the right to do this action' %}">
+        {% trans " upgrade" %}
+    </a>
+    {% trans "? Your answers will be preserved." %}
     {% endif %}
 </header>
 
-<div class="modal" id="modal-upgrade-eval{{evaluation.id}}" aria-hidden="true"
-     data-backdrop="static" data-keyboard="false">
-  <div class="modal-dialog">
-    <div class="modal-content">
+<div aria-hidden="true" class="modal" data-backdrop="static"
+     data-keyboard="false" id="modal-upgrade-eval{{evaluation.id}}">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-    {% include "assessment/upgrade-modal.html" %}
+            {% include "assessment/upgrade-modal.html" %}
 
+        </div>
     </div>
-  </div>
 </div>

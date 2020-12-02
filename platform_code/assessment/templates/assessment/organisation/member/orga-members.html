@@ -7,135 +7,141 @@
 
 <div id="messagesMember"></div>
 
-    {% if organisation|get_role:user == "admin" %}
-     <div class="margin-bot-top-20">
-        <button type="button" class="btn btn-primary"
-                    data-toggle="modal"
-                    data-target="#modal-add-member"
-                    title="{% trans 'Add a member to your organisation' %}">
-            <i class="fa fa-plus"></i>
+{% if organisation|get_role:user == "admin" %}
+<div class="margin-bot-top-20">
+    <button class="btn btn-primary" data-target="#modal-add-member"
+            data-toggle="modal"
+            title="{% trans 'Add a member to your organisation' %}"
+            type="button">
+        <i class="fa fa-plus"></i>
 
-        </button>
-     </div>
-    {% endif %}
+    </button>
+</div>
+{% endif %}
 
 <table class="table table-striped">
-          <thead>
-            <tr>
-              <th scope="col" class="col-array">{% trans "User name" %}</th>
-              <th scope="col" class="col-array">{% trans "Email" %}</th>
-              <th scope="col" class="col-array">{% trans "Rights" %}</th>
-              <th scope="col" class="col-array" >{% trans "Evaluations created" %}</th>
-              {% if organisation|get_role:user == "admin" %}
-                <th scope="col" class="col-array display-none"></th>
-              {% endif %}
-            </tr>
-          </thead>
-          <tbody id="arrayMembers">
-            {% for member in member_list %}
-                <div >
-                <tr class="row-array" id="rowMember{{member.id}}">
+    <thead>
+    <tr>
+        <th class="col-array" scope="col">{% trans "User name" %}</th>
+        <th class="col-array" scope="col">{% trans "Email" %}</th>
+        <th class="col-array" scope="col">{% trans "Rights" %}</th>
+        <th class="col-array" scope="col">{% trans "Evaluations created" %}</th>
+        {% if organisation|get_role:user == "admin" %}
+        <th class="col-array display-none" scope="col"></th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody id="arrayMembers">
+    {% for member in member_list %}
+    <div>
+        <tr class="row-array" id="rowMember{{member.id}}">
 
-                    <td class="case-array" >{{member.user.get_full_name}}</td>
-                    <td class="case-array" >{{member.user.email}}</td>
-                    <td class="case-array">{{member.role}}</td>
-                    <td class="case-array">{{member|evaluation_created_by:evaluation_list}}</td>
-<!--                To allow the user to leave the organisation-->
-                    {% if member.user == user %}
-<!--                        Unique case where the user cannot leave the organisation, he is the only admin member-->
-                        {% if organisation|get_role:user == "admin" and organisation.count_admin_members == 1 %}
-                        {% else %}
-                        <td class="div-hidden-icons" >
-                            <button class="btn btn-danger small-btn" data-toggle="modal" data-target="#modal-leave-orga{{member.id}}">
-                                <i class="fa fa-sign-in"></i>
-                            </button>
-                            <div class="modal" id="modal-leave-orga{{member.id}}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        {% include "assessment/organisation/member/leave-organisation.html" %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endif %}
-                    {% endif %}
-
-                    {% if organisation|get_role:user == "admin" and not member.role == "admin" %}
-                        <td class="div-hidden-icons" id="member{{member.id}}" >
-                            <button class="btn btn-primary small-btn margin-10" data-toggle="modal" data-target="#modal-edit-role{{member.id}}">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <div class="modal" id="modal-edit-role{{member.id}}" aria-hidden="true">
-                                <div class="large-modal-dialog">
-                                    <div class="modal-content">
-                                        {% include "assessment/organisation/member/edit-role-member.html" %}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button class="btn btn-danger small-btn margin-10" data-toggle="modal" data-target="#modal-remove-member{{member.id}}">
-                                <span class="fa fa-trash"></span>
-                            </button>
-                            <div class="modal" id="modal-remove-member{{member.id}}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        {% include "assessment/organisation/member/remove-member.html" %}
-                                    </div>
-                                </div>
-                            </div>
-
-                          </td>
-                    {% endif %}
-
-                </tr>
+            <td class="case-array">{{member.user.get_full_name}}</td>
+            <td class="case-array">{{member.user.email}}</td>
+            <td class="case-array">{{member.role}}</td>
+            <td class="case-array">{{member|evaluation_created_by:evaluation_list}}</td>
+            <!-- To allow the user to leave the organisation-->
+            {% if member.user == user %}
+            <!-- Unique case where the user cannot leave the organisation, he is the only admin member-->
+            {% if organisation|get_role:user == "admin" and organisation.count_admin_members == 1 %}
+            {% else %}
+            <td class="div-hidden-icons">
+                <button class="btn btn-danger small-btn" data-target="#modal-leave-orga{{member.id}}"
+                        data-toggle="modal">
+                    <i class="fa fa-sign-in"></i>
+                </button>
+                <div aria-hidden="true" class="modal" id="modal-leave-orga{{member.id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            {% include "assessment/organisation/member/leave-organisation.html" %}
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
-            {% for pending_member in pending_member_list %}
-                <div >
-                    <tr class="row-array" id="rowPendingMember{{pending_member.id}}">
-                        <td class="case-array" >{{pending_member.email}}</td>
-                        <td class="case-array" >{{pending_member.email}}</td>
-                        <td class="case-array">{{pending_member.role}} (pending)</td>
-                        <td class="case-array"></td>
-                        {% if organisation|get_role:user == "admin" %}
-                        <td class="div-hidden-icons background-white" id="pendingMember{{pending_member.id}}">
-                            <button class="btn btn-primary small-btn" data-toggle="modal" data-target="#modal-edit-role-pending{{pending_member.id}}">
-                                <i class="fa fa-edit"></i>
-                            </button>
-                            <div class="modal" id="modal-edit-role-pending{{pending_member.id}}" aria-hidden="true">
-                                <div class="large-modal-dialog">
-                                    <div class="modal-content">
-                                        {% include "assessment/organisation/member/edit-role-pending-member.html" %}
-                                    </div>
-                                </div>
-                            </div>
+                {% endif %}
+                {% endif %}
 
-                            <button class="btn btn-danger small-btn margin-10" data-toggle="modal" data-target="#modal-remove-member-pending{{pending_member.id}}">
-                                <span class="fa fa-trash"></span>
-                            </button>
-                            <div class="modal" id="modal-remove-member-pending{{pending_member.id}}" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        {% include "assessment/organisation/member/remove-pending-member.html" %}
-                                    </div>
-                                </div>
-                            </div>
-
-                          </td>
-                    {% endif %}
-
-                    </tr>
+                {% if organisation|get_role:user == "admin" and not member.role == "admin" %}
+            <td class="div-hidden-icons" id="member{{member.id}}">
+                <button class="btn btn-primary small-btn margin-10" data-target="#modal-edit-role{{member.id}}"
+                        data-toggle="modal">
+                    <i class="fa fa-edit"></i>
+                </button>
+                <div aria-hidden="true" class="modal" id="modal-edit-role{{member.id}}">
+                    <div class="large-modal-dialog">
+                        <div class="modal-content">
+                            {% include "assessment/organisation/member/edit-role-member.html" %}
+                        </div>
+                    </div>
                 </div>
-            {% endfor %}
-          </tbody>
+
+                <button class="btn btn-danger small-btn margin-10" data-target="#modal-remove-member{{member.id}}"
+                        data-toggle="modal">
+                    <span class="fa fa-trash"></span>
+                </button>
+                <div aria-hidden="true" class="modal" id="modal-remove-member{{member.id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            {% include "assessment/organisation/member/remove-member.html" %}
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+            {% endif %}
+
+        </tr>
+    </div>
+    {% endfor %}
+    {% for pending_member in pending_member_list %}
+    <div>
+        <tr class="row-array" id="rowPendingMember{{pending_member.id}}">
+            <td class="case-array">{{pending_member.email}}</td>
+            <td class="case-array">{{pending_member.email}}</td>
+            <td class="case-array">{{pending_member.role}} (pending)</td>
+            <td class="case-array"></td>
+            {% if organisation|get_role:user == "admin" %}
+            <td class="div-hidden-icons background-white" id="pendingMember{{pending_member.id}}">
+                <button class="btn btn-primary small-btn" data-target="#modal-edit-role-pending{{pending_member.id}}"
+                        data-toggle="modal">
+                    <i class="fa fa-edit"></i>
+                </button>
+                <div aria-hidden="true" class="modal" id="modal-edit-role-pending{{pending_member.id}}">
+                    <div class="large-modal-dialog">
+                        <div class="modal-content">
+                            {% include "assessment/organisation/member/edit-role-pending-member.html" %}
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-danger small-btn margin-10"
+                        data-target="#modal-remove-member-pending{{pending_member.id}}"
+                        data-toggle="modal">
+                    <span class="fa fa-trash"></span>
+                </button>
+                <div aria-hidden="true" class="modal" id="modal-remove-member-pending{{pending_member.id}}">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            {% include "assessment/organisation/member/remove-pending-member.html" %}
+                        </div>
+                    </div>
+                </div>
+
+            </td>
+            {% endif %}
+
+        </tr>
+    </div>
+    {% endfor %}
+    </tbody>
 </table>
 
 <!-- The Modal create evaluation -->
-<div class="modal" id="modal-add-member" aria-hidden="true">
-  <div class="large-modal-dialog">
-    <div class="modal-content">
+<div aria-hidden="true" class="modal" id="modal-add-member">
+    <div class="large-modal-dialog">
+        <div class="modal-content">
 
-      {% include "assessment/organisation/member/add-member-modal.html" %}
+            {% include "assessment/organisation/member/add-member-modal.html" %}
 
+        </div>
     </div>
-  </div>
 </div>

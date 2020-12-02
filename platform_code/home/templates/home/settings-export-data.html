@@ -3,13 +3,13 @@
 {% load i18n %}
 
 <div>
-    <h3 class="settings-subtitle" >{% trans "Personnal data export" %}</h3>
+    <h3 class="settings-subtitle">{% trans "Personnal data export" %}</h3>
 
     <div class="margin-50">
-    <p>{% trans "Do you want to download your personnal data stored in the platform?" %}</p>
+        <p>{% trans "Do you want to download your personnal data stored in the platform?" %}</p>
     </div>
-    <form action="{% url 'home:export-user-data' %}" >
-        <input class="btn btn-primary float-left validation-button" type="submit" value="{% trans 'Download' %}" />
+    <form action="{% url 'home:export-user-data' %}">
+        <input class="btn btn-primary float-left validation-button" type="submit" value="{% trans 'Download' %}"/>
     </form>
 
 </div>

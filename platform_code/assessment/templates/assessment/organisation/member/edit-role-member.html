@@ -3,45 +3,61 @@
 {% load static %}
 
 <div>
-  <form  method='post' class="form" role="form" id="editRoleMember{{member.id}}"
-        action="{% url 'assessment:orga-summary' organisation.id %}">
-    <div class="modal-header">
-        <h4 class="modal-title absolute-position" >{% trans "Edit the rights of" %} {{member.user.email}}</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-      </div>
+    <form action="{% url 'assessment:orga-summary' organisation.id %}"
+          class="form" id="editRoleMember{{member.id}}" method='post'
+          role="form">
+        <div class="modal-header">
+            <h4 class="modal-title absolute-position">{% trans "Edit the rights of" %} {{member.user.email}}</h4>
+            <button class="close" data-dismiss="modal" type="button">&times;</button>
+        </div>
         <div class="modal-body">
             <p>{% trans "You can edit the rights of the members, except those who are 'admin':" %}</p>
             <ul>
-                <li class="li-with-disc">{% trans "<strong>Read-only user</strong>: the read-only user can only consult the evaluations, he cannot create, edit or delete one." %}</li>
-                <li class="li-with-disc">{% trans "<strong>Editor</strong>: the editor can create, modify and delete evaluations" %}</li>
-                <li class="li-with-disc">{% trans "<strong>Admin</strong>: the admin user can create, modify and delete evaluations and members." %}</li>
+                <li class="li-with-disc">
+                    {% blocktrans %}
+                    <strong>Read-only user</strong>: the read-only user can only consult
+                    the evaluations, he cannot create, edit or delete one.
+                    {% endblocktrans %}
+                </li>
+                <li class="li-with-disc">
+                    {% blocktrans %}
+                    <strong>Editor</strong>: the editor can create, modify and delete evaluations.
+                    {% endblocktrans %}
+                </li>
+                <li class="li-with-disc">{% blocktrans %}
+                    <strong>Admin</strong>: the admin user can create, modify and delete
+                    evaluations and members.
+                    {% endblocktrans %}
+                </li>
             </ul>
-            <p>{% trans "Note that you cannot remove an user with admin rights from the organisation." %}</p>
+            <p>{% blocktrans %}
+                Note that you cannot remove an user with admin rights from the organisation.
+                {% endblocktrans %}</p>
             {% csrf_token %}
             <div class="create-form width-35">
                 <div class="full-width padding-1">
                     <div>
                         {% with edit_form=edit_member_role_form_dic|get_item_converted_str:member.id %}
-                            {% for field in edit_form %}
-                            <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                                <span class="float-left">{{ field.label}}</span>
-                                <p > {{field}} </p>
-                            {% endfor %}
-                         {% endwith %}
+                        {% for field in edit_form %}
+                        <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                        <span class="float-left">{{ field.label}}</span>
+                        <p> {{field}} </p>
+                        {% endfor %}
+                        {% endwith %}
                     </div>
                 </div>
             </div>
         </div>
-      <div class="modal-footer self-center">
-          <button onclick="editRoleMember('editRoleMember{{member.id}}', '{{member.id}}', false)"
-                  class="btn btn-primary same-size-250 margin-auto margin-10" type="button">
-              {% trans "Change" %}
-          </button>
-          <button type="button" class="btn btn-danger same-size-250 margin-auto right-button"
-                data-dismiss="modal">{% trans 'Cancel' %}
-          </button>
+        <div class="modal-footer self-center">
+            <button class="btn btn-primary same-size-250 margin-auto margin-10"
+                    onclick="editRoleMember('editRoleMember{{member.id}}', '{{member.id}}', false)" type="button">
+                {% trans "Change" %}
+            </button>
+            <button class="btn btn-danger same-size-250 margin-auto right-button" data-dismiss="modal"
+                    type="button">{% trans 'Cancel' %}
+            </button>
 
-      </div>
+        </div>
     </form>
 
 </div>

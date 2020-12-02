@@ -4,36 +4,38 @@
 {% load i18n %}
 
 
-     <div class="margin-50 margin-bot-30">
-        <a href="{% url 'home:orga-creation' %}" data-toggle="modal" data-target="#modal-create-orga"
-           class="btn btn-primary card-button">{% trans "Create a new organisation" %}
-        </a>
-     </div>
+<div class="margin-50 margin-bot-30">
+    <a class="btn btn-primary card-button" data-target="#modal-create-orga" data-toggle="modal"
+       href="{% url 'home:orga-creation' %}">{% trans "Create a new organisation" %}
+    </a>
+</div>
 
- <section class="cards-orga">
-     {% for organisation in organisations %}
-     <article class="card text-center " >
-        <h5 class="card-title" >{{organisation.name}} </h5>
+<section class="cards-orga">
+    {% for organisation in organisations %}
+    <article class="card text-center ">
+        <h5 class="card-title">{{organisation.name}} </h5>
 
-      <div class="card-body">
-        <p class="card-text">{% trans "My role: "%}{{organisation|get_role:user}}</p>
-        <p class="card-text">{% trans "Number of evaluations in progress: "%}{{organisation.evaluation_set.all|eval_not_finished}} </p>
-        <p class="card-text">{% trans "Number of completed evaluations: "%}{{organisation.evaluation_set.all|eval_finished}} </p>
-        <a href="{% url 'assessment:orga-summary' organisation.id %}"
-           class="btn btn-primary card-button">{% trans "Go to the organisation" %}</a>
-      </div>
+        <div class="card-body">
+            <p class="card-text">{% trans "My role: "%}{{organisation|get_role:user}}</p>
+            <p class="card-text">{% trans "Number of evaluations in progress: "%}
+                {{organisation.evaluation_set.all|eval_not_finished}} </p>
+            <p class="card-text">{% trans "Number of completed evaluations: "%}
+                {{organisation.evaluation_set.all|eval_finished}} </p>
+            <a class="btn btn-primary card-button"
+               href="{% url 'assessment:orga-summary' organisation.id %}">{% trans "Go to the organisation" %}</a>
+        </div>
     </article>
     {% endfor %}
 
 
- </section>
+</section>
 
-<div class="modal" id="modal-create-orga" aria-hidden="true">
-  <div class="modal-dialog ">
-    <div class="modal-content">
+<div aria-hidden="true" class="modal" id="modal-create-orga">
+    <div class="modal-dialog ">
+        <div class="modal-content">
 
-      {% include "home/profile-orga-creation-modal.html" %}
+            {% include "home/profile-orga-creation-modal.html" %}
 
+        </div>
     </div>
-  </div>
 </div>

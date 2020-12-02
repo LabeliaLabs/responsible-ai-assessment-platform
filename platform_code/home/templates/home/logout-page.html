@@ -2,13 +2,13 @@
 {% load add_attr %}
 {% load i18n %}
 
-<h3 class="settings-subtitle" >{% trans "Do you want to logout?" %}</h3>
+<h3 class="settings-subtitle">{% trans "Do you want to logout?" %}</h3>
 
 
-<div >
-    <a class="btn btn-primary same-size-220 float-left" href="{% url 'home:user-profile' %}"
-            style="margin: auto">{% trans "Cancel" %}</a>
-    <a class="btn btn-danger same-size-220 float-right" href="{% url 'home:logout' %}"
-            data-dismiss="modal" style="margin: auto;">{% trans "Logout" %}</a>
+<div>
+    <a class="btn btn-primary same-size-220 float-left margin-auto" href="{% url 'home:user-profile' %}"
+       >{% trans "Cancel" %}</a>
+    <a class="btn btn-danger same-size-220 float-right margin-auto" data-dismiss="modal"
+       href="{% url 'home:logout' %}">{% trans "Logout" %}</a>
 </div>
 

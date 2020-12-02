@@ -4,46 +4,62 @@
 {% load i18n %}
 
 <div class="create-eval-modal">
-    <form method='post' class="form" role="form" id="send_invitation_form"
-          action="{% url 'assessment:orga-summary' organisation.id %}">
+    <form action="{% url 'assessment:orga-summary' organisation.id %}"
+          class="form" id="send_invitation_form" method='post' role="form">
         <div class="modal-header">
             <h4 class="modal-title absolute-position" id="myModalLabel">{% trans "Add a new member to the organisation" %}</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <button class="close" data-dismiss="modal" type="button">&times;</button>
         </div>
         <div class="modal-body margin-auto">
-            <p>{% trans "You can add another user to your organisation. If the user does not already have an account on the platform, an invitation email will be sent to him to join your organisation." %}
+            <p>{% blocktrans %}
+                You can add another user to your organisation. If the user does not already have an account on
+                the platform, an invitation email will be sent to him to join your organisation.
+                {% endblocktrans %}
             </p>
             <p>{% trans "You can chose the rights you want to give to the user:" %}</p>
             <ul>
-                <li class="li-with-disc">{% trans "<strong>Read-only user</strong>: the read-only user can only consult the evaluations, he cannot create, edit or delete one." %}</li>
-                <li class="li-with-disc">{% trans "<strong>Editor</strong>: the editor can create, modify or delete evaluations." %}</li>
-                <li class="li-with-disc">{% trans "<strong>Admin</strong>: the admin user can create, modify or delete evaluations. He also can edit rights of other members and add/remove users to the organisation." %}</li>
+                <li class="li-with-disc">
+                    {% blocktrans %}
+                    <strong>Read-only user</strong>: the read-only user can only consult
+                    the evaluations, he cannot create, edit or delete one.
+                    {% endblocktrans %}
+                </li>
+                <li class="li-with-disc">
+                    {% blocktrans %}
+                    <strong>Editor</strong>: the editor can create, modify or delete evaluations.
+                    {% endblocktrans %}
+                </li>
+                <li class="li-with-disc">
+                    {% blocktrans %}
+                    <strong>Admin</strong>: the admin user can create, modify or delete
+                    evaluations. He also can edit rights of other members and add/remove users to the organisation.
+                    {% endblocktrans %}
+                </li>
             </ul>
-            <p>{% trans "<strong>Note that you cannot remove an user with admin rights from the organisation, neither change its rights. It is recommended to add user with edit rights</strong>." %}</p>
+            <p>{% blocktrans %}
+                <strong>Note that you cannot remove an user with admin rights from the organisation, neither
+                change its rights. It is recommended to add user with edit rights</strong>.
+                {% endblocktrans %}</p>
             <div class="create-form width-35">
-<!--                <div>-->
-<!--                    <div class="column">-->
-                    {% csrf_token %}
-                    {% for field in add_member_form %}
-                    <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                        <span class="float-left">{{ field.label}}</span>
-                        <p> {{field}} </p>
-                    {% endfor %}
-
-<!--                    </div>-->
-<!--                </div>-->
+                {% csrf_token %}
+                {% for field in add_member_form %}
+                <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                <span class="float-left">{{ field.label}}</span>
+                <p> {{field}} </p>
+                {% endfor %}
             </div>
         </div>
         <div class="modal-footer center one-column">
             <div class="column">
                 <div>
-                    <button class="btn btn-primary same-size-250 margin-auto" type="button" id="sendInvitationButton"
-                        onclick="send_invitation('send_invitation_form')" >{% trans 'Send the invitation' %}
+                    <button class="btn btn-primary same-size-250 margin-auto" id="sendInvitationButton"
+                            onclick="send_invitation('send_invitation_form')"
+                            type="button">{% trans 'Send the invitation' %}
                     </button>
                 </div>
                 <div class="margin-10">
-                    <input type="button" class="btn btn-danger same-size-250 margin-auto" data-dismiss="modal"
-                        value="{% trans 'Cancel' %}"/>
+                    <input class="btn btn-danger same-size-250 margin-auto" data-dismiss="modal" type="button"
+                           value="{% trans 'Cancel' %}"/>
                 </div>
             </div>
         </div>
