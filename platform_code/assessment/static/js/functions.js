@@ -611,3 +611,29 @@ function topFunction() {
   document.body.scrollTop = 0; // For Safari
   document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
 }
+
+function goNextElement(counter) {
+// This function is used to go to the next evaluation element in the sectionView
+// When the user click on the arrow-down
+// Argument 'counter' is the number of element iterations for the section
+    var cardList = document.querySelectorAll(".card");
+//    counter starts at 1, cardList starts at 0
+    var nextCard = cardList[counter];
+    var nextCardHeader = nextCard.children[0].children[0];
+    var rect = nextCard.getBoundingClientRect();
+    window.scrollBy(0, rect.top);
+}
+
+function goPreviousElement(counter) {
+// This function is used to go to the previous evaluation element in the sectionView
+// When the user click on the arrow-up
+// Argument 'counter' is the number of element iterations for the section
+    var cardList = document.querySelectorAll(".card");
+    if (counter > 1) {
+        var previousCard = cardList[counter-2];
+        var previousCardHeader = previousCard.children[0].children[0];
+        var rect = previousCard.getBoundingClientRect();
+        window.scrollBy(0, rect.top);
+    }
+
+}
