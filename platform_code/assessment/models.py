@@ -882,6 +882,19 @@ class EvaluationElement(models.Model):
                 list_choices_ticked.append(choice)
         return list_choices_ticked
 
+    def are_choices_valid(self, choice_list):
+        """
+        Check that the strings contained in the list (choice_list) match with the evaluation element choices.
+        This is used during the answer validation.
+
+        :param choice_list: list of strings
+        :results: boolean
+        """
+        # Todo tests
+        numbering = self.master_evaluation_element.get_numbering()
+        # Check that the 1st 3 characters (choice numbering) match with the element numbering
+        return all(choice[:3] == numbering for choice in choice_list)
+
     def set_status(self):
         """True is one choice is ticked, else False"""
         if len(self.get_list_choices_ticked()) != 0:
@@ -946,11 +959,11 @@ class EvaluationElement(models.Model):
         else:
             return True
 
-    def condition_on_other_elements(self):
+    def has_condition_on_other_elements(self):
         """
         For this element, if one of his choice set conditions for other element,
-         return True, else False
-         """
+        return True, else False
+        """
         for choice in self.choice_set.all():
             if choice.has_element_conditioned_on():
                 return True

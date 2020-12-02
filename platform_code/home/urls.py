@@ -1,43 +1,59 @@
 from django.urls import path, include, re_path, reverse_lazy
 from django.contrib.auth import views as auth_views
 
-from . import views
+from .views import (
+    LoginView,
+    signup,
+    activate,
+    login_view,
+    legal_notices_view,
+    faq_view,
+    ProfileView,
+    ProfileSettingsView,
+    OrganisationCreationView,
+    LogoutView,
+    delete_user,
+    export_user_data,
+    PasswordReset,
+    ResourcesView,
+)
+
 
 app_name = "home"
 urlpatterns = [
-    path("", views.LoginView.as_view(), name="homepage"),
-    path("signup/", views.signup, name="signup"),
+    path("", LoginView.as_view(), name="homepage"),
+    path("signup/", signup, name="signup"),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z\_\.\-]+)/$',
-            views.activate,
+            activate,
             name='activate'
             ),
-    path("login/", views.login_view, name="login"),  # login page when redirect
-    path("legal-notices/", views.legal_notices_view, name="legal-notices"),
-    path("faq/", views.faq_view, name="faq"),
+    path("login/", login_view, name="login"),  # login page when redirect
+    path("legal-notices/", legal_notices_view, name="legal-notices"),
+    path("faq/", faq_view, name="faq"),
     path(
         "accounts/",
         include(
             [
-                path("profile/", views.ProfileView.as_view(), name="user-profile"),
+                path("profile/", ProfileView.as_view(), name="user-profile"),
                 path(
                     "profile-settings/",
-                    views.ProfileSettingsView.as_view(),
+                    ProfileSettingsView.as_view(),
                     name="user-profile-settings",
                 ),
                 path(
                     "organisation-creation/",
-                    views.OrganisationCreationView.as_view(),
+                    OrganisationCreationView.as_view(),
                     name="orga-creation",
                 ),  # when its not a pop in
-                path("logout/", views.LogoutView.as_view(), name="logout"),
-                path("delete-user", views.delete_user, name="delete-user"),
+                path("logout/", LogoutView.as_view(), name="logout"),
+                path("delete-user", delete_user, name="delete-user"),
                 path(
-                    "export-user-data", views.export_user_data, name="export-user-data"
+                    "export-user-data", export_user_data, name="export-user-data"
                 ),
-                path("ressources/", views.ResourcesView.as_view(), name="resources"),
+                path("ressources/", ResourcesView.as_view(), name="resources"),
                 re_path(
                     r"^password_reset/$",
-                    views.PasswordReset.as_view(
+                    PasswordReset.as_view(
                         template_name="home/registration/password_reset_form.html",
                         email_template_name="home/registration/password_reset_email.html",
                         success_url=reverse_lazy("home:password_reset_done"),

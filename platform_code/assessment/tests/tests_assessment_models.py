@@ -469,9 +469,9 @@ class EvaluationElementTestCase(TestCase):
         )
         self.assertEqual(self.evaluation_element1.get_element_depending_on(), None)
 
-    def test_element_condition_on_other_elements(self):
-        self.assertTrue(self.evaluation_element1.condition_on_other_elements())
-        self.assertFalse(self.evaluation_element2.condition_on_other_elements())
+    def test_element_has_condition_on_other_elements(self):
+        self.assertTrue(self.evaluation_element1.has_condition_on_other_elements())
+        self.assertFalse(self.evaluation_element2.has_condition_on_other_elements())
 
     def test_element_get_choice_setting_conditions_on_other_elements(self):
         self.assertEqual(
