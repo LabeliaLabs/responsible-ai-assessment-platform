@@ -2,7 +2,7 @@
 Django==3.0.5
 psycopg2-binary==2.8.4
 gunicorn==20.0.4
-django-bootstrap4==2.1.1
+django-bootstrap4==2.3.0
 django-countries==6.1.2
 django-markdownify==0.8.1
 requests==2.24.0
