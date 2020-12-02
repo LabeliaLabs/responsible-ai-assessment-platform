@@ -27,7 +27,7 @@ urlpatterns = i18n_patterns(
     prefix_default_language=False
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
-handler404 = 'assessment.views.error_404_view_handler'
-handler500 = 'assessment.views.error_500_view_handler'
-handler403 = 'assessment.views.error_403_view_handler'
-handler400 = 'assessment.views.error_400_view_handler'
+handler404 = 'assessment.views.utils.error_handler.error_404_view_handler'
+handler500 = 'assessment.views.utils.error_handler.error_500_view_handler'
+handler403 = 'assessment.views.utils.error_handler.error_403_view_handler'
+handler400 = 'assessment.views.utils.error_handler.error_400_view_handler'

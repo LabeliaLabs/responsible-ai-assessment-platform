@@ -1,6 +1,15 @@
 from django.urls import path, re_path, include
 
-from . import views
+from .views import (
+    EvaluationView,
+    EvaluationCreationView,
+    DeleteEvaluation,
+    SummaryView,
+    ResultsView,
+    leave_organisation,
+    upgradeView,
+    SectionView,
+)
 
 
 app_name = "assessment"
@@ -12,29 +21,29 @@ urlpatterns = [
             [
                 path(
                     "creation-evaluation/",
-                    views.EvaluationCreationView.as_view(),
+                    EvaluationCreationView.as_view(),
                     name="creation-evaluation",
                 ),
-                path("", views.SummaryView.as_view(), name="orga-summary"),
-                path("leave-organisation", views.leave_organisation, name="leave-organisation"),
+                path("", SummaryView.as_view(), name="orga-summary"),
+                path("leave-organisation", leave_organisation, name="leave-organisation"),
                 path(
                     "<slug:slug>/<int:pk>/",
                     include(
                         [
-                            path("", views.EvaluationView.as_view(), name="evaluation"),
+                            path("", EvaluationView.as_view(), name="evaluation"),
                             path(
                                 "delete/",
-                                views.DeleteEvaluation.as_view(),
+                                DeleteEvaluation.as_view(),
                                 name="delete-evaluation",
                             ),
-                            path("upgrade/", views.upgradeView, name="upgrade"),
+                            path("upgrade/", upgradeView, name="upgrade"),
                             re_path(
                                 r"^section/(?P<id>[0-9]{1,})/(?P<name>[-\w\W]+)/(?P<page>\d+)$",
-                                views.SectionView.as_view(),
+                                SectionView.as_view(),
                                 name="section",
                             ),
                             path(
-                                "results/", views.ResultsView.as_view(), name="results"
+                                "results/", ResultsView.as_view(), name="results"
                             ),
                         ]
                     ),
