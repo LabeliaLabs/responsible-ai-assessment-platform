@@ -20,10 +20,13 @@ from django.urls import path
 from django.urls import include
 from django.conf.urls.i18n import i18n_patterns
 
+from home.admin import admin_dashboard
+
 urlpatterns = i18n_patterns(
     path("", include("home.urls")),
     path("assessment/", include("assessment.urls")),
     path("admin/", admin.site.urls),
+    path('admin-dashboard/', admin_dashboard.urls),
     prefix_default_language=False
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
