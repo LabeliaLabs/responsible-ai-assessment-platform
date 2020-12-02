@@ -812,6 +812,11 @@ tr.spaceUnder>td {
 
 }
 
+.graph-admin{
+    width: 600px;
+    height: 500px;
+}
+
 .settings-subtitle{
     margin-bottom: 30px;
 }

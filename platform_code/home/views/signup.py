@@ -57,7 +57,7 @@ def signup(request):
                 mail_subject, message, to=[to_email]
             )
             email.send()
-            logger.info(f"[account_creation] The user {email} created an account")
+            logger.info(f"[account_creation] The user {user.email} created an account")
             return render(request, "home/account/acc_activate_done.html")
     else:
         form = SignUpForm()

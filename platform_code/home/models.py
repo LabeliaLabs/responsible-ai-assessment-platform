@@ -77,6 +77,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)  # a admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
+    created_at = models.DateTimeField(auto_now_add=True)
     # notice the absence of a "Password field", that is built in.
 
     object = UserManager()
@@ -511,6 +512,22 @@ class Organisation(models.Model):
             return max([float(i) for i in list_version])
         else:
             return None
+
+    def count_evaluations_finished_or_not(self, finished=True):
+        """
+        Count the number of evaluations finished if finished=True, else in progress
+        """
+        # todo tests
+        # todo use it in orga-evaluation.html instead of template tag
+        count = 0
+        for evaluation in self.get_list_evaluations():
+            if finished:
+                if evaluation.is_finished:
+                    count += 1
+            else:
+                if not evaluation.is_finished:
+                    count += 1
+        return count
 
     def get_pending_list(self):
         """
