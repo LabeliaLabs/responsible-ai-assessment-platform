@@ -1,61 +1,72 @@
 {% extends 'admin/change_list.html' %}
 {% block content %}
-    {{ block.super }}
-    <h3>Import Process</h3>
+{{ block.super }}
+<h3>Import Process</h3>
+<ul>
+    <li>You want to import the first assessment of the platform</li>
     <ul>
-        <li>You want to import the first assessment of the platform</li>
+        <li>Be sure no assessment already exists nor scoring system in the database</li>
+        <li>Be sure you have a json file of the assessment respecting the format - ideally created with the jsonify
+            process:
+        </li>
         <ul>
-            <li>Be sure no assessment already exists nor scoring system in the database</li>
-            <li>Be sure you have a json file of the assessment respecting the format - ideally created with the jsonify process:</li>
-            <ul>
-                <li>A version for the assessment convertible into a positive float</li>
-                <li>A name for the assessment</li>
-                <li>A json structure respecting the format (cf templates)</li>
-            </ul>
-            <li>Same for the scoring json file (score of each choices), you need to have a json file respecting the format:</li>
-                <ul>
-                    <li>A json with choice numbering as keys ('1.1.a') for all the choices in the assessment</li>
-                    <li>And positive float numbers as values</li>
-                </ul>
-            <li>For the assessment, click on "choisir un fichier" next to "assessment_json_file" and select your json file</li>
-            <li>For the scoring system, click on "choisir un fichier" next to "scoring_json_file" and select your json file</li>
-            <li>After doing this, click on "Upload". The assessment and the scoring system are now created.</li>
+            <li>A version for the assessment convertible into a positive float</li>
+            <li>A name for the assessment</li>
+            <li>A json structure respecting the format (cf templates)</li>
         </ul>
-        <li style="margin-top: 3em;">You want to import a new version of the assessment</li>
+        <li>Same for the scoring json file (score of each choices), you need to have a json file respecting the
+            format:
+        </li>
         <ul>
-            <li>Be sure there is already an assessment with its scoring system in the database</li>
-            <li>Be sure to have an assessment json file respecting all the conditions:</li>
-            <ul>
-                <li>A version for the assessment convertible into a positive float</li>
-                <li>A version superior to the latest assessment version</li>
-                <li>A name for the assessment</li>
-                <li>A json structure respecting the format (cf templates)</li>
-            </ul>
-            <li>Be sure to have a scoring json file respecting the format:</li>
-                <ul>
-                    <li>A json with choice numbering as keys ('1.1.a') for all the choices in the assessment</li>
-                    <li>And positive float numbers as values</li>
-                </ul>
-            <li>Be sure to have an upgrade table (json file) respecting the format (cf templates):</li>
-                <ul>
-                    <li>The versions of the previous assessments as keys</li>
-                    <li>The dictionaries of the matching objects or not between the new assessment and the previous assessment as values</li>
-                </ul>
-            <li>Select all the corresponding files for each field with the button "choisir un fichier"</li>
-            <li>Then, click on "Upload"</li>
+            <li>A json with choice numbering as keys ('1.1.a') for all the choices in the assessment</li>
+            <li>And positive float numbers as values</li>
         </ul>
+        <li>For the assessment, click on "choisir un fichier" next to "assessment_json_file" and select your json file
+        </li>
+        <li>For the scoring system, click on "choisir un fichier" next to "scoring_json_file" and select your json
+            file
+        </li>
+        <li>After doing this, click on "Upload". The assessment and the scoring system are now created.</li>
     </ul>
+    <li style="margin-top: 3em;">You want to import a new version of the assessment</li>
+    <ul>
+        <li>Be sure there is already an assessment with its scoring system in the database</li>
+        <li>Be sure to have an assessment json file respecting all the conditions:</li>
+        <ul>
+            <li>A version for the assessment convertible into a positive float</li>
+            <li>A version superior to the latest assessment version</li>
+            <li>A name for the assessment</li>
+            <li>A json structure respecting the format (cf templates)</li>
+        </ul>
+        <li>Be sure to have a scoring json file respecting the format:</li>
+        <ul>
+            <li>A json with choice numbering as keys ('1.1.a') for all the choices in the assessment</li>
+            <li>And positive float numbers as values</li>
+        </ul>
+        <li>Be sure to have an upgrade table (json file) respecting the format (cf templates):</li>
+        <ul>
+            <li>The versions of the previous assessments as keys</li>
+            <li>The dictionaries of the matching objects or not between the new assessment and the previous assessment
+                as values
+            </li>
+        </ul>
+        <li>Select all the corresponding files for each field with the button "choisir un fichier"</li>
+        <li>Then, click on "Upload"</li>
+    </ul>
+</ul>
 
-    <h3 style="margin-top: 4em;">Selection of the files</h3>
-<p>If you take the files from the resource_platform folder, make sure the files have the same version number in their name, <br>which means they are associated and must be imported at the same time. You cannot import 2 files with different version number in their name.</p>
-    <form action="upload-json/" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {% for field in json_upload_form %}
-            <ul>
-                <li>{{ field.label_tag }} {{field}}</li>
-            </ul>
-        {% endfor %}
-        <h3 style="margin-top: 3em;">Upload</h3>
-        <li>Be sure you have selected all the files you wanted to import <input type="submit" value="Upload"></li>
-    </form>
+<h3 style="margin-top: 4em;">Selection of the files</h3>
+<p>If you take the files from the resource_platform folder, make sure the files have the same version number in their
+    name, <br>which means they are associated and must be imported at the same time. You cannot import 2 files with
+    different version number in their name.</p>
+<form action="upload-json/" enctype="multipart/form-data" method="post">
+    {% csrf_token %}
+    {% for field in json_upload_form %}
+    <ul>
+        <li>{{ field.label_tag }} {{field}}</li>
+    </ul>
+    {% endfor %}
+    <h3 style="margin-top: 3em;">Upload</h3>
+    <li>Be sure you have selected all the files you wanted to import <input type="submit" value="Upload"></li>
+</form>
 {% endblock %}

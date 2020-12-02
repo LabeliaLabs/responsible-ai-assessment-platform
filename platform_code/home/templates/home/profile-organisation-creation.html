@@ -7,52 +7,46 @@
 <h1>{% trans "Organisation creation" %}</h1>
 
 {% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li {% if message.tags %} class=" alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}" >{{ message }}</li>
+        {% endfor %}
+    </ul>
 {% endif %}
 
 <!--If message in context -->
 {% if message %}
-    <div class="alert {{message|get_key_by_position:0}} center">{{message|get_value_by_position:0}} </div>
+    <div class="alert {{message|get_key_by_position:0}} center">{{message|get_value_by_position:0}}</div>
 {% endif %}
 
 <div class="form-center width-35">
     <div class="column">
-<form method="post" id="orga-creation-form" class="">
-    {% csrf_token %}
+        <form class="" id="orga-creation-form" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <span>{{ field.label_tag }}</span><br>
+                    <p>{{ field }}</p>
+                {% if field.help_text %}
+                    <small style="color: grey">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p style="color: red">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+            <button class="btn btn-primary same-size-220 margin-10" id="orga-creation" type="submit">{% trans "Create" %}
+            </button>
+        </form>
 
-    {% for field in form %}
-
-        <span>{{ field.label_tag }}</span><br>
-
-          <p >{{ field }}</p>
-        {% if field.help_text %}
-          <small style="color: grey">{{ field.help_text }}</small>
+        {% if skip_button %}
+            <form action="{% url 'home:user-profile' %}">
+                <input class="btn btn-danger same-size-220 margin-10" type="submit" value="{% trans 'Pass' %}"/>
+            </form>
+            {% else %}
+            <form action="{% url 'home:user-profile' %}">
+                <input class="btn btn-danger same-size-220 margin-10" type="submit" value="{% trans 'Back' %}"/>
+            </form>
         {% endif %}
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-      </p>
-    {% endfor %}
-    <button id="orga-creation" type="submit" class="btn btn-primary same-size-220 margin-10">{% trans "Create" %}</button>
-
-  </form>
-
-
-
-    {% if skip_button %}
-        <form action="{% url 'home:user-profile' %}" >
-            <input  type="submit" class="btn btn-danger same-size-220 margin-10" value="{% trans 'Pass' %}" />
-        </form>
-    {% else %}
-        <form action="{% url 'home:user-profile' %}">
-            <input type="submit" class="btn btn-danger same-size-220 margin-10" value="{% trans 'Back' %}" />
-        </form>
-    {% endif %}
-        </div>
+    </div>
 </div>
 
 {% endblock %}

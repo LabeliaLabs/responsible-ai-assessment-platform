@@ -3,125 +3,133 @@
 {% load markdownify %}
 {% load i18n %}
 
- <div id="error_messages"></div>
+<div id="error_messages"></div>
 
 <!-- Titles of the tablist-->
 <nav>
-  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-item nav-link title-nav active" id="nav-favorite-tab" data-toggle="tab"
-       href="#nav-favorite" role="tab" aria-controls="nav-favorite"
-       aria-selected="true">{% trans "My favorite resources" %}</a>
-    <a class="nav-item nav-link title-nav" id="nav-resources-tab" data-toggle="tab"
-       href="#nav-resources" role="tab" aria-controls="nav-resources" aria-selected="false">{% trans "All the resources" %}</a>
-<!--      The glossary is temporary removed as long as the content is not ready to be deployed -->
-<!--    <a class="nav-item nav-link title-nav" id="nav-glossary-tab" data-toggle="tab"-->
-<!--       href="#nav-glossary" role="tab" aria-controls="nav-glossary" aria-selected="false">{% trans "Glossary" %}</a>-->
-  </div>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+        <a aria-controls="nav-favorite" aria-selected="true" class="nav-item nav-link title-nav active"
+           data-toggle="tab" href="#nav-favorite" id="nav-favorite-tab"
+           role="tab">{% trans "My favorite resources" %}</a>
+        <a aria-controls="nav-resources" aria-selected="false" class="nav-item nav-link title-nav"
+           data-toggle="tab" href="#nav-resources" id="nav-resources-tab" role="tab"
+            >{% trans "All the resources" %}
+        </a>
+        <!--      The glossary is temporary removed as long as the content is not ready to be deployed -->
+        <!--    <a class="nav-item nav-link title-nav" id="nav-glossary-tab" data-toggle="tab"-->
+        <!--       href="#nav-glossary" role="tab" aria-controls="nav-glossary" aria-selected="false">{% trans "Glossary" %}</a>-->
+    </div>
 </nav>
 
 <!-- Content of the tablist -->
 <div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-favorite" role="tabpanel" aria-labelledby="nav-favorite-tab">
-      <ul style="display: inline-grid;" id="liked-resources-array">
-          {% if resources %}
+    <div aria-labelledby="nav-favorite-tab" class="tab-pane fade show active" id="nav-favorite" role="tabpanel">
+        <ul id="liked-resources-array" style="display: inline-grid;">
+            {% if resources %}
             {% for resource in resources %}
-              <div class="grid-container-2-cols">
-                 <div class="grid-item">
-                    <li id="resource{{resource.id}}" class="object-linked list-with-disc margin-10 ">
+            <div class="grid-container-2-cols">
+                <div class="grid-item">
+                    <li class="object-linked list-with-disc margin-10 " id="resource{{resource.id}}">
                         [{{resource.type}}] - {{resource.text|markdownify}}
                     </li>
-                 </div>
-                  <div class="icon-list" >
-                        <form id="{{resource.id}}" method='post' action="{% url 'home:user-profile' %}" >
-                            {% csrf_token %}
-                            <a onclick="remove(this, {{resource.id}})" name="unlike">
-                                 <i class="fa fa-bookmark liked" id="resource_list{{resource.id}}"></i>
-                            </a>
-                        </form>
-                    </div>
-              </div>
+                </div>
+                <div class="icon-list">
+                    <form action="{% url 'home:user-profile' %}" id="{{resource.id}}" method='post'>
+                        {% csrf_token %}
+                        <a name="unlike" onclick="remove(this, {{resource.id}})">
+                            <i class="fa fa-bookmark liked" id="resource_list{{resource.id}}"></i>
+                        </a>
+                    </form>
+                </div>
+            </div>
             {% endfor %}
-          {% else %}
-           <p id="no-resources-message" class="margin-50"
-                >{% trans "You do not have selected resources as favorite yet. You can do this in the next tab or during the evaluation by clicking on the small icon next to the resources. " %}
-           </p>
-          {% endif %}
-            <p id="no-resources-message-temp" class="margin-50 display-none"
-                >{% trans "You do not have selected resources as favorite yet. You can do this in the next tab or during the evaluation by clicking on the small icon next to the resources. " %}
-           </p>
+            {% else %}
+            <p class="margin-50" id="no-resources-message"
+            >{% blocktrans %}
+                You do not have selected resources as favorite yet. You can do this in the next tab or during the
+                evaluation by clicking on the small icon next to the resources.
+             {% endblocktrans %}
+            </p>
+            {% endif %}
+            <p class="margin-50 display-none" id="no-resources-message-temp"
+            >{% blocktrans %}
+                You do not have selected resources as favorite yet. You can do this in the next tab or during the
+                evaluation by clicking on the small icon next to the resources.
+             {% endblocktrans %}
+            </p>
 
-      </ul>
-  </div>
-  <div class="tab-pane fade" id="nav-resources" role="tabpanel" aria-labelledby="nav-resources-tab">
-      {% for master_section in last_assessment.mastersection_set.all %}
-        <div id="accordion-{{master_section.id}}" class="accordion-resource-section margin-10" >
+        </ul>
+    </div>
+    <div aria-labelledby="nav-resources-tab" class="tab-pane fade" id="nav-resources" role="tabpanel">
+        {% for master_section in last_assessment.mastersection_set.all %}
+        <div class="accordion-resource-section margin-10" id="accordion-{{master_section.id}}">
             <div class="card mb-0">
-                <div id="cardHeader{{master_section.id}}"
-                     onclick="changeIconResource(this)"
-                     class="grid-2-cols-resource-section card-header collapsed background-white"
-                     data-toggle="collapse" href="#collapse-{{master_section.id}}">
-                    <div id="iconResource{{master_section.id}}" class="resource-section-icon fa fa-plus">
+                <div class="grid-2-cols-resource-section card-header collapsed background-white"
+                     data-toggle="collapse"
+                     href="#collapse-{{master_section.id}}"
+                     id="cardHeader{{master_section.id}}" onclick="changeIconResource(this)">
+                    <div class="resource-section-icon fa fa-plus" id="iconResource{{master_section.id}}">
 
                     </div>
-                    <div class="" >
+                    <div class="">
                         <span class="fake-link">Section {{master_section.order_id}}: {{master_section.name}}</span>
                     </div>
                 </div>
-                <div id="collapse-{{master_section.id}}" class="card-body collapse"
-                     data-parent="#accordion-{{master_section.id}}">
+                <div class="card-body collapse" data-parent="#accordion-{{master_section.id}}"
+                     id="collapse-{{master_section.id}}">
                     <ul>
-                    {% for master_element in master_section.masterevaluationelement_set.all %}
+                        {% for master_element in master_section.masterevaluationelement_set.all %}
                         {% if master_element.has_resources %}
-                                <li class="margin-10">
-                                Q{{master_section.order_id}}.{{master_element.order_id}} : {{ master_element.name }}
-                                <form id="like_resources{{master_element.id}}" action="" method="POST">
-                                    {% csrf_token %}
-                                    <ul>
-                                        {% for resource in master_element.external_links.all %}
-                                                <div class="grid-container-2-cols">
-                                                    <div class="grid-item">
-                                                        <li class="list-with-disc margin-10">
-                                                        [{{resource.type}}] - {{resource.text|markdownify}}
-                                                        </li>
-                                                    </div>
-                                                    <div class="icon-list">
-                                                        {% if not resource in resources_liked %}
-                                                            <a onclick="like(this, {{master_element.id}}, {{resource.id}})" name="like">
-                                                                <i class="fa fa-bookmark-o  not-liked"
-                                                                   title="{% trans 'Click to like the resource' %}"
-                                                                   name="resource_not_liked{{resource.id}}"></i>
-                                                            </a>
-                                                        {% else %}
-                                                            <a onclick="like(this, {{master_element.id}}, {{resource.id}})"
-                                                               name="unlike">
-                                                                <i class="fa fa-bookmark liked"
-                                                                   title="{% trans 'Click to unlike the resource' %}"
-                                                                   name="resource_liked{{resource.id}}"></i>
-                                                            </a>
-                                                        {% endif %}
-                                                    </div>
+                        <li class="margin-10">
+                            Q{{master_section.order_id}}.{{master_element.order_id}} : {{ master_element.name }}
+                            <form action="" id="like_resources{{master_element.id}}" method="POST">
+                                {% csrf_token %}
+                                <ul>
+                                    {% for resource in master_element.external_links.all %}
+                                    <div class="grid-container-2-cols">
+                                        <div class="grid-item">
+                                            <li class="list-with-disc margin-10">
+                                                [{{resource.type}}] - {{resource.text|markdownify}}
+                                            </li>
+                                        </div>
+                                        <div class="icon-list">
+                                            {% if not resource in resources_liked %}
+                                            <a name="like" onclick="like(this, {{master_element.id}}, {{resource.id}})">
+                                                <i class="fa fa-bookmark-o  not-liked"
+                                                   name="resource_not_liked{{resource.id}}"
+                                                   title="{% trans 'Click to like the resource' %}"></i>
+                                            </a>
+                                            {% else %}
+                                            <a name="unlike"
+                                               onclick="like(this, {{master_element.id}}, {{resource.id}})">
+                                                <i class="fa fa-bookmark liked"
+                                                   name="resource_liked{{resource.id}}"
+                                                   title="{% trans 'Click to unlike the resource' %}"></i>
+                                            </a>
+                                            {% endif %}
+                                        </div>
 
-                                                </div>
-                                        {% endfor %}
-                                    </ul>
-                                    </form>
-                            </li>
+                                    </div>
+                                    {% endfor %}
+                                </ul>
+                            </form>
+                        </li>
 
                         {% endif %}
-                    {% endfor %}
+                        {% endfor %}
                     </ul>
                 </div>
 
             </div>
         </div>
-      {% endfor %}
-  </div>
-<!--    Todo manage the glossary (new dedicated html file, see how to import/create it)-->
-<!--  <div class="tab-pane fade" id="nav-glossary" role="tabpanel" aria-labelledby="nav-glossary-tab">-->
-<!--      <ul class="margin-50">-->
-<!--      <li class="list-with-disc">-->
-<!--          <p><strong>{% trans "Privacy:" %}</strong>{% trans "the right to an individual to control who have access to his personal data."%}</p>-->
-<!--      </li>-->
-<!--      </ul>-->
-<!--  </div>-->
+        {% endfor %}
+    </div>
+    <!--    Todo manage the glossary (new dedicated html file, see how to import/create it)-->
+    <!--  <div class="tab-pane fade" id="nav-glossary" role="tabpanel" aria-labelledby="nav-glossary-tab">-->
+    <!--      <ul class="margin-50">-->
+    <!--      <li class="list-with-disc">-->
+    <!--          <p><strong>{% trans "Privacy:" %}</strong>{% trans "the right to an individual to control who have access to his personal data."%}</p>-->
+    <!--      </li>-->
+    <!--      </ul>-->
+    <!--  </div>-->
 </div>

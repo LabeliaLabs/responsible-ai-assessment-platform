@@ -4,264 +4,269 @@
 {% load i18n %}
 {% load markdownify %}
 
-    {% for section in page_obj %}
-        {% if not section.fetch %}
-            <button class="btn-new top-section" disabled="true">New</button>
-        {% endif %}
-        <div class="evaluation-title" >
-                <h1>Section {{ section.master_section.order_id}} </h1>
+{% for section in page_obj %}
+    {% if not section.fetch %}
+        <button class="btn-new top-section" disabled="true">New</button>
+    {% endif %}
+    <div class="evaluation-title">
+        <h1>Section {{ section.master_section.order_id}} </h1>
+        <h3>{{section.master_section.name}}</h3>
+        {% include "assessment/section-feedback.html" %}
+        <div class="progress progress-section" id="section-progress-bar"
+             title="{% blocktrans with progression=section.user_progression %}{{ progression }}% is done{% endblocktrans %}">
+            <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{section.user_progression}}"
+                 class="progress-bar progress-bar-section" id="section-progress-bar-content" role="progressbar"
+                 style="width: {{section.user_progression}}%;"
+                 title="{% blocktrans with progression=section.user_progression %}{{ progression }}% is done{% endblocktrans %}"></div>
+        </div>
+    </div>
 
-                <h3>{{section.master_section.name}}</h3>
-                {% include "assessment/section-feedback.html" %}
-            <div id="section-progress-bar" class="progress progress-section"
-                 title="{% blocktrans with progression=section.user_progression %}{{ progression }}% is done{% endblocktrans %}">
-                <div class="progress-bar progress-bar-section" role="progressbar" style="width: {{section.user_progression}}%;"
-                     aria-valuenow="{{section.user_progression}}" aria-valuemin="0" aria-valuemax="100"
-                     title="{% blocktrans with progression=section.user_progression %}{{ progression }}% is done{% endblocktrans %}" id="section-progress-bar-content"></div>
+    <div class="section-description" id="section-description">
+        {{section.master_section.description|markdownify}}
+    </div>
+
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+    <!--    User section notes -->
+    <div class="margin-10, margin-bot-50">
+        <form action="{{ section.get_absolute_url }}" id="sectionNotes{{section.id}}" method="POST">
+            {% csrf_token %}
+            {{section_notes_form}}
+            <div class="wrapper">
+                {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
+                    <button class="btn btn-primary same-size-220 margin-10"
+                            onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
+                            title="{% trans 'Save the notes' %}"
+                            type="button">{% trans "Save" %}
+                    </button>
+                {% else %}
+                    <button class="btn btn-primary same-size-220" disabled
+                            onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
+                            title="{% trans 'You do not have the right to do this action' %}"
+                            type="button">{% trans "Save" %}
+                    </button>
+                {% endif %}
             </div>
+        </form>
+        <div class="display-none margin-bot-top-20" id="messageSectionNotes{{section.id}}"></div>
+    </div>
 
+    <div class="element">
+        <div class="pagination-top margin-bot-30">
+            {% include "assessment/pagination.html" %}
         </div>
-        <div id="section-description" class="section-description">
-            {{section.master_section.description|markdownify}}
-        </div>
 
-        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <div aria-multiselectable="true" class="accordion" id="accordionExample">
+            {% for element in element_list %}
+                <div class="card">
+                    <div class="card-header row grid-container-3-cols " id="heading{{element.id}}">
+                        <div aria-controls="collapse{{element.id}}" aria-expanded="true"
+                             class="display-line div-button" data-target="#collapse{{element.id}}"
+                             data-toggle="collapse">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left " type="button">
+                                    Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} :
+                                    {{element.master_evaluation_element.name|markdownify}}
+                                </button>
+                            </h2>
 
-<!--    User section notes -->
-        <div class="margin-10, margin-bot-50">
-                    <form id="sectionNotes{{section.id}}" action="{{ section.get_absolute_url }}" method="POST">
-                    {% csrf_token %}
-                        {{section_notes_form}}
-                        <div class="wrapper">
-                            {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
-                                <button type="button" onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
-                                        class="btn btn-primary same-size-220 margin-10"
-                                        title="{% trans 'Save the notes' %}">{% trans "Save" %}
-                                </button>
-                            {% else %}
-                                <button type="button" onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
-                                        class="btn btn-primary same-size-220" disabled
-                                        title="{% trans 'You do not have the right to do this action' %}">{% trans "Save" %}
-                                </button>
+                            {% if not element.fetch %}
+                                <button class="btn-new" disabled>New</button>
                             {% endif %}
                         </div>
-                    </form>
-            <div class="display-none margin-bot-top-20" id="messageSectionNotes{{section.id}}"></div>
-        </div>
 
-        <div class="element">
+                        {% include "assessment/element-feedback.html" %}
+                        <div class="margin-auto">
+                            <span class="fa-stack-evaluation fa-stack fa-lg"
+                                  name="element_status_temporary{{element.id}}"
+                                  style="display: none;"
+                                  title="">
+                            </span>
 
-            <div class="pagination-top margin-bot-30">
-            {% include "assessment/pagination.html" %}
-            </div>
-
-            <div class="accordion" id="accordionExample" aria-multiselectable="true">
-            {% for element in element_list %}
-                      <div class="card">
-                        <div class="card-header row grid-container-3-cols " id="heading{{element.id}}">
-                            <div class="display-line div-button" data-toggle="collapse"
-                                        data-target="#collapse{{element.id}}" aria-expanded="true"
-                                        aria-controls="collapse{{element.id}}">
-                              <h2 class="mb-0" >
-                                <button class="btn btn-link btn-block text-left " type="button" >
-                                    Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} : {{element.master_evaluation_element.name|markdownify}}
-                                </button>
-
-
-                              </h2>
-                              {% if not element.fetch %}
-                                  <button class="btn-new" disabled="true">New</button>
-                              {% endif %}
-                                </div>
-                            {% include "assessment/element-feedback.html" %}
-                            <div class="margin-auto">
-                                <span name="element_status_temporary{{element.id}}" class="fa-stack-evaluation fa-stack fa-lg"
-                                      style="display: none;"
-                                      title="">
+                            {% if element.status %}
+                                <span class="fa-stack-evaluation fa-stack fa-lg " name="element_status_done{{element.id}}"
+                                      title="{% trans 'You have already answered to this evaluation element' %}">
+                                    <i class="fa fa-circle fa-stack-2x"></i>
                                 </span>
 
-                                {% if element.status %}
-                                <span name="element_status_done{{element.id}}" class="fa-stack-evaluation fa-stack fa-lg "
-                                       title="{% trans 'You have already answered to this evaluation element' %}">
+                            {% elif not element.status %}
+                                {% if element.has_condition_on and element|is_not_applicable %}
+                                <span class="fa-stack-evaluation fa-stack fa-lg answer" name="element_status_invalid{{element.id}}"
+                                      title="{% trans 'You are not concerned by this evaluation element due to your answer to this evaluation element' %} {{depends_on_dic|get_item:element}}">
                                       <i class="fa fa-circle fa-stack-2x"></i>
                                 </span>
 
-                                {% elif not element.status %}
-                                    {% if element.has_condition_on and element|is_not_applicable %}
-                                        <span name="element_status_invalid{{element.id}}" class="fa-stack-evaluation fa-stack fa-lg answer"
-                                              title="{% trans 'You are not concerned by this evaluation element due to your answer to this evaluation element' %} {{depends_on_dic|get_item:element}}">
-                                            <i class="fa fa-circle fa-stack-2x"></i>
-                                         </span>
-
-                                    {% else %}
-                                        <span name="element_status_not_done{{element.id}}" class="fa-stack-evaluation fa-stack fa-lg answer"
-                                              title="{% trans 'You have not yet answered to this evaluation element' %}">
-                                              <i class="fa fa-circle-o fa-stack-2x" ></i>
-                                        </span>
-                                    {% endif %}
-
+                                {% else %}
+                                    <span class="fa-stack-evaluation fa-stack fa-lg answer" name="element_status_not_done{{element.id}}"
+                                          title="{% trans 'You have not yet answered to this evaluation element' %}">
+                                          <i class="fa fa-circle-o fa-stack-2x"></i>
+                                    </span>
                                 {% endif %}
-                             </div>
-                        </div>
 
-                        <div id="collapse{{element.id}}" class="collapse" aria-labelledby="heading{{element.id}}" >
-                          <form method="POST" name="{{element.id}}" id="form{{element.id}}"
-                                action="{{ section.get_absolute_url }}" element="{{element}}" >
-                              {% csrf_token %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div aria-labelledby="heading{{element.id}}" class="collapse" id="collapse{{element.id}}">
+                        <form action="{{ section.get_absolute_url }}" element="{{element}}" id="form{{element.id}}"
+                              method="POST" name="{{element.id}}">
+                            {% csrf_token %}
                             <div class="card-body">
 
-                                <div id="temp_warning{{element.id}}" class='alert alert-warning' style="display:none;">
+                                <div class='alert alert-warning' id="temp_warning{{element.id}}" style="display:none;">
                                     {% trans "This evaluation element is not applicable due to your previous answers" %}
                                 </div>
+
                                 {% if element.has_condition_on and element|is_not_applicable %}
-                                    <div id="warningmessage{{element.id}}" class='alert alert-warning'>
-                                        {% trans 'You are not concerned by this evaluation element due to your answer to this evaluation element' %} {{depends_on_dic|get_item:element}}
+                                    <div class='alert alert-warning' id="warningmessage{{element.id}}">
+                                        {% blocktrans %}
+                                        You are not concerned by this evaluation element due to your answer to this
+                                        evaluation element
+                                        {% endblocktrans %} {{depends_on_dic|get_item:element}}
                                     </div>
                                 {% endif %}
 
-                                <div id="question-text" class="sub-question-headers grid-container-2-cols row margin-left-em">
-                                    <div id="question-name" class="question-name">
+                                <div class="sub-question-headers grid-container-2-cols row margin-left-em" id="question-text">
+                                    <div class="question-name" id="question-name">
                                         {{element.master_evaluation_element.question_text|markdownify}}
                                     </div>
                                     {% if element.master_evaluation_element.explanation_text %}
                                     <div class="help-tip help-tip-explanation absolute-position">
                                         <p>{{element.master_evaluation_element.explanation_text|markdownify}}</p>
                                     </div>
-
                                     {% endif %}
                                 </div>
 
                                 <div class="choices" id="{{element}}">
                                     {% if element.master_evaluation_element.question_type == "radio" %}
-                                            <p class="italic margin-bottom-1em">
-                                                {% trans "Please select one answer which best matches to your organisation situation." %}
-                                            </p>
-
-                                      {% elif element.master_evaluation_element.question_type == "checkbox"%}
                                         <p class="italic margin-bottom-1em">
-                                            {% trans "Please select all the answers which best match to your organisation situation. Be careful, some combinations are not coherent." %}
+                                            {% blocktrans %}
+                                                Please select one answer which best matches to your organisation situation.
+                                            {% endblocktrans %}
                                         </p>
-
-                                      {% endif %}
+                                    {% elif element.master_evaluation_element.question_type == "checkbox"%}
+                                        <p class="italic margin-bottom-1em">
+                                            {% blocktrans %}
+                                                Please select all the answers which best match to your organisation situation.
+                                                Be careful, some combinations are not coherent.
+                                            {% endblocktrans %}
+                                        </p>
+                                    {% endif %}
 
                                     {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                         {% if element.has_condition_on and element|is_not_applicable %}
-                                            <fieldset id="disable_element_{{element.id}}" disabled >
-
-                                          {{ dic_form|get_item:element }}
-                                            </fieldset>
+                                        <fieldset disabled id="disable_element_{{element.id}}">
+                                            {{ dic_form|get_item:element }}
+                                        </fieldset>
                                         {% else %}
-                                            <fieldset id="disable_element{{element.id}}" >
-
-                                              {{ dic_form|get_item:element }}
-                                                </fieldset>
+                                        <fieldset id="disable_element{{element.id}}">
+                                            {{ dic_form|get_item:element }}
+                                        </fieldset>
                                         {% endif %}
                                     {% else %}
-                                        <fieldset  disabled >
-
-                                          {{ dic_form|get_item:element }}
-                                            </fieldset>
+                                        <fieldset disabled>
+                                            {{ dic_form|get_item:element }}
+                                        </fieldset>
                                     {% endif %}
 
-<!--                                    Reset the answers -->
+                                    <!-- Reset the answers -->
                                     {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                         {% if element.has_condition_on and element|is_not_applicable %}
-                                            <a id="reset_{{element.id}}" class="reset-response float-right" title="Inactive">
+                                            <a class="reset-response float-right" id="reset_{{element.id}}" title="Inactive">
                                                 {% trans "Reset the answer" %}</a>
                                         {% else %}
-                                            <a id="reset{{element.id}}" onclick="resetChoice('{{element.id}}')"
-                                               class="reset-response float-right" >{% trans "Reset the answer" %}</a>
-                                        {% endif %}
+                                            <a class="reset-response float-right" id="reset{{element.id}}"
+                                               onclick="resetChoice('{{element.id}}')">{% trans "Reset the answer" %}</a>
+                                            {% endif %}
                                     {% endif %}
-
-                              </div>
-
-                            </div>
-                              <div class="wrapper">
-                                  {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
-                                      {% if element.has_condition_on and element|is_not_applicable %}
-                                        <button type="button"
-                                                 disabled class="btn btn-primary same-size-220" id="validate_{{element.id}}" >
-                                            {% trans "Validate" %}
-                                        </button>
-                                      {% else %}
-                                          <button type="button" onclick="submitForm('form{{element.id}}')"
-                                                     class="btn btn-primary same-size-220" id="validate{{element.id}}" >{% trans "Validate" %}
-                                          </button>
-                                      {% endif %}
-                                  {% else %}
-                                      <button type="button"
-                                                 disabled class="btn btn-primary same-size-220"
-                                                title="{% trans 'You do not have the right to do this action' %}" >
-                                            {% trans "Validate" %}
-                                        </button>
-                                  {% endif %}
-                              </div>
-                              <div class="margin-10" id="confirmationform{{element.id}}" >
-                              </div>
-                            <div id="warningmessage_temporary{{element.id}}" class='alert alert-warning'
-                                 style="visibility:hidden; height:1px;">{% trans "This evaluation element is not applicable due to the answer to this evaluation element" %}{depends_on_dic|get_item:element}}
+                                </div>
                             </div>
 
+                            <div class="wrapper">
+                                {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
+                                    {% if element.has_condition_on and element|is_not_applicable %}
+                                        <button class="btn btn-primary same-size-220"
+                                                disabled
+                                                id="validate_{{element.id}}"
+                                                type="button">
+                                            {% trans "Validate" %}
+                                        </button>
+                                    {% else %}
+                                        <button class="btn btn-primary same-size-220" id="validate{{element.id}}"
+                                                onclick="submitForm('form{{element.id}}')" type="button">{% trans "Validate" %}
+                                        </button>
+                                    {% endif %}
+                                {% else %}
+                                    <button class="btn btn-primary same-size-220"
+                                            disabled
+                                            title="{% trans 'You do not have the right to do this action' %}"
+                                            type="button">
+                                        {% trans "Validate" %}
+                                    </button>
+                                {% endif %}
+                            </div>
+
+                            <div class="margin-10" id="confirmationform{{element.id}}"></div>
+
+                            <div class='alert alert-warning' id="warningmessage_temporary{{element.id}}"
+                                 style="visibility:hidden; height:1px;">
+                                {% blocktrans %}
+                                This evaluation element is not applicable due to the answer to this evaluation element
+                                {% endblocktrans %} {depends_on_dic|get_item:element}}
+                            </div>
                         </form>
-                            {% if element.master_evaluation_element.has_resources %}
-                                  <div id="accordion-{{element.id}}" class="accordion-resource margin-20">
-                                        <div class="resource-card mb-0">
-                                            <div class="card-header collapsed background-white" data-toggle="collapse" href="#collapse-{{element.id}}">
-                                                <a class="card-title">{% trans "Resources" %}</a>
-                                            </div>
-                                            <div id="collapse-{{element.id}}" class="card-body collapse" data-parent="#accordion-{{element.id}}">
-                                                <form id="like_resources{{element.id}}" action="{{ section.get_absolute_url }}" method="POST">
-                                                {% csrf_token %}
-                                                <ul>
-                                                    {% for resource in element.master_evaluation_element.external_links.all %}
-                                                        <div class="grid-container-2-cols">
-                                                            <div class="grid-item">
-                                                                <li class="list-with-disc margin-10">
-                                                                [{{resource.type}}] - {{resource.text|markdownify}}
-                                                                </li>
-                                                            </div>
-                                                            <div class="icon-list">
-                                                                {% if not resource in resources_liked %}
-                                                                    <a onclick="like(this, {{element.id}}, {{resource.id}})" name="like">
-                                                                        <i class="fa fa-bookmark-o not-liked"
-                                                                           title="{% trans 'Click to like the resource' %}"
-                                                                           name="resource_not_liked{{resource.id}}"></i>
-                                                                    </a>
-                                                                {% else %}
-                                                                    <a onclick="like(this, {{element.id}}, {{resource.id}})" name="unlike">
-                                                                        <i class="fa fa-bookmark liked"
-                                                                           title="{% trans 'Click to unlike the resource' %}"
-                                                                           name="resource_liked{{resource.id}}"></i>
-                                                                    </a>
-                                                                {% endif %}
-                                                            </div>
 
-                                                        </div>
-                                                    {% endfor %}
-                                                    </ul>
-                                                    </form>
-                                            </div>
-
-                                        </div>
+                        {% if element.master_evaluation_element.has_resources %}
+                            <div class="accordion-resource margin-20" id="accordion-{{element.id}}">
+                                <div class="resource-card mb-0">
+                                    <div class="card-header collapsed background-white" data-toggle="collapse"
+                                         href="#collapse-{{element.id}}">
+                                        <a class="card-title">{% trans "Resources" %}</a>
                                     </div>
-                              {% endif %}
-
-                           </div>
-                        </div>
-
-                {% endfor %}
-
-
+                                    <div class="card-body collapse" data-parent="#accordion-{{element.id}}"
+                                         id="collapse-{{element.id}}">
+                                        <form action="{{ section.get_absolute_url }}" id="like_resources{{element.id}}"
+                                              method="POST">
+                                            {% csrf_token %}
+                                            <ul>
+                                                {% for resource in element.master_evaluation_element.external_links.all %}
+                                                    <div class="grid-container-2-cols">
+                                                        <div class="grid-item">
+                                                            <li class="list-with-disc margin-10">
+                                                                [{{resource.type}}] - {{resource.text|markdownify}}
+                                                            </li>
+                                                        </div>
+                                                        <div class="icon-list">
+                                                            {% if not resource in resources_liked %}
+                                                                <a name="like" onclick="like(this, {{element.id}}, {{resource.id}})">
+                                                                    <i class="fa fa-bookmark-o not-liked"
+                                                                       name="resource_not_liked{{resource.id}}"
+                                                                       title="{% trans 'Click to like the resource' %}"></i>
+                                                                </a>
+                                                            {% else %}
+                                                                <a name="unlike" onclick="like(this, {{element.id}}, {{resource.id}})">
+                                                                    <i class="fa fa-bookmark liked"
+                                                                       name="resource_liked{{resource.id}}"
+                                                                       title="{% trans 'Click to unlike the resource' %}"></i>
+                                                                </a>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </ul>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-
+            {% endfor %}
         </div>
-
+    </div>
 {% endfor %}
 
 <script>
-
-
 var coll = document.getElementsByClassName("collapsible-resource");
 var i;
 
@@ -276,6 +281,4 @@ for (i = 0; i < coll.length; i++) {
     }
   });
 }
-
-
 </script>

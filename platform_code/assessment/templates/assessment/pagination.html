@@ -9,7 +9,7 @@
             <a href="{{ previous_section.get_absolute_url }}">{% trans "Previous section" %}</a>
 
         {% else %}
-            <a href="{{ evaluation.get_absolute_url }}" >{% trans "Evaluation summary" %}</a>
+            <a href="{{ evaluation.get_absolute_url }}">{% trans "Evaluation summary" %}</a>
 
         {% endif %}
         {% if page_obj.has_next %}

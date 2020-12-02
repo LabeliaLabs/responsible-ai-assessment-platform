@@ -8,9 +8,9 @@
 <div class="breadcrumbs">
     <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
     <span> ></span>
-    <a href="#" class="active-breadcrumb">{% trans 'User settings' %}</a>
+    <a class="active-breadcrumb" href="#">{% trans 'User settings' %}</a>
     <span> ></span>
-    <a href="#" class="active-breadcrumb" id="active-profile-settings"><span>{% trans "My information" %}</span></a>
+    <a class="active-breadcrumb" href="#" id="active-profile-settings"><span>{% trans "My information" %}</span></a>
 </div>
 
 <h1>{% trans "My account" %}</h1>
@@ -19,51 +19,57 @@
         <div class="col-md-3">
             <ul class="nav nav-pills nav-stacked flex-column table-column-profile" role="tablist">
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column active" data-toggle="pill" name="column-button"
-                       onclick="displayTextLink('{% trans 'My information' %}', 'active-profile-settings')"
-                       href="#content-username">{% trans "User information" %}</a>
+                    <a class="nav-link profile-column active" data-toggle="pill" href="#content-username"
+                       name="column-button"
+                       onclick="displayTextLink('{% trans 'My information' %}', 'active-profile-settings')">
+                        {% trans "User information" %}
+                    </a>
                 </li>
                 <li class="nav-item column-button">
-                   <a class="nav-link profile-column" data-toggle="pill" name="column-button"
-                       href="#content-password"
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-password"
+                       name="column-button"
                        onclick="displayTextLink('{% trans 'Password' %}', 'active-profile-settings')"
-                       >{% trans "Password" %}</a>
+                    >{% trans "Password" %}</a>
                 </li>
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column" data-toggle="pill" name="column-button"
-                       onclick="displayTextLink('{% trans 'Data export' %}', 'active-profile-settings')"
-                       href="#content-export">{% trans "Export personnal data" %}</a>
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-export"
+                       name="column-button"
+                       onclick="displayTextLink('{% trans 'Data export' %}', 'active-profile-settings')">
+                        {% trans "Export personnal data" %}
+                    </a>
                 </li>
 
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column" data-toggle="pill" name="column-button"
-                       onclick="displayTextLink('{% trans 'Account deletion' %}', 'active-profile-settings')"
-                       href="#content-delete">{% trans "Delete the account" %}</a>
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-delete"
+                       name="column-button"
+                       onclick="displayTextLink('{% trans 'Account deletion' %}', 'active-profile-settings')">
+                        {% trans "Delete the account" %}
+                    </a>
                 </li>
             </ul>
         </div>
         <div class="col-md-9">
             <div class="tab-content">
-               <div class="container tab-pane active" id="content-username"><br>
-                   {% include "home/settings-data.html" %}
-               </div>
-               <div class="container tab-pane fade" id="content-password">
-                   {% include "home/settings-password.html" %}
-               </div>
+                <div class="container tab-pane active" id="content-username"><br>
+                    {% include "home/settings-data.html" %}
+                </div>
+                <div class="container tab-pane fade" id="content-password">
+                    {% include "home/settings-password.html" %}
+                </div>
                 <div class="container tab-pane fade" id="content-export"><br>
-                   {% include "home/settings-export-data.html" %}
-               </div>
+                    {% include "home/settings-export-data.html" %}
+                </div>
                 <div class="container tab-pane fade" id="content-delete"><br>
-                   {% include "home/settings-delete.html" %}
-               </div>
+                    {% include "home/settings-delete.html" %}
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <form action="{% url 'home:user-profile' %}">
-    <input type="submit" value="{% trans 'Go back to my dashboard' %}"
-           class="btn btn-primary bottom-page-button float-right same-size-280 " />
+    <input class="btn btn-primary bottom-page-button float-right same-size-280 " type="submit"
+           value="{% trans 'Go back to my dashboard' %}"/>
 </form>
 
 

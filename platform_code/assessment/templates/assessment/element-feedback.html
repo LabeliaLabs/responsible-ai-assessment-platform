@@ -4,47 +4,48 @@
 
 <!-- Feedback for each evaluation element -->
 
-<a class="feedback" href="#" data-toggle="modal"
-   data-target="#modal-feedback-element{{element.id}}" type="button"
-   title="{% trans 'You can give a feedback on this evaluation element to the Substra team.' %}" >
+<a class="feedback" data-target="#modal-feedback-element{{element.id}}" data-toggle="modal"
+   href="#" title="{% trans 'You can give a feedback on this evaluation element to the Substra team.' %}"
+   type="button">
     {% trans "Give a feedback" %}
 
 </a>
 
 <!-- The Modal create feedback -->
 
-<div class="modal" id="modal-feedback-element{{element.id}}" aria-hidden="true">
-  <div class="modal-dialog ">
-    <div class="modal-content">
+<div aria-hidden="true" class="modal" id="modal-feedback-element{{element.id}}">
+    <div class="modal-dialog ">
+        <div class="modal-content">
 
-      <form id="feedback_user_element{{element.id}}" method='post' class="form" role="form"
-          action="">
-        <div class="modal-header">
-            <h4 class="modal-title" >{% trans "Give a feedback on this element" %}</h4>
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-            {% csrf_token %}
-            {% for field in element_feedback_form %}
-            <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                <p class="" > {{field}} </p>
-            {% endfor %}
+            <form action="" class="form" id="feedback_user_element{{element.id}}" method='post'
+                  role="form">
+                <div class="modal-header">
+                    <h4 class="modal-title">{% trans "Give a feedback on this element" %}</h4>
+                    <button class="close" data-dismiss="modal" type="button">&times;</button>
+                </div>
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {% for field in element_feedback_form %}
+                    <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                    <p class=""> {{field}} </p>
+                    {% endfor %}
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary same-size-250 margin-auto"
+                            name="button_feedback"
+                            onclick="feedback({{element.id}}, 'element')"
+                            type="button">{% trans 'Submit' %}
+                    </button>
+                </div>
+                <div id="confirmation_feedback_element{{element.id}}"></div>
+            </form>
 
         </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary same-size-250" type="button" name="button_feedback"
-                    onclick="feedback({{element.id}}, 'element')" style="margin: auto" >{% trans 'Submit' %}</button>
-        </div>
-          <div id="confirmation_feedback_element{{element.id}}"></div>
-    </form>
-
     </div>
-  </div>
 </div>
 
 <script>
-
-
 
 
 </script>

@@ -6,9 +6,9 @@
 {% block content %}
 
 <div class="breadcrumbs">
-    <a href="#" class="active-breadcrumb">{% trans 'Dashboard' %}</a>
+    <a class="active-breadcrumb" href="#">{% trans 'Dashboard' %}</a>
     <span> ></span>
-    <a href="#" class="active-breadcrumb" id="active-profile"><span>{% trans "My evaluations" %}</span></a>
+    <a class="active-breadcrumb" href="#" id="active-profile"><span>{% trans "My evaluations" %}</span></a>
 </div>
 
 <h1>{% trans "Your dashboard" %} </h1>
@@ -16,7 +16,7 @@
 {% if messages %}
 <ul class="messages margin-3em">
     {% for message in messages %}
-    <li {% if message.tags %} class=" alert alert-{{ message.tags }}"{% endif %}>{{ message }}</li>
+    <li class="alert alert-{{ message.tags }}">{{ message }}</li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -26,46 +26,46 @@
         <div class="col-ms-3 container-platform column-right">
             <ul class="nav nav-pills nav-stacked flex-column table-column-profile" role="tablist">
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column active" data-toggle="pill" name="column-button"
-                       href="#content-eval" id="tab-eval"
-                        onclick="displayTextLink('{% trans 'My evaluations' %}', 'active-profile')"
-                        >{% trans "My evaluations" %}</a>
+                    <a class="nav-link profile-column active" data-toggle="pill" href="#content-eval"
+                       id="tab-eval" name="column-button"
+                       onclick="displayTextLink('{% trans 'My evaluations' %}', 'active-profile')"
+                    >{% trans "My evaluations" %}</a>
                 </li>
                 <li class="nav-item column-button">
-                   <a class="nav-link profile-column" data-toggle="pill" name="column-button"
-                       href="#content-orga" id="tab-orga"
-                        onclick="displayTextLink('{% trans 'My organisations' %}', 'active-profile')">{% trans "Organisation" %}</a>
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-orga"
+                       id="tab-orga" name="column-button"
+                       onclick="displayTextLink('{% trans 'My organisations' %}', 'active-profile')">
+                        {% trans "Organisation" %}</a>
                 </li>
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column" data-toggle="pill" name="column-button"
-                       href="#content-ressource" id="tab-resource"
-                        onclick="displayTextLink('{% trans 'My resources' %}', 'active-profile')"
-                        >{% trans "My resources" %}</a>
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-ressource"
+                       id="tab-resource" name="column-button"
+                       onclick="displayTextLink('{% trans 'My resources' %}', 'active-profile')"
+                    >{% trans "My resources" %}</a>
                 </li>
 
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column" name="column-button"
-                       href="{% url 'home:user-profile-settings'%}">{% trans "User settings" %}</a>
+                    <a class="nav-link profile-column" href="{% url 'home:user-profile-settings'%}"
+                       name="column-button">{% trans "User settings" %}</a>
                 </li>
             </ul>
         </div>
         <div class=" data">
             <div class="tab-content">
-               <div class="tab-pane active" id="content-eval"><br>
-                   {% include "home/profile-user-evaluations.html" %}
-               </div>
-               <div class="container tab-pane fade" id="content-orga">
-                   {% include "home/profile-orga-cards.html" %}
-               </div>
+                <div class="tab-pane active" id="content-eval"><br>
+                    {% include "home/profile-user-evaluations.html" %}
+                </div>
+                <div class="container tab-pane fade" id="content-orga">
+                    {% include "home/profile-orga-cards.html" %}
+                </div>
                 <div class="container tab-pane fade" id="content-ressource"><br>
-                   {% include "home/profile-my-ressources.html" %}
-               </div>
+                    {% include "home/profile-my-ressources.html" %}
+                </div>
 
             </div>
         </div>
     </div>
 </div>
-
 
 
 {% endblock %}
