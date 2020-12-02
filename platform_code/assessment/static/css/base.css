@@ -133,6 +133,14 @@ a:hover {
     margin-left: 0.2em;
 }
 
+.margin-left-1em{
+    margin-left: 1em;
+}
+
+.margin-right-1em{
+    margin-right: 1em;
+}
+
 .margin-left-signup{
     margin-left: 10%;
 }
@@ -479,6 +487,10 @@ li {
 .fake-link:hover {
     color: #8985FF;
     text-decoration: underline;
+    cursor: pointer;
+}
+
+.next-element:hover{
     cursor: pointer;
 }
 

@@ -60,8 +60,11 @@
             {% for element in element_list %}
                 <div class="card">
                     <div class="card-header row grid-container-3-cols " id="heading{{element.id}}">
-                        <div aria-controls="collapse{{element.id}}" aria-expanded="true"
-                             class="display-line div-button" data-target="#collapse{{element.id}}"
+                        <div aria-controls="collapse{{element.id}}"
+                             aria-expanded="true"
+                             class="display-line div-button"
+                             data-target="#collapse{{element.id}}"
+                             id="collapsible{{element.id}}"
                              data-toggle="collapse">
                             <h2 class="mb-0">
                                 <button class="btn btn-link btn-block text-left " type="button">
@@ -107,7 +110,7 @@
                         </div>
                     </div>
 
-                    <div aria-labelledby="heading{{element.id}}" class="collapse" id="collapse{{element.id}}">
+                    <div aria-labelledby="heading{{element.id}}" class="collapse show" id="collapse{{element.id}}">
                         <form action="{{ section.get_absolute_url }}" element="{{element}}" id="form{{element.id}}"
                               method="POST" name="{{element.id}}">
                             {% csrf_token %}
@@ -183,6 +186,14 @@
                             </div>
 
                             <div class="wrapper">
+                                {% if forloop.counter != 1 %}
+                                      <div class="margin-right-1em next-element">
+                                        <i class="fa fa-arrow-up"
+                                           title="{% trans 'Go to the previous evaluation element' %}"
+                                           onclick="goPreviousElement({{forloop.counter}})">
+                                        </i>
+                                      </div>
+                                {% endif %}
                                 {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                     {% if element.has_condition_on and element|is_not_applicable %}
                                         <button class="btn btn-primary same-size-220"
@@ -193,7 +204,12 @@
                                         </button>
                                     {% else %}
                                         <button class="btn btn-primary same-size-220" id="validate{{element.id}}"
-                                                onclick="submitForm('form{{element.id}}')" type="button">{% trans "Validate" %}
+                                                onclick="submitForm('form{{element.id}}')" type="button">
+                                            {% if element.status %}
+                                                {% trans "Modify" %}
+                                            {% else %}
+                                                {% trans "Validate" %}
+                                            {% endif %}
                                         </button>
                                     {% endif %}
                                 {% else %}
@@ -204,6 +220,14 @@
                                         {% trans "Validate" %}
                                     </button>
                                 {% endif %}
+                                {% if forloop.counter != element_list|length %}
+                                      <div class="margin-left-1em">
+                                        <i class="fa fa-arrow-down"
+                                           title="{% trans 'Go to the next evaluation element' %}"
+                                           onclick="goNextElement({{forloop.counter}})">
+                                        </i>
+                                      </div>
+                                  {% endif %}
                             </div>
 
                             <div class="margin-10" id="confirmationform{{element.id}}"></div>
