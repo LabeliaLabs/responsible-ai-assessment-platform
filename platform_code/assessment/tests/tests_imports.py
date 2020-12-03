@@ -355,13 +355,13 @@ class TestOrderIdTestCase(TestCase):
         self.assertFalse(test_order_id_number("a"))
 
     def test_order_id_letter(self):
-        # It should be a lower case between "a" and "h"
+        # It should be a lower case between "a" and "n"
         self.assertFalse(test_order_id_letter("1"))
         self.assertFalse(test_order_id_letter("0.5"))
         self.assertFalse(test_order_id_letter("A"))
         self.assertTrue(test_order_id_letter("a"))
         self.assertTrue(test_order_id_letter("h"))
-        self.assertFalse(test_order_id_letter("i"))
+        self.assertTrue(test_order_id_letter("i"))
         self.assertFalse(test_order_id_letter("a,"))
 
 

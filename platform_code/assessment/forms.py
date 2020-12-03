@@ -598,7 +598,7 @@ class ResultsForm(ModelForm):
             self.fields[str(evaluation_element.id)] = question
 
         # If the user has registered the champ user_notes for this element, it is displayed
-        if evaluation_element.user_notes != "":
+        if evaluation_element.user_notes and evaluation_element.user_notes != "":
             notes = forms.CharField(
                 label=_("My notes"),
                 widget=forms.Textarea(

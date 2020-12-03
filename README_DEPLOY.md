@@ -1,7 +1,8 @@
 # Deploy
 
 > No deploy friday & use `tmux`!
-> At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`. /!\ This will **remove** your images!
+> At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`.
+> /!\ This will **remove** your images!
 
 ## Updates
 
@@ -32,7 +33,7 @@ If you want to use the *production* configuration, please use:
 
 Then, please follow the recommendations inside the relevant template:
 
-- Rename the file as avised in the first line of the template file, for example with `cp env_dev_template .env.dev`
+- Rename the file as advised in the first line of the template file, for example with `cp env_dev_template .env.dev`
 - Update values flagged as `<CHANGE_ME>`
 
 ## Nginx
@@ -45,7 +46,7 @@ sudo apt install nginx
 ### Server config
 
 ```sh
-# [only once] Dereference default conf from enabled webstites
+# [only once] Dereference default conf from enabled websites
 sudo unlink /etc/nginx/sites-enabled/default
 
 # Edit your config with the one located in data/nginx/nginx.conf
@@ -113,6 +114,8 @@ sudo certbot renew
 
 TODO:
 
+- change port 22
+- unix user  
 - export conf here (no password, timeout, etc.)
 - definir une politique sec (que faire si on découvre un virus sur sa machine locale qui a des clés ssh pour des serveurs => PREVENIR les autres ayant accès à la machine)
 
@@ -199,13 +202,15 @@ docker-compose exec web watch cat dev.log
 #### Translation
 
 Note that all the content should be written in english. Currently, the languages accepted are
-French and English. The site is deployed in french. To realize the translation (refer to the
+French and English. The site is deployed in French. To realize the translation (refer to the
  [django documentation](https://docs.djangoproject.com/en/3.1/topics/i18n/translation/)
-to implement it ), you need to use `gettext_lazy` or `i18n` or even `ngettext` to manage plurial.
+to implement it ), you need to use `gettext_lazy` or `i18n` or even `ngettext` to manage plural.
 
 For example, in Python files, use the syntax: `_("English message to translate in French")` with the **underscore** for `gettext_lazy`.
 
-In the html files, at the beginning of the file, add `{% load i18n %}` and for the text you want to translate, use the tags `{% trans "English message to translate in French" %}`.
+In the html files, at the beginning of the file, add `{% load i18n %}` and for the text you want to translate, 
+use the tags `{% trans "English message to translate in French" %}` for short messages
+and `{% blocktrans %} text {% endblocktrans %}` for long messages which cannot written in one line, as this tag handles line breaks. 
 
 Then you can do the command:
 
@@ -214,7 +219,11 @@ django-admin makemessages -l fr
 >>> processing locale fr
 ```
 
-This will gather all the text between the tags in the file `django.po`. Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`. You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`. Be careful to the 'fuzzy' translations which are inaccurate (Tips: use `Ctrl + f "fuzzy"`). Make all your translations and then do the command:
+This will gather all the text between the tags in the file `django.po`. 
+Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`. 
+You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`. 
+Be careful to the 'fuzzy' translations which are inaccurate (Tips: use `Ctrl + f "fuzzy"`). 
+Make all your translations and then do the command:
 
 ```sh
 django-admin compilemessages
@@ -222,11 +231,38 @@ django-admin compilemessages
 
 Do not forget to add and commit both of the files `django.po` and `django.mo`.
 
+Note that if you use `{% blocktrans %}` with a line break straight after the tag in the html file:
+
+```sh
+{% blocktrans %}
+ text very long
+ on several lines
+{% endblocktrans %}
+```
+
+You will have `\n` in the translation file at the beginning of the `msgid`:
+
+```sh
+msgid ""
+"\n"
+" text very long\n"
+ "on several lines"
+```
+
+So you need to add it also to the translation (only the first one at the beginning):
+
+```sh
+msgstr "\n"
+"texte très long"
+"sur plusieurs lignes"
+```
+
 ### Tests
 
 The tests are implemented on each application, assessment and home, in a folder named "tests".
-You can add your own tests in this folders or create a new one. The only requirement is to make your python
-file starting with "test". For more details, refer to the [django documentation](https://docs.djangoproject.com/fr/3.0/topics/testing/overview/).
+You can add your own tests in these folders or create a new one. The only requirement is to make your python
+file starting with "test". 
+For more details, refer to the [django documentation](https://docs.djangoproject.com/fr/3.0/topics/testing/overview/).
 
 To run the tests, use the following command:
 
@@ -283,8 +319,8 @@ docker-compose -f docker-compose.prod.yml exec web python manage.py createsuperu
 
 # Turn off Docker
 docker-compose -f docker-compose.prod.yml down
-# or
-docker-compose -f docker-compose.prod.yml down -v # --volumes /!\ Removes volumes, including db!
+# or /!\ Removes volumes, including db!
+docker-compose -f docker-compose.prod.yml down -v # --volumes 
 ```
 
 ## Logs
@@ -296,6 +332,32 @@ tail -f /var/log/ufw.log
 tail -f /var/log/letsencrypt/letsencrypt.log
 ```
 
-## Plateform admin account
+## Django logs
+
+A logger is created in the settings (dev and prod), called *monitoring*. It creates logs
+in the file `prod.log` in the `platform_code` folder.
+You can retrieve this logger in python files (in the views for example) with the following code:
+
+```python
+logger = logging.getLogger('monitoring')
+```
+
+You can then writes new logs in this file with the code `logger.info("text")` for example.
+Refer to the [django documentation](https://docs.djangoproject.com/fr/3.1/topics/logging/) for more information.
+
+In order to categorize the logs and to use it in the admin dashboard, a tag is set at the beginning of the log text in 
+the project:
+
+```python
+logger.info(f"[organisation_deletion] The organisation {organisation} has been created")
+```
+
+You are free to use the tag you want, but some are used for a certain purpose:
+
+- 'error' for all generic errors (400, 403, 404, 500)
+- '*action*_error' for errors caught in the code (as excepts)
+
+
+## Platform admin account
 
 contact: nathanael.cretin@substra.org
