@@ -1304,31 +1304,14 @@ class Choice(models.Model):
         self.save()
 
     def convert_order_id_to_int(self):
-        """ Convert the order id (letter) of the master choice into an int
-        This could be done with a dictionary, I don't know what is 'cleaner'
+        """
+        Convert the order id (letter) of the master choice into an int
+        97 is subtracted of ord(char) to start with "a" at 0, have "b" to 1, etc
         This function is used to format the widgets in the results page
-        :return integer"""
+        :return integer
+        """
         order_id = self.master_choice.order_id
-        if order_id == "a" or order_id == "A":
-            return 0
-        elif order_id == "b" or order_id == "B":
-            return 1
-        elif order_id == "c" or order_id == "C":
-            return 2
-        elif order_id == "d" or order_id == "D":
-            return 3
-        elif order_id == "e" or order_id == "E":
-            return 4
-        elif order_id == "f" or order_id == "F":
-            return 5
-        elif order_id == "g" or order_id == "G":
-            return 6
-        elif order_id == "h" or order_id == "H":
-            return 7
-        elif order_id == "i" or order_id == "I":
-            return 8
-        elif order_id == "j" or order_id == "J":
-            return 9
+        return ord(order_id.lower()) - 97
 
     def get_evaluation_id(self):
         return self.evaluation_element.section.evaluation.id

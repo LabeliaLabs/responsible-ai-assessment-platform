@@ -273,7 +273,7 @@ def test_order_id_number(order_id):
 
 
 def test_order_id_letter(order_id):
-    """Check if the choice order_id is a letter between a and h"""
+    """Check if the choice order_id is a letter between a and n"""
     reg = re.findall(r"^[a-n]$", order_id)
     return reg != []
 
