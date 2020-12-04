@@ -2437,7 +2437,7 @@ msgstr "\n"
 
 #: .\platform_code\home\templates\home\signup.html:41
 msgid "already have an account?"
-msgstr "J'ai déjà un compte'"
+msgstr "J'ai déjà un compte"
 
 #: .\platform_code\home\views\delete_user.py:42
 msgid "Your account has been deleted."
