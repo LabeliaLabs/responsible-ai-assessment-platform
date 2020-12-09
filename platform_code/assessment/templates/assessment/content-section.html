@@ -110,7 +110,7 @@
                         </div>
                     </div>
 
-                    <div aria-labelledby="heading{{element.id}}" class="collapse show" id="collapse{{element.id}}">
+                    <div aria-labelledby="heading{{element.id}}" class="collapse" id="collapse{{element.id}}">
                         <form action="{{ section.get_absolute_url }}" element="{{element}}" id="form{{element.id}}"
                               method="POST" name="{{element.id}}">
                             {% csrf_token %}
