@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
@@ -77,7 +78,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)  # a admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     # notice the absence of a "Password field", that is built in.
 
     object = UserManager()
