@@ -592,10 +592,10 @@ $(function() {
     var left = $(this).find('.progress-left .progress-bar');
     var right = $(this).find('.progress-right .progress-bar');
 
-    if (0 <= value < 50) {
+    if (value >= 0 && value < 50) {
         right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
     }
-    if (50 <= value <= 100) {
+    if ( value >= 50 && value <=100) {
         right.css('transform', 'rotate(180deg)')
         left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
       }
