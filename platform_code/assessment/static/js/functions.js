@@ -621,7 +621,10 @@ function goNextElement(counter) {
     var nextCard = cardList[counter];
     var nextCardHeader = nextCard.children[0].children[0];
     var rect = nextCard.getBoundingClientRect();
-    window.scrollBy(0, rect.top);
+    scrollSlowly(rect.top, 1);
+    //Show the next card
+    nextCard.children[1].classList.add("show");
+
 }
 
 function goPreviousElement(counter) {
@@ -631,9 +634,28 @@ function goPreviousElement(counter) {
     var cardList = document.querySelectorAll(".card");
     if (counter > 1) {
         var previousCard = cardList[counter-2];
+        //Show the previous card
+        previousCard.children[1].classList.add("show");
         var previousCardHeader = previousCard.children[0].children[0];
         var rect = previousCard.getBoundingClientRect();
-        window.scrollBy(0, rect.top);
+        scrollSlowly(rect.top, -1);
     }
-
 }
+
+function scrollSlowly(distanceScroll, direction) {
+//Each 20 milliseconds, the screen is scrolled of a distanceEach (int which represents the px)
+//direction is number, 1 to scroll down, -1 to scroll up
+    var x = 0;
+    var id = setInterval(scrollDist, 20);
+    var distanceEach = 20;
+    function scrollDist() {
+        if (Math.abs(x) >= Math.abs(distanceScroll)) {
+          clearInterval(id);
+        } else {
+          x = x + direction * distanceEach;
+          //scrollBy a distance, which means the screen will go "dist"px below/up
+          window.scrollBy(0, direction * distanceEach);
+        }
+    }
+}
+
