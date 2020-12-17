@@ -5,16 +5,16 @@
 
 {% block content %}
 
-<div class="breadcrumbs">
+<div class="breadcrumbs column-right-margin-left">
     <a class="active-breadcrumb" href="#">{% trans 'Dashboard' %}</a>
     <span> ></span>
     <a class="active-breadcrumb" href="#" id="active-profile"><span>{% trans "My evaluations" %}</span></a>
 </div>
 
-<h1>{% trans "My dashboard" %} </h1>
+<h1 class="h1-margin-breadcrumbs">{% trans "My dashboard" %} </h1>
 
 {% if messages %}
-<ul class="messages margin-3em">
+<ul class="messages margin-3em padding-0-smaller-tablet">
     {% for message in messages %}
     <li class="alert alert-{{ message.tags }}">{{ message }}</li>
     {% endfor %}
@@ -23,7 +23,7 @@
 
 <div class="container">
     <div class="row ">
-        <div class="col-ms-3 container-platform column-right">
+        <div class="col-ms-3 container-platform column-right column-right-margin-left">
             <ul class="nav nav-pills nav-stacked flex-column table-column-profile" role="tablist">
                 <li class="nav-item column-button">
                     <a class="nav-link profile-column active" data-toggle="pill" href="#content-eval"
@@ -50,15 +50,15 @@
                 </li>
             </ul>
         </div>
-        <div class=" data">
+        <div class="data-nav-pills">
             <div class="tab-content">
-                <div class="tab-pane active" id="content-eval"><br>
+                <div class="container-profile tab-pane active small-screen-max-center" id="content-eval"><br>
                     {% include "home/profile-user-evaluations.html" %}
                 </div>
-                <div class="container tab-pane fade" id="content-orga">
+                <div class="container-profile tab-pane fade small-screen-max-center" id="content-orga">
                     {% include "home/profile-orga-cards.html" %}
                 </div>
-                <div class="container tab-pane fade" id="content-ressource"><br>
+                <div class="container-profile tab-pane fade" id="content-ressource"><br>
                     {% include "home/profile-my-ressources.html" %}
                 </div>
 

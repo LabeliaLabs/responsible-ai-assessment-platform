@@ -15,7 +15,7 @@
 </div>
 
 {% if evaluation.is_upgradable %}
-<div>
+<div class="upgrade-banner-section-evaluation">
     {% include "assessment/upgrade-banner.html" %}
 </div>
 {% endif %}
@@ -30,10 +30,12 @@
 
 <div class="head-page">
     {% if organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
-    <ul id='listTitle'>
+    <ul id='listTitle' class="no-padding-inline-start-smartphone">
         <li class="flex">
-            <h1 class="h1-section" id="evaluationName">{{ evaluation.name }}
-                <button class="btn btn-primary small-btn hidden-div" data-target="#modal-edit{{evaluation.id}}"
+            <h1 class="h1-section h1-margin-breadcrumbs object-linked margin-bottom-smartphone-30"
+                id="evaluationName">{{ evaluation.name }}
+                <button class="btn btn-primary small-btn hidden-div remove-smartphone-screen"
+                        data-target="#modal-edit{{evaluation.id}}"
                         data-toggle="modal" id="hiddenButton">
                     <i class="fa fa-edit"></i>
                 </button>
@@ -54,7 +56,7 @@
     <div class="progress progress-eval margin-auto"
          title="{% blocktrans with progression=evaluation.calculate_progression %}{{ progression }}% done{% endblocktrans %}">
         <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{evaluation.calculate_progression}}"
-             class="progress-bar "
+             class="progress-bar"
              role="progressbar"
              style="width:{{evaluation.calculate_progression}}%; background-color: #28a745;"
              title="{% blocktrans with progression=evaluation.calculate_progression %}{{ progression }}% done{% endblocktrans %}">
@@ -66,7 +68,7 @@
         <p class="progress-bar-text">{{evaluation.calculate_progression}}%</p>
         {% endif %}
     </div>
-    <p class="center" style="margin-bottom: 0px;">{% trans "Creation date:" %}
+    <p class="center margin-bottom-0">{% trans "Creation date:" %}
         {{evaluation.created_at|format_date_calendar}}</p>
     <p class="center margin-bot-30">{% trans "Version" %} {{evaluation.assessment.version}}</p>
     {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -82,17 +84,19 @@
 </main>
 <div id="validation evaluation">
     {% if evaluation.is_finished %}
-    <div>
-        <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
-            <input class="btn btn-primary float-right bottom-page-button"
+    <div class="center-smartphone-screen">
+        <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
+              class="center-smartphone-screen">
+            <input class="btn btn-results float-right-larger-tablet bottom-page-button"
                    type="submit"
                    value="{% trans 'Validate and see the results' %}"/>
         </form>
     </div>
     {% else %}
-    <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
+    <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
+          class="center-smartphone-screen">
         <input alt="{% trans 'Please finish the evaluation before validating it' %}"
-               class="btn btn-primary float-right bottom-page-button"
+               class="btn btn-results float-right-larger-tablet bottom-page-button"
                disabled
                title="{% trans 'Please finish the evaluation before validating it' %}"
                type="submit"
@@ -100,8 +104,9 @@
     </form>
     {% endif %}
 </div>
-<form action="{% url 'assessment:orga-summary' organisation.id %}">
-    <input class="btn btn-primary float-left bottom-page-button" type="submit"
+<form action="{% url 'assessment:orga-summary' organisation.id %}"
+      class="center-smartphone-screen">
+    <input class="btn btn-primary float-left-larger-tablet bottom-page-button" type="submit"
            value="{% trans 'Back to the organisation' %}"/>
 </form>
 

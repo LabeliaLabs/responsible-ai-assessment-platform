@@ -3,16 +3,15 @@
 {% load add_attr %}
 {% load home_tags %}
 {% load i18n %}
-
 {% block content %}
 
-<div class="breadcrumbs">
+<div class="breadcrumbs column-right-margin-left">
     <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
     <span> ></span>
     <a class="active-breadcrumb" href="#">{% trans 'Organisation' %}</a>
 </div>
 
-<h1>{% trans "Organisation: " %}{{organisation.name}} </h1>
+<h1 class="h1-margin-breadcrumbs">{% trans "Organisation: " %}{{organisation.name}} </h1>
 
 {% if messages %}
 <ul class="messages margin-3em">
@@ -21,9 +20,9 @@
     {% endfor %}
 </ul>
 {% endif %}
-
+<div class="container">
 <div class="row ">
-    <div class="col-ms-3 container-platform column-right">
+    <div class="col-ms-3 container-platform column-right column-right-margin-left">
         <ul class="nav nav-pills nav-stacked flex-column table-column-profile" id="PillProfile" role="tablist">
             <li class="nav-item column-button">
                 <a aria-controls="content-eval" aria-selected="true" class="nav-link profile-column active"
@@ -42,7 +41,7 @@
             </li>
         </ul>
     </div>
-    <div class="data">
+    <div class="data-nav-pills">
         <div class="tab-content" id="PillProfileContent">
 
             <div aria-labelledby="tab-eval" class="tab-pane active large-array"
@@ -61,7 +60,7 @@
         </div>
     </div>
 </div>
-
+</div>
 
 <div class="row bottom-page-button margin-70">
     <form action="{% url 'home:user-profile'  %}" class="margin-auto">
@@ -71,13 +70,14 @@
     {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor"%}
     {% if last_version %}
     <!-- Button to Open the Modal -->
-    <button class="btn btn-primary float-right same-size-280 margin-auto" data-target="#modal-create-eval"
+    <button class="btn btn-primary float-right same-size-280 margin-auto smaller-tablet-margin-10"
+            data-target="#modal-create-eval"
             data-toggle="modal"
             type="button">
         {% trans "Start a new evaluation" %}
     </button>
     {% else %}
-    <button class="btn btn-primary float-right same-size-280 margin-auto"
+    <button class="btn btn-primary float-right same-size-280 margin-auto smaller-tablet-margin-10"
             disabled
             title="{% trans 'We are sorry, there is no assessment available yet.' %}"
             type="button">
@@ -85,7 +85,7 @@
     </button>
     {% endif %}
     {% else %}
-    <button class="btn btn-primary float-right same-size-280 margin-auto"
+    <button class="btn btn-primary float-right same-size-280 margin-auto smaller-tablet-margin-10"
             disabled
             title="{% trans 'You do not have the right to do this action' %}"
             type="button">

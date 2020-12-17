@@ -3,7 +3,7 @@
 
 
 <div class="modal-header">
-    <h4 class="modal-title absolute-position">{% trans 'Upgrade the evaluation' %}</h4>
+    <h4 class="modal-title larger-tablet-absolute-position">{% trans 'Upgrade the evaluation' %}</h4>
     <button class="close" data-dismiss="modal" type="button">&times;</button>
 </div>
 
@@ -15,18 +15,20 @@
     </p>
 </div>
 
-<div class="modal-footer self-center">
-    <form action="{% url 'assessment:upgrade' evaluation.organisation.id evaluation.slug evaluation.id %}"
-          id="upgrade_form{{evaluation.id}}" method="get">
-        <button class="btn btn-primary same-size-250 margin-auto"
-                onclick="upgrade('modal-upgrade-eval{{evaluation.id}}', 'upgrade_form{{evaluation.id}}', '{{evaluation.id}}')"
-                type="button"
-        >{% trans 'Yes' %}
+<div class="modal-footer one-column">
+    <div class="column center">
+        <form action="{% url 'assessment:upgrade' evaluation.organisation.id evaluation.slug evaluation.id %}"
+              id="upgrade_form{{evaluation.id}}" method="get">
+            <button class="btn btn-primary same-size-250 margin-auto"
+                    onclick="upgrade('modal-upgrade-eval{{evaluation.id}}', 'upgrade_form{{evaluation.id}}', '{{evaluation.id}}')"
+                    type="submit"
+            >{% trans 'Yes' %}
+            </button>
+        </form>
+        <button class="btn btn-danger same-size-250 margin-10" data-dismiss="modal"
+                type="button">{% trans 'Cancel' %}
         </button>
-    </form>
-    <button class="btn btn-danger same-size-250 margin-auto" data-dismiss="modal"
-            type="button">{% trans 'Cancel' %}
-    </button>
+    </div>
 </div>
 
 <div class="alert margin-10 display-none" id="upgrade_message{{evaluation.id}}">

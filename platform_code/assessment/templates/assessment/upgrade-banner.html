@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load home_tags %}
 
-<header class="upgrade-banner margin-bot-20 margin-3em" role="banner">
+<header class="upgrade-banner" role="banner">
     {% trans "Your evaluation version is not up to date. Do you want to" %}
     {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
     <a data-target="#modal-upgrade-eval{{evaluation.id}}" data-toggle="modal" href="#">
@@ -12,8 +12,9 @@
     <a href="#" title="{% trans ' You do not have the right to do this action' %}">
         {% trans " upgrade" %}
     </a>
-    {% trans "? Your answers will be preserved." %}
     {% endif %}
+    {% trans "? Your answers will be preserved." %}
+
 </header>
 
 <div aria-hidden="true" class="modal" data-backdrop="static"

@@ -7,7 +7,8 @@
     <form action="{% url 'assessment:orga-summary' organisation.id %}"
           class="form" id="send_invitation_form" method='post' role="form">
         <div class="modal-header">
-            <h4 class="modal-title absolute-position" id="myModalLabel">{% trans "Add a new member to the organisation" %}</h4>
+            <h4 class="modal-title larger-small-screen-absolute-position"
+                id="myModalLabel">{% trans "Add a new member to the organisation" %}</h4>
             <button class="close" data-dismiss="modal" type="button">&times;</button>
         </div>
         <div class="modal-body margin-auto">
@@ -17,7 +18,7 @@
                 {% endblocktrans %}
             </p>
             <p>{% trans "You can chose the rights you want to give to the user:" %}</p>
-            <ul>
+            <ul class="inline-padding">
                 <li class="li-with-disc">
                     {% blocktrans %}
                     <strong>Read-only user</strong>: the read-only user can only consult
@@ -52,13 +53,13 @@
         <div class="modal-footer center one-column">
             <div class="column">
                 <div>
-                    <button class="btn btn-primary same-size-250 margin-auto" id="sendInvitationButton"
+                    <button class="btn btn-primary adapted-button-size-250 margin-auto" id="sendInvitationButton"
                             onclick="send_invitation('send_invitation_form')"
-                            type="button">{% trans 'Send the invitation' %}
+                            type="submit">{% trans 'Send the invitation' %}
                     </button>
                 </div>
                 <div class="margin-10">
-                    <input class="btn btn-danger same-size-250 margin-auto" data-dismiss="modal" type="button"
+                    <input class="btn btn-danger adapted-button-size-250 margin-auto" data-dismiss="modal" type="button"
                            value="{% trans 'Cancel' %}"/>
                 </div>
             </div>

@@ -7,12 +7,12 @@
           class="form" id="editRoleInvitation{{pending_member.id}}" method='post'
           role="form">
         <div class="modal-header">
-            <h4 class="modal-title absolute-position">{% trans "Edit invitation rights" %} </h4>
+            <h4 class="modal-title larger-small-screen-absolute-position">{% trans "Edit invitation rights" %} </h4>
             <button class="close" data-dismiss="modal" type="button">&times;</button>
         </div>
         <div class="modal-body">
             <p>{% trans "You can edit the rights you want to give to the future users:" %}</p>
-            <ul>
+            <ul class="inline-padding">
                 <li class="li-with-disc">
                     {% blocktrans %}
                     <strong>Read-only user</strong>: the read-only user can only consult
@@ -47,12 +47,12 @@
             </div>
         </div>
         <div class="modal-footer self-center">
-            <button class="btn btn-primary same-size-250 margin-auto margin-10"
+            <button class="btn btn-primary adapted-button-size-250 margin-auto margin-10"
                     onclick="editRoleMember('editRoleInvitation{{pending_member.id}}', '{{pending_member.id}}', true)"
-                    type="button">
+                    type="submit">
                 {% trans "Change" %}
             </button>
-            <button class="btn btn-danger same-size-250 margin-auto right-button" data-dismiss="modal"
+            <button class="btn btn-danger adapted-button-size-250 margin-auto right-button" data-dismiss="modal"
                     type="button">{% trans 'Cancel' %}
             </button>
 

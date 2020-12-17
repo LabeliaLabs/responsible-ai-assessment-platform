@@ -659,3 +659,18 @@ function scrollSlowly(distanceScroll, direction) {
     }
 }
 
+// script used to adapt the grid of the evaluations and the organisations when the small screen width (<1025)
+// and when there is only one card -> display it next to the column pills
+var grid = document.getElementsByTagName('tbody')[0];
+var orgaCards = document.getElementsByClassName("cards-orga")[0];
+// if the screen is smaller than 1025px ie the array is transformed into cards
+//console.log("grid", grid, orgaCards);
+if (window.screen.width < 1025) {
+    if (grid && grid.childElementCount <=1) {
+        grid.style.gridTemplateColumns = "auto";
+        // only the case there is also only one evaluation to avoid to have the column pills moved between eval/orga
+        if (orgaCards && orgaCards.childElementCount <= 1) {
+            orgaCards.style.gridTemplateColumns = "auto";
+        }
+    }
+}

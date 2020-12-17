@@ -1,0 +1,616 @@
+/* This file is used to manage the element position, size in function of the user screen size
+
+320px - 480px: Mobile devices
+481px - 768px: iPads, Tablets
+769px - 1024px: Small screens, laptops
+1025px - 1200px: Desktops, large screens
+1201px and more - Extra large screens, TV
+
+Inside each section, first you have, if it exists:
+    -the width between the thresholds
+    -then the smaller than the max
+    -then the larger than the min
+    -other
+
+*/
+
+
+/*********************************** MOBILE DEVICES 320 - 480 ***********************************/
+
+
+/* SMALLER THAN 480 */
+
+@media (max-width: 480px) {
+
+    /* Homepage */
+    .two-columns-adapted {
+        columns: 1;
+    }
+    .remove-smartphone-screen {
+        display: none;
+    }
+    .tbody {
+        grid-template-columns: repeat(1, 1fr);
+	}
+    .column-larger-tablet{
+        flex: auto;
+        float: none;
+    }
+    .margin-150 {
+        margin-top: 30px;
+    }
+    .margin-bottom-smartphone-30{
+        margin-bottom: 30px;
+    }
+    .image-max-350 {
+        max-height: 250px;
+    }
+    .middle-width {
+        width: 45%;
+    }
+    .width-35 {
+        width: 75%;
+    }
+    #content-wrap {
+        padding-bottom: 3rem;
+    }
+    .smartphone-margin-top {
+        margin-top: 20px;
+    }
+    /* login popin */
+    .width-50 {
+        width: 90%;
+    }
+    .modal-title {
+        width: 85%;
+    }
+
+    /* signup */
+    .grid-container-2-cols-signup {
+        display: block;
+    }
+    .center-smartphone-screen {
+        text-align: center;
+    }
+    .margin-left-signup {
+        margin-left: 0;
+    }
+    .grid-2-cols-resource-section {
+        grid-template-columns: 15% 85%;
+    }
+    .settings-subtitle {
+        margin-top: -30px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .center-smartphone{
+        text-align: center;
+    }
+    .change-password-form{
+        width: 100%;
+    }
+    .smartphone-60-height{
+        height: 60px;
+    }
+    .adapted-width-button{
+        width: 100%;
+    }
+    .organisation-evaluation-cards{
+	    width: 250px;
+	    margin: auto;
+	}
+	.adapted-button-size-250{
+	    width: 200px;
+	}
+	.no-padding-inline-start-smartphone{
+        padding-inline-start: 0;
+    }
+    .progress-eval{
+        width: 80%;
+    }
+    .section-description {
+        text-align: center;
+    }
+    .progress-section-page{
+        width: 80%;
+    }
+    .grid-container-3-cols{
+        grid-template-columns: 72% 15% 8%;
+    }
+    ul{
+        padding-inline-start: 0px;
+    }
+    .inline-padding{
+        padding-inline-start: 20px;
+    }
+    .help-tip {
+        width: 20px;
+        height: 20px;
+        font-size: 14px;
+        line-height: 22px;
+        font-size: 15px;
+    }
+    .grid-container-2-cols {
+        grid-template-columns: 90% 5%;
+    }
+    .help-tip-explanation>p{
+        font-size: 17px;
+        width: 100%;
+    }
+    .button-190-or-220{
+        width: 190px;
+    }
+    .result-grid{
+        grid-template-columns: 15% 85%;
+    }
+    .profile-settings-pills{
+        width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    .navbar-expand-lg>.container {
+        padding-right: 0;
+        padding-left: 1em;
+        max-width: 100%;
+    }
+    .remove-smaller-380{
+        display: none;
+    }
+}
+
+@media (min-width: 380px) {
+    .remove-larger-380{
+        display: none;
+    }
+}
+
+/* Orga cards */
+@media (max-width: 435px) {
+    .cards-orga {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+
+
+/*********************************** END MOBILE DEVICES 320 - 480 ***********************************/
+
+
+/*********************************** IPAD TABLET 481 - 768 ******************************************/
+
+/* between */
+
+@media (min-width: 481px) and (max-width: 768px) {
+    /* homepage */
+    .margin-150 {
+        margin-top: 80px;
+    }
+    #content-wrap {
+        padding-bottom: 5rem;
+    }
+    tbody {
+        grid-template-columns: repeat(2, 1fr);
+	}
+	.organisation-evaluation-cards{
+	    width: 400px;
+	}
+	.progress-eval{
+	    width: 60%;
+	}
+	.progress-section-page{
+        width: 60%;
+    }
+    .result-grid{
+        grid-template-columns: 8% 92%;
+    }
+    .middle-width {
+        width: 45%;
+    }
+    .width-35 {
+        width: 55%;
+    }
+    .signup-field-tablet-min-screen {
+        grid-template-columns: 80% 20%;
+    }
+    .profile-settings-pills{
+        width: 50%;
+    }
+}
+
+/* SMALLER THAN 768 */
+
+@media (max-width: 768px) {
+    .column {
+        flex: auto;
+        float: none;
+    }
+    .tablet-max-center {
+        text-align: center;
+    }
+    .smaller-tablet-place-center{
+        place-content: center;
+    }
+    .remove-smaller-than-tablet {
+        display: none;
+    }
+    .padding-0-smaller-tablet{
+        padding: 0;
+    }
+    .bottom-page-button{
+        margin-bottom: 0px;
+    }
+    .smaller-tablet-margin-10{
+        margin-top: 10px;
+    }
+    .main{
+        margin-left: 0px;
+    }
+    .h1-margin-breadcrumbs{
+        margin-bottom: 30px;
+        margin-top: 30px;
+    }
+    .question-name {
+        text-align: left;
+    }
+    .breadcrumbs{
+        margin-top: -50px;
+        margin-bottom: 20px;
+    }
+    .column-right{
+        margin-top: -80px;
+    }
+    .larger-small-screen-absolute-position{
+        position: relative;
+    }
+    .title-nav-resources{
+        text-align: center;
+        width: 100%;
+    }
+}
+
+/* LARGER THAN 481px */
+
+@media (min-width: 481px) {
+    .signup-field-tablet-min-screen {
+        display: grid;
+        margin-top: 10px;
+    }
+    .tablet-min-screen-signup {
+        padding-left: 15%;
+        float: right;
+    }
+    .tablet-min-screen-field-margin-10{
+        margin-top: 10px;
+    }
+    .tablet-min-screen-buttons-signup{
+        width: 60%;
+    }
+    .float-left-larger-tablet{
+        float: left;
+    }
+    .float-right-larger-tablet{
+        float: right;
+    }
+    .adapted-button-size-250{
+        width: 250px;
+    }
+    .remove-larger-than-smartphone{
+        display: none;
+    }
+    .larger-tablet-absolute-position{
+        position: absolute;
+    }
+    .button-190-or-220{
+        width: 220px;
+    }
+    .column-larger-tablet{ /* same as column but media only between smartphone and tablet width */
+        float: left;
+        padding: 10px;
+        flex: 1;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 580px) {
+    .adapted-width-button{
+        width: 150px;
+    }
+}
+
+@media (min-width: 580px) and (max-width: 768px){
+    .adapted-width-button{
+        width: 220px;
+    }
+}
+
+/* container width */
+@media (min-width: 576px) and (max-width: 650px) {
+    .container {
+        max-width: 540px;
+     }
+}
+@media (min-width: 651px) and (max-width: 769px) {
+    .container {
+        max-width: 620px;
+     }
+}
+
+/* navbar */
+@media (min-width: 381px) and (max-width: 768px) {
+    .navbar-expand-lg>.container {
+        max-width: 80%;
+    }
+}
+
+/*********************************** END IPAD TABLET 481 - 768 **************************************/
+
+
+
+/*********************************** SMALL SCREENS 769 - 1024 ***************************************/
+
+/* BETWEEN */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    tbody {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .organisation-settings{
+        width: 400px;
+    }
+    .column-right {
+        margin-top: -50px;
+    }
+}
+
+/* ALL SMALLER THAN 1024px */
+
+@media (max-width: 1024px) {
+    /* Change tables for example for evaluations */
+    /* Force table to not be like tables anymore */
+	table, thead, th, td, tr {
+		display: block;
+	}
+	 tbody {
+        display: grid;
+        grid-gap: 15px;
+        grid-auto-rows: minmax(70px, auto);
+	}
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	tr {
+	    border: 1px solid #ccc;
+	    border-radius: 0.5em;
+	}
+	td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+	}
+	td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+	}
+	.table-striped tbody tr:nth-of-type(odd) {
+        background-color: white;
+    }
+	.small-screen-max-center {
+	    text-align: center;
+	}
+	.hidden-delete-button{
+        margin-left: 10px;
+    }
+    .small-screen-max-right{
+        float: right;
+    }
+    .small-screen-max-float-left{
+        float: left;
+    }
+    .remove-smaller-than-small-screen{
+        display: none;
+    }
+}
+
+/* ALL LARGER THAN 769px */
+
+@media (min-width: 769px) {
+    .small-screen-min-margin-10 {
+        margin-top: 10px;
+    }
+    /* NAVBAR */
+    .navbar-expand-lg .navbar-collapse {
+        display: -webkit-box!important;
+        display: -ms-flexbox!important;
+        display: flex!important;
+        -ms-flex-preferred-size: auto;
+        flex-basis: auto;
+    }
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+        float: right;
+    }
+    .navbar-expand-lg .navbar-toggler {
+        display: none;
+    }
+    .navbar-expand-lg .navbar-nav {
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+    .adapted-width-button{
+        width: 220px;
+    }
+    .adapted-width-button-250{
+        width: 250px;
+    }
+    .larger-small-screen-absolute-position{
+        position: absolute;
+    }
+    .remove-larger-than-small-screen{
+        display: none;
+    }
+    .progress-eval {
+        width: 50%;
+    }
+    .float-left-larger-small-screen{
+        float: left;
+    }
+    .float-right-larger-small-screen{
+        float: right;
+    }
+    .result-grid{
+        grid-template-columns: 5% 95%;
+    }
+    .h1-margin-no-breadcrumbs, .h1-margin-breadcrumbs{
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .larger-small-screen-margin-left-150{
+        margin-left: 150px;
+    }
+    .upgrade-banner-section-evaluation{
+        margin-top: 3em;
+    }
+    .partnership-footer{
+        left: 3%;
+        margin-top: 20px;
+    }
+    .signup-field-tablet-min-screen {
+        grid-template-columns: 60% 40%;
+    }
+}
+
+@media (min-width: 381px) and (max-width: 900px) {
+    .navbar-expand-lg>.container {
+        padding-right: 0;
+        padding-left: 1em;
+    }
+}
+
+/* container width */
+@media (min-width: 992px) {
+    .container {
+        max-width: 960px;
+    }
+}
+@media (min-width: 769px) {
+    .container {
+        max-width: 720px;
+    }
+}
+
+
+/*********************************** END SMALL SCREENS 769 - 1024 ************************************/
+
+
+
+
+/*********************************** LARGE SCREEN 1025 - 1200 ****************************************/
+
+/* BETWEEN */
+
+@media (min-width: 1025px) and (max-width: 1200px){
+    .organisation-settings{
+        width: 700px;
+    }
+}
+
+/* SMALLER */
+
+@media (max-width: 1200px) {
+    .column-right {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .height-title {
+        height: 5em;
+    }
+}
+
+/* LARGER */
+
+@media (min-width: 1025px) {
+    .large-screen-min-margin-10 {
+        margin-top: 10px;
+    }
+    .hidden-delete-button{
+        margin-top: 10px;
+    }
+    .div-hidden-icons{
+        background-color: white;
+    }
+    .larger-large-screen-30-top{
+        margin-top: 30px;
+    }
+    .larger-large-screen-50-top{
+        margin-top: 50px;
+    }
+    .remove-larger-than-large-screen{
+        display: none;
+    }
+}
+
+@media (max-width: 1130px) {
+    .data-nav-pills {
+        margin: auto;
+    }
+}
+
+@media (max-width: 1030px) {
+    .container-platform {
+        max-width:1000px;
+    }
+}
+
+/*********************************** END LARGE SCREEN 1025 - 1200 ************************************/
+
+
+
+
+/*********************************** EXTRA LARGE SCREEN 1201++  **************************************/
+
+/* container max-width */
+@media (min-width: 1700px) {
+    .container {
+        max-width: 1500px;
+    }
+}
+
+/* LARGER 1200 */
+
+@media (min-width: 1201px) {
+    .container {
+        max-width: 1140px;
+    }
+    .height-title {
+        height: 3em;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 1300px){
+    /* used also for the breadcrumbs to follow the alignment */
+    .column-right-margin-left {
+       margin-left: -50px;
+    }
+}
+
+@media (min-width: 1301px){
+    .column-right-margin-left {
+       margin-left: -80px;
+    }
+}
+
+
+
+/*********************************** END EXTRA LARGE SCREEN 1201++ ***********************************/
