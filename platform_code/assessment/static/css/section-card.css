@@ -1,7 +1,3 @@
-body {
-   margin: 20px;
-}
-
 h1-section {
     text-align: center;
     margin: 0 auto;
@@ -10,22 +6,19 @@ h1-section {
     font-size: 3em;
 }
 
-.height-title{
-    height: 3em;
-}
-
 .centered {
     margin: 0 auto;
     padding: 0 1em;
 }
 
 .card-section {
-    flex: 1 0 500px;
+    flex: 1 0 100%;
     box-sizing: border-box;
     margin: 1rem .25em;
     padding: 10px;
     border: solid 1px lightgrey;
     height: fit-content;
+    border-radius: 0.5em;
 }
 
 .cards-section {
@@ -85,7 +78,6 @@ h5.card-title-section {
 }
 
 .progress-eval{
-    width: 50%;
     margin-top: -2.5em;
     margin-bottom: 2em;
     height: 1.5em;
@@ -94,7 +86,6 @@ h5.card-title-section {
 .progress-section{
     height: 14px;
     margin: auto;
-/*    margin-right: 8%;*/
     width: 40%;
 }
 

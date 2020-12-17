@@ -15,11 +15,11 @@
         <form action="{% url 'assessment:leave-organisation' organisation.id %}"
               id="leaveOrganisation{{member.id}}" method="post">
             {% csrf_token %}
-            <button class="btn btn-primary same-size-250 margin-auto"
+            <button class="btn btn-primary adapted-button-size-250 margin-auto"
                     type="submit">
                 {% trans 'Yes' %}
             </button>
-            <button class="btn btn-danger same-size-250 margin-auto right-button" data-dismiss="modal"
+            <button class="btn btn-danger adapted-button-size-250 margin-auto right-button" data-dismiss="modal"
                     type="button">{% trans 'Cancel' %}
             </button>
         </form>

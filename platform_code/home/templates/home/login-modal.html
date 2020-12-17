@@ -18,20 +18,20 @@
             <h4 class="modal-title absolute-position" id="myModalLabel">{% trans "Login" %}</h4>
             <button class="close" data-dismiss="modal" type="button">&times;</button>
         </div>
-        <div class=" create-form width-50">
+        <div class="create-form width-50">
             <div class="column">
                 {% csrf_token %}
                 <span class="margin-right: 9em;">{{ login_form.username.label_tag }}</span>
                 <p>{{ login_form.username }}</p>
                 <span class="margin-right: 5em;">{{ login_form.password.label_tag }}</span>
                 <p>{{ login_form.password }}</p>
-                <div class="row padding-1 margin-auto">
+                <div class="row padding-1 margin-auto smaller-tablet-place-center">
                     <div>
-                        <input class="btn btn-primary same-size-250" type="submit" value="{% trans 'Validate' %}"/>
+                        <input class="btn btn-primary adapted-button-size-250" type="submit" value="{% trans 'Validate' %}"/>
                     </div>
                     <div class="margin-10">
                         <input name="next" type="hidden" value="{{ next }}"/>
-                        <a class="btn btn-blue same-size-250" href="{% url 'home:signup' %}" type="button"
+                        <a class="btn btn-blue adapted-button-size-250" href="{% url 'home:signup' %}" type="button"
                         >{% trans "I haven't an account" %}</a>
                     </div>
 

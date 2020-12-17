@@ -6,13 +6,13 @@
 
 {% for section in page_obj %}
     {% if not section.fetch %}
-        <button class="btn-new top-section" disabled="true">New</button>
+        <button class="btn-new top-section" disabled>New</button>
     {% endif %}
     <div class="evaluation-title">
-        <h1>Section {{ section.master_section.order_id}} </h1>
+        <h1 class="h1-margin-breadcrumbs">Section {{ section.master_section.order_id}} </h1>
         <h3>{{section.master_section.name}}</h3>
         {% include "assessment/section-feedback.html" %}
-        <div class="progress progress-section" id="section-progress-bar"
+        <div class="progress progress-section-page" id="section-progress-bar"
              title="{% blocktrans with progression=section.user_progression %}{{ progression }}% is done{% endblocktrans %}">
             <div aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{section.user_progression}}"
                  class="progress-bar progress-bar-section" id="section-progress-bar-content" role="progressbar"
@@ -134,7 +134,7 @@
                                         {{element.master_evaluation_element.question_text|markdownify}}
                                     </div>
                                     {% if element.master_evaluation_element.explanation_text %}
-                                    <div class="help-tip help-tip-explanation absolute-position">
+                                    <div class="help-tip help-tip-explanation larger-tablet-absolute-position">
                                         <p>{{element.master_evaluation_element.explanation_text|markdownify}}</p>
                                     </div>
                                     {% endif %}
@@ -175,11 +175,17 @@
                                     <!-- Reset the answers -->
                                     {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                         {% if element.has_condition_on and element|is_not_applicable %}
-                                            <a class="reset-response float-right" id="reset_{{element.id}}" title="Inactive">
+                                            <a class="reset-response float-right remove-smaller-than-small-screen"
+                                               id="reset_{{element.id}}"
+                                               title="Inactive">
                                                 {% trans "Reset the answer" %}</a>
                                         {% else %}
                                             <a class="reset-response float-right" id="reset{{element.id}}"
-                                               onclick="resetChoice('{{element.id}}')">{% trans "Reset the answer" %}</a>
+                                               onclick="resetChoice('{{element.id}}')">
+                                                <span class="remove-smaller-than-small-screen">{% trans "Reset the answer" %}</span>
+                                                <i class="fa fa-refresh remove-larger-than-large-screen"></i>
+                                            </a>
+
                                             {% endif %}
                                     {% endif %}
                                 </div>
@@ -193,17 +199,23 @@
                                            onclick="goPreviousElement({{forloop.counter}})">
                                         </i>
                                       </div>
+<!--                             Just to occupy the space   -->
+                                {% else %}
+                                    <div class="margin-right-1em next-element hidden-div">
+                                        <i class="fa fa-arrow-up"></i>
+                                    </div>
                                 {% endif %}
                                 {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
                                     {% if element.has_condition_on and element|is_not_applicable %}
-                                        <button class="btn btn-primary same-size-220"
+                                        <button class="btn btn-primary validation-button adapted-button-size-250"
                                                 disabled
                                                 id="validate_{{element.id}}"
                                                 type="button">
                                             {% trans "Validate" %}
                                         </button>
                                     {% else %}
-                                        <button class="btn btn-primary same-size-220" id="validate{{element.id}}"
+                                        <button class="btn btn-primary validation-button adapted-button-size-250"
+                                                id="validate{{element.id}}"
                                                 onclick="submitForm('form{{element.id}}')" type="button">
                                             {% if element.status %}
                                                 {% trans "Modify" %}
@@ -213,7 +225,7 @@
                                         </button>
                                     {% endif %}
                                 {% else %}
-                                    <button class="btn btn-primary same-size-220"
+                                    <button class="btn btn-primary validation-button adapted-button-size-250"
                                             disabled
                                             title="{% trans 'You do not have the right to do this action' %}"
                                             type="button">
@@ -227,6 +239,10 @@
                                            onclick="goNextElement({{forloop.counter}})">
                                         </i>
                                       </div>
+                                {% else %}
+                                    <div class="margin-left-1em next-element hidden-div">
+                                        <i class="fa fa-arrow-down"></i>
+                                    </div>
                                   {% endif %}
                             </div>
 

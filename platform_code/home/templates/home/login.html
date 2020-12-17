@@ -23,42 +23,44 @@
 
     <form class="form" id="user_login_form" method='post' role="form">
         <div class="header">
-            <h1 class="title">{% trans "Login" %}</h1>
+            <h1 class="title h1-margin-no-breadcrumbs">{% trans "Login" %}</h1>
 
         </div>
         {% if message %}
 
-        <div class="alert {{message|get_key_by_position:0}}">{{message|get_value_by_position:0}}</div>
+        <div class="alert {{message|get_key_by_position:0}} smartphone-margin-top">
+            {{message|get_value_by_position:0}}
+        </div>
 
         {% endif %}
         <div class="body margin-50 ">
             {% csrf_token %}
-            <table class="margin-auto">
-                <tr>
-                    <td class="margin-50">{{ login_form.username.label_tag }}</td>
-                </tr>
-                <tr class="spaceUnder">
-                    <td class="margin-50">{{ login_form.username }}</td>
-                </tr>
-                <tr>
-                    <td class="margin-50">{{ login_form.password.label_tag }}</td>
+            <div class="margin-auto">
+                <div>
+                    <div class="tablet-min-screen-field-margin-10">{{ login_form.username.label_tag }}</div>
+                </div>
+                <div>
+                    <div class="tablet-min-screen-field-margin-10">{{ login_form.username }}</div>
+                </div>
+                <div>
+                    <div class="tablet-min-screen-field-margin-10">{{ login_form.password.label_tag }}</div>
 
-                </tr>
-                <tr class="spaceUnder">
-                    <td class="margin-50">{{ login_form.password }}</td>
-                </tr>
-            </table>
+                </div>
+                <div>
+                    <div class="tablet-min-screen-field-margin-10">{{ login_form.password }}</div>
+                </div>
+            </div>
 
         </div>
-        <div class="margin-50 row" style="columns: 1">
+        <div class="margin-50 row one-column">
             <div class="column">
                 <div>
-                    <input class="btn btn-primary same-size-280" style="margin: auto" type="submit"
+                    <input class="btn btn-primary adapted-button-size-250 margin-auto" type="submit"
                            value="{% trans 'Validate' %}"/>
                 </div>
                 <div class="margin-10">
                     <input name="next" type="hidden" value="{{ next }}"/>
-                    <a class="btn btn-blue same-size-280" href="{% url 'home:signup' %}"
+                    <a class="btn btn-blue adapted-button-size-250" href="{% url 'home:signup' %}"
                        type="button">{% trans "I haven't an account" %}</a>
                 </div>
             </div>

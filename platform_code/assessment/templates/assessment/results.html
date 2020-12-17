@@ -14,7 +14,7 @@
 </div>
 
 {% if evaluation.is_upgradable %}
-<div class="section-banner">
+<div class="upgrade-banner-section-evaluation">
     {% include "assessment/upgrade-banner.html" %}
 </div>
 {% endif %}
@@ -27,7 +27,7 @@
 </ul>
 {% endif %}
 
-<h1>{{evaluation.name}}</h1>
+<h1 class="h1-margin-breadcrumbs">{{evaluation.name}}</h1>
 
 <div class="bg-white rounded-lg p-5 shadow">
     <h2 class="h6 font-weight-bold text-center mb-4">{% trans "Your score" %}</h2>
@@ -80,14 +80,15 @@
     </div>
     <div class="row">
         <form action="{% url 'assessment:orga-summary' organisation.id %}" class="float-left margin-auto">
-            <input class="btn btn-primary same-size-220" type="submit"
+            <input class="btn btn-primary button-190-or-220" type="submit"
                    value="{% trans 'Back to the organisation summary' %}"/>
         </form>
 
-        <form action="{{ evaluation.get_absolute_url }}" class="float-right margin-auto">
-            <input class="btn btn-primary same-size-220" type="submit" value="{% trans 'Modify' %}"/>
+        <form action="{{ evaluation.get_absolute_url }}" class="float-right margin-auto smartphone-margin-top">
+            <input class="btn btn-primary button-190-or-220" type="submit" value="{% trans 'Modify' %}"/>
         </form>
     </div>
+</div>
     <div class="response margin-70" id="responses">
         <h2>{% trans "Your answers" %}</h2>
         <!--    Need to create a new form, initiate with database, disable other choices-->
@@ -141,7 +142,7 @@
                 title="{% trans 'Top of the page' %}">{% trans 'Top of the page' %}
         </button>
     </div>
-</div>
+
 
 
 {% endblock %}

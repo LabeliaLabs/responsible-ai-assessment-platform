@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div class="breadcrumbs">
+<div class="breadcrumbs larger-small-screen-margin-left-150">
     <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
     <span> ></span>
     <a href="{% url 'assessment:orga-summary' evaluation.organisation.id %}">{% trans 'Organisation' %}</a>
@@ -16,12 +16,12 @@
 </div>
 
 {% if evaluation.is_upgradable %}
-<div class="section-banner">
+<div class="upgrade-banner-section-evaluation larger-small-screen-margin-left-150">
     {% include "assessment/upgrade-banner.html" %}
 </div>
 {% endif %}
 
-<div class="sidenav" id="mySidenav">
+<div class="sidenav remove-smaller-than-tablet" id="mySidenav">
     {% include "assessment/sidebar.html" %}
 </div>
 
@@ -34,39 +34,45 @@
     <div class="pagination margin-bot-30 ">
         {% include "assessment/pagination.html" %}
     </div>
+    <div class="tablet-max-center">
+        <form action="{{ evaluation.get_absolute_url }}">
+            <input class="btn btn-primary float-left-larger-small-screen same-size-250"
+                   type="submit"
+                   value="{% trans 'Back to the sections page' %}"/>
+        </form>
 
-    <form action="{{ evaluation.get_absolute_url }}">
-        <input class="btn btn-primary float-left" type="submit" value="{% trans 'Back to the sections page' %}"/>
-    </form>
+        <div id="validation evaluation">
+            <a class="btn btn-results float-right-larger-small-screen display-none same-size-250
+                      smaller-tablet-margin-10"
+               href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
+               id="temp-validation-button"
+            >{% trans 'Validate and see the results' %}</a>
 
-    <div id="validation evaluation">
+            {% if evaluation.is_finished %}
+            <div>
+                <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
+                    <input class="btn btn-results float-right-larger-small-screen validation-button same-size-250
+                                  smaller-tablet-margin-10"
+                           name="validation-button"
+                           type="submit"
+                           value="{% trans 'Validate and see the results' %}"/>
+                </form>
+            </div>
 
-        <a class="btn btn-primary float-right display-none"
-           href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
-           id="temp-validation-button"
-        >{% trans 'Validate and see the results' %}</a>
-
-        {% if evaluation.is_finished %}
-        <div>
+            {% else %}
             <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
-                <input class="btn btn-primary float-right validation-button" name="validation-button"
+                <input alt="{% trans 'Please finish the evaluation before validating it' %}"
+                       class="btn btn-results float-right-larger-small-screen same-size-250
+                              smaller-tablet-margin-10"
+                       disabled
+                       name="validation-button"
+                       title="{% trans 'Please finish the evaluation before validating it' %}"
                        type="submit"
                        value="{% trans 'Validate and see the results' %}"/>
             </form>
+            {% endif %}
+
         </div>
-
-        {% else %}
-        <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}">
-            <input alt="{% trans 'Please finish the evaluation before validating it' %}"
-                   class="btn btn-primary float-right "
-                   disabled
-                   name="validation-button"
-                   title="{% trans 'Please finish the evaluation before validating it' %}"
-                   type="submit"
-                   value="{% trans 'Validate and see the results' %}"/>
-        </form>
-        {% endif %}
-
     </div>
 
 </div>

@@ -13,7 +13,7 @@
 </ul>
 {% endif %}
 
-<div class="row" style="columns: 2">
+<div class="row two-columns-adapted">
     <div class="column center-content">
         <h1 class="center">Substra Assessment</h1>
         <p class="margin-50">{% blocktrans %}
@@ -31,9 +31,8 @@
             {% endif %}
         </div>
     </div>
-    <div class="column">
-        <img alt="image" class="img-fluid d-block mx-auto " src="{% static 'image/Illustration_3.png' %}"
-             style="max-height: 350px;">
+    <div class="column remove-smartphone-screen margin-auto">
+        <img alt="image" class="img-fluid d-block mx-auto image-max-350" src="{% static 'image/Illustration_3.png' %}">
     </div>
 </div>
 
@@ -41,10 +40,10 @@
     {% trans "Responsible and Trustworthy Data Science: towards a reference framework and a professional community" %}
 </div>
 
-<div class="row" style="columns: 2">
+<div class="row two-columns-adapted under-homepage-banner">
     <div class="column center-content">
-        <img alt="image" class="img-fluid d-block mx-auto margin-50"
-             src="{% static 'image/Illustration_10.png' %}" style="max-height: 350px;">
+        <img alt="image" class="img-fluid d-block mx-auto margin-50 image-max-350"
+             src="{% static 'image/Illustration_10.png' %}">
         <p class="margin-150">
             {% blocktrans %}
             New technical and organisational solutions are essential to provide a framework
@@ -52,7 +51,9 @@
             companies, public institutions and citizens.
             {% endblocktrans %}
         </p>
-        <img alt="image" class="centered-image middle-width margin-110" src="{% static 'image/Illustration_1.png' %}">
+        <img alt="image"
+             class="img-fluid d-block mx-auto margin-50 image-max-350"
+             src="{% static 'image/Illustration_1.png' %}">
     </div>
     <div class="column center-content">
         <p class="margin-50">
@@ -63,8 +64,8 @@
             together?
             {% endblocktrans %}
         </p>
-        <img alt="image" class="img-fluid d-block mx-auto margin-150"
-             src="{% static 'image/Illustration_7.png' %}" style="max-height: 350px;">
+        <img alt="image" class="img-fluid d-block mx-auto margin-150 image-max-350"
+             src="{% static 'image/Illustration_7.png' %}">
         <p class="margin-150">
             {% blocktrans %}
             Based on an open and participative approach that we initiated in mid-2019 and
@@ -87,7 +88,7 @@
     {% trans "Assess the level of maturity of your organisation and select topics for further study" %}
 </div>
 
-<div class="row" style="columns: 3">
+<div class="row under-homepage-banner three-columns">
     <div class="column">
         <img alt="image" class="centered-image middle-width" src="{% static 'image/picto_homepage_rose.png' %}">
         <p class="text-center"><strong>{% trans "Evaluate your organisation" %}</strong></p>

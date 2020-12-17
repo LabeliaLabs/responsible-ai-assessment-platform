@@ -26,6 +26,7 @@
     <link href="{% static 'css/base.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/summary.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/results.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/media.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/section-card.css' %}" rel="stylesheet" type="text/css">
     <link href="{% static 'css/ubuntu-family.css' %}" rel="stylesheet" type="text/css">
 </head>
@@ -36,7 +37,7 @@
         <div class="ribbon"><span>Beta</span></div>
         <nav class="navbar navbar-expand-lg  is-fixed-top">
             <div class="container">
-                <a class="navbar-brand" href="{% url 'home:homepage' %}" style="color: #FFF;" title="home">
+                <a class="navbar-brand white-color" href="{% url 'home:homepage' %}" title="home">
                     <img class="logo-navbar" src="{% static 'image/Substra_Foundation_Logo_horizontal_fond.png' %}">
                 </a>
                 <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
@@ -117,6 +118,20 @@
 
     <!-- Footer -->
     <footer class="py-2 footer">
+        <div class="larger-small-screen-absolute-position white-color partnership-footer">
+            <p class="margin-auto center text-partnership">{% trans "With the support of " %}
+            <a href="https://dataforgood.fr/"
+               title="https://dataforgood.fr/"
+               class="link-with-border" >Data for Good.</a>
+            </p>
+            <a href="https://dataforgood.fr/"
+               title="https://dataforgood.fr/">
+                <img alt="Data for Good logo"
+                 class="img-fluid d-block mx-auto logo-d4g margin-10"
+                 src="{% static 'image/logo-d4g-white.png' %}">
+            </a>
+            <p><strong>DATA FOR GOOD</strong></p>
+        </div>
         <div class="col-md-3 col-md-3-footer">
             {% if user.is_authenticated %}
             <a class="link-with-border" href="{% url 'home:logout' %}">{% trans "Logout" %}</a>

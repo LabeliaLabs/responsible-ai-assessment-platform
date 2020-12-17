@@ -19,14 +19,17 @@
 
     <div class="modal-footer self-center">
         <form action="{% url 'assessment:orga-summary' organisation.id %}"
-              id="removeMember{{member.id}}" method="post">
+              id="removeMember{{member.id}}"
+              class="tablet-max-center"
+              method="post">
             {% csrf_token %}
-            <button class="btn btn-primary same-size-250 margin-auto"
+            <button class="btn btn-primary adapted-button-size-250 margin-auto"
                     onclick="removeMember('removeMember{{member.id}}', '{{member.id}}', false)"
-                    type="button">
+                    type="submit">
                 {% trans 'Yes' %}
             </button>
-            <button class="btn btn-danger same-size-250 margin-auto right-button" data-dismiss="modal"
+            <button class="btn btn-danger adapted-button-size-250 margin-auto right-button smartphone-margin-top"
+                    data-dismiss="modal"
                     type="button">{% trans 'Cancel' %}
             </button>
         </form>

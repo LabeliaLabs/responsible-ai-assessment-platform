@@ -8,15 +8,15 @@
 <!-- Titles of the tablist-->
 <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-        <a aria-controls="nav-favorite" aria-selected="true" class="nav-item nav-link title-nav active"
+        <a aria-controls="nav-favorite" aria-selected="true" class="nav-item nav-link title-nav-resources active"
            data-toggle="tab" href="#nav-favorite" id="nav-favorite-tab"
            role="tab">{% trans "My favorite resources" %}</a>
-        <a aria-controls="nav-resources" aria-selected="false" class="nav-item nav-link title-nav"
+        <a aria-controls="nav-resources" aria-selected="false" class="nav-item nav-link title-nav-resources"
            data-toggle="tab" href="#nav-resources" id="nav-resources-tab" role="tab"
             >{% trans "All the resources" %}
         </a>
         <!--      The glossary is temporary removed as long as the content is not ready to be deployed -->
-        <!--    <a class="nav-item nav-link title-nav" id="nav-glossary-tab" data-toggle="tab"-->
+        <!--    <a class="nav-item nav-link title-nav-resources" id="nav-glossary-tab" data-toggle="tab"-->
         <!--       href="#nav-glossary" role="tab" aria-controls="nav-glossary" aria-selected="false">{% trans "Glossary" %}</a>-->
     </div>
 </nav>
@@ -24,7 +24,7 @@
 <!-- Content of the tablist -->
 <div class="tab-content" id="nav-tabContent">
     <div aria-labelledby="nav-favorite-tab" class="tab-pane fade show active" id="nav-favorite" role="tabpanel">
-        <ul id="liked-resources-array" style="display: inline-grid;">
+        <ul id="liked-resources-array inline-grid">
             {% if resources %}
             {% for resource in resources %}
             <div class="grid-container-2-cols">
@@ -77,14 +77,14 @@
                 </div>
                 <div class="card-body collapse" data-parent="#accordion-{{master_section.id}}"
                      id="collapse-{{master_section.id}}">
-                    <ul>
+                    <ul class="no-padding-inline-start">
                         {% for master_element in master_section.masterevaluationelement_set.all %}
                         {% if master_element.has_resources %}
                         <li class="margin-10">
                             Q{{master_section.order_id}}.{{master_element.order_id}} : {{ master_element.name }}
                             <form action="" id="like_resources{{master_element.id}}" method="POST">
                                 {% csrf_token %}
-                                <ul>
+                                <ul class="inline-padding">
                                     {% for resource in master_element.external_links.all %}
                                     <div class="grid-container-2-cols">
                                         <div class="grid-item">

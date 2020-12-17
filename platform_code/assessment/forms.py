@@ -431,7 +431,7 @@ class RadioResultsWidget(widgets.CheckboxSelectMultiple):
             order_choice = choice.convert_order_id_to_int()
             if choice.is_ticked:
                 string_html += (
-                    '<li><span class="fa-stack fa-lg result-point"> '
+                    '<li class="result-grid"><span class="fa-stack fa-lg result-point"> '
                     '<i class="fa fa-circle fa-stack-2x"></i>'
                     '</span><label class="selected-choice" for="'
                     + attrs["id"]
@@ -443,7 +443,7 @@ class RadioResultsWidget(widgets.CheckboxSelectMultiple):
                 )
             else:
                 string_html += (
-                    '<li><span class="fa-stack fa-lg result-point">'
+                    '<li class="result-grid"><span class="fa-stack fa-lg result-point">'
                     '<i class="fa fa-circle-o fa-stack-2x"></i>'
                     '</span><label class="not-selected-choice" for="'
                     + attrs["id"]
@@ -472,7 +472,7 @@ class CheckboxResultsWidget(widgets.RadioSelect):
             order_choice = choice.convert_order_id_to_int()
             if choice.is_ticked:
                 string_html += (
-                    '<li><span class="fa-stack fa-lg result-point"> '
+                    '<li class="result-grid"><span class="fa-stack fa-lg result-point"> '
                     '<i class="fa fa-circle fa-stack-2x"></i>'
                     '</span><label class="selected-choice" for="'
                     + attrs["id"]
@@ -484,7 +484,7 @@ class CheckboxResultsWidget(widgets.RadioSelect):
                 )
             else:
                 string_html += (
-                    '<li><span class="fa-stack fa-lg result-point">'
+                    '<li class="result-grid"><span class="fa-stack fa-lg result-point">'
                     '<i class="fa fa-circle-o fa-stack-2x"></i>'
                     '</span><label class="not-selected-choice" for="'
                     + attrs["id"]

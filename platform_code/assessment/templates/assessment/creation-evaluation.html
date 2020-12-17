@@ -5,17 +5,17 @@
 
 {% block content %}
 
-<h1>{% trans "Evaluation creation" %}</h1>
+<h1 class="h1-margin-breadcrumbs">{% trans "Evaluation creation" %}</h1>
 
-<div class="form-center width-50">
-    <div class="column">
+<div class="form-center width-50 smartphone-margin-top">
+    <div>
         <form class="form" id="create_evaluation_form" method='post' role="form">
 
-            <div class="form-body">
+            <div>
                 {% csrf_token %}
                 {% for field in form %}
                 <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                <span class="float-left">{{ field.label}}</span>
+                <span class="">{{ field.label}}</span>
                 <p> {{field}} </p>
                 {% endfor %}
                 <p class="text-form-bis">{% trans "Assessment version" %} :</p>

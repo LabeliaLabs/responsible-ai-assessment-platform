@@ -1,9 +1,10 @@
 .card {
-        margin: 0 auto; /* Added */
-        float: none; /* Added */
-        margin-bottom: 25px; /* Added */
-        margin-bottom: 25px;
-        position: relative;
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 25px; /* Added */
+    margin-bottom: 25px;
+    position: relative;
+    border-radius: 0.5em;
 
 }
 
