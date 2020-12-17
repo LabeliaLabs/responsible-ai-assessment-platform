@@ -43,10 +43,16 @@ class UserAdmin(BaseUserAdmin):
     filter_horizontal = ()
 
     def get_created_at(self, obj):
-        return obj.created_at.strftime("%d/%m/%Y")
+        if obj.created_at:
+            return obj.created_at.strftime("%d/%m/%Y")
+        else:
+            return "No date"
 
     def get_last_login(self, obj):
-        return obj.last_login.strftime("%d/%m/%Y")
+        if obj.last_login:
+            return obj.last_login.strftime("%d/%m/%Y")
+        else:
+            return "Not logged yet"
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
