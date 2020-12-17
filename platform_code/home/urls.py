@@ -5,7 +5,6 @@ from .views import (
     LoginView,
     signup,
     activate,
-    login_view,
     legal_notices_view,
     faq_view,
     ProfileView,
@@ -16,6 +15,7 @@ from .views import (
     export_user_data,
     PasswordReset,
     ResourcesView,
+    LoginPageView
 )
 
 
@@ -27,7 +27,7 @@ urlpatterns = [
             activate,
             name='activate'
             ),
-    path("login/", login_view, name="login"),  # login page when redirect
+    path("login/", LoginPageView.as_view(), name="login"),  # login page when redirect
     path("legal-notices/", legal_notices_view, name="legal-notices"),
     path("faq/", faq_view, name="faq"),
     path(

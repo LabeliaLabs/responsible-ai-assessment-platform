@@ -114,7 +114,8 @@ function feedback(id, feedback_object){
     });
 }
 
-function untickAllChoices(baseChoiceId) {
+function untickAllChoices(element_id) {
+    var baseChoiceId = "id_"+element_id+"-"+element_id+"_";
     let i =0;
     do {
         var choice = document.getElementById(baseChoiceId+i);
@@ -126,7 +127,7 @@ function untickAllChoices(baseChoiceId) {
 
 function resetChoice(id_form){
     var element_id = id_form;
-    untickAllChoices("id_"+element_id+"_");
+    untickAllChoices(element_id);
     var form = document.getElementById("form"+element_id);
     var name = $(form).attr("element");
     $.ajax({ data: $(form).serialize() + "&reset_element_id=" + element_id,
@@ -238,7 +239,7 @@ function submitForm(id_form){
                     for (var i=0; i < response['conditional_elements_list'].length; i++) {
                         var id_evaluation_element = response['conditional_elements_list'][i];
                         setElementEvaluationStatusDone(id_evaluation_element);
-                        untickAllChoices("id_"+id_evaluation_element+"_"); // reset the choices
+                        untickAllChoices(id_evaluation_element); // reset the choices
                         $("#temp_warning"+id_evaluation_element).attr("style", "display: block;");
                         $("#disable_element"+id_evaluation_element).attr("disabled","true");
                         $("#validate"+id_evaluation_element).attr("disabled", "true");

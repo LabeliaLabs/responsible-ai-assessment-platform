@@ -111,16 +111,22 @@
 </form>
 
 <script>
-// This script is used in the title of the evaluation page to allow the admin user to edit his evaluation name (display a button which open a popin)
-$(document).ready(function(){
-  $("h1").mouseover(function(){
-    $("#hiddenButton").removeClass("hidden-div");
-  });
-  $("h1").mouseout(function(){
-    $('#hiddenButton').addClass("hidden-div");
-  });
-});
+<!--This script is used in the title of the evaluation page to allow the admin user-->
+<!--to edit his evaluation name (display a button which open a popin)-->
 
+editEvaluationName();
+
+function editEvaluationName() {
+    var title = document.getElementById("evaluationName");
+    title.addEventListener('mouseover', function() {
+        var hiddenButton = document.getElementById("hiddenButton");
+        hiddenButton.classList.remove("hidden-div");
+    });
+    title.addEventListener('mouseout', function() {
+        var hiddenButton = document.getElementById("hiddenButton");
+        hiddenButton.classList.add("hidden-div");
+    });
+}
 
 </script>
 {% endblock %}

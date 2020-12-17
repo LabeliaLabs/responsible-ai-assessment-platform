@@ -63,8 +63,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
         self.context["evaluation_score_dic"] = \
             manage_evaluation_score(request=request, evaluation_list=self.context["evaluations"])
-        self.context["new_orga_form"] = OrganisationCreationForm()
-        self.context["new_evaluation_form"] = EvaluationMutliOrgaForm(user=user)
+        self.context["new_orga_form"] = OrganisationCreationForm(prefix="organisation-creation")
+        self.context["new_evaluation_form"] = EvaluationMutliOrgaForm(user=user, prefix="evaluation-creation")
 
         self.context = add_last_version_last_assessment_dictionary(self.context)
         return self.render_to_response(self.context)
@@ -84,10 +84,10 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             user = request.user
             # Differentiate between the organisation creation and the evaluation creation
             # It could be done with the form id but easier this way, may be to improve
-            # If the sector is in the form, it means it is the organisation creation form, else evaluation creation
-            if "sector" in request.POST:
+            # If organisation-creation-name, it means it is the organisation creation form, else evaluation creation
+            if "organisation-creation-name" in request.POST:
                 # create a form instance and populate it with data from the request:
-                form = OrganisationCreationForm(request.POST)
+                form = OrganisationCreationForm(request.POST, prefix="organisation-creation")
                 # check whether it's valid:
                 if form.is_valid():
                     organisation = organisation_creation(request, form)
@@ -97,12 +97,12 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                     return self.form_invalid(form)
 
             # If there is "organisation" in the form, it is a Evaluation creation form
-            elif "organisation" in request.POST:
+            elif "evaluation-creation-name" in request.POST:
 
                 # If the user belongs to multiple organisation, it is a form with a field organisation
                 if len(user.get_list_organisations_where_user_as_role(role="admin")) >= 1 or \
                         len(user.get_list_organisations_where_user_as_role(role="editor")) >= 1:
-                    form = EvaluationMutliOrgaForm(request.POST, user=user)
+                    form = EvaluationMutliOrgaForm(request.POST, user=user, prefix="evaluation-creation")
                     if form.is_valid():
                         return treat_evaluation_creation_valid_form(form, form.cleaned_data.get("organisation"), user)
                     else:
@@ -157,4 +157,5 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         self.context["evaluations"] = sorted(list(list_evaluations), key=lambda x: x.created_at, reverse=True)
         self.context["evaluation_form_dic"] = {}
         for evaluation in list_evaluations:
-            self.context["evaluation_form_dic"][str(evaluation.id)] = EvaluationForm(name=evaluation.name)
+            self.context["evaluation_form_dic"][str(evaluation.id)] = EvaluationForm(name=evaluation.name,
+                                                                                     auto_id=False)

@@ -42,7 +42,7 @@ def upgradeView(request, *args, **kwargs):
             new_eval = evaluation.upgrade(user=user)
             # Manage the redirection between the different pages where the user clicked to upgrade the evaluation
             url = manage_upgrade_next_url(request, new_eval, organisation, evaluation_id)
-            data_update["redirection"] = url.url
+            data_update["redirection"] = url
             data_update["success"] = True
             data_update["message"] = _("Your evaluation has been upgraded."
                                        " You will be redirected to the new version.")

@@ -5,14 +5,13 @@ from django.contrib.auth.views import (
     LoginView,
     LogoutView,
     AuthenticationForm,
-    auth_login,
-    )
+)
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib.auth import views as auth_views
 
 from home.forms import PasswordResetForm_
-
+from home.views.utils import manage_message_login_page
 
 logger = logging.getLogger('monitoring')
 
@@ -46,16 +45,6 @@ class LoginView(LoginView):
     template_name = "home/homepage.html"
     success_url = "home:user-profile"  # It s the view called when success, I define it here instead of in the settings
 
-    def form_valid(self, form):
-        """
-        If the login is valid, redirect to the user profile
-        :param form:
-        :return:
-        """
-        """Security check complete. Log the user in."""
-        auth_login(self.request, form.get_user())
-        return redirect("home:user-profile")
-
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
             # Redirect to user profile if he is already logged
@@ -76,3 +65,19 @@ class LoginView(LoginView):
                     return redirect("home:login")
             else:
                 return redirect("home:login")
+
+
+class LoginPageView(LoginView):
+    """
+    This class inherits from LoginView which manage the login popin.
+    So all the logic is implemented over there, only the message displayed to the user is built here.
+    """
+    template_name = "home/login.html"
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        # This will manage the message displayed to the user, whether is failed or he must login to access the content
+        # or just to inform him that he needs to enter email & password, depending on his previous page
+        message = manage_message_login_page(request)
+        context["message"] = message
+        return self.render_to_response(context)
