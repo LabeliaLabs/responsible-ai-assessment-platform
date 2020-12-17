@@ -140,17 +140,18 @@ class SummaryView(LoginRequiredMixin, DetailView):
         """
         Manage the member information to add to the context
         """
-        self.context["add_member_form"] = AddMemberForm()
+        self.context["add_member_form"] = AddMemberForm(auto_id=False)
         self.context["member_list"] = organisation.get_list_members_to_display()
         self.context["pending_member_list"] = organisation.get_pending_list()
         # Dictionary of forms to edit the role of members of the organisation
         self.context["edit_member_role_form_dic"] = {}
         for member in self.context["member_list"]:
-            self.context["edit_member_role_form_dic"][str(member.id)] = EditRoleForm(member=member)
+            self.context["edit_member_role_form_dic"][str(member.id)] = EditRoleForm(member=member, auto_id=False)
         # Dictionary of the forms to edit the role of the invitations sent to join the organisation
         self.context["edit_invitation_role_form_dic"] = {}
         for invitation in self.context["pending_member_list"]:
-            self.context["edit_invitation_role_form_dic"][str(invitation.id)] = EditRoleForm(invitation=invitation)
+            self.context["edit_invitation_role_form_dic"][str(invitation.id)] = EditRoleForm(invitation=invitation,
+                                                                                             auto_id=False)
 
     def post(self, request, **kwargs):
         """

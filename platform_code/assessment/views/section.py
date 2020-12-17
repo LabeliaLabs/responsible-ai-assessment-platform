@@ -89,7 +89,7 @@ class SectionView(LoginRequiredMixin, ListView):
             self.context["depends_on_dic"][element] = element.get_element_depending_on()
 
         # Feedback for the element and section
-        self.context["element_feedback_form"] = ElementFeedbackForm()
+        self.context["element_feedback_form"] = ElementFeedbackForm(auto_id=False)
         self.context["section_feedback_form"] = SectionFeedbackForm()
 
         # Manage pagination and next/previous section
@@ -246,7 +246,7 @@ class SectionView(LoginRequiredMixin, ListView):
         can both change notes and answers.
         """
         self.data_update["message_notes"] = None  # We suppose there is no notes, initialization
-        form = ChoiceForm(request.POST, evaluation_element=evaluation_element)
+        form = ChoiceForm(request.POST, evaluation_element=evaluation_element, prefix=evaluation_element.id)
         if form.is_valid():
             element_notes = form.cleaned_data.get("notes")
             # Case the notes have changed, else no message
@@ -338,7 +338,10 @@ class SectionView(LoginRequiredMixin, ListView):
         self.data_update["conditions_respected"] = True
         # This list contains the choices ticked in the form.
         # We need to check that they are really choices of the element.
-        list_choices_ticked = request.POST.getlist(str(evaluation_element.id))
+        # As there is a prefix in the form, the key is like "4-4" for the element_id=4
+        list_choices_ticked = request.POST.getlist(
+            str(evaluation_element.id) + "-" + str(evaluation_element.id)
+        )
         # At least one choice ticked
         if list_choices_ticked:
             # If the evaluation element is a radio item (one choice possible) but several in the ajax POST (user hacked)

@@ -24,7 +24,8 @@ def set_form_for_sections(section_query):
     for section in section_query:
         for evaluation_element in section.evaluationelement_set.all():
             dic_form[evaluation_element] = ChoiceForm(
-                evaluation_element=evaluation_element
+                evaluation_element=evaluation_element,
+                prefix=evaluation_element.id,
             )
     return dic_form
 
@@ -43,7 +44,8 @@ def set_form_for_results(evaluation):
                 "master_evaluation_element__order_id"
         ):
             dic_form[evaluation_element] = ResultsForm(
-                evaluation_element=evaluation_element
+                evaluation_element=evaluation_element,
+                prefix=evaluation_element.id,
             )
     return dic_form
 
