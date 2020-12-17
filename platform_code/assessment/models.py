@@ -95,7 +95,7 @@ class Evaluation(models.Model):
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     name = models.CharField(
         max_length=200,
-        default="Evaluation " + str(timezone.now().strftime("%d/%m/%Y"))
+        default="Evaluation",
     )
     slug = models.SlugField()
     # Set to null if the user delete is account because other users in the orga could still use the evaluation

@@ -7,6 +7,7 @@ from django.forms import widgets
 from django.forms.renderers import get_default_renderer
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from django.db.models import Q
 
 from .models import (
@@ -221,6 +222,9 @@ class EvaluationForm(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
+        """
+        When value is_name in kwargs, it means the evaluation has already a name and the user wants to edit it
+        """
         is_name = False
         # If the evaluation name is edited
         if "name" in kwargs:
@@ -229,6 +233,8 @@ class EvaluationForm(forms.ModelForm):
         super(EvaluationForm, self).__init__(*args, **kwargs)
         if is_name:
             self.fields["name"].initial = name
+        else:
+            self.fields["name"].initial = _("Evaluation") + " " + str(timezone.now().strftime("%d/%m/%Y"))
         self.fields["name"].label = _("Evaluation title")
         self.fields["name"].widget.attrs = {"class": "full-width center"}
 
@@ -258,6 +264,7 @@ class EvaluationMutliOrgaForm(ModelForm):
         self.fields["organisation"].queryset = queryset
         self.fields["name"].widget.attrs = {"class": "full-width center"}
         self.fields["organisation"].widget.attrs = {"class": "full-width center-select"}
+        self.fields["name"].initial = _("Evaluation") + " " + str(timezone.now().strftime("%d/%m/%Y"))
 
 
 class SectionNotesForm(ModelForm):
