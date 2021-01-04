@@ -1,5 +1,17 @@
 # Plateforme d'assessment data science responsable et de confiance (DSRC)
 
+## Organisation Git
+
+> L'objectif est de garder un fonctionnement clair : une branche par feature.
+
+- Les développements se font sur la base de la branche `develop`, sur des branches spécifiques. 
+- Les Merges Request de la branche feature vers la branche `develop` doivent être validées par au moins personne autre que le développeur en charge de la feature.
+- Les releases se font d'abord dans la branche `preprod` qui est déployée sur le serveur de préprod pour que les tests fonctionnels soient réalisés.
+- Une fois les tests fonctionnels validés, les releases sont ensuite ajoutées à la branche `prod` qui sera déployée sur le serveur de production.
+
+> Les branches `develop`, `preprod` et `prod` sont des branches réservées. Seuls les membres du groupe `maintainer` peuvent les manipuler avec prudence. 
+> Les développements par les membres du groupe `developer` se font sur des branches spécifiques, crées à partir de la branche `develop`.
+
 ## Contexte et ambition
 
 Dans le prolongement des travaux participatifs démarrés en 2019 sur la définition de la data science responsable et de confiance qui peuvent être consultés sur le [repo dédié](https://github.com/SubstraFoundation/referentiel-ds-responsable-confiance), Substra Foundation a orienté l'initiative vers une évaluation de maturité, un _assessment_, à destination des organisations qui ont une activité data science.
