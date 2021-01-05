@@ -98,13 +98,14 @@ div.evaluation-title: h3 {
 
 }
 
-.select_feedback{
+.select-feedback-popin{
     width: 90%;
     height: 40px;
     border-radius: 0.25em;
     border: 1px solid lightsteelblue;
     margin-left: 5%;
     margin-right: 5%;
+    background-color: white;
 }
 
 .feedback-text{

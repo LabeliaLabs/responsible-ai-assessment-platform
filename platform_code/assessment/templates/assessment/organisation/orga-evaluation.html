@@ -13,7 +13,6 @@
         <th class="col-array" scope="col">{% trans "Version" %}</th>
         <th class="col-array" scope="col">{% trans "Creation date" %}</th>
         <th class="col-array" scope="col">{% trans "Validation date" %}</th>
-        <th class="col-array" scope="col">{% trans "Evaluation status" %}</th>
         <th class="col-array" scope="col">{% trans "Progression" %}</th>
         <th class="col-array" scope="col">{% trans "Score" %}</th>
         <th class="col-array" scope="col">{% trans "Action" %}</th>
@@ -25,7 +24,9 @@
     <div>
         <tr class="row-array">
 
-            <td class="case-array first-case-array">{{evaluation.name}}</td>
+            <td class="case-array first-case-array">
+                <div>{{evaluation.name}}</div>
+            </td>
             <td class="case-array">V{{evaluation.assessment.version}}</td>
             <td class="case-array">{{evaluation.created_at|format_date_calendar}}</td>
 
@@ -33,12 +34,6 @@
             <td class="case-array">{{evaluation.finished_at|format_date_calendar}}</td>
             {% else %}
             <td class="case-array">{% trans "Not validated yet" %}</td>
-            {% endif %}
-
-            {% if evaluation.is_finished %}
-            <td class="case-array">{% trans "Validated" %}</td>
-            {% else %}
-            <td class="case-array">{% trans "In progress" %}</td>
             {% endif %}
 
             <td class="case-array">{{evaluation.calculate_progression}} %</td>

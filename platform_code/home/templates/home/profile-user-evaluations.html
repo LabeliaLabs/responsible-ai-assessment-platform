@@ -19,7 +19,6 @@
             <th class="col-array" scope="col">{% trans "Organisation" %}</th>
             <th class="col-array" scope="col">{% trans "Creation date" %}</th>
             <th class="col-array" scope="col">{% trans "Validation date" %}</th>
-            <th class="col-array" scope="col">{% trans "Evaluation status" %}</th>
             <th class="col-array" scope="col">{% trans "Progression" %}</th>
             <th class="col-array" scope="col">{% trans "Score" %}</th>
             <th class="col-array" scope="col">{% trans "Action" %}</th>
@@ -30,96 +29,94 @@
         {% for evaluation in evaluations %}
         <div>
             <tr class="row-array">
-                <td class="case-array first-case-array">{{evaluation.name}}</td>
+                <td class="case-array first-case-array">
+                    <div>{{evaluation.name}}</div>
+                </td>
                 <td class="case-array">V{{evaluation.assessment.version}}</td>
-                <td class="case-array">{{evaluation.organisation}}</td>
+                <td class="case-array">
+                    <div>{{evaluation.organisation}}</div>
+                </td>
                 <td class="case-array">{{evaluation.created_at|format_date_calendar}}</td>
 
-                    {% if evaluation.is_finished %}
-                    <td class="case-array">{{evaluation.finished_at|format_date_calendar}}</td>
-                    {% else %}
-                    <td class="case-array">{% trans "Not validated yet" %}</td>
-                    {% endif %}
+                {% if evaluation.is_finished %}
+                <td class="case-array">{{evaluation.finished_at|format_date_calendar}}</td>
+                {% else %}
+                <td class="case-array">{% trans "Not validated yet" %}</td>
+                {% endif %}
 
-                    {% if evaluation.is_finished %}
-                    <td class="case-array">{% trans "Validated" %}</td>
-                    {% else %}
-                    <td class="case-array">{% trans " In progress" %}</td>
-                    {% endif %}
+                <td class="case-array">{{evaluation.calculate_progression}} %</td>
 
-                    <td class="case-array">{{evaluation.calculate_progression}} %</td>
-
-                    {% if evaluation.is_finished %}
-                    <td class="case-array">{{evaluation_score_dic|get_item:evaluation.id}}</td>
-                    {% else %}
-                    <td class="case-array">-</td>
+                {% if evaluation.is_finished %}
+                <td class="case-array">{{evaluation_score_dic|get_item:evaluation.id}}</td>
+                {% else %}
+                <td class="case-array">-</td>
+                {% endif %}
+                <td class="case-array last-case-array">
+                    <!-- Actions buttons -->
+                    {% if evaluation.is_upgradable %}
+                    <a class="btn btn-primary medium-button margin-10"
+                       data-target="#modal-upgrade-eval{{evaluation.id}}"
+                       data-toggle="modal"
+                       href="#">
+                        {% trans "Upgrade" %}
+                    </a>
                     {% endif %}
-                    <td class="case-array last-case-array">
-                        <!-- Actions buttons -->
-                        {% if evaluation.is_upgradable %}
-                        <a class="btn btn-primary medium-button margin-10"
-                           data-target="#modal-upgrade-eval{{evaluation.id}}"
-                           data-toggle="modal"
-                           href="#">
-                            {% trans "Upgrade" %}
-                        </a>
-                        {% endif %}
-                        <!-- If the evaluation is finished  -->
-                        {% if evaluation.is_finished %}
-                        <a class="btn btn-results medium-button margin-10"
-                           href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}"
-                           name="resultat-no-modif">
-                            {% trans "Results" %}
-                        </a>
-                        <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
-                            {% trans "Modify" %}
-                        </a>
-                        {% else %}
-                        <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
-                            {% trans "Continue" %}
-                        </a>
-                        {% endif %}
-                    </td>
-                    <!--  Modal to upgrade for all cases finished/not finished-->
-                    <div aria-hidden="true" class="modal" data-backdrop="static"
-                         data-keyboard="false" id="modal-upgrade-eval{{evaluation.id}}">
-                        <div class="modal-dialog ">
+                    <!-- If the evaluation is finished  -->
+                    {% if evaluation.is_finished %}
+                    <a class="btn btn-results medium-button margin-10"
+                       href="{% url 'assessment:results' evaluation.organisation.id evaluation.slug evaluation.id %}"
+                       name="resultat-no-modif">
+                        {% trans "Results" %}
+                    </a>
+                    <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                        {% trans "Modify" %}
+                    </a>
+                    {% else %}
+                    <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                        {% trans "Continue" %}
+                    </a>
+                    {% endif %}
+                </td>
+                <!--  Modal to upgrade for all cases finished/not finished-->
+                <div aria-hidden="true" class="modal" data-backdrop="static"
+                     data-keyboard="false" id="modal-upgrade-eval{{evaluation.id}}">
+                    <div class="modal-dialog ">
+                        <div class="modal-content">
+                            {% include "assessment/upgrade-modal.html" %}
+                        </div>
+                    </div>
+                </div>
+
+                <td class="div-hidden-icons center" id="div-hidden-icons{{evaluation.id}}">
+                    <button class="btn btn-primary small-btn" data-target="#modal-edit{{evaluation.id}}"
+                            data-toggle="modal">
+                        <i class="fa fa-edit"></i>
+                    </button>
+                    <div aria-hidden="true" class="modal" id="modal-edit{{evaluation.id}}">
+                        <div class="modal-dialog">
                             <div class="modal-content">
-                                {% include "assessment/upgrade-modal.html" %}
+                                {% include "assessment/edit-evaluation.html" %}
                             </div>
                         </div>
                     </div>
-
-                    <td class="div-hidden-icons center" id="div-hidden-icons{{evaluation.id}}">
-                        <button class="btn btn-primary small-btn" data-target="#modal-edit{{evaluation.id}}"
-                                data-toggle="modal">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                        <div aria-hidden="true" class="modal" id="modal-edit{{evaluation.id}}">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    {% include "assessment/edit-evaluation.html" %}
-                                </div>
+                    <button class="btn btn-danger small-btn hidden-delete-button"
+                            data-target="#modal-delete{{evaluation.id}}"
+                            data-toggle="modal">
+                        <span class="fa fa-trash"></span>
+                    </button>
+                    <!-- The Modal delete evaluation -->
+                    <!-- The modal is inside the for loop because we need to catch the evaluation id -->
+                    <!-- It calls the DeleteEvaluation view -->
+                    <div aria-hidden="true" class="modal" id="modal-delete{{evaluation.id}}">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                {% include "assessment/deletion-evaluation.html" %}
                             </div>
                         </div>
-                        <button class="btn btn-danger small-btn hidden-delete-button"
-                                data-target="#modal-delete{{evaluation.id}}"
-                                data-toggle="modal">
-                            <span class="fa fa-trash"></span>
-                        </button>
-                        <!-- The Modal delete evaluation -->
-                        <!-- The modal is inside the for loop because we need to catch the evaluation id -->
-                        <!-- It calls the DeleteEvaluation view -->
-                        <div aria-hidden="true" class="modal" id="modal-delete{{evaluation.id}}">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    {% include "assessment/deletion-evaluation.html" %}
-                                </div>
-                            </div>
-                        </div>
-                    </td>
-                </tr>
-            </div>
+                    </div>
+                </td>
+            </tr>
+        </div>
 
         {% endfor %}
         </tbody>

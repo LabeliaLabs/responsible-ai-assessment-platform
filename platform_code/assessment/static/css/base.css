@@ -171,10 +171,6 @@ a:hover {
     displayed: none;
 }
 
-.large-array{
-    max-width: min-content;
-}
-
 .display-line{
     display: flex;
     align-items: center;
@@ -192,6 +188,10 @@ a:hover {
 
 .center-content{
     align-self: center;
+}
+
+.overflow-auto{
+    overflow: auto;
 }
 
 /******************************************* END GLOBAL PROPERTIES *******************************************/
@@ -528,7 +528,7 @@ a[name="column-button"]:hover{
 }
 
 .medium-button{
-    width: 105px;
+    width: 95px;
 }
 
 .small-btn{
@@ -722,6 +722,10 @@ h1 img {
     margin-left: 10px;
 }
 
+.navbar>.container {
+    max-width: 90%;
+}
+
 .topnav .icon {
   display: none;
 }
@@ -840,6 +844,7 @@ body.navbar-is-fixed-top {
     height: 15px;
     width: 50%;
     margin: auto;
+    margin-top: 15px;
 }
 
 .progress-bar-section{
@@ -1004,6 +1009,15 @@ body.navbar-is-fixed-top {
 
 .table td{
     padding: 0.5em;
+    overflow: auto;
+}
+
+td>div{
+    overflow: auto;
+}
+
+.member-td{
+    max-width: 250px;
 }
 
 tr.spaceUnder>td {
