@@ -12,11 +12,12 @@
 </div>
 
 <h1 class="h1-margin-breadcrumbs">{% trans "My dashboard" %} </h1>
-
 {% if messages %}
 <ul class="messages margin-3em padding-0-smaller-tablet">
     {% for message in messages %}
-    <li class="alert alert-{{ message.tags }}">{{ message }}</li>
+    <li class="alert alert-{{ message.tags }} overflow-auto">
+        <div>{{ message }}</div>
+    </li>
     {% endfor %}
 </ul>
 {% endif %}

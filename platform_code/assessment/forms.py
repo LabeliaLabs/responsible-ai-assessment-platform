@@ -531,7 +531,7 @@ class ElementFeedbackForm(forms.Form):
         super(ElementFeedbackForm, self).__init__(*args, **kwargs)
         self.fields["element_feedback_type"].widget.attrs[
             "class"
-        ] = "select select_feedback"
+        ] = "select select-feedback-popin"
 
 
 class SectionFeedbackForm(forms.Form):
@@ -558,7 +558,7 @@ class SectionFeedbackForm(forms.Form):
         super(SectionFeedbackForm, self).__init__(*args, **kwargs)
         self.fields["section_feedback_type"].widget.attrs[
             "class"
-        ] = "select select_feedback"
+        ] = "select select-feedback-popin"
 
 
 class ResultsForm(ModelForm):

@@ -118,7 +118,7 @@ Inside each section, first you have, if it exists:
         grid-template-columns: 72% 15% 8%;
     }
     ul{
-        padding-inline-start: 0px;
+        padding-inline-start: 5px;
     }
     .inline-padding{
         padding-inline-start: 20px;
@@ -145,6 +145,9 @@ Inside each section, first you have, if it exists:
     }
     .profile-settings-pills{
         width: 100%;
+    }
+    .select-feedback-popin{
+        font-size: 12px;
     }
 }
 
@@ -335,6 +338,12 @@ Inside each section, first you have, if it exists:
      }
 }
 
+@media (max-width: 650px) {
+    .margin-10-new-eval-button {
+        margin-top: 10px;
+    }
+}
+
 /* navbar */
 @media (min-width: 381px) and (max-width: 768px) {
     .navbar-expand-lg>.container {
@@ -391,6 +400,8 @@ Inside each section, first you have, if it exists:
 		border-bottom: 1px solid #eee;
 		position: relative;
 		padding-left: 50%;
+		max-width: 90%;
+		width: 200px;
 	}
 	td:before {
 		/* Now like a table header */
@@ -524,6 +535,9 @@ Inside each section, first you have, if it exists:
     .organisation-settings{
         width: 700px;
     }
+    .margin-left-large-screen {
+        margin-left: -50px;
+    }
 }
 
 /* SMALLER */
@@ -558,6 +572,12 @@ Inside each section, first you have, if it exists:
     }
     .remove-larger-than-large-screen{
         display: none;
+    }
+    .large-array-large-screen{
+        max-width: min-content;
+    }
+    td {
+        max-width: 120px;
     }
 }
 

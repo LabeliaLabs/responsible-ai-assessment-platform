@@ -32,8 +32,9 @@
     {% if organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
     <ul id='listTitle' class="no-padding-inline-start-smartphone">
         <li class="flex">
-            <h1 class="h1-section h1-margin-breadcrumbs object-linked margin-bottom-smartphone-30"
-                id="evaluationName">{{ evaluation.name }}
+            <h1 class="h1-section h1-margin-breadcrumbs object-linked margin-bottom-smartphone-30 overflow-auto"
+                id="evaluationName">
+                <div>{{ evaluation.name }}</div>
                 <button class="btn btn-primary small-btn hidden-div remove-smartphone-screen"
                         data-target="#modal-edit{{evaluation.id}}"
                         data-toggle="modal" id="hiddenButton">

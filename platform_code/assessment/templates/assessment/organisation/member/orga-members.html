@@ -36,10 +36,18 @@
     <div>
         <tr class="row-array" id="rowMember{{member.id}}">
 
-            <td class="case-array">{{member.user.get_full_name}}</td>
-            <td class="case-array">{{member.user.email}}</td>
-            <td class="case-array">{{member.role}}</td>
-            <td class="case-array">{{member|evaluation_created_by:evaluation_list}}</td>
+            <td class="case-array member-td">
+                <div>{{member.user.get_full_name}}</div>
+            </td>
+            <td class="case-array member-td">
+                <div>{{member.user.email}}</div>
+            </td>
+            <td class="case-array member-td">
+                <div>{{member.role}}</div>
+            </td>
+            <td class="case-array member-td">
+                <div>{{member|evaluation_created_by:evaluation_list}}</div>
+            </td>
             <!-- To allow the user to leave the organisation-->
             {% if member.user == user %}
                 <!-- Unique case where the user cannot leave the organisation, he is the only admin member-->

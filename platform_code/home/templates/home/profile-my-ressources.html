@@ -24,20 +24,20 @@
 <!-- Content of the tablist -->
 <div class="tab-content" id="nav-tabContent">
     <div aria-labelledby="nav-favorite-tab" class="tab-pane fade show active" id="nav-favorite" role="tabpanel">
-        <ul id="liked-resources-array inline-grid">
+        <ul id="liked-resources-array" class="inline-grid">
             {% if resources %}
             {% for resource in resources %}
-            <div class="grid-container-2-cols">
+            <div class="grid-container-2-cols" id="div_resource_fav{{resource.id}}">
                 <div class="grid-item">
-                    <li class="object-linked list-with-disc margin-10 " id="resource{{resource.id}}">
+                    <li class="object-linked list-with-disc margin-10 " id="resource_fav{{resource.id}}">
                         [{{resource.type}}] - {{resource.text|markdownify}}
                     </li>
                 </div>
                 <div class="icon-list">
                     <form action="{% url 'home:user-profile' %}" id="{{resource.id}}" method='post'>
                         {% csrf_token %}
-                        <a name="unlike" onclick="remove(this, {{resource.id}})">
-                            <i class="fa fa-bookmark liked" id="resource_list{{resource.id}}"></i>
+                        <a name="unlike" onclick="removeResource({{resource.id}})">
+                            <i class="fa fa-bookmark liked" id="resource_fav_icon{{resource.id}}"></i>
                         </a>
                     </form>
                 </div>
@@ -94,14 +94,14 @@
                                         </div>
                                         <div class="icon-list">
                                             {% if not resource in resources_liked %}
-                                            <a name="like" onclick="like(this, {{master_element.id}}, {{resource.id}})">
+                                            <a name="like" onclick="like({{master_element.id}}, {{resource.id}})">
                                                 <i class="fa fa-bookmark-o  not-liked"
                                                    name="resource_not_liked{{resource.id}}"
                                                    title="{% trans 'Click to like the resource' %}"></i>
                                             </a>
                                             {% else %}
                                             <a name="unlike"
-                                               onclick="like(this, {{master_element.id}}, {{resource.id}})">
+                                               onclick="like({{master_element.id}}, {{resource.id}})">
                                                 <i class="fa fa-bookmark liked"
                                                    name="resource_liked{{resource.id}}"
                                                    title="{% trans 'Click to unlike the resource' %}"></i>

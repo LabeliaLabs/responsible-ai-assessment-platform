@@ -2,82 +2,83 @@
 
 // Functions to manage resources
 
-function like(x, element_id, resource_id){
+function like(element_id, resource_id) {
     var form = document.getElementById("like_resources"+element_id);
     $.ajax({ data: $(form).serialize() + "&resource_id=" + resource_id,
-             type: "POST",
-             url: $(form).attr('action'),
-             success: function(response) {
-                 if(response['success']) {
-                     if (response['like']){
-                        var resources_list = document.getElementsByName("resource_not_liked"+resource_id);
+        type: "POST",
+        url: $(form).attr('action'),
+        success: function(response) {
+            if(response['success']) {
+                var textNoResource = document.getElementById("no-resources-message");
+                var textNoResourceTemp = document.getElementById("no-resources-message-temp");
+                // If the user liked a resource, so the icon is changed, the text "no resource liked" is removed,
+                // and the resource is added to the "my favorite resources" tab
+                if (response['like']) {
+                    // We get by name so this is an array as the resource is not unique, it can exists for several
+                    // elements
+                    var resourceToLikeList = document.getElementsByName("resource_not_liked"+resource_id);
 
-                        // remove the text when we like a resource
-                        var text_no_resources = document.getElementById("no-resources-message");
-                        if ($(text_no_resources).attr("style", "display: block;")){
-                            $(text_no_resources).attr("style", "display: none;");
-                            $("#no-resources-message-temp").addClass("display-none");
-                        }
+                    // remove the text when we like a resource
+                    if ( textNoResource && !textNoResource.classList.contains("display-none") && resourceToLikeList.length >= 1) {
+                        textNoResource.classList.add("display-none");
+                    } else if (textNoResourceTemp && resourceToLikeList.length >= 1) {
+                        textNoResourceTemp.classList.add("display-none");
+                    }
+                    // Change the icon of the resource, start from the end of the list as changing the name of the icon
+                    // remove it from the list
+                    for (var i = resourceToLikeList.length - 1; i >= 0; i--) {
+                        resourceToLikeList[i].classList.replace("fa-bookmark-o", "fa-bookmark");
+                        resourceToLikeList[i].setAttribute("name", "resource_liked"+resource_id);
+                    }
+                    //
+                    var favoriteResourcesArray = document.getElementById("liked-resources-array");
+                    var resourceText = response["resource_text"];
+                    // Create the resource in the favorite resources
+                    var favResource = document.createElement("div");
+                    favResource.innerHTML = '<div class="grid-container-2-cols" id="div_resource_fav'+resource_id+'"><div class="grid-item"><li id="resource_fav'+resource_id+'" class="object-linked list-with-disc margin-10">'+resourceText+'</li></div></div>';
+                    favoriteResourcesArray.appendChild(favResource);
 
-                        for ( var i = 0; i <= resources_list.length; i++){
-                            $(resources_list[0]).removeClass("fa-bookmark-o").addClass("fa-bookmark");
-                            $(resources_list[0]).attr("name","resource_liked"+resource_id);
-                        }
-                     var resources_liked_array = document.getElementById("liked-resources-array");
-                     var resource_text = response["resource_text"];
-                     $(resources_liked_array).append('<li id="resource'+resource_id+'" class="object-linked list-with-disc margin-10">'+resource_text+'</li>');
-                     } else {
-                        var resources_list = document.getElementsByName("resource_liked"+resource_id);
-
-                        for ( var i = 0; i <= resources_list.length; i++){
-                            $(resources_list[0]).removeClass("fa-bookmark").addClass("fa-bookmark-o");
-                            $(resources_list[0]).attr("name","resource_not_liked"+resource_id);
-
-                        }
-                        var resource = document.getElementById("resource"+resource_id);
-                        $("#resource"+resource_id).remove();
-
-                        // Manage the fact there is no more resource liked and the text message is displayed
-                        if (response["no_resource_liked"]){
-                            $("#no-resources-message-temp").removeClass("display-none");
-                        }
-                     }
-
+                    } else {
+                        // call the function unlikeResource
+                        unlikeResource(textNoResource, textNoResourceTemp, resource_id, response);
+                    }
                  }
              }
     });
 }
 
-function remove(x, resource_id){
+function unlikeResource(textNoResource, textNoResourceTemp, resource_id, response) {
+    // The user unlike a resource, so the icon is changed, the resource is removed from the favorite
+    // and if no resources are liked, the text is displayed
+    var resourcesToUnlikeList = document.getElementsByName("resource_liked"+resource_id);
+
+    // Change the icon
+    for (var i = resourcesToUnlikeList.length - 1; i >= 0; i--){
+        resourcesToUnlikeList[i].classList.replace("fa-bookmark", "fa-bookmark-o");
+        resourcesToUnlikeList[i].setAttribute("name", "resource_not_liked"+resource_id);
+    }
+    // Remove the resource from the favorite resources array
+    var favResource = document.getElementById("div_resource_fav"+resource_id);
+    favResource.remove();
+
+    // Manage the fact there is no more resource liked and the text message is displayed
+    // Always act on the temp div
+    if (response["no_resource_liked"] && textNoResourceTemp && textNoResourceTemp.classList.contains("display-none")) {
+        textNoResourceTemp.classList.remove("display-none");
+    }
+}
+
+function removeResource(resource_id){
     var form = document.getElementById(resource_id);
     $.ajax({ data: $(form).serialize() + "&resource_id=" + resource_id,
              type: "POST",
              url: $(form).attr('action'),
              success: function(response) {
                  if(response['success']) {
-                    var resource = document.getElementById("resource"+resource_id);
-                    $("#resource"+resource_id).remove();
-                    var resources_list = document.getElementsByName("resource_liked"+resource_id)
-                    for ( var i = 0; i <= resources_list.length; i++){
-                        $(resources_list[0]).removeClass("fa-bookmark").addClass("fa-bookmark-o");
-                        $(resources_list[0]).attr("name","resource_not_liked"+resource_id);
-                        $("#resource_list"+resource_id).addClass("hidden-div");
-
-                    }
-                    // Manage the fact there is no more resource liked and the text message is displayed
-                    if (response["no_resource_liked"]){
-                        $("#no-resources-message-temp").removeClass("display-none");
-                    }
-                 } else {
-                    var messages = response["error_messages"];
-                    $("#error_messages_resources").html("");
-                    $("#error_messages_resources").show();
-                    for (message of messages){
-                        $("#error_messages_resources").append("<li class='alert alert-danger'>"+message+"</li>");
-                     }
-                    $("#error_messages").delay(4000).slideUp(200, function() {
-                    $(this).hide();
-                    });
+                    // The resource is unliked, so it is removed from the favorite
+                    var textNoResource = document.getElementById("no-resources-message");
+                    var textNoResourceTemp = document.getElementById("no-resources-message-temp");
+                    unlikeResource(textNoResource, textNoResourceTemp, resource_id, response);
                  }
              }
     });
