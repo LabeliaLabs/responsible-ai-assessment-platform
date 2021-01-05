@@ -136,7 +136,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-LOGOUT_REDIRECT_URL = 'homepage'
+LOGOUT_REDIRECT_URL = 'home:homepage'
 
 LOGGING = {
     'version': 1,
