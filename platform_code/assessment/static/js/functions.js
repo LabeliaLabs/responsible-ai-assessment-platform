@@ -32,15 +32,17 @@ function like(element_id, resource_id) {
                     }
                     //
                     var favoriteResourcesArray = document.getElementById("liked-resources-array");
-                    var resourceText = response["resource_text"];
-                    // Create the resource in the favorite resources
-                    var favResource = document.createElement("div");
-                    favResource.innerHTML = '<div class="grid-container-2-cols" id="div_resource_fav'+resource_id+'"><div class="grid-item"><li id="resource_fav'+resource_id+'" class="object-linked list-with-disc margin-10">'+resourceText+'</li></div></div>';
-                    favoriteResourcesArray.appendChild(favResource);
+                    if (favoriteResourcesArray) {
+                        var resourceText = response["resource_text"];
+                        // Create the resource in the favorite resources
+                        var favResource = document.createElement("div");
+                        favResource.innerHTML = '<div class="grid-container-2-cols" id="div_resource_fav'+resource_id+'"><div class="grid-item"><li id="resource_fav'+resource_id+'" class="object-linked list-with-disc margin-10">'+resourceText+'</li></div></div>';
+                        favoriteResourcesArray.appendChild(favResource);
+                    }
 
-                    } else {
-                        // call the function unlikeResource
-                        unlikeResource(textNoResource, textNoResourceTemp, resource_id, response);
+                } else {
+                    // call the function unlikeResource
+                    unlikeResource(textNoResource, textNoResourceTemp, resource_id, response);
                     }
                  }
              }
