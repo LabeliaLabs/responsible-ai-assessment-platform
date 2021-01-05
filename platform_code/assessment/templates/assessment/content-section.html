@@ -278,13 +278,13 @@
                                                         </div>
                                                         <div class="icon-list">
                                                             {% if not resource in resources_liked %}
-                                                                <a name="like" onclick="like(this, {{element.id}}, {{resource.id}})">
+                                                                <a name="like" onclick="like({{element.id}}, {{resource.id}})">
                                                                     <i class="fa fa-bookmark-o not-liked"
                                                                        name="resource_not_liked{{resource.id}}"
                                                                        title="{% trans 'Click to like the resource' %}"></i>
                                                                 </a>
                                                             {% else %}
-                                                                <a name="unlike" onclick="like(this, {{element.id}}, {{resource.id}})">
+                                                                <a name="unlike" onclick="like({{element.id}}, {{resource.id}})">
                                                                     <i class="fa fa-bookmark liked"
                                                                        name="resource_liked{{resource.id}}"
                                                                        title="{% trans 'Click to unlike the resource' %}"></i>
