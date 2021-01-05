@@ -4,15 +4,16 @@
 
 <div>
 
-    <form action="" class="form" id="changeNameEval{{evaluation.id}}" method='post'
-          role="form">
+    <form action="" class="form" id="changeNameEval{{evaluation.id}}" method='post' role="form"
+          onkeydown="return event.key != 'Enter';">
+         {% csrf_token %}
         <div class="modal-header">
             <h4 class="modal-title">{% trans "Do you want to change the name of your evaluation?" %} </h4>
             <button class="close" data-dismiss="modal" type="button">&times;</button>
         </div>
         <div class="modal-body create-form width-50">
             <div class="column">
-                {% csrf_token %}
+
                 {% with eval_form=evaluation_form_dic|get_item_converted_str:evaluation.id %}
                 {% for field in eval_form %}
                 <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
@@ -26,7 +27,8 @@
             <input class="btn btn-primary same-size-220 margin-auto" data-dismiss="modal" type="button"
                    value="{% trans 'Cancel' %}"/>
             <button class="btn btn-modify same-size-220 margin-auto"
-                    onclick="changeNameEvaluation('changeNameEval{{evaluation.id}}', '{{evaluation.id}}')" type="submit"
+                    type="button"
+                    onclick="changeNameEvaluation('changeNameEval{{evaluation.id}}', '{{evaluation.id}}')"
             >{% trans "Change" %}
             </button>
 

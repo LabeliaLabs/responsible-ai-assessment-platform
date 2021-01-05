@@ -86,7 +86,11 @@ class SummaryView(LoginRequiredMixin, DetailView):
     login_url = "home:login"
     redirect_field_name = "home:homepage"
     context = {}
-    data_update = {"success": False, "message": _("An error occurred.")}
+    data_update = {}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.data_update = {"success": False, "message": _("An error occurred.")}
 
     def get(self, request, *args, **kwargs):
         """

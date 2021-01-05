@@ -253,54 +253,48 @@ function submitForm(id_form){
 function submitUserSettingsDataForm(id_form){
     var form = document.getElementById(id_form);
     $.ajax({ data: $(form).serialize(),
-             type: $(form).attr('method'),
-             url: $(form).attr('action'),
-             success: function(response) {
-                 if(response['success']) {
-                 $("#confirmation").html("<div class='alert alert-success margin-50'>"+response['message_success']+"</div>");
-                 $(".alert").delay(3000).slideUp(200, function() {
-                    $(this).remove();
-                    });
-                 } else {
-                    $(form)[0].reset();
-                    $("#error_messages").html("");
-                    $("#error_messages").show();
-                    $("#error_messages").append("<div class='alert alert-danger margin-50'>"+response['message_fail']+"</div>");
-
-                    $("#error_messages").delay(4000).slideUp(200, function() {
-                    $(this).hide();
-                    });
-                 }
-             }
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        success: function(response) {
+            var divMessage = document.getElementById("message");
+            divMessage.classList.remove("display-none");
+            divMessage.textContent = "";
+            if (response['success']) {
+                addMessage(divMessage, response['message'], "alert-success");
+            } else {
+                addMessage(divMessage, response['message'], "alert-danger");
+            }
+            setTimeout( function() {
+                divMessage.classList.add("display-none")
+                divMessage.textContent = "";
+                }, 4000);
+        }
     });
 }
 
 function submitUserSettingsPasswordForm(id_form){
     var form = document.getElementById(id_form);
     $.ajax({ data: $(form).serialize(),
-             type: $(form).attr('method'),
-             url: $(form).attr('action'),
-             success: function(response) {
-                 if(response['success']) {
-                 $('input[name="old_password"]').val("");
-                 $('input[name="new_password1"]').val("");
-                 $('input[name="new_password2"]').val("");
-                 $("#confirmation"+id_form).html("<div class='alert alert-success margin-70'>"+response['message_success']+"</div>");
-                 $(".alert").delay(5000).slideUp(200, function() {
-                    $(this).remove();
-                    });
-                 } else {
-                    var messages = response["error_messages"];
-                    $("#error_messages_password").html("");
-                    $("#error_messages_password").show();
-                    for (message of messages){
-                        $("#error_messages_password").append("<li class='alert alert-danger margin-70'>"+message+"</li>");
-                     }
-                    $("#error_messages_password").delay(4000).slideUp(200, function() {
-                    $(this).hide();
-                    });
-                 }
-             }
+        type: $(form).attr('method'),
+        url: $(form).attr('action'),
+        success: function(response) {
+            var divMessage = document.getElementById("messagePassword");
+            divMessage.classList.remove("display-none");
+            divMessage.textContent = "";
+            if (response['success']) {
+                form.reset();
+                addMessage(divMessage, response['message'], "alert-success");
+            } else {
+                var messages = response["error_messages"];
+                for (message of messages){
+                    addMessage(divMessage, message, "alert-danger");
+                }
+            }
+            setTimeout( function() {
+                divMessage.classList.add("display-none")
+                divMessage.textContent = "";
+                }, 6000);
+        }
     });
 }
 
@@ -373,8 +367,8 @@ function changeNameEvaluation(form_id, evaluation_id){
                      $("#confirmation"+form_id).html("<div class='alert alert-success margin-10'>"+response['message']+"</div>");
                      $(".alert").delay(3000).slideUp(200, function() {
                         $(this).remove();
+                        location.reload();  // to update the array and the page
                         });
-                     location.reload();  // to update the array and the page
                  } else {
                     $("#confirmation"+form_id).html("<div class='alert alert-danger margin-10'>"+response['message']+"</div>");
                     $(".alert").delay(5000).slideUp(200, function() {

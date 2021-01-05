@@ -19,7 +19,7 @@
             {% csrf_token %}
             <button class="btn btn-primary adapted-button-size-250 margin-auto"
                     onclick="removeMember('remove_pending_member{{pending_member.id}}', '{{pending_member.id}}', true)"
-                    type="submit">
+                    type="button">
                 {% trans 'Yes' %}
             </button>
             <button class="btn btn-danger adapted-button-size-250 margin-auto right-button smartphone-margin-top"
