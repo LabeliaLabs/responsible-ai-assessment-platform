@@ -5,7 +5,8 @@
 
 <div class="create-eval-modal">
     <form action="{% url 'assessment:orga-summary' organisation.id %}"
-          class="form" id="send_invitation_form" method='post' role="form">
+          class="form" id="send_invitation_form" method='post' role="form"
+          onkeydown="return event.key != 'Enter';">
         <div class="modal-header">
             <h4 class="modal-title larger-small-screen-absolute-position"
                 id="myModalLabel">{% trans "Add a new member to the organisation" %}</h4>
@@ -55,7 +56,7 @@
                 <div>
                     <button class="btn btn-primary adapted-button-size-250 margin-auto" id="sendInvitationButton"
                             onclick="send_invitation('send_invitation_form')"
-                            type="submit">{% trans 'Send the invitation' %}
+                            type="button">{% trans 'Send the invitation' %}
                     </button>
                 </div>
                 <div class="margin-10">

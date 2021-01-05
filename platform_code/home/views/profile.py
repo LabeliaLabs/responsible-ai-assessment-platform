@@ -80,7 +80,6 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         :return:
         """
         if request.method == 'POST':
-
             user = request.user
             # Differentiate between the organisation creation and the evaluation creation
             # It could be done with the form id but easier this way, may be to improve
@@ -122,7 +121,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                 return treat_resources(request)
 
             # If the user edits the name of the evaluation
-            elif "name" in request.POST.dict():
+            elif "name" in request.POST.dict() and "evaluation_id" in request.POST.dict():
                 return treat_evaluation_name_edition(request)
 
             # Case there is a post which is not managed by the function

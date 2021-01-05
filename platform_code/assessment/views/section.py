@@ -33,7 +33,11 @@ class SectionView(LoginRequiredMixin, ListView):
     login_url = "home:login"
     redirect_field_name = "home:homepage"
     context = {}
-    data_update = {"success": False, "message": _("An error occurred."), "message_type": "alert-danger"}
+    data_update = {}
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.data_update = {"success": False, "message": _("An error occurred."), "message_type": "alert-danger"}
 
     def get(self, request, *args, **kwargs):
         """

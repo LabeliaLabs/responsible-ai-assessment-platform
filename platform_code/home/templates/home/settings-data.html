@@ -19,13 +19,12 @@
                 {% endfor %}
                 <button class="btn btn-primary float-left-larger-tablet"
                         onclick="submitUserSettingsDataForm('form-user-data')"
-                        type="submit">{% trans "Modify" %}
+                        type="button">{% trans "Modify" %}
                 </button>
             </form>
         </div>
     </div>
-    <div id="confirmation"></div>
-    <div id="error_messages"></div>
+    <div id="message" class="display-none alert margin-50"></div>
 </div>
 
 

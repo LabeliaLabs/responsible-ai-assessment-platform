@@ -24,6 +24,10 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
     redirect_field_name = "home:homepage"
     data_update = {}
 
+    def __init__(self):
+        super().__init__()
+        self.data_update = {"success": False, "error_messages": []}
+
     def get(self, request, *args, **kwargs):
 
         user = request.user
@@ -37,16 +41,13 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
             dic_form = request.POST.dict()
-
-            data_update = {"success": False, "error_messages": []}
             # It means the user change his password
             if "old_password" in dic_form:
                 self.treat_password_change(request)
 
             elif "last_name" in dic_form:
                 self.treat_name_change(request)
-
-            return HttpResponse(json.dumps(data_update), content_type="application/json")
+        return HttpResponse(json.dumps(self.data_update), content_type="application/json")
 
     def treat_password_change(self, request):
         """
@@ -59,7 +60,7 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
             update_session_auth_hash(request, user)  # Important!
             self.data_update["success"] = True
             logger.info(f"[password_changed] The user {user.email} has changed his password.")
-            self.data_update["message_success"] = _("Your password has been changed!")
+            self.data_update["message"] = _("Your password has been changed!")
         else:
             all_error_data = json.loads(form.errors.as_json())  # need dict format to extract error code
             error_list_values = list(all_error_data.values())[0]
@@ -81,6 +82,6 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
             user.first_name = first_name
             user.save()
             self.data_update["success"] = True
-            self.data_update["message_success"] = _("Your personal data have been updated!")
+            self.data_update["message"] = _("Your personal data have been updated!")
         else:
-            self.data_update["message_fail"] = _("The validation failed. Please check you have filled all the fields.")
+            self.data_update["message"] = _("The validation failed. Please check you have filled all the fields.")
