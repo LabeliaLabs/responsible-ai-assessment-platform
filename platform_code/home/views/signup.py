@@ -46,7 +46,7 @@ def signup(request):
             message = render_to_string('home/account/acc_activate_email.html', {
                 'user': user,
                 'domain': current_site.domain,
-                'protocol': "https" if request.is_secure() else "http",
+                'protocol': "http" if settings.DEBUG else "https",
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': jwt.encode({"user": user.email,
                                      "exp": datetime.now()+timedelta(days=5)},  # You can edit the delay token validity
