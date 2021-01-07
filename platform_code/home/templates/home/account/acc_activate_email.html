@@ -1,8 +1,6 @@
-{% load i18n %}
-{% load static %}
-{% autoescape off %}
-{% trans "Hello" %},
-{% trans "To continue your account creation, please verify your email by clicking on the link below," %}
+{% load i18n %}{% load static %}{% autoescape off %}
+{% trans "Thank you for creating a Substra account!" %}
+{% trans "To continue the process, please verify your email by clicking on the link below," %}
 {{ protocol }}://{{ domain }}{% url 'home:activate' uidb64=uid token=token %}
 
 {% trans "If clicking the link above doesn't work, please copy and paste the URL in a new browser window instead." %}

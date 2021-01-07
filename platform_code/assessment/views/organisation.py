@@ -11,6 +11,7 @@ from django.utils.translation import gettext as _
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import DetailView
+from django.conf import settings
 
 from assessment.forms import EvaluationForm
 from assessment.forms_.member_forms import AddMemberForm, EditRoleForm
@@ -312,7 +313,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
             'user': user,
             'organisation': organisation,
             'domain': current_site.domain,
-            'protocol': "https" if request.is_secure() else "http",
+            'protocol': "http" if settings.DEBUG else "https",
         })
         email = EmailMessage(mail_subject, message, to=[email_address])
         email.send()
