@@ -121,4 +121,35 @@
     {% endif %}
 </div>
 
+<div id="mc_embed_signup" class="newsletter-form-container margin-auto">
+    <form action="https://substra.us18.list-manage.com/subscribe/post?u=385fa3f9736ea94a1fcca969f&amp;id=a80365310d"
+          method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
+          class="validate form-center" target="_blank" novalidate onsubmit="registerNewsletter(event)">
+        <div id="mc_embed_signup_scroll" class="centered">
+            <label for="mce-EMAIL"
+                   class="newsletter-label">{% trans "Sign up to receive Substra Foundation’s newsletter:" %}</label>
+            <div id="divErrorsNewsletter" class="field-error">
+                <p id="errorMailEmpty" class="display-none">{% trans "Email Address is required." %}</p>
+                <p id="errorMailFormat"
+                   class="display-none">{% trans "Email addresses should follow the format user@domain.com." %}</p>
+                <p id="errorInvalidMail"
+                   class="display-none">{% trans "This email address looks fake or invalid. Please enter a real email address." %}</p>
+                <p id="errorServerUnavailable" class="display-none">{% trans "Could not connect to the registration server, retry later." %}</p>
+            </div>
+            <input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="Email address"
+                   required>
+            <div class="out-of-screen" aria-hidden="true">
+                <input type="text" name="b_385fa3f9736ea94a1fcca969f_a80365310d" tabindex="-1" value=""></div>
+            <div class="newsletter-submit-container">
+                <input type="submit" value="{% trans 'SIGN UP' %}" name="subscribe" id="mc-embedded-subscribe"
+                       class="btn btn-submit-newsletter"></div>
+            <div class="newsletter-form-footnote">
+                <p>{% trans "Frequency: maximum 1 email/month. Your email address will not be shared with anyone." %}</p>
+            </div>
+        </div>
+    </form>
+    <p id="confirmSubscribe" class='newsletter-confirmation-text display-none'>{% trans "Thank you for subscribing to the newsletter!" %}</p>
+    <p id="errorAlreadySubscribed" class='newsletter-confirmation-text display-none'>{% trans "You are already subscribed!" %}</p>
+</div>
+
 {% endblock %}

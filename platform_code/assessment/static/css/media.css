@@ -270,6 +270,29 @@ Inside each section, first you have, if it exists:
         text-align: center;
         width: 100%;
     }
+
+    /* newsletter */
+    .newsletter-form-container {
+        width: 100%;
+    }
+
+    .newsletter-form-container input.email {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .newsletter-submit-container {
+        display: block;
+        width: 100%
+    }
+
+    .btn-submit-newsletter{
+        margin-top: 10px;
+    }
+
+    .newsletter-form-container{
+        margin-bottom: 0;
+    }
 }
 
 /* LARGER THAN 481px */
@@ -368,6 +391,10 @@ Inside each section, first you have, if it exists:
     }
     .column-right {
         margin-top: -50px;
+    }
+
+    .btn-submit-newsletter{
+        margin-top: 15px;
     }
 }
 
@@ -537,6 +564,10 @@ Inside each section, first you have, if it exists:
     }
     .margin-left-large-screen {
         margin-left: -50px;
+    }
+
+    .btn-submit-newsletter{
+        margin-top: 15px;
     }
 }
 
