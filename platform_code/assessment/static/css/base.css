@@ -537,6 +537,15 @@ a[name="column-button"]:hover{
     text-align: center;
 }
 
+.btn-submit-newsletter{
+    border-radius: 300px;
+    padding: 13px 37px;
+    color: white;
+    font-weight: bold;
+    background-color: #FFBE3C;
+    margin: 0 15px;
+}
+
 /******************************************* END BUTTONS *****************************************************/
 
 /********************************************* IMAGE *********************************************************/
@@ -639,6 +648,70 @@ h1 img {
 }
 
 /****************************************** END FORM *********************************************************/
+
+/****************************************** NEWSLETTER *******************************************************/
+
+.newsletter-form-container{
+    border-radius: 30px;
+    padding: 15px 0 0 0;
+    background-color: #00C3D2;
+    color: white;
+    width: 50%;
+    margin-top: 60px;
+    margin-bottom: -60px;
+}
+
+.newsletter-label{
+    display: block;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.newsletter-submit-container{
+    display: inline-block;
+}
+
+.newsletter-form-container .email{
+    padding: 15px;
+    color: #4D566B;
+}
+
+/*Used on a honeypot field to hide it. https://mailchimp.com/help/about-fake-signups*/
+.out-of-screen{
+    position: absolute;
+    left: -5000px;
+}
+
+.newsletter-form-footnote p {
+    opacity: .8;
+    margin: 17px 0;
+    padding: 0;
+    font-size: 13px;
+    line-height: normal;
+}
+
+.newsletter-confirmation-text{
+    text-align: center;
+    padding-bottom: 15px;
+    font-weight: bold;
+}
+
+.field-error {
+    display: block;
+    margin-bottom: 12px;
+    background: #fed9db;
+    width: 85%;
+}
+
+.field-error p {
+    line-height: normal;
+    padding: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #f23d3d;
+}
+
+/****************************************** END NEWSLETTER ****************************************************/
 
 /****************************************** BETA BANNER ******************************************************/
 

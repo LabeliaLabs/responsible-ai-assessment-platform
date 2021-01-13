@@ -672,3 +672,73 @@ if (window.screen.width < 1025) {
         }
     }
 }
+
+//script used to send newsletter subscription to MailChimp and display succes/error messages
+function registerNewsletter(event) {
+    //disable normal form submit behavior
+    event.preventDefault();
+    var $form = $('#mc-embedded-subscribe-form');
+    //replace some url's parts to get a json response to our request
+    //this is not done in the <form> to allow user without js to register
+    var formatedUrl = $form.attr('action').replace('post', 'post-json') + "&c=?"
+    $(function () {
+        //hide errors messages if present
+        $('#divErrorsNewsletter').children("p").each(function (child) {
+            $(this).hide();
+        });
+        $.ajax({
+            type: "GET",
+            url: formatedUrl,
+            data: $form.serialize(),
+            cache: false,
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            error: function (err) {
+                $('#errorServerUnavailable').show();
+            },
+            success: function (data) {
+                //if mailChimp does not return "succes" -> display an error message
+                //else: hide form and display a confirmation message
+                let errorNum;
+                if (data.result != "success") {
+                    //regroup mailChimp errors into 4 differents errors
+
+                    //if the '0' is not present it means that the mail adress is already subscribed
+                    if (data.msg[0] != '0') {
+                        errorNum = "alreadySub";
+                    } else {
+                        let errorsReceivedRedirect = {
+                            "0 - Please enter a value": "empty",
+                            "0 - An email address must contain a single @": "format",
+                            "0 - The domain portion of the email address is invalid (the portion after the @: )": "format",
+                            "0 - The username portion of the email address is empty": "format",
+                            "0 - This email address looks fake or invalid. Please enter a real email address.": "invalid",
+                        }
+                        errorNum = errorsReceivedRedirect[data.msg];
+                    }
+
+                    let displayError = {
+                        'empty': function () {
+                            $('#errorMailEmpty').show();
+                        },
+                        'format': function () {
+                            $('#errorMailFormat').show();
+                        },
+                        'invalid': function () {
+                            $('#errorInvalidMail').show();
+                        },
+                        'alreadySub': function () {
+                            $('#mc_embed_signup').children('form').remove();
+                            $('#errorAlreadySubscribed').show();
+                        }
+                    }
+                    displayError[errorNum]();
+                } else {
+                    $('#mc_embed_signup').children('form').remove();
+                    $('#confirmSubscribe').show();
+                }
+
+            }
+        })
+    });
+}
