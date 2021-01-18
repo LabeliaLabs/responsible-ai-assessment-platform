@@ -1,0 +1,73 @@
+{% load static %}
+{% load add_attr %}
+{% load home_tags %}
+{% load i18n %}
+
+<div class="container">
+    <a class="navbar-brand white-color" href="{% url 'home:homepage' %}" title="home">
+        <img class="logo-navbar" src="{% static 'image/Substra_Foundation_Logo_horizontal_fond.png' %}">
+    </a>
+    <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
+        class="navbar-toggler icon-navbar" data-target="#navbarResponsive" data-toggle="collapse"
+        id="navbar-button" type="button">
+        <i aria-hidden="true" class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                <li class="nav-item navbar-item">
+                    <a class="nav-link" href="{% url 'admin:index' %}">
+                        {% trans "Admin" %}
+                    </a>
+                </li>
+                {% endif %}
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:user-profile' %}">
+                    {% trans "My dashboard" %}
+                </a>
+            </li>
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:resources' %}">
+                    {% trans "Resources" %}
+                </a>
+            </li>
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:faq' %}">
+                    {% trans "FAQ" %}
+                </a>
+            </li>
+            <li class="nav-item navbar-item">
+                {% include "navbar-language-select.html" %}
+            </li>
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:logout' %}">
+                    {% trans "Logout" %}
+                </a>
+            </li>
+            {% else %}
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:faq' %}">
+                {% trans "FAQ" %}
+                </a>
+            </li>
+            <li class="nav-item navbar-item">
+                {% include "navbar-language-select.html" %}
+            </li>
+            {% if request.get_full_path|need_login_page %}
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:login' %}">
+                {% trans "Login" %}
+                </a>
+            </li>
+            {% else %}
+            <li class="nav-item navbar-item">
+                <a class="nav-link" data-target="#modal-login-user" data-toggle="modal"
+                    href="{% url 'home:homepage' %}">{% trans "Login" %}
+                </a>
+            </li>
+            {% endif %}
+            {% endif %}
+        </ul>
+    </div>
+</div>

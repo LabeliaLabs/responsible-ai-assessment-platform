@@ -2,6 +2,7 @@
     "version": "0.55",
     "name": "assessment-dsrc",
     "timestamp": "22-Sep-2020 (15:38:57.929706)",
+	"language": "fr",
     "sections": {
         "section 1": {
             "order_id": "1",

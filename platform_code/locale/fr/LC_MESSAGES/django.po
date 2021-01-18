@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-07 16:15+0100\n"
+"POT-Creation-Date: 2021-01-18 09:31+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: .\platform_code\assessment\admin_utils\assessment_import.py:292
+msgid "I want to import the assessment in a new language"
+msgstr "Je veux importer l'assessment dans une autre langue"
 
 #: .\platform_code\assessment\admin_utils\scoring_import.py:128
 #, python-format
@@ -143,9 +147,26 @@ msgstr "Mon avis"
 msgid "rights"
 msgstr "droits"
 
-#: .\platform_code\assessment\models.py:278
+#: .\platform_code\assessment\models.py:386
 msgid " (new version)"
 msgstr " (nouvelle version)"
+
+#: .\platform_code\assessment\templates\assessment\admin\import-new-language.html:10
+#, python-format
+msgid "Import the assessment in <strong>%(language)s</strong>"
+msgstr "Importez l'assessment en <strong>%(language)s</strong>"
+
+#: .\platform_code\assessment\templates\assessment\admin\import-new-language.html:15
+#, python-format
+msgid ""
+"Your assessment is currently in \"<strong>%(assessment_language_tag)s</"
+"strong>\". <br><br> Please, import the %(assessment_language_import)s "
+"version. Note that it must be the same version, same structure."
+msgstr ""
+"L'assessment est actuellement en \"<strong> %(assessment_language_tag)s</"
+"strong>\".<br><br> Veuillez importer celui-ci en "
+"%(assessment_language_import)s.Il faut qu'il ait la même version, même "
+"structure."
 
 #: .\platform_code\assessment\templates\assessment\base-card-section.html:13
 #: .\platform_code\assessment\templates\assessment\evaluation.html:58
@@ -196,6 +217,7 @@ msgid "You have already answered to this evaluation element"
 msgstr "Vous avez déjà répondu à cet élément d'évaluation"
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:98
+#: .\platform_code\assessment\templates\assessment\content-section.html:125
 msgid ""
 "You are not concerned by this evaluation element due to your answer to this "
 "evaluation element"
@@ -213,39 +235,18 @@ msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à vos réponses "
 "précédentes."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:125
-msgid ""
-"\n"
-"                                        You are not concerned by this "
-"evaluation element due to your answer to this\n"
-"                                        evaluation element\n"
-"                                        "
-msgstr ""
-"\n"
-" Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
-"l'élément d'évaluation"
-
 #: .\platform_code\assessment\templates\assessment\content-section.html:146
 msgid ""
-"\n"
-"                                                Please select one answer "
-"which best matches to your organisation situation.\n"
-"                                            "
+"Please select one answer which best matches to your organisation situation."
 msgstr ""
-"\n"
 "Veuillez sélectionner une seule réponse correspondant le mieux à la maturité "
 "de l'organisation à ce sujet."
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:152
 msgid ""
-"\n"
-"                                                Please select all the "
-"answers which best match to your organisation situation.\n"
-"                                                Be careful, some "
-"combinations are not coherent.\n"
-"                                            "
+"Please select all the answers which best match to your organisation "
+"situation. Be careful, some combinations are not coherent."
 msgstr ""
-"\n"
 "Veuillez sélectionner tous les éléments de réponse correspondant à des "
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes."
@@ -282,17 +283,14 @@ msgstr "Aller à l'élément d'évaluation suivant"
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:253
 msgid ""
-"\n"
-"                                This evaluation element is not applicable "
-"due to the answer to this evaluation element\n"
-"                                "
+"This evaluation element is not applicable due to the answer to this "
+"evaluation element"
 msgstr ""
-"\n"
 "Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
-"l'élément "
+"l'élément d'évaluation"
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:264
-#: .\platform_code\templates\base-evaluation.html:65
+#: .\platform_code\templates\navbar.html:32
 msgid "Resources"
 msgstr "Ressources"
 
@@ -361,12 +359,9 @@ msgstr "Etes vous certain de vouloir supprimer cette évaluation ?"
 
 #: .\platform_code\assessment\templates\assessment\deletion-evaluation.html:13
 msgid ""
-"\n"
-"                The evaluation deletion is definitive. You would not be able "
-"to retrieve your answers and your score.\n"
-"                "
+"The evaluation deletion is definitive. You would not be able to retrieve "
+"your answers and your score."
 msgstr ""
-"\n"
 "La suppression d'une évaluation est définitive. Vous ne pourrez plus "
 "retrouver vos éléments de réponses et votre score."
 
@@ -488,14 +483,10 @@ msgstr "Ajouter un nouveau membre à l'organisation"
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-modal.html:16
 msgid ""
-"\n"
-"                You can add another user to your organisation. If the user "
-"does not already have an account on\n"
-"                the platform, an invitation email will be sent to him to "
-"join your organisation.\n"
-"                "
+"You can add another user to your organisation. If the user does not already "
+"have an account on the platform, an invitation email will be sent to him to "
+"join your organisation."
 msgstr ""
-"\n"
 "Vous pouvez ajouter un autre utilisateur à votre organisation. Si aucun "
 "compte n'existe pour cette adresse mail, une invitation pour créer un compte "
 "est envoyée. Une fois celui-ci créé, l'utilisateur rejoindra automatiquement "
@@ -510,51 +501,35 @@ msgstr ""
 #: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-member.html:18
 #: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-pending-member.html:17
 msgid ""
-"\n"
-"                    <strong>Read-only user</strong>: the read-only user can "
-"only consult\n"
-"                    the evaluations, he cannot create, edit or delete one.\n"
-"                    "
+"<strong>Read-only user</strong>: the read-only user can only consult the "
+"evaluations, he cannot create, edit or delete one."
 msgstr ""
-"\n"
 "<strong>Lecteur</strong> : un lecteur peut seulement consulter les "
 "évaluations. Il ne peut pas en créer, en éditer ou en supprimer."
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-modal.html:30
 msgid ""
-"\n"
-"                    <strong>Editor</strong>: the editor can create, modify "
-"or delete evaluations.\n"
-"                    "
+"<strong>Editor</strong>: the editor can create, modify or delete evaluations."
 msgstr ""
-"\n"
 "<strong>Editeur</strong> : un éditeur peut créer, modifier et supprimer des "
 "évaluations."
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-modal.html:35
 msgid ""
-"\n"
-"                    <strong>Admin</strong>: the admin user can create, "
-"modify or delete\n"
-"                    evaluations. He also can edit rights of other members "
-"and add/remove users to the organisation.\n"
-"                    "
+"<strong>Admin</strong>: the admin user can create, modify or delete "
+"evaluations. He also can edit rights of other members and add/remove users "
+"to the organisation."
 msgstr ""
-"\n"
 "<strong>Administrateur</strong> : un membre administrateur peut créer, "
 "modifier et supprimer des évaluations. Il peut aussi éditer les droits des "
 "autres membres et en ajouter à l'organisation ou en retirer."
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-modal.html:41
 msgid ""
-"\n"
-"                <strong>Note that you cannot remove an user with admin "
-"rights from the organisation, neither\n"
-"                change its rights. It is recommended to add user with edit "
-"rights</strong>.\n"
-"                "
+"<strong>Note that you cannot remove an user with admin rights from the "
+"organisation, neither change its rights. It is recommended to add user with "
+"edit rights</strong>."
 msgstr ""
-"\n"
 "<strong>Notez que vous ne pouvez pas retirer un membre avec des droits "
 "'Administrateur' des l'organisation, ni changer ses droits. C'est pourquoi "
 "nous vous recommendons d'ajouter des utilisateurs avec le droit 'Editeur'</"
@@ -577,35 +552,26 @@ msgstr ""
 #: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-member.html:24
 #: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-pending-member.html:23
 msgid ""
-"\n"
-"                    <strong>Editor</strong>: the editor can create, modify "
-"and delete evaluations.\n"
-"                    "
+"<strong>Editor</strong>: the editor can create, modify and delete "
+"evaluations."
 msgstr ""
-"\n"
 "<strong>Editeur</strong> : un éditeur peut créer, modifier et supprimer des "
 "évaluations."
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-member.html:28
+#: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-pending-member.html:28
 msgid ""
-"\n"
-"                    <strong>Admin</strong>: the admin user can create, "
-"modify and delete\n"
-"                    evaluations and members.\n"
-"                    "
+"<strong>Admin</strong>: the admin user can create, modify and delete "
+"evaluations and members."
 msgstr ""
-"\n"
 "<strong>Administrateur</strong> : un membre administrateur peut créer, "
 "modifier et supprimer des évaluations et ainsi que des membres."
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-member.html:34
+#: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-pending-member.html:33
 msgid ""
-"\n"
-"                Note that you cannot remove an user with admin rights from "
-"the organisation.\n"
-"                "
+"Note that you cannot remove an user with admin rights from the organisation."
 msgstr ""
-"\n"
 "Notez que vous ne pouvez pas retirer un membre avec les droits "
 "'administrateur' de l'organisation."
 
@@ -618,24 +584,6 @@ msgid "You can edit the rights you want to give to the future users:"
 msgstr ""
 "Vous pouvez changer les droits que vous voulez donner aux futurs "
 "utilisateurs :"
-
-#: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-pending-member.html:28
-msgid ""
-"\n"
-"                    <strong>Admin</strong>: the admin user can create, "
-"modify and delete evaluations and members.\n"
-"                    "
-msgstr ""
-"\n"
-"<strong>Administrateur</strong> : un membre administrateur peut créer, "
-"modifier et supprimer des évaluations et ainsi que des membres."
-
-#: .\platform_code\assessment\templates\assessment\organisation\member\edit-role-pending-member.html:33
-msgid ""
-"Note that you cannot remove an user with admin rights from the organisation."
-msgstr ""
-"Notez que vous ne pouvez pas retirer un membre avec les droits "
-"'administrateur' de l'organisation."
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\leave-organisation.html:6
 msgid "Are you sure you want to leave the organisation?"
@@ -690,13 +638,9 @@ msgstr "de l'organisation ?"
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\remove-member.html:12
 msgid ""
-"\n"
-"            The user will not be able to consult the evaluations anymore. "
-"You may also edit his role within the\n"
-"            organisation to limit the actions he can take.\n"
-"            "
+"The user will not be able to consult the evaluations anymore. You may also "
+"edit his role within the organisation to limit the actions he can take."
 msgstr ""
-"\n"
 "L'utilisateur ne pourra plus consulter les évaluations de l'organisation. "
 "Vous pouvez aussi éditer son rôle au sein de l'organisation pour limiter ses "
 "actions possibles."
@@ -737,7 +681,7 @@ msgid "Progression"
 msgstr "Progression"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:17
-#: .\platform_code\home\templates\home\faq.html:116
+#: .\platform_code\home\templates\home\faq.html:115
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:23
 msgid "Score"
 msgstr "Score"
@@ -863,18 +807,13 @@ msgid "Your score"
 msgstr "Votre score"
 
 #: .\platform_code\assessment\templates\assessment\results.html:64
+#: .\platform_code\home\templates\home\faq.html:117
 msgid ""
-"\n"
-"            The synthetic score is on a total of 100 theoretical maximum "
-"points for your full\n"
-"            assessment. It provides an indication of the organization "
-"maturity level concerning a responsible and\n"
-"            trustworthy data science. At the end of 2020, the 50/100 "
-"threshold can be considered a very advanced\n"
-"            maturity level.\n"
-"            "
+"The synthetic score is on a total of 100 theoretical maximum points for your "
+"full assessment. It provides an indication of the organization maturity "
+"level concerning a responsible and trustworthy data science. At the end of "
+"2020, the 50/100 threshold can be considered a very advanced maturity level."
 msgstr ""
-"\n"
 "Le score synthétique est sur un total de 100 points maximum théoriques pour "
 "l'ensemble de l'évaluation. Il offre une indication sur le niveau de "
 "maturité de l'organisation quant à une approche responsable et de confiance "
@@ -883,20 +822,17 @@ msgstr ""
 
 #: .\platform_code\assessment\templates\assessment\results.html:71
 msgid ""
-"\n"
-"            The mechanism for calculating the score is described in the FAQ "
-"that you can consult\n"
-"            "
+"The mechanism for calculating the score is described in the FAQ that you can "
+"consult"
 msgstr ""
-"\n"
 "Le mécanisme de calcul du score est décrit dans la FAQ que vous pouvez "
-"consulter "
+"consulter"
 
 #: .\platform_code\assessment\templates\assessment\results.html:73
-#: .\platform_code\home\templates\home\faq.html:10
-#: .\platform_code\templates\base-evaluation.html:70
-#: .\platform_code\templates\base-evaluation.html:81
-#: .\platform_code\templates\base-evaluation.html:146
+#: .\platform_code\home\templates\home\faq.html:9
+#: .\platform_code\templates\footer.html:35
+#: .\platform_code\templates\navbar.html:37
+#: .\platform_code\templates\navbar.html:51
 msgid "FAQ"
 msgstr "FAQ"
 
@@ -906,15 +842,11 @@ msgstr "ici."
 
 #: .\platform_code\assessment\templates\assessment\results.html:74
 msgid ""
-"\n"
-"            Note: the score is a synthetic indication, not an end in itself. "
-"In particular, we invite\n"
-"            you to consult the resources associated with each assessment "
-"element, which are excellent entry points for\n"
-"            building skills on your topics of interest.\n"
-"            "
+"Note: the score is a synthetic indication, not an end in itself. In "
+"particular, we invite you to consult the resources associated with each "
+"assessment element, which are excellent entry points for building skills on "
+"your topics of interest."
 msgstr ""
-"\n"
 "Note : le score est une indication synthétique, pas une fin en soi. Nous "
 "vous invitons en particulier à consulter les ressources associées à chaque "
 "élément d'évaluation, qui sont d'excellents points d'entrée pour monter en "
@@ -947,13 +879,9 @@ msgstr ""
 
 #: .\platform_code\assessment\templates\assessment\results.html:126
 msgid ""
-"\n"
-"                    : Please select all the answers which best match to your "
-"organisation situation. Be\n"
-"                    careful, some combinations are not coherent.\n"
-"                    "
+": Please select all the answers which best match to your organisation "
+"situation. Be careful, some combinations are not coherent."
 msgstr ""
-"\n"
 " : Veuillez sélectionner tous les éléments de réponse correspondant à des "
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes"
@@ -995,14 +923,10 @@ msgstr "Monter en version l'évaluation"
 
 #: .\platform_code\assessment\templates\assessment\upgrade-modal.html:11
 msgid ""
-"\n"
-"        Do you want to upgrade your evaluation to the latest version? Your "
-"answers and your notes will\n"
-"        be transferred to the new evaluation. This evaluation won't be "
-"deleted by the process.\n"
-"       "
+"Do you want to upgrade your evaluation to the latest version? Your answers "
+"and your notes will be transferred to the new evaluation. This evaluation "
+"won't be deleted by the process."
 msgstr ""
-"\n"
 "Voulez-vous monter en version votre évaluation à la dernière version "
 "disponible ? Vos réponses et vos notes seront retranscrites dans la nouvelle "
 "évaluation. Votre évaluation actuelle ne sera pas supprimée."
@@ -1269,13 +1193,13 @@ msgstr ""
 msgid "Your evaluation has been upgraded!"
 msgstr "Votre évaluation a bien été mise à jour à la dernière version."
 
-#: .\platform_code\dev_platform\settings.py:123
-#: .\platform_code\dev_platform\settings_prod.py:123
+#: .\platform_code\dev_platform\settings.py:124
+#: .\platform_code\dev_platform\settings_prod.py:124
 msgid "English"
 msgstr "Anglais"
 
-#: .\platform_code\dev_platform\settings.py:124
-#: .\platform_code\dev_platform\settings_prod.py:124
+#: .\platform_code\dev_platform\settings.py:125
+#: .\platform_code\dev_platform\settings_prod.py:125
 msgid "French"
 msgstr "Français"
 
@@ -1296,6 +1220,7 @@ msgstr "Mot de passe"
 
 #: .\platform_code\home\forms.py:27
 #: .\platform_code\home\templates\home\settings-password.html:8
+#: .\platform_code\home\templates\home\signup.html:25
 msgid ""
 "Your password must contain at least 8 characters, with at least one number "
 "and one letter"
@@ -1376,8 +1301,8 @@ msgid ""
 "To continue the process, please verify your email by clicking on the link "
 "below,"
 msgstr ""
-"Afin de valider l'opération, veuillez vérifier votre adresse "
-"email en cliquant sur le lien ci-dessous,"
+"Afin de valider l'opération, veuillez vérifier votre adresse email en "
+"cliquant sur le lien ci-dessous,"
 
 #: .\platform_code\home\templates\home\account\acc_activate_email.html:6
 #: .\platform_code\home\templates\home\registration\password_reset_email.html:8
@@ -1388,71 +1313,63 @@ msgstr ""
 "Si le lien ne fonctionne pas, veuillez le copier et le coller dans l'URL "
 "d'une nouvelle fenêtre."
 
-#: .\platform_code\home\templates\home\faq.html:12
+#: .\platform_code\home\templates\home\faq.html:11
 msgid "The assessment"
 msgstr "Le référentiel d'évaluation"
 
-#: .\platform_code\home\templates\home\faq.html:13
+#: .\platform_code\home\templates\home\faq.html:12
 msgid "How was the evaluation developed?"
 msgstr "Comment l'évaluation a-t-elle été élaborée ?"
 
-#: .\platform_code\home\templates\home\faq.html:16
+#: .\platform_code\home\templates\home\faq.html:15
 msgid ""
-"\n"
-"            It is the result of a participatory work initiated in mid-2019\n"
-"            and carried out by the Substra Foundation association.<strong> "
-"This approach is described in this\n"
-"            "
+"It is the result of a participatory work initiated in mid-2019 and carried "
+"out by the Substra Foundation association.<strong> This approach is "
+"described in this"
 msgstr ""
-"\n"
 "Elle est le fruit d'un travail participatif initié mi-2019 et mené par "
 "l'association Substra Foundation.<strong> Cette démarche est décrite dans "
 "cet "
 
-#: .\platform_code\home\templates\home\faq.html:21
+#: .\platform_code\home\templates\home\faq.html:20
 msgid "blog article"
 msgstr "article de blog"
 
-#: .\platform_code\home\templates\home\faq.html:23
+#: .\platform_code\home\templates\home\faq.html:22
 msgid " that we recommend!"
 msgstr " que nous vous recommendons !"
 
-#: .\platform_code\home\templates\home\faq.html:24
+#: .\platform_code\home\templates\home\faq.html:23
 msgid ""
-"\n"
-"                Nevertheless, let us take up again here some of the "
-"contextual elements described in the\n"
-"                article. First of all, we can see that there is growing "
-"tension between the potential and interest of AI\n"
-"                techniques on the one hand, and the difficulty of trusting "
-"these techniques or their implementation on\n"
-"                the other (whether by private actors such as\n"
-"                "
+"Nevertheless, let us take up again here some of the contextual elements "
+"described in the article. First of all, we can see that there is growing "
+"tension between the potential and interest of AI techniques on the one hand, "
+"and the difficulty of trusting these techniques or their implementation on "
+"the other (whether by private actors such as"
 msgstr ""
-"\n"
 "Reprenons tout de même ici quelques éléments de contexte décrits dans "
 "l'article. Tout d'abord, notre constat est que l'on observe une tension "
 "grandissante, entre d’un côté le potentiel et l’intérêt des techniques d’IA, "
 "et de l’autre la difficulté à faire confiance à ces techniques ou à leurs "
 "mises en oeuvres (que ce soit par des acteurs privés comme "
 
-#: .\platform_code\home\templates\home\faq.html:32
+#: .\platform_code\home\templates\home\faq.html:31
 msgid "Apple with the Apple Card"
 msgstr "Apple avec l'Apple Card"
 
-#: .\platform_code\home\templates\home\faq.html:32
+#: .\platform_code\home\templates\home\faq.html:31
 msgid ", Tesla in "
 msgstr ", Tesla dans"
 
-#: .\platform_code\home\templates\home\faq.html:36
+#: .\platform_code\home\templates\home\faq.html:35
 msgid "this astonishing example"
 msgstr "cet exemple étonnant"
 
-#: .\platform_code\home\templates\home\faq.html:38
+#: .\platform_code\home\templates\home\faq.html:37
 msgid ", or by public actors such as the States, cf. "
 msgstr ", ou par des acteurs publics comme les Etats, cf. "
 
-#: .\platform_code\home\templates\home\faq.html:43
+#: .\platform_code\home\templates\home\faq.html:42
 msgid ""
 " on conditional release in the USA, the controversies each year on "
 "Parcoursup in France, "
@@ -1460,43 +1377,31 @@ msgstr ""
 " sur les libérations conditionnelles aux USA, les controverses chaque année "
 "sur Parcoursup en France, les "
 
-#: .\platform_code\home\templates\home\faq.html:47
+#: .\platform_code\home\templates\home\faq.html:46
 msgid "unemployment benefits in the Netherlands"
 msgstr "allocations chômage aux Pays-Bas"
 
-#: .\platform_code\home\templates\home\faq.html:49
+#: .\platform_code\home\templates\home\faq.html:48
 msgid ""
-"\n"
-"                , and many\n"
-"                others). In this context, it is becoming increasingly "
-"difficult for an organisation to implement data\n"
-"                science approaches in its products and services and to take "
-"this on board publicly.\n"
-"                "
+", and many others). In this context, it is becoming increasingly difficult "
+"for an organisation to implement data science approaches in its products and "
+"services and to take this on board publicly."
 msgstr ""
-"\n"
 ", et bien d’autres). Et dans ce contexte, il devient de plus en plus délicat "
 "pour une organisation de mettre en œuvre des approches de data science dans "
 "ses produits et services et de l’assumer publiquement."
 
-#: .\platform_code\home\templates\home\faq.html:55
+#: .\platform_code\home\templates\home\faq.html:54
 msgid ""
-"\n"
-"                Obviously this tension is not new, certain risks are very "
-"real, and it seems to us that there\n"
-"                is a general consensus on the fact that it is necessary to "
-"develop structuring and reassuring\n"
-"                frameworks. You only have to type <i>AI and ethics</i> or "
-"<i>responsible AI</i> into a search engine to\n"
-"                see the plethora of initiatives in this field. However, many "
-"of them are lists of cardinal principles,\n"
-"                and do not offer a concrete, operational hook. How can we "
-"position ourselves? How to evaluate one's\n"
-"                organisation? What should you work on to <i>comply</i> with "
-"these principles?\n"
-"                "
+"Obviously this tension is not new, certain risks are very real, and it seems "
+"to us that there is a general consensus on the fact that it is necessary to "
+"develop structuring and reassuring frameworks. You only have to type <i>AI "
+"and ethics</i> or <i>responsible AI</i> into a search engine to see the "
+"plethora of initiatives in this field. However, many of them are lists of "
+"cardinal principles, and do not offer a concrete, operational hook. How can "
+"we position ourselves? How to evaluate one's organisation? What should you "
+"work on to <i>comply</i> with these principles?"
 msgstr ""
-"\n"
 "Evidemment cette tension ne date pas d’hier, certains risques sont bien "
 "réels, et il nous semble que règne une forme de consensus général sur le "
 "fait qu’il faille faire émerger des cadres structurants et rassurants. Il "
@@ -1507,39 +1412,29 @@ msgstr ""
 "opérationnelle. Comment se positionner ? Comment évaluer son organisation ? "
 "Sur quoi travailler pour se <i>mettre en conformité</i> avec ces principes ?"
 
-#: .\platform_code\home\templates\home\faq.html:64
+#: .\platform_code\home\templates\home\faq.html:63
 msgid ""
-"\n"
-"                It is on the basis of this reflection that we wanted to "
-"develop a tool that is intended for\n"
-"                practitioners, useful and actionable as soon as possible. "
-"Give it a try and tell us what you think!\n"
-"                "
+"It is on the basis of this reflection that we wanted to develop a tool that "
+"is intended for practitioners, useful and actionable as soon as possible. "
+"Give it a try and tell us what you think!"
 msgstr ""
-"\n"
 "C'est à partir de cette réflexion que nous avons souhaité élaborer un outil "
 "qui soit à destination des praticiens, utile et actionnable dès que "
 "possible. Essayez et dites-nous ce que vous en pensez !"
 
-#: .\platform_code\home\templates\home\faq.html:72
+#: .\platform_code\home\templates\home\faq.html:71
 msgid "Who is this evaluation intended for?"
 msgstr "À qui s'adresse cette évaluation ?"
 
-#: .\platform_code\home\templates\home\faq.html:75
+#: .\platform_code\home\templates\home\faq.html:74
 msgid ""
-"\n"
-"            The self-assessment tool has been developed to suit (and "
-"hopefully\n"
-"            bring something!) all organisations (companies, university "
-"laboratories, start-ups, specialised consultants,\n"
-"            etc.) with activities in data science, AI, ML, etc. A data "
-"scientist, a team leader, or a technical director\n"
-"            for example can complete the assessment. The tool also allows "
-"several users for the same organisation to be\n"
-"            involved, for example to divide up the subjects.\n"
-"            "
+"The self-assessment tool has been developed to suit (and hopefully bring "
+"something!) all organisations (companies, university laboratories, start-"
+"ups, specialised consultants, etc.) with activities in data science, AI, ML, "
+"etc. A data scientist, a team leader, or a technical director for example "
+"can complete the assessment. The tool also allows several users for the same "
+"organisation to be involved, for example to divide up the subjects."
 msgstr ""
-"\n"
 "L'outil d'auto-évaluation a été élaboré pour convenir (et, on l'espère, "
 "apporter quelque chose !) à toutes les organisations (entreprises, "
 "laboratoires universitaires, start-ups, consultants spécialisés…) ayant des "
@@ -1549,61 +1444,46 @@ msgstr ""
 "utilisateurs pour une même organisation, pour se répartir les sujets par "
 "exemple."
 
-#: .\platform_code\home\templates\home\faq.html:85
+#: .\platform_code\home\templates\home\faq.html:84
 msgid "How is the evaluation structured?"
 msgstr "Comment est structurée l'évaluation ?"
 
-#: .\platform_code\home\templates\home\faq.html:88
+#: .\platform_code\home\templates\home\faq.html:87
 msgid ""
-"\n"
-"            It is composed of 6 thematic sections. We have chosen not to "
-"take\n"
-"            up here the 7 themes of the report of the EU high-level expert "
-"group or of its ALTAI tool, but to prefer a\n"
-"            breakdown that we hope will be more pragmatic, aimed at getting "
-"closer to the life cycle of a data science\n"
-"            project. See it in use!\n"
-"            "
+"It is composed of 6 thematic sections. We have chosen not to take up here "
+"the 7 themes of the report of the EU high-level expert group or of its ALTAI "
+"tool, but to prefer a breakdown that we hope will be more pragmatic, aimed "
+"at getting closer to the life cycle of a data science project. See it in use!"
 msgstr ""
-"\n"
 "Elle est composée de 6 sections thématiques. Nous avons choisi de ne pas "
 "reprendre ici les 7 thèmes du rapport du high-level expert group de l'UE ou "
 "de son outil ALTAI, mais de leur préférer un découpage que nous espérons "
 "plus pragmatique, visant à se rapprocher du cycle de vie d'un projet de data "
 "science. À voir à l'usage !"
 
-#: .\platform_code\home\templates\home\faq.html:97
+#: .\platform_code\home\templates\home\faq.html:96
 msgid "Is the assessment fixed or will you change it over time?"
 msgstr ""
 "L'évaluation est-elle figée ou allez-vous la faire évoluer avec le temps ?"
 
-#: .\platform_code\home\templates\home\faq.html:100
+#: .\platform_code\home\templates\home\faq.html:99
 msgid ""
-"\n"
-"            Yes, it will continue to evolve. From the very beginning of "
-"this\n"
-"            project it was clear that it would be an iterative process, "
-"because it seemed unimaginable to work for a\n"
-"            period of time, publish this work and move on to something else. "
-"The field evolves quickly, the perspectives\n"
-"            are multiple (large companies, public organisations, small start-"
-"ups, specialised consultants,\n"
-"            regulators...), it was going to have to start somewhere and "
-"improve over time. Now that the platform is\n"
-"            online, however, it is not a question of making changes every "
-"week, otherwise the assessments in progress or\n"
-"            just completed will be constantly obsolete. We therefore set "
-"ourselves a time constant of the order of a\n"
-"            quarter or semester. In order to accompany these updates and "
-"make them a positive thing for users and\n"
-"            organisations that have already evaluated themselves, the "
-"platform includes a migration functionality. This\n"
-"            consists of <i>migrating</i> a given evaluation to the more "
-"recent version of the evaluation repository: all\n"
-"            responses to unchanged elements will be retained.\n"
-"            "
+"Yes, it will continue to evolve. From the very beginning of this project it "
+"was clear that it would be an iterative process, because it seemed "
+"unimaginable to work for a period of time, publish this work and move on to "
+"something else. The field evolves quickly, the perspectives are multiple "
+"(large companies, public organisations, small start-ups, specialised "
+"consultants, regulators...), it was going to have to start somewhere and "
+"improve over time. Now that the platform is online, however, it is not a "
+"question of making changes every week, otherwise the assessments in progress "
+"or just completed will be constantly obsolete. We therefore set ourselves a "
+"time constant of the order of a quarter or semester. In order to accompany "
+"these updates and make them a positive thing for users and organisations "
+"that have already evaluated themselves, the platform includes a migration "
+"functionality. This consists of <i>migrating</i> a given evaluation to the "
+"more recent version of the evaluation repository: all responses to unchanged "
+"elements will be retained."
 msgstr ""
-"\n"
 "Oui elle va continuer à évoluer. Dès le début de ce projet il était clair "
 "que ce serait une démarche itérative, car il paraissait inimaginable de "
 "travailler pendant une période, publier ce travail et passer à autre chose. "
@@ -1620,88 +1500,51 @@ msgstr ""
 "donnée vers la version plus récente du référentiel d'évaluation : toutes les "
 "réponses à des éléments inchangés seront conservés."
 
-#: .\platform_code\home\templates\home\faq.html:118
-msgid ""
-"\n"
-"        The synthetic score is on a total of 100 theoretical maximum points "
-"for your full assessment. It\n"
-"        provides an indication of the organization maturity level concerning "
-"a responsible and trustworthy data science.\n"
-"        At the end of 2020, the 50/100 threshold can be considered a very "
-"advanced maturity level.\n"
-"        "
-msgstr ""
-"\n"
-"Le score synthétique est sur un total de 100 points maximum théoriques pour "
-"l'ensemble de l'évaluation. Il offre une indication sur le niveau de "
-"maturité de l'organisation quant à une approche responsable et de confiance "
-"de la data science. À fin 2020, le seuil de 50/100 peut être considéré comme "
-"un niveau de maturité très avancé."
-
-#: .\platform_code\home\templates\home\faq.html:124
+#: .\platform_code\home\templates\home\faq.html:123
 msgid "The mechanism for calculating the score is relatively simple:"
 msgstr "Le mécanisme de calcul du score est relativement simple :"
 
-#: .\platform_code\home\templates\home\faq.html:127
+#: .\platform_code\home\templates\home\faq.html:126
 msgid ""
-"\n"
-"            with each version of the assessment we define a number of "
-"points\n"
-"            for each response item of each evaluation element, as well as a "
-"so-called <i>importance weighting</i>\n"
-"            calibrated to ensure that the theoretical maximum total is "
-"exactly 100.\n"
-"            "
+"with each version of the assessment we define a number of points for each "
+"response item of each evaluation element, as well as a so-called "
+"<i>importance weighting</i> calibrated to ensure that the theoretical "
+"maximum total is exactly 100."
 msgstr ""
-"\n"
 "avec chaque version de l'évaluation nous définissons un nombre de points "
 "pour chaque item de réponse de chaque élément d'évaluation, ainsi qu'une "
 "pondération dite <i>pondération d'importance</i> calibrée pour assurer que "
 "le total maximal théorique est bien 100 exactement."
 
-#: .\platform_code\home\templates\home\faq.html:134
+#: .\platform_code\home\templates\home\faq.html:133
 msgid ""
-"\n"
-"            for single response evaluation elements, the number of points "
-"of\n"
-"            the selected item is retained, while for multiple response "
-"evaluation elements, the number of points of all\n"
-"            selected items are summed.\n"
-"            "
+"for single response evaluation elements, the number of points of the "
+"selected item is retained, while for multiple response evaluation elements, "
+"the number of points of all selected items are summed."
 msgstr ""
-"\n"
 "pour les éléments à réponse unique, le nombre de point de l'item sélectionné "
 "est retenu, alors que pour les éléments à réponses multiples, les nombres de "
 "points de tous les items sélectionnés sont sommés."
 
-#: .\platform_code\home\templates\home\faq.html:141
+#: .\platform_code\home\templates\home\faq.html:140
 msgid ""
-"\n"
-"            the total score obtained is the sum of the number of points for\n"
-"            each evaluation element, weighted by the importance weighting.\n"
-"            "
+"the total score obtained is the sum of the number of points for each "
+"evaluation element, weighted by the importance weighting."
 msgstr ""
-"\n"
 "le score total obtenu est la somme des nombres de points de chaque élément, "
 "pondérée par la pondération d'importance."
 
-#: .\platform_code\home\templates\home\faq.html:148
+#: .\platform_code\home\templates\home\faq.html:147
 msgid ""
-"\n"
-"        There is, however, a subtlety in cases where one is <i>not "
-"concerned</i> by certain evaluation elements\n"
-"        and the risk universes corresponding to them. Indeed, it would be "
-"illogical to deprive the organisation of\n"
-"        points associated with evaluation elements that do not concern it "
-"but which other organisations concerned by\n"
-"        this risk can obtain. Similarly, it would be illogical to "
-"immediately obtain all possible points, at the risk\n"
-"        otherwise of automatically having a very high score as soon as "
-"little is actually done. The mechanism for\n"
-"        dealing with this point is as follows:\n"
-"        "
+"There is, however, a subtlety in cases where one is <i>not concerned</i> by "
+"certain evaluation elements and the risk universes corresponding to them. "
+"Indeed, it would be illogical to deprive the organisation of points "
+"associated with evaluation elements that do not concern it but which other "
+"organisations concerned by this risk can obtain. Similarly, it would be "
+"illogical to immediately obtain all possible points, at the risk otherwise "
+"of automatically having a very high score as soon as little is actually "
+"done. The mechanism for dealing with this point is as follows:"
 msgstr ""
-"\n"
 "Il y a toutefois une subtilité dans les cas de figure où l'on est <i>non "
 "concerné</i> par certains éléments d'évaluation et par les univers de "
 "risques leurs correspondant. En effet, il serait illogique de priver "
@@ -1712,68 +1555,50 @@ msgstr ""
 "élevé dès lors que l'on ne fait en fait pas grand chose. Le mécanisme pour "
 "traiter ce point est le suivant :"
 
-#: .\platform_code\home\templates\home\faq.html:158
+#: .\platform_code\home\templates\home\faq.html:157
 msgid ""
-"\n"
-"            If you are <i>not concerned</i> by an evaluation element, you "
-"are\n"
-"            automatically awarded half of the maximum number of points for "
-"the element. The other half is added to a\n"
-"            temporary variable, the <i>number of points that cannot be "
-"obtained</i>.\n"
-"            "
+"If you are <i>not concerned</i> by an evaluation element, you are "
+"automatically awarded half of the maximum number of points for the element. "
+"The other half is added to a temporary variable, the <i>number of points "
+"that cannot be obtained</i>."
 msgstr ""
-"\n"
 "Lorsque l'on est <i>non concerné</i> par un élément d'évaluation, on se voit "
 "attribuer automatiquement la moitié du nombre de points maximal de "
 "l'élément. L'autre moitié vient abonder une variable temporaire, le "
 "<i>nombre de points qui ne peuvent pas être obtenus</i>."
 
-#: .\platform_code\home\templates\home\faq.html:165
+#: .\platform_code\home\templates\home\faq.html:164
 msgid ""
-"\n"
-"            Once all the assessment items that do not concern you have been\n"
-"            dealt with, an intermediate score is calculated by summing the "
-"points for each item. This intermediate score\n"
-"            is therefore not out of 100, but out of an intermediate maximum "
-"= (100 - the number of points that cannot be\n"
-"            obtained).\n"
-"            "
+"Once all the assessment items that do not concern you have been dealt with, "
+"an intermediate score is calculated by summing the points for each item. "
+"This intermediate score is therefore not out of 100, but out of an "
+"intermediate maximum = (100 - the number of points that cannot be obtained)."
 msgstr ""
-"\n"
 "Une fois que tous les éléments d'évaluation par lesquels on n'est pas "
 "concerné ont été traités, on calcule un score intermédiaire en sommant les "
 "points pour chaque élément. Ce score intermédiaire n'est donc pas sur 100, "
 "mais sur un maximum intermédiaire = (100 - le nombre de points qui ne "
 "peuvent pas être obtenus)."
 
-#: .\platform_code\home\templates\home\faq.html:173
+#: .\platform_code\home\templates\home\faq.html:172
 msgid ""
-"\n"
-"            This intermediate score is then <i>dilated</i> to be brought "
-"back\n"
-"            to 100; dilated by a factor (100 / maximum intermediate).\n"
-"            "
+"This intermediate score is then <i>dilated</i> to be brought back to 100; "
+"dilated by a factor (100 / maximum intermediate)."
 msgstr ""
-"\n"
 "Ce score intermédiaire est ensuite <i>dilaté</i> pour être ramené sur 100 ; "
 "dilaté d'un facteur (100 / maximum intermédiaire)."
 
-#: .\platform_code\home\templates\home\faq.html:179
+#: .\platform_code\home\templates\home\faq.html:178
 msgid ""
-"\n"
-"            This mechanism is a compromise to ensure : (i) that not being\n"
-"            affected by certain risks is taken into account; (ii) that the "
-"score of any assessment is always out of\n"
-"            100.\n"
-"            "
+"This mechanism is a compromise to ensure : (i) that not being affected by "
+"certain risks is taken into account; (ii) that the score of any assessment "
+"is always out of 100."
 msgstr ""
-"\n"
 "Ce mécanisme est un compromis visant à assurer : (i) que le fait de ne pas "
 "être concerné par certains risques est pris en compte ; (ii) que le score de "
 "n'importe quelle évaluation est toujours sur 100."
 
-#: .\platform_code\home\templates\home\faq.html:187
+#: .\platform_code\home\templates\home\faq.html:186
 msgid ""
 "Finally, here is some additional information in the form of answers to "
 "frequently asked questions:"
@@ -1781,21 +1606,16 @@ msgstr ""
 "Enfin, voici quelques compléments d'information sous forme de réponses à des "
 "questions souvent posées :"
 
-#: .\platform_code\home\templates\home\faq.html:191
+#: .\platform_code\home\templates\home\faq.html:190
 msgid ""
-"\n"
-"            Why is the value of each response item not seen during the\n"
-"            assessment? In studying several systems for evaluating "
-"professional practices in different sectors, it has\n"
-"            become apparent that it is rather good practice not to show "
-"these values. The aim is to give priority to the\n"
-"            content, and to limit the risk of distracting the user by "
-"constantly putting before his eyes the numerical\n"
-"            elements that can lead to an attempt to <i>optimise</i> his "
-"answers.\n"
-"            "
+"Why is the value of each response item not seen during the assessment? In "
+"studying several systems for evaluating professional practices in different "
+"sectors, it has become apparent that it is rather good practice not to show "
+"these values. The aim is to give priority to the content, and to limit the "
+"risk of distracting the user by constantly putting before his eyes the "
+"numerical elements that can lead to an attempt to <i>optimise</i> his "
+"answers."
 msgstr ""
-"\n"
 "Pourquoi ne voit-on pas durant l'évaluation la valeur de chaque élément de "
 "réponse ? En étudiant plusieurs systèmes d'évaluation de pratiques "
 "professionnelles dans différents secteurs, il nous est apparu que c'était "
@@ -1805,75 +1625,57 @@ msgstr ""
 "chiffrés qui pourraient le conduire à chercher à <i>optimiser</i> ses "
 "réponses."
 
-#: .\platform_code\home\templates\home\faq.html:200
+#: .\platform_code\home\templates\home\faq.html:199
 msgid ""
-"\n"
-"            Why don't we get a score per section? We are working on this "
-"feature, be patient!\n"
-"            "
-msgstr ""
-"\n"
-"Pourquoi n'obtient-on pas un score par section ? Nous y travaillons ! "
+"Why don't we get a score per section? We are working on this feature, be "
+"patient!"
+msgstr "Pourquoi n'obtient-on pas un score par section ? Nous y travaillons ! "
 
-#: .\platform_code\home\templates\home\faq.html:206
+#: .\platform_code\home\templates\home\faq.html:205
 msgid "About Substra Foundation"
 msgstr "À propos de Substra Foundation"
 
-#: .\platform_code\home\templates\home\faq.html:208
-#: .\platform_code\home\templates\home\faq.html:210
+#: .\platform_code\home\templates\home\faq.html:207
+#: .\platform_code\home\templates\home\faq.html:209
 msgid "https://www.substra.ai/en/about-substra-foundation"
 msgstr "https://www.substra.ai/fr/about-substra-foundation"
 
-#: .\platform_code\home\templates\home\faq.html:211
+#: .\platform_code\home\templates\home\faq.html:210
 msgid ""
-"\n"
-"        is a non-profit organisation whose mission is to contribute to the "
-"development of collaborative,\n"
-"        responsible and trustworthy data science. It is dedicated to the "
-"following 5 projects:\n"
-"        "
+"is a non-profit organisation whose mission is to contribute to the "
+"development of collaborative, responsible and trustworthy data science. It "
+"is dedicated to the following 5 projects:"
 msgstr ""
-"\n"
 "est une association loi 1901 qui s'est donné pour mission de contribuer au "
 "développement de la data science collaborative, responsable et de confiance. "
 "Elle se consacre aux 5 projets suivants :"
 
-#: .\platform_code\home\templates\home\faq.html:217
+#: .\platform_code\home\templates\home\faq.html:216
 msgid ""
-"\n"
-"            Substra Assessment: a self-assessment and self-training tool on\n"
-"            risks and good practices on the theme of responsible and "
-"trustworthy data science.\n"
-"            "
+"Substra Assessment: a self-assessment and self-training tool on risks and "
+"good practices on the theme of responsible and trustworthy data science."
 msgstr ""
-"\n"
 "Substra Assessment : un outil d'auto-évaluation et d'auto-formation aux "
 "risques et bonnes pratiques sur le thème de la data science responsable et "
 "de confiance."
 
-#: .\platform_code\home\templates\home\faq.html:222
+#: .\platform_code\home\templates\home\faq.html:221
 msgid "https://doc.substra.ai/"
 msgstr "https://doc.substra.ai/"
 
-#: .\platform_code\home\templates\home\faq.html:224
+#: .\platform_code\home\templates\home\faq.html:223
 msgid "Substra Framework: "
 msgstr "Framework Substra :"
 
-#: .\platform_code\home\templates\home\faq.html:225
+#: .\platform_code\home\templates\home\faq.html:224
 msgid ""
-"\n"
-"            the association promotes, animates and contributes to the open "
-"source project Substra, a framework\n"
-"            for the secure, traceable and decentralised orchestration of ML "
-"tasks. It is based on Hyperledger Fabric,\n"
-"            the reference DLT framework hosted by the Linux Foundation. "
-"Substra is developed by Owkin and published\n"
-"            under the Apache 2.0 license to foster the emergence of new use "
-"cases and open up open source\n"
-"            collaborations.\n"
-"            "
+"the association promotes, animates and contributes to the open source "
+"project Substra, a framework for the secure, traceable and decentralised "
+"orchestration of ML tasks. It is based on Hyperledger Fabric, the reference "
+"DLT framework hosted by the Linux Foundation. Substra is developed by Owkin "
+"and published under the Apache 2.0 license to foster the emergence of new "
+"use cases and open up open source collaborations."
 msgstr ""
-"\n"
 "l'association promeut, anime et contribue au projet open source Substra, un "
 "framework pour l’orchestration sécurisée, traçable et décentralisée de "
 "tâches de ML. Il est basé sur Hyperledger Fabric, le framework DLT de "
@@ -1881,77 +1683,59 @@ msgstr ""
 "publiée sous licence Apache 2.0 pour favoriser l'émergence de nouveaux cas "
 "d'usage et ouvrir les collaborations open source."
 
-#: .\platform_code\home\templates\home\faq.html:236
+#: .\platform_code\home\templates\home\faq.html:235
 msgid "MLPC: "
 msgstr "MLPC :"
 
-#: .\platform_code\home\templates\home\faq.html:237
+#: .\platform_code\home\templates\home\faq.html:236
 msgid ""
-"\n"
-"            mplc (for Multi-Partner Learning and Contributivity) is a Python "
-"library for simulating\n"
-"            distributed learning scenarios and benchmarking different "
-"learning methods and different methods of dataset\n"
-"            contributivity assessment.\n"
-"            "
+"mplc (for Multi-Partner Learning and Contributivity) is a Python library for "
+"simulating distributed learning scenarios and benchmarking different "
+"learning methods and different methods of dataset contributivity assessment."
 msgstr ""
-"\n"
 "mplc (pour Multi-Partner Learning and Contributivity) est une librairie "
 "Python pour simuler des scenarios d'apprentissage distribué et benchmarker "
 "différentes méthodes d'apprentissage et différentes méthodes d'évaluation de "
 "contributivité des datasets."
 
-#: .\platform_code\home\templates\home\faq.html:244
+#: .\platform_code\home\templates\home\faq.html:243
 msgid ""
-"\n"
-"            HealthChain: research consortium on federated learning use cases "
-"on\n"
-"            clinical data (see description\n"
-"            "
+"HealthChain: research consortium on federated learning use cases on clinical "
+"data (see description"
 msgstr ""
-"\n"
 "HealthChain : consortium de recherche sur des cas d'usage d'apprentissage "
 "fédéré sur des données cliniques (voir description "
 
-#: .\platform_code\home\templates\home\faq.html:248
-#: .\platform_code\home\templates\home\faq.html:250
+#: .\platform_code\home\templates\home\faq.html:247
+#: .\platform_code\home\templates\home\faq.html:249
 msgid "https://www.substra.ai/en/healthchain-project"
 msgstr "https://www.substra.ai/fr/healthchain-project"
 
-#: .\platform_code\home\templates\home\faq.html:250
-#: .\platform_code\home\templates\home\faq.html:258
+#: .\platform_code\home\templates\home\faq.html:249
+#: .\platform_code\home\templates\home\faq.html:257
 msgid "here"
 msgstr "ici"
 
-#: .\platform_code\home\templates\home\faq.html:252
+#: .\platform_code\home\templates\home\faq.html:251
 msgid ""
-"\n"
-"            MELLODDY: research consortium on federated learning use cases "
-"on\n"
-"            chemical data (see description\n"
-"            "
+"MELLODDY: research consortium on federated learning use cases on chemical "
+"data (see description"
 msgstr ""
-"\n"
 "MELLODDY : consortium de recherche sur des cas d'usage d'apprentissage "
 "fédéré sur des données chimiques (voir description "
 
-#: .\platform_code\home\templates\home\faq.html:256
-#: .\platform_code\home\templates\home\faq.html:258
+#: .\platform_code\home\templates\home\faq.html:255
+#: .\platform_code\home\templates\home\faq.html:257
 msgid "https://www.substra.ai/en/melloddy-project"
 msgstr "https://www.substra.ai/fr/melloddy-project"
 
 #: .\platform_code\home\templates\home\homepage.html:19
 msgid ""
-"\n"
-"            Are you sensitive to the notion of responsible and trustworthy "
-"data science\n"
-"            practices? Substra Assessment is a self-assessment and self-"
-"training tool: assess your organisation's level\n"
-"            of maturity now and access numerous technical references to "
-"increase your competence.\n"
-"            "
+"Are you sensitive to the notion of responsible and trustworthy data science "
+"practices? Substra Assessment is a self-assessment and self-training tool: "
+"assess your organisation's level of maturity now and access numerous "
+"technical references to increase your competence."
 msgstr ""
-"\n"
 " Vous êtes sensible aux pratiques de la data science qui soient responsables "
 "et de confiance ? Substra Assessment est un outil d'auto-évaluation et "
 "d'auto-formation : évaluez dès maintenant le niveau de maturité de votre "
@@ -1961,7 +1745,7 @@ msgstr ""
 #: .\platform_code\home\templates\home\homepage.html:28
 #: .\platform_code\home\templates\home\homepage.html:118
 #: .\platform_code\home\templates\home\profile.html:14
-#: .\platform_code\templates\base-evaluation.html:60
+#: .\platform_code\templates\navbar.html:27
 msgid "My dashboard"
 msgstr "Mon tableau de bord"
 
@@ -1980,15 +1764,11 @@ msgstr ""
 
 #: .\platform_code\home\templates\home\homepage.html:48
 msgid ""
-"\n"
-"            New technical and organisational solutions are essential to "
-"provide a framework\n"
-"            of trust that is lacking today and to make possible new, "
-"promising and secure collaborations between\n"
-"            companies, public institutions and citizens.\n"
-"            "
+"New technical and organisational solutions are essential to provide a "
+"framework of trust that is lacking today and to make possible new, promising "
+"and secure collaborations between companies, public institutions and "
+"citizens."
 msgstr ""
-"\n"
 "Des solutions techniques et organisationnelles nouvelles sont indispensables "
 "pour accorder un cadre de confiance qui manque aujourd'hui et pour rendre "
 "possible des collaborations nouvelles, prometteuses et sûres entre les "
@@ -1996,17 +1776,11 @@ msgstr ""
 
 #: .\platform_code\home\templates\home\homepage.html:60
 msgid ""
-"\n"
-"            A new space is emerging at the crossroads between the AI "
-"expansion in\n"
-"            organisations and public concerns about private data, "
-"transparency and robustness of algorithms. These are\n"
-"            two powerful trends that are already beginning to collide. How "
-"can they be reconciled and combined\n"
-"            together?\n"
-"            "
+"A new space is emerging at the crossroads between the AI expansion in "
+"organisations and public concerns about private data, transparency and "
+"robustness of algorithms. These are two powerful trends that are already "
+"beginning to collide. How can they be reconciled and combined together?"
 msgstr ""
-"\n"
 "Un nouvel espace émerge au croisement entre expansion de l'IA dans les "
 "organisations et inquiétudes du public sur les données privées, la "
 "transparence et la robustesse des algorithmes. Ce sont deux tendances "
@@ -2015,13 +1789,9 @@ msgstr ""
 
 #: .\platform_code\home\templates\home\homepage.html:70
 msgid ""
-"\n"
-"            Based on an open and participative approach that we initiated in "
-"mid-2019 and\n"
-"            described in\n"
-"            "
+"Based on an open and participative approach that we initiated in mid-2019 "
+"and described in"
 msgstr ""
-"\n"
 "En s'appuyant sur une démarche ouverte et participative que nous avons "
 "initiée mi-2019 et décrite dans"
 
@@ -2037,14 +1807,10 @@ msgstr "cet article"
 
 #: .\platform_code\home\templates\home\homepage.html:78
 msgid ""
-"\n"
-"            , we have developed a repository of risks and\n"
-"            good practices to promote responsible and trustworthy data "
-"science. It has given rise to a self-assessment\n"
-"            tool accompanied by numerous technical resources.\n"
-"            "
+", we have developed a repository of risks and good practices to promote "
+"responsible and trustworthy data science. It has given rise to a self-"
+"assessment tool accompanied by numerous technical resources."
 msgstr ""
-"\n"
 ", nous avons élaboré un référentiel de risques et de bonnes pratiques pour "
 "promouvoir une data science responsable et de confiance. Il a donné "
 "naissance à un outil d'auto-évaluation accompagné de nombreuses ressources "
@@ -2076,12 +1842,9 @@ msgstr "Les ressources techniques"
 
 #: .\platform_code\home\templates\home\homepage.html:103
 msgid ""
-"\n"
-"            Discover the resources that will allow you to progress, discover "
-"new tools and learn new techniques.\n"
-"            "
+"Discover the resources that will allow you to progress, discover new tools "
+"and learn new techniques."
 msgstr ""
-"\n"
 "Découvrez les ressources qui vous permettrons de progresser, de découvrir de "
 "nouveaux outils et d'apprendre de nouvelles techniques"
 
@@ -2090,6 +1853,49 @@ msgid "Analyse your progress over time on the different assessment axes"
 msgstr ""
 "Analysez votre progression au fil du temps sur les différents axes "
 "d'évaluation"
+
+#: .\platform_code\home\templates\home\homepage.html:130
+msgid "Sign up to receive Substra Foundation’s newsletter:"
+msgstr "Inscrivez-vous pour recevoir la newsletter de Substra Foundation :"
+
+#: .\platform_code\home\templates\home\homepage.html:132
+msgid "Email Address is required."
+msgstr "Une adresse email est nécessaire."
+
+#: .\platform_code\home\templates\home\homepage.html:134
+msgid "Email addresses should follow the format user@domain.com."
+msgstr "L'adresse email doit respecter le format user@domail.com."
+
+#: .\platform_code\home\templates\home\homepage.html:136
+msgid ""
+"This email address looks fake or invalid. Please enter a real email address."
+msgstr "Cet email n'est pas valide. Veuillez entrer une adresse email valide."
+
+#: .\platform_code\home\templates\home\homepage.html:137
+msgid "Could not connect to the registration server, retry later."
+msgstr ""
+"Une erreur est survenue lors de la connection au serveur. Essayez de nouveau "
+"plus tard."
+
+#: .\platform_code\home\templates\home\homepage.html:144
+msgid "SIGN UP"
+msgstr "Inscription"
+
+#: .\platform_code\home\templates\home\homepage.html:147
+msgid ""
+"Frequency: maximum 1 email/month. Your email address will not be shared with "
+"anyone."
+msgstr ""
+"Fréquence : maximum 1 email / mois. Votre adresse ne sera transmise à "
+"personne."
+
+#: .\platform_code\home\templates\home\homepage.html:151
+msgid "Thank you for subscribing to the newsletter!"
+msgstr "Merci d'avoir souscrit à la newsletter !"
+
+#: .\platform_code\home\templates\home\homepage.html:152
+msgid "You are already subscribed!"
+msgstr "Vous êtes déjà inscrit !"
 
 #: .\platform_code\home\templates\home\login-modal.html:5
 msgid "Your username and password didn't match. Please try again."
@@ -2103,9 +1909,9 @@ msgstr "Veuillez vous connecter pour accéder à cette page."
 #: .\platform_code\home\templates\home\login-modal.html:18
 #: .\platform_code\home\templates\home\login.html:26
 #: .\platform_code\home\templates\home\registration\password_reset_complete.html:7
-#: .\platform_code\templates\base-evaluation.html:87
-#: .\platform_code\templates\base-evaluation.html:93
-#: .\platform_code\templates\base-evaluation.html:142
+#: .\platform_code\templates\footer.html:31
+#: .\platform_code\templates\navbar.html:60
+#: .\platform_code\templates\navbar.html:66
 msgid "Login"
 msgstr "Connexion"
 
@@ -2128,8 +1934,8 @@ msgid "Do you want to logout?"
 msgstr "Voulez-vous vous déconnecter ?"
 
 #: .\platform_code\home\templates\home\logout-page.html:12
-#: .\platform_code\templates\base-evaluation.html:75
-#: .\platform_code\templates\base-evaluation.html:139
+#: .\platform_code\templates\footer.html:28
+#: .\platform_code\templates\navbar.html:45
 msgid "Logout"
 msgstr "Déconnexion"
 
@@ -2156,14 +1962,10 @@ msgstr "Glossaire"
 #: .\platform_code\home\templates\home\profile-my-ressources.html:48
 #: .\platform_code\home\templates\home\profile-my-ressources.html:55
 msgid ""
-"\n"
-"                You do not have selected resources as favorite yet. You can "
-"do this in the next tab or during the\n"
-"                evaluation by clicking on the small icon next to the "
-"resources.\n"
-"             "
+"You do not have selected resources as favorite yet. You can do this in the "
+"next tab or during the evaluation by clicking on the small icon next to the "
+"resources."
 msgstr ""
-"\n"
 "Vous n'avez pas de ressources favorites actuellement. Vous pouvez en ajouter "
 "dans l'onglet suivant ou lors de l'évaluation en cliquant sur l'icône à côté "
 "de la ressource."
@@ -2292,25 +2094,17 @@ msgstr "Changer mon mot de passe"
 
 #: .\platform_code\home\templates\home\registration\password_reset_confirm.html:16
 msgid ""
-"\n"
-"        The password reset link was invalid, possibly because it has already "
-"been used.\n"
-"        Please request a new password reset.\n"
-"        "
+"The password reset link was invalid, possibly because it has already been "
+"used. Please request a new password reset."
 msgstr ""
-"\n"
 "Le lien n'est pas valide, il a peut-être déjà été utilisé. Faites une "
 "nouvelle demande."
 
 #: .\platform_code\home\templates\home\registration\password_reset_done.html:7
 msgid ""
-"\n"
-"        We've emailed you instructions for setting your password, if an "
-"account exists with the email you\n"
-"        entered.\n"
-"        "
+"We've emailed you instructions for setting your password, if an account "
+"exists with the email you entered."
 msgstr ""
-"\n"
 "Nous vous avons envoyé un email contenant les instructions pour "
 "réinitialiser votre mot de passe à l'adresse mail renseignée, si celle-ci "
 "est liée à un compte."
@@ -2321,13 +2115,9 @@ msgstr "Vous devriez le recevoir rapidement."
 
 #: .\platform_code\home\templates\home\registration\password_reset_done.html:14
 msgid ""
-"\n"
-"        If you don't receive an email, please make sure you've entered the "
-"address you registered with, and\n"
-"        check your spam folder.\n"
-"        "
+"If you don't receive an email, please make sure you've entered the address "
+"you registered with, and check your spam folder."
 msgstr ""
-"\n"
 "Si vous ne recevez pas l'email, vérifiez que vous avez correctement entré "
 "votre adresse email et regardez dans vos emails indésirables."
 
@@ -2367,6 +2157,7 @@ msgid "Are you sure you want to delete your account?"
 msgstr "Êtes-vous sûr de vouloir supprimer votre compte ?"
 
 #: .\platform_code\home\templates\home\settings-delete.html:10
+#: .\platform_code\home\templates\home\settings-delete.html:32
 msgid ""
 "The organisations you are the only admin member will be deleted, as well as "
 "their evaluations."
@@ -2381,18 +2172,6 @@ msgstr "Supprimer"
 #: .\platform_code\home\templates\home\settings-delete.html:28
 msgid "Are you really sure you want to delete your account?"
 msgstr "Etes-vous sûr de vouloir supprimer votre compte ?"
-
-#: .\platform_code\home\templates\home\settings-delete.html:32
-msgid ""
-"\n"
-"                    The organisations you are the only admin member will be "
-"deleted, as well as their\n"
-"                    evaluations.\n"
-"                    "
-msgstr ""
-"\n"
-"Cela entrainera la suppression des organisations où vous êtes l'unique "
-"administrateur ainsi que les évaluations associées."
 
 #: .\platform_code\home\templates\home\settings-delete.html:46
 msgid "Delete my account"
@@ -2418,20 +2197,9 @@ msgstr "Changer mon mot de passe"
 
 #: .\platform_code\home\templates\home\signup.html:6
 #: .\platform_code\home\templates\home\signup.html:42
-#: .\platform_code\templates\base-evaluation.html:141
+#: .\platform_code\templates\footer.html:30
 msgid "Sign up"
 msgstr "Création du compte"
-
-#: .\platform_code\home\templates\home\signup.html:25
-msgid ""
-"\n"
-"                            Your password must contain at least 8 "
-"characters, with at least one number and one letter\n"
-"                            "
-msgstr ""
-"\n"
-"Votre mot de passe doit contenir au moins 8 caractères avec au moins une "
-"lettre et un chiffre"
 
 #: .\platform_code\home\templates\home\signup.html:46
 msgid "already have an account?"
@@ -2547,21 +2315,129 @@ msgstr ""
 msgid "Django site admin"
 msgstr ""
 
-#: .\platform_code\templates\base-evaluation.html:54
-msgid "Admin"
-msgstr "Admin"
-
-#: .\platform_code\templates\base-evaluation.html:122
-msgid "With the support of "
-msgstr "Avec le soutien de "
-
-#: .\platform_code\templates\base-evaluation.html:149
-msgid "Legal notices"
-msgstr "Mentions légales"
-
 #: .\platform_code\templates\errors.html:33
 msgid "Homepage"
 msgstr "Page d'accueil"
+
+#: .\platform_code\templates\footer.html:11
+msgid "With the support of "
+msgstr "Avec le soutien de "
+
+#: .\platform_code\templates\footer.html:48
+msgid "Passer en version française"
+msgstr "Switch in English"
+
+#: .\platform_code\templates\footer.html:56
+msgid "Legal notices"
+msgstr "Mentions légales"
+
+#: .\platform_code\templates\navbar.html:21
+msgid "Admin"
+msgstr "Admin"
+
+#~ msgid ""
+#~ "\n"
+#~ "                                        You are not concerned by this "
+#~ "evaluation element due to your answer to this\n"
+#~ "                                        evaluation element\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "\n"
+#~ " Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
+#~ "l'élément d'évaluation"
+
+#~ msgid ""
+#~ "\n"
+#~ "                                                Please select one answer "
+#~ "which best matches to your organisation situation.\n"
+#~ "                                            "
+#~ msgstr ""
+#~ "\n"
+#~ "Veuillez sélectionner une seule réponse correspondant le mieux à la "
+#~ "maturité de l'organisation à ce sujet."
+
+#~ msgid ""
+#~ "\n"
+#~ "                                                Please select all the "
+#~ "answers which best match to your organisation situation.\n"
+#~ "                                                Be careful, some "
+#~ "combinations are not coherent.\n"
+#~ "                                            "
+#~ msgstr ""
+#~ "\n"
+#~ "Veuillez sélectionner tous les éléments de réponse correspondant à des "
+#~ "pratiques de votre organisation. Attention, certaines combinaisons ne "
+#~ "seraient pas cohérentes."
+
+#~ msgid ""
+#~ "\n"
+#~ "                                This evaluation element is not applicable "
+#~ "due to the answer to this evaluation element\n"
+#~ "                                "
+#~ msgstr ""
+#~ "\n"
+#~ "Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
+#~ "l'élément "
+
+#~ msgid ""
+#~ "\n"
+#~ "                    <strong>Admin</strong>: the admin user can create, "
+#~ "modify and delete\n"
+#~ "                    evaluations and members.\n"
+#~ "                    "
+#~ msgstr ""
+#~ "\n"
+#~ "<strong>Administrateur</strong> : un membre administrateur peut créer, "
+#~ "modifier et supprimer des évaluations et ainsi que des membres."
+
+#~ msgid ""
+#~ "\n"
+#~ "                Note that you cannot remove an user with admin rights "
+#~ "from the organisation.\n"
+#~ "                "
+#~ msgstr ""
+#~ "\n"
+#~ "Notez que vous ne pouvez pas retirer un membre avec les droits "
+#~ "'administrateur' de l'organisation."
+
+#~ msgid ""
+#~ "\n"
+#~ "            The synthetic score is on a total of 100 theoretical maximum "
+#~ "points for your full\n"
+#~ "            assessment. It provides an indication of the organization "
+#~ "maturity level concerning a responsible and\n"
+#~ "            trustworthy data science. At the end of 2020, the 50/100 "
+#~ "threshold can be considered a very advanced\n"
+#~ "            maturity level.\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "Le score synthétique est sur un total de 100 points maximum théoriques "
+#~ "pour l'ensemble de l'évaluation. Il offre une indication sur le niveau de "
+#~ "maturité de l'organisation quant à une approche responsable et de "
+#~ "confiance de la data science. À fin 2020, le seuil de 50/100 peut être "
+#~ "considéré comme un niveau de maturité très avancé."
+
+#~ msgid ""
+#~ "\n"
+#~ "                    The organisations you are the only admin member will "
+#~ "be deleted, as well as their\n"
+#~ "                    evaluations.\n"
+#~ "                    "
+#~ msgstr ""
+#~ "\n"
+#~ "Cela entrainera la suppression des organisations où vous êtes l'unique "
+#~ "administrateur ainsi que les évaluations associées."
+
+#~ msgid ""
+#~ "\n"
+#~ "                            Your password must contain at least 8 "
+#~ "characters, with at least one number and one letter\n"
+#~ "                            "
+#~ msgstr ""
+#~ "\n"
+#~ "Votre mot de passe doit contenir au moins 8 caractères avec au moins une "
+#~ "lettre et un chiffre"
 
 #~ msgid "Hello"
 #~ msgstr "Bonjour"

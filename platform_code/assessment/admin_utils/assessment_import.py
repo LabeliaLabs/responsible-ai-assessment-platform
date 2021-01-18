@@ -3,18 +3,21 @@ from ast import literal_eval
 
 from django.contrib import admin, messages
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render, get_object_or_404
 from django.urls import path  # Used to import Json
+from django.utils.translation import gettext as _
 
-from assessment.forms import JsonUploadForm
+from assessment.forms import JsonUploadForm, ImportAssessmentNewLanguageForm
 from assessment.import_assessment import (
     treat_and_save_dictionary_data,
     check_upgrade,
     save_upgrade,
+    save_new_assessment_language,
 )
 from assessment.models import (
     ScoringSystem,
     get_last_assessment_created,
+    Assessment,
 )
 from assessment.scoring import check_and_valid_scoring_json
 
@@ -26,14 +29,16 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
     If there are more than one assessment in the database, an upgrade json must be provided (refer to the doc
     "multiple_version.md" to see the format). From this upgrade json, the table Upgrade is populated.
     """
-
-    # TODO refactor a little bit this function
-    change_list_template = "assessment/import-json.html"
+    actions = ['add_new_language_assessment']
+    change_list_template = "assessment/admin/import-json.html"
 
     def get_urls(self):
         urls = super().get_urls()
         additional_urls = [
             path("upload-json/", self.upload_json),
+            path("<int:id>/add-assessment-language",
+                 self.import_assessment_new_language,
+                 name='add-assessment-language',)
         ]
         return additional_urls + urls
 
@@ -71,7 +76,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                     f"There is an issue in your json architecture. Please verify you file. Error {e}",
                                     level=messages.ERROR,
                                 )
-                                return redirect("admin/")
+                                return redirect("admin:index")
                             # Process all the saving of the items (in import_assessment.py)
                             # If it fails, there is a message and a redirection to admin
                             try:
@@ -87,7 +92,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                     assessment_save_message,
                                     level=messages.ERROR,
                                 )
-                                return redirect("admin/")
+                                return redirect("admin:index")
 
                             # Update the scoring with the import file
                             if assessment_success:
@@ -102,7 +107,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                 self.message_user(
                                     request, upgrade_message, level=messages.ERROR,
                                 )
-                                return redirect("admin/")
+                                return redirect("admin:index")
                             upgrade_save_success, upgrade_save_message = save_upgrade(
                                 dict_upgrade_data
                             )
@@ -110,7 +115,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                 self.message_user(
                                     request, upgrade_save_message, level=messages.ERROR,
                                 )
-                                return redirect("admin/")
+                                return redirect("admin:index")
 
                             # success in this case ! the assessment and the upgrade items have been created
                             else:
@@ -140,7 +145,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                 f"There is an issue in your json architecture. Please verify you file. Error {e}",
                                 level=messages.ERROR,
                             )
-                            return redirect("admin/")
+                            return redirect("admin:index")
                         # Process all the saving of the items (in import_assessment.py)
                         try:
                             (
@@ -157,7 +162,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             self.message_user(
                                 request, assessment_save_message, level=messages.ERROR,
                             )
-                            return redirect("admin/")
+                            return redirect("admin:index")
                         else:
                             assessment = get_last_assessment_created()  # It is the assessment just created
                             self.import_scoring(request, assessment)
@@ -182,7 +187,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                 level=messages.ERROR,
             )
 
-        return redirect("admin/")
+        return redirect("admin:index")
 
     def import_scoring(self, request, assessment):
         """
@@ -213,7 +218,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                     level=messages.ERROR,
                 )
                 assessment.delete()
-                return redirect("admin/")
+                return redirect("admin:index")
             try:
                 # The scoring has been automatically created with the assessment import
                 # We just set the json weight now
@@ -234,7 +239,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                     level=messages.ERROR,
                 )
                 assessment.delete()
-                return redirect("admin/")
+                return redirect("admin:index")
 
         # Else there is an issue with the scoring json format (which is not a json)
         else:
@@ -260,5 +265,83 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                 f"There was an error decoding the file:{e}",
                 level=messages.ERROR,
             )
-            return redirect("admin/")
+            return redirect("admin:index")
         return decoded_file
+
+    def add_new_language_assessment(self, request, queryset):
+        if len(list(queryset)) == 1:
+            assessment = queryset[0]
+            # TODO see for the language when upgrading
+            if len(assessment.get_the_available_languages()) > 1:
+                self.message_user(request, "There are already 2 languages for the assessment", messages.ERROR)
+                return redirect("admin:index")
+            else:
+                assessment_language_tag = assessment.get_the_available_languages()[0]
+            assessment_language_import = "English" if assessment_language_tag == "fr" else "French"
+            context = {
+                "assessment_language_tag": assessment_language_tag,
+                "assessment_language_import": assessment_language_import,
+                "form": ImportAssessmentNewLanguageForm(),
+                "assessment": assessment,
+            }
+            response = render(request, "assessment/admin/import-new-language.html", context)
+            return response
+        else:
+            self.message_user(request, "You need to select only one assessment", messages.ERROR)
+            return redirect("admin:index")
+    add_new_language_assessment.short_description = _("I want to import the assessment in a new language")
+
+    def import_assessment_new_language(self, request, *args, **kwargs):
+        assessment = get_object_or_404(Assessment, id=kwargs.get("id"))
+        if request.method == "POST":
+            form = ImportAssessmentNewLanguageForm(request.POST, request.FILES)
+            if form.is_valid():
+                if request.FILES["assessment_file"].name.endswith("json"):
+                    decoded_assessment_file = self.decode_file(request, "assessment_file")
+                    try:
+                        dict_data = json.loads(decoded_assessment_file)
+                    except json.JSONDecodeError as e:
+                        self.message_user(
+                            request,
+                            f"There is an issue in your json architecture. Please verify you file. Error {e}",
+                            level=messages.ERROR,
+                        )
+                        return redirect("admin:index")
+                    # Save the assessment as new language so only the names, texts, descriptions of the objects
+                    # and compare that it is valid (same format, version) than the assessment in other languages
+                    try:
+                        assessment_success, assessment_save_message = save_new_assessment_language(dict_data,
+                                                                                                   assessment)
+                    except (ValueError, KeyError) as e:
+                        # If the import fails, the assessment created is deleted inside the same function
+                        assessment_success = False
+                        assessment_save_message = f"The saving of the new assessment language failed. " \
+                                                  f"Please, verify your file. Error {e}"
+                    if not assessment_success:
+                        self.message_user(
+                            request,
+                            assessment_save_message,
+                            level=messages.ERROR,
+                        )
+                    # Success!
+                    else:
+                        self.message_user(
+                            request,
+                            assessment_save_message,
+                            level=messages.SUCCESS,
+                        )
+                # Else there is an issue with the assessment json format (which is not a json)
+                else:
+                    self.message_user(
+                        request,
+                        f"Incorrect file type: {request.FILES['assessment_file'].name.split('.')[1]}",
+                        level=messages.ERROR,
+                    )
+            else:
+                self.message_user(
+                    request,
+                    f"There was an error in the form {ImportAssessmentNewLanguageForm.errors}",
+                    level=messages.ERROR,
+                )
+
+        return redirect("admin:index")

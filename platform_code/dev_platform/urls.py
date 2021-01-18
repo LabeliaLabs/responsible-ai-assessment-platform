@@ -24,10 +24,11 @@ from home.admin import admin_dashboard
 
 urlpatterns = i18n_patterns(
     path("", include("home.urls")),
+    path('i18n/', include('django.conf.urls.i18n')),
     path("assessment/", include("assessment.urls")),
     path("admin/", admin.site.urls),
     path('admin-dashboard/', admin_dashboard.urls),
-    prefix_default_language=False
+    prefix_default_language=True
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = 'assessment.views.utils.error_handler.error_404_view_handler'

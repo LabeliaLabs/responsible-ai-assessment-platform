@@ -122,7 +122,7 @@
 
                                 {% if element.has_condition_on and element|is_not_applicable %}
                                     <div class='alert alert-warning' id="warningmessage{{element.id}}">
-                                        {% blocktrans %}
+                                        {% blocktrans trimmed %}
                                         You are not concerned by this evaluation element due to your answer to this
                                         evaluation element
                                         {% endblocktrans %} {{depends_on_dic|get_item:element}}
@@ -143,13 +143,13 @@
                                 <div class="choices" id="{{element}}">
                                     {% if element.master_evaluation_element.question_type == "radio" %}
                                         <p class="italic margin-bottom-1em">
-                                            {% blocktrans %}
+                                            {% blocktrans trimmed %}
                                                 Please select one answer which best matches to your organisation situation.
                                             {% endblocktrans %}
                                         </p>
                                     {% elif element.master_evaluation_element.question_type == "checkbox"%}
                                         <p class="italic margin-bottom-1em">
-                                            {% blocktrans %}
+                                            {% blocktrans trimmed %}
                                                 Please select all the answers which best match to your organisation situation.
                                                 Be careful, some combinations are not coherent.
                                             {% endblocktrans %}
@@ -250,7 +250,7 @@
 
                             <div class='alert alert-warning' id="warningmessage_temporary{{element.id}}"
                                  style="visibility:hidden; height:1px;">
-                                {% blocktrans %}
+                                {% blocktrans trimmed %}
                                 This evaluation element is not applicable due to the answer to this evaluation element
                                 {% endblocktrans %} {depends_on_dic|get_item:element}}
                             </div>

@@ -61,17 +61,17 @@
     <!--      </div>-->
 
     <div class="margin-70 margin-bot-50">
-        <p class="">{% blocktrans %}
+        <p class="">{% blocktrans trimmed %}
             The synthetic score is on a total of 100 theoretical maximum points for your full
             assessment. It provides an indication of the organization maturity level concerning a responsible and
             trustworthy data science. At the end of 2020, the 50/100 threshold can be considered a very advanced
             maturity level.
             {% endblocktrans %}
         </p>
-        <p class="">{% blocktrans %}
+        <p class="">{% blocktrans trimmed %}
             The mechanism for calculating the score is described in the FAQ that you can consult
-            {% endblocktrans %}<a href="{% url 'home:faq' %}" title="{% trans 'FAQ' %}">{% trans "here." %}</a></p>
-        <p class="">{% blocktrans %}
+            {% endblocktrans %}<a href="{% url 'home:faq' %}" title="{% trans 'FAQ' %}"> {% trans "here." %}</a></p>
+        <p class="">{% blocktrans trimmed %}
             Note: the score is a synthetic indication, not an end in itself. In particular, we invite
             you to consult the resources associated with each assessment element, which are excellent entry points for
             building skills on your topics of interest.
@@ -123,7 +123,7 @@
                 {% elif element.master_evaluation_element.question_type == "checkbox"%}
                 <p class="italic margin-all-20">
                     R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
-                    {% blocktrans %}
+                    {% blocktrans trimmed %}
                     : Please select all the answers which best match to your organisation situation. Be
                     careful, some combinations are not coherent.
                     {% endblocktrans %}

@@ -10,7 +10,7 @@
         </div>
         <div class="modal-body-delete">
             {% csrf_token %}
-            <p>{% blocktrans %}
+            <p>{% blocktrans trimmed %}
                 The evaluation deletion is definitive. You would not be able to retrieve your answers and your score.
                 {% endblocktrans %}
             </p>
