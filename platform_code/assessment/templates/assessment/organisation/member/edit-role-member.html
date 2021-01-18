@@ -15,23 +15,23 @@
             <p>{% trans "You can edit the rights of the members, except those who are 'admin':" %}</p>
             <ul class="inline-padding">
                 <li class="li-with-disc">
-                    {% blocktrans %}
+                    {% blocktrans trimmed %}
                     <strong>Read-only user</strong>: the read-only user can only consult
                     the evaluations, he cannot create, edit or delete one.
                     {% endblocktrans %}
                 </li>
                 <li class="li-with-disc">
-                    {% blocktrans %}
+                    {% blocktrans trimmed %}
                     <strong>Editor</strong>: the editor can create, modify and delete evaluations.
                     {% endblocktrans %}
                 </li>
-                <li class="li-with-disc">{% blocktrans %}
+                <li class="li-with-disc">{% blocktrans trimmed %}
                     <strong>Admin</strong>: the admin user can create, modify and delete
                     evaluations and members.
                     {% endblocktrans %}
                 </li>
             </ul>
-            <p>{% blocktrans %}
+            <p>{% blocktrans trimmed %}
                 Note that you cannot remove an user with admin rights from the organisation.
                 {% endblocktrans %}</p>
             {% csrf_token %}

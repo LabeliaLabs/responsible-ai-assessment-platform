@@ -288,11 +288,11 @@ class EvaluationTestCase(TestCase):
         evaluation_id = evaluation.id
         self.assertEquals(
             evaluation.get_absolute_url(),
-            f"/assessment/organisation/{organisation.id}/{evaluation.slug}/{evaluation.id}/",
+            f"/fr/assessment/organisation/{organisation.id}/{evaluation.slug}/{evaluation.id}/",
         )
         self.assertEquals(
             evaluation.get_absolute_url(),
-            f"/assessment/organisation/1/evaluation/{evaluation_id}/",
+            f"/fr/assessment/organisation/1/evaluation/{evaluation_id}/",
         )  # evaluation_id = 5
 
     def test_evaluation_suppression(self):
@@ -345,12 +345,12 @@ class SectionTestCase(TestCase):
         )
         self.assertEquals(
             section1.get_absolute_url(),
-            f"/assessment/organisation/{organisation.id}/{evaluation.slug}/{evaluation.id}/section/"
+            f"/fr/assessment/organisation/{organisation.id}/{evaluation.slug}/{evaluation.id}/section/"
             f"{section1.id}/{section1.master_section.name}/{section1.master_section.order_id}",
         )
         self.assertEquals(
             section1.get_absolute_url(),
-            f"/assessment/organisation/2/evaluation/{evaluation.id}/section/"  # evaluation_id = 10
+            f"/fr/assessment/organisation/2/evaluation/{evaluation.id}/section/"  # evaluation_id = 10
             f"{section1.id}/master_section1/1",
         )  # section_id = 4
 

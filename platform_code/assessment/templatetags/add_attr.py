@@ -141,6 +141,11 @@ def count_finished(list_evaluation):
 
 
 @register.filter
+def upper(text):
+    return text.upper()
+
+
+@register.filter
 def get_item_converted_str(dictionary, key):
     key = str(key)
     if isinstance(dictionary, dict) and key in dictionary.keys():

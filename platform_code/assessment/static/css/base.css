@@ -838,6 +838,17 @@ body.navbar-is-fixed-top {
     color: #5550ff;
 }
 
+.select-language-navbar{
+    background-color: white;
+    font-family: Ubuntu;
+    font-size: 15px;
+    color: #5550FF;
+}
+
+.language-options{
+    font-family: Ubuntu;
+}
+
 /*********************************************** END NAVBAR ***********************************************/
 
 
@@ -907,6 +918,30 @@ body.navbar-is-fixed-top {
 
 .text-partnership{
     font-size: 15px;
+}
+
+.button-language-footer {
+    background-color: #5550FF;
+    border-color: #5550FF;
+    color: white;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+    border-radius: 0px;
+    font-size: 15px;
+    margin-bottom: 0px;
+    padding: 2px;
+    font-size: 15px;
+    width: 130px;
+}
+
+.button-language-footer:hover {
+    background-color: #5550FF;
+    color: white;
+}
+
+.button-language-footer:focus {
+    box-shadow: none;
 }
 
 /************************************************* END FOOTER ***********************************************/

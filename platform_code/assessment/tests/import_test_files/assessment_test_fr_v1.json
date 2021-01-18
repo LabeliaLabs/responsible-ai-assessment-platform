@@ -2,11 +2,12 @@
     "version": "1.0",
     "name": "assessment",
     "timestamp": "03-Sep-2020 (15:23:55.801132)",
+    "language": "fr",
     "sections": {
         "section 1": {
             "order_id": "1",
             "name": "section 1",
-            "description": "C'est la description de la section 1.",
+            "description": "C'est la description de la section 1 en français.",
             "elements": {
                 "element 1": {
                     "order_id": "1",
@@ -18,7 +19,7 @@
                     "explanation_text": "Explication 1",
                     "resources": {
                         "0": {
-                            "resource_type": "Official report",
+                            "resource_type": "official report",
                             "resource_text": "[Big data, artificial intelligence, machine learning and data protection](https://ico.org.uk/media/for-organisations/documents/2013559/big-data-ai-ml-and-data-protection.pdf), EU Information Commissioner's Office, 2017"
                         }
                     },
@@ -62,7 +63,7 @@
 		        "section 2": {
             "order_id": "2",
             "name": "Section 2",
-            "description": "Description section 2 ",
+            "description": "Description section 2 en français",
             "elements": {
                 "element 1": {
                     "order_id": "1",

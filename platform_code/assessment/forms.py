@@ -21,7 +21,7 @@ from .models import (
 )
 from .scoring import check_and_valid_scoring_json
 from home.models import Organisation
-from .utils import markdownify_bold, markdownify_italic, select_label_choice, remove_markdown_bold, \
+from assessment.utils import markdownify_bold, markdownify_italic, select_label_choice, remove_markdown_bold, \
     remove_markdownify_italic
 
 element_feedback_list = [
@@ -642,3 +642,10 @@ class JsonUploadForm(forms.Form):
                                                                   "registered. You don't need to provide and upgrade "
                                                                   "json when it's the first assessment in the database."
                                         )  # help text not displayed
+
+
+class ImportAssessmentNewLanguageForm(forms.Form):
+    """
+    This form is used in admin/assessment to import the assessment selected in a new language
+    """
+    assessment_file = forms.FileField()

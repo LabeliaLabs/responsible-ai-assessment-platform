@@ -1,0 +1,21 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+
+
+<form action="{% url 'set_language' %}" method="post" class="nav-link" name="language-form">{% csrf_token %}
+    <input name="next" type="hidden" value="{{ redirect_to }}">
+    <select name="language" onchange="this.form.submit()" class="select-language-navbar">
+        {% get_current_language as LANGUAGE_CODE %}
+        {% get_available_languages as LANGUAGES %}
+        {% get_language_info_list for LANGUAGES as languages %}
+        {% for language in languages %}
+            <option value="{{ language.code }}" class="language-options"
+                    {% if language.code == LANGUAGE_CODE %}
+                        selected
+                    {% endif %}>
+                {{ language.code|upper }}
+            </option>
+        {% endfor %}
+    </select>
+</form>

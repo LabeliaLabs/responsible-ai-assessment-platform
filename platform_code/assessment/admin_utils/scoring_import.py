@@ -14,7 +14,7 @@ from assessment.forms import ScoringSystemForm
 
 
 class ScoringAdmin(admin.ModelAdmin):
-    change_form_template = "assessment/import-json-scoring.html"
+    change_form_template = "assessment/admin/import-json-scoring.html"
     form = ScoringSystemForm
     add_form = ScoringSystemForm
     formfield_overrides = {JSONField: {"widget": PrettyJSONWidget, }}

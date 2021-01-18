@@ -5,6 +5,7 @@ gunicorn==20.0.4
 django-bootstrap4==2.3.0
 django-countries==6.1.2
 django-markdownify==0.8.1
+django-modeltranslation==0.16.1
 requests==2.24.0
 pyjwt==1.7.1
 plotly==4.13.0

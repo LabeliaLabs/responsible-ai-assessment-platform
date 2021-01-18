@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'django_countries',
     'markdownify',
+    'modeltranslation',
 ]
 
 MIDDLEWARE = [

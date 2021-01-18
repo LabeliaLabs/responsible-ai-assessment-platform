@@ -210,7 +210,7 @@ For example, in Python files, use the syntax: `_("English message to translate i
 
 In the html files, at the beginning of the file, add `{% load i18n %}` and for the text you want to translate, 
 use the tags `{% trans "English message to translate in French" %}` for short messages
-and `{% blocktrans %} text {% endblocktrans %}` for long messages which cannot written in one line, as this tag handles line breaks. 
+and `{% blocktrans trimmed %} text {% endblocktrans %}` for long messages which cannot be written in one line, as this tag handles line breaks. 
 
 Then you can do the command:
 
@@ -231,16 +231,16 @@ django-admin compilemessages
 
 Do not forget to add and commit both of the files `django.po` and `django.mo`.
 
-Note that if you use `{% blocktrans %}` with a line break straight after the tag in the html file:
+Note that you should use `trimmed` inside `{% blocktrans %}`, to avoid line breaks in the translations:
 
 ```sh
-{% blocktrans %}
+{% blocktrans trimmed %}
  text very long
  on several lines
 {% endblocktrans %}
 ```
 
-You will have `\n` in the translation file at the beginning of the `msgid`:
+Without, you will have `\n` in the translation file at the beginning of the `msgid`:
 
 ```sh
 msgid ""

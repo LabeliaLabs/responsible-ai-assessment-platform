@@ -16,7 +16,7 @@ from assessment.models import (
 from .object_creation import (
     create_evaluation,
 )
-from ..import_assessment import treat_and_save_dictionary_data
+from assessment.import_assessment import treat_and_save_dictionary_data
 
 """
 In this file, the scoring is tested: the class EvaluationScore, the calculation of the max score
@@ -32,11 +32,15 @@ class TestEvaluationScoreStatic(TestCase):
     """
 
     def setUp(self):
-        with open("assessment/tests/import_test_files/assessment_test_v1.json") as json_file:
+        with open("assessment/tests/import_test_files/assessment_test_fr_v1.json") as json_file:
             self.assessment_data = json.load(json_file)
-        treat_and_save_dictionary_data(self.assessment_data)
-        self.assessment = Assessment.objects.get(name="assessment")
         json_file.close()
+        self.set_test_objects()
+
+    def set_test_objects(self):
+        self.assessment = treat_and_save_dictionary_data(self.assessment_data, return_assessment=True)
+        # self.assertTrue(treat_and_save_dictionary_data(self.assessment_data)[0])
+        # self.assessment = Assessment.objects.get(name="assessment")
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(assessment=self.assessment, name="evaluation")
         with open("assessment/tests/import_test_files/scoring_test_v1.json") as scoring_json:
@@ -61,6 +65,11 @@ class TestEvaluationScoreStatic(TestCase):
             master_evaluation_element__order_id="1",
             section=self.section2,
         )
+
+    def tearDown(self):
+        del self.assessment_data
+        for assessment in Assessment.objects.all():
+            assessment.delete()
 
     def test_evaluation_score_creation_no_body(self):
         """
@@ -158,11 +167,13 @@ class TestEvaluationScoreStatic(TestCase):
 
 class TestScoreValues(TestCase):
     def setUp(self):
-        with open("assessment/tests/import_test_files/assessment_test_v1.json") as json_file:
+        with open("assessment/tests/import_test_files/assessment_test_fr_v1.json") as json_file:
             self.assessment_data = json.load(json_file)
-        treat_and_save_dictionary_data(self.assessment_data)
-        self.assessment = Assessment.objects.get(name="assessment")
         json_file.close()
+        self.set_test_objects()
+
+    def set_test_objects(self):
+        self.assessment = treat_and_save_dictionary_data(self.assessment_data, return_assessment=True)
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(assessment=self.assessment, name="evaluation")
         with open("assessment/tests/import_test_files/scoring_test_v1.json") as scoring_json:
