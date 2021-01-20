@@ -178,10 +178,19 @@ sudo systemctl restart ufw
 
 ## Fail2ban: IP ban for script kiddies
 
-TODO:
+Ubuntu package: <https://packages.ubuntu.com/search?keywords=fail2ban>
 
-- re-add (disabled during dev/test)
-- config documentation
+```sh
+# Install
+curl -LO http://fr.archive.ubuntu.com/ubuntu/pool/universe/f/fail2ban/fail2ban_0.11.1-1_all.deb
+sudo dpkg -i fail2ban_0.11.1-1_all.deb
+
+# Check service status 
+sudo service fail2ban status
+
+# Logs
+tail -f /var/log/fail2ban.log
+```
 
 ## Docker
 
@@ -326,10 +335,17 @@ docker-compose -f docker-compose.prod.yml down -v # --volumes
 ## Logs
 
 ```sh
+# live logs
+journalctl -f
+
 tail -f /var/log/nginx/access.log;
 tail -f /var/log/nginx/error.log;
 tail -f /var/log/ufw.log
 tail -f /var/log/letsencrypt/letsencrypt.log
+
+tail -f /var/log/fail2ban.log
+tail -f /var/log/auth.log
+tail -f /var/log/syslog
 ```
 
 ## Django logs
