@@ -37,9 +37,11 @@
                     {% trans "FAQ" %}
                 </a>
             </li>
-            <li class="nav-item navbar-item">
-                {% include "navbar-language-select.html" %}
-            </li>
+            {% if platform_management.activate_multi_languages %}
+                <li class="nav-item navbar-item">
+                    {% include "navbar-language-select.html" %}
+                </li>
+            {% endif %}
             <li class="nav-item navbar-item">
                 <a class="nav-link" href="{% url 'home:logout' %}">
                     {% trans "Logout" %}
@@ -51,9 +53,11 @@
                 {% trans "FAQ" %}
                 </a>
             </li>
-            <li class="nav-item navbar-item">
-                {% include "navbar-language-select.html" %}
-            </li>
+            {% if platform_management.activate_multi_languages %}
+                <li class="nav-item navbar-item">
+                    {% include "navbar-language-select.html" %}
+                </li>
+            {% endif %}
             {% if request.get_full_path|need_login_page %}
             <li class="nav-item navbar-item">
                 <a class="nav-link" href="{% url 'home:login' %}">

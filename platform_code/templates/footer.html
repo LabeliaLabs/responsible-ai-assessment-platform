@@ -35,22 +35,24 @@
     <a class="link-with-border" href="{% url 'home:faq' %}">{% trans "FAQ" %}</a>
 </div>
 <div class="col-md-3 col-md-3-footer">
-    <form action="{% url 'set_language' %}" method="post">
-        {% csrf_token %}
-        <input name="next" type="hidden" value="{{ redirect_to }}" />
-        <div class="nav navbar-nav navbar-right language menu">
+    {% if platform_management.activate_multi_languages %}
+        <form action="{% url 'set_language' %}" method="post">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ redirect_to }}" />
+            <div class="nav navbar-nav navbar-right language menu">
 
-            {% for language in languages %}
-                {% if language.code != LANGUAGE_CODE %}
+                {% for language in languages %}
+                    {% if language.code != LANGUAGE_CODE %}
 
-                {# Trans: the language is voluntarily inverted #}
-                <button type="submit" name="language" value="{{ language.code }}" class="btn button-language-footer self-center">
-                    {% trans "Passer en version française" %}
-                </button>
-            {% endif %}
-            {% endfor %}
-        </div>
-    </form>
+                    {# Trans: the language is voluntarily inverted #}
+                    <button type="submit" name="language" value="{{ language.code }}" class="btn button-language-footer self-center">
+                        {% trans "Passer en version française" %}
+                    </button>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </form>
+    {% endif %}
 </div>
 <div class="col-md-3 col-md-3-footer">
     <a class="link-with-border" href="{% url 'home:legal-notices' %}">{% trans "Legal notices" %}</a>

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-01-18 09:31+0100\n"
+"POT-Creation-Date: 2021-01-21 09:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: .\platform_code\assessment\admin_utils\assessment_import.py:292
+#: .\platform_code\assessment\admin_utils\assessment_import.py:295
 msgid "I want to import the assessment in a new language"
 msgstr "Je veux importer l'assessment dans une autre langue"
 
@@ -424,16 +424,16 @@ msgstr "Version"
 
 #: .\platform_code\assessment\templates\assessment\evaluation.html:93
 #: .\platform_code\assessment\templates\assessment\evaluation.html:104
-#: .\platform_code\assessment\templates\assessment\section.html:49
-#: .\platform_code\assessment\templates\assessment\section.html:58
-#: .\platform_code\assessment\templates\assessment\section.html:71
+#: .\platform_code\assessment\templates\assessment\section.html:54
+#: .\platform_code\assessment\templates\assessment\section.html:63
+#: .\platform_code\assessment\templates\assessment\section.html:76
 msgid "Validate and see the results"
 msgstr "Valider et voir les résultats"
 
 #: .\platform_code\assessment\templates\assessment\evaluation.html:99
 #: .\platform_code\assessment\templates\assessment\evaluation.html:102
-#: .\platform_code\assessment\templates\assessment\section.html:64
 #: .\platform_code\assessment\templates\assessment\section.html:69
+#: .\platform_code\assessment\templates\assessment\section.html:74
 msgid "Please finish the evaluation before validating it"
 msgstr "Veuillez finir l'évaluation avant de pouvoir la valider"
 
@@ -832,7 +832,7 @@ msgstr ""
 #: .\platform_code\home\templates\home\faq.html:9
 #: .\platform_code\templates\footer.html:35
 #: .\platform_code\templates\navbar.html:37
-#: .\platform_code\templates\navbar.html:51
+#: .\platform_code\templates\navbar.html:53
 msgid "FAQ"
 msgstr "FAQ"
 
@@ -894,7 +894,7 @@ msgstr "Retour haut de page"
 msgid "Give a feedback on this section"
 msgstr "Donnez votre avis sur cette section"
 
-#: .\platform_code\assessment\templates\assessment\section.html:41
+#: .\platform_code\assessment\templates\assessment\section.html:46
 msgid "Back to the sections page"
 msgstr "Retour aux différentes sections"
 
@@ -1193,13 +1193,13 @@ msgstr ""
 msgid "Your evaluation has been upgraded!"
 msgstr "Votre évaluation a bien été mise à jour à la dernière version."
 
-#: .\platform_code\dev_platform\settings.py:124
-#: .\platform_code\dev_platform\settings_prod.py:124
+#: .\platform_code\dev_platform\settings.py:125
+#: .\platform_code\dev_platform\settings_prod.py:125
 msgid "English"
 msgstr "Anglais"
 
-#: .\platform_code\dev_platform\settings.py:125
-#: .\platform_code\dev_platform\settings_prod.py:125
+#: .\platform_code\dev_platform\settings.py:126
+#: .\platform_code\dev_platform\settings_prod.py:126
 msgid "French"
 msgstr "Français"
 
@@ -1252,27 +1252,27 @@ msgstr "Confirmation du mot de passe"
 msgid "Passwords don't match"
 msgstr "Votre mot de passe est erroné"
 
-#: .\platform_code\home\models.py:31
+#: .\platform_code\home\models.py:62
 msgid "Users must have an email address"
 msgstr "Un utilisateur doit avoir un email"
 
-#: .\platform_code\home\models.py:72
+#: .\platform_code\home\models.py:103
 msgid "A user with that email already exists."
 msgstr "Un utilisateur a déjà cet email"
 
-#: .\platform_code\home\models.py:76
+#: .\platform_code\home\models.py:107
 msgid "first name"
 msgstr "Prénom"
 
-#: .\platform_code\home\models.py:77
+#: .\platform_code\home\models.py:108
 msgid "last name"
 msgstr "Nom"
 
-#: .\platform_code\home\models.py:234
+#: .\platform_code\home\models.py:265
 msgid "read_only"
 msgstr "lecteur"
 
-#: .\platform_code\home\models.py:235
+#: .\platform_code\home\models.py:266
 msgid "editor"
 msgstr "éditeur"
 
@@ -1910,8 +1910,8 @@ msgstr "Veuillez vous connecter pour accéder à cette page."
 #: .\platform_code\home\templates\home\login.html:26
 #: .\platform_code\home\templates\home\registration\password_reset_complete.html:7
 #: .\platform_code\templates\footer.html:31
-#: .\platform_code\templates\navbar.html:60
-#: .\platform_code\templates\navbar.html:66
+#: .\platform_code\templates\navbar.html:64
+#: .\platform_code\templates\navbar.html:70
 msgid "Login"
 msgstr "Connexion"
 
@@ -1935,7 +1935,7 @@ msgstr "Voulez-vous vous déconnecter ?"
 
 #: .\platform_code\home\templates\home\logout-page.html:12
 #: .\platform_code\templates\footer.html:28
-#: .\platform_code\templates\navbar.html:45
+#: .\platform_code\templates\navbar.html:47
 msgid "Logout"
 msgstr "Déconnexion"
 
@@ -2323,17 +2323,20 @@ msgstr "Page d'accueil"
 msgid "With the support of "
 msgstr "Avec le soutien de "
 
-#: .\platform_code\templates\footer.html:48
+#: .\platform_code\templates\footer.html:49
 msgid "Passer en version française"
 msgstr "Switch in English"
 
-#: .\platform_code\templates\footer.html:56
+#: .\platform_code\templates\footer.html:58
 msgid "Legal notices"
 msgstr "Mentions légales"
 
 #: .\platform_code\templates\navbar.html:21
 msgid "Admin"
 msgstr "Admin"
+
+#~ msgid "Platform update ongoing"
+#~ msgstr "Mise à jour de la plateforme en cours"
 
 #~ msgid ""
 #~ "\n"

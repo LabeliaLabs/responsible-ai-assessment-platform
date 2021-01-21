@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from home.models import User, Organisation, Membership, PendingInvitation
+from home.models import User, Organisation, Membership, PendingInvitation, PlatformManagement
 from assessment.models import Assessment, Evaluation
 from assessment.tests.object_creation import create_assessment_body, create_evaluation, create_scoring
 
@@ -311,3 +311,17 @@ class TestPendingInvitation(TestCase):
         self.assertFalse(user2.get_list_pending_invitation())
 
         # todo test membership creation
+
+
+class TestPlatformManagement(TestCase):
+    def test_platform_management_get_or_create(self):
+        self.assertFalse(PlatformManagement.objects.all())  # No objects
+        platform_management = PlatformManagement.get_or_create()
+        self.assertEqual(platform_management, PlatformManagement.objects.first())
+        platform_management_2 = PlatformManagement.get_or_create()
+        # Test that the method do not create a new object but get the existent one
+        self.assertEqual(platform_management, platform_management_2)
+
+    def test_platform_management_name(self):
+        platform_management = PlatformManagement.get_or_create()
+        self.assertEqual(str(platform_management), "Platform management")

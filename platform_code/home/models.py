@@ -22,6 +22,37 @@ from django.contrib.auth.models import PermissionsMixin
 # Admin members can not delete an orga if there are other members in the orga (see if only other admin member)
 
 
+class PlatformManagement(models.Model):
+    """
+    This class aims to furnish the possibility to admin users to realize actions on the platform globally.
+    The platform_update fields manage the fact that during the release on production, the users may lose the unsaved
+    content so a banner is displayed.
+    The activate_multi_languages field manages the fact that we may want to do not activate the English version of the
+    platform (because English assessment is not imported).
+    """
+    # Manage delivery and add a banner on the site
+    platform_update = models.BooleanField(default=False)
+    delivery_text_en = models.TextField(max_length=1000, default="Platform update ongoing")
+    delivery_text_fr = models.TextField(max_length=1000, default="Mise à jour de la plateforme en cours")
+    # Manage the language
+    activate_multi_languages = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "Platform management"
+
+    @classmethod
+    def get_or_create(cls):
+        """"
+        Get the object if it exists or creates it and return it
+        """
+        if cls.objects.first():
+            return cls.objects.first()
+        else:
+            created_obj = cls()
+            created_obj.save()
+            return created_obj
+
+
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None):
         """

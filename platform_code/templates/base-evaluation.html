@@ -36,6 +36,20 @@
             {% include "navbar.html" %}
         </nav>
     </header>
+    {% get_current_language as LANGUAGE_CODE %}
+    {% if user.is_authenticated %}
+        <div>
+            {% if platform_management.platform_update %}
+            <div class="delivery-banner">
+                {% if LANGUAGE_CODE == "fr" %}
+                    {{ platform_management.delivery_text_fr|linebreaksbr }}
+                {% else %}
+                    {{ platform_management.delivery_text_en|linebreaksbr }}
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
 
     <div aria-hidden="true" class="modal" id="modal-login-user">
         <div class="modal-dialog ">

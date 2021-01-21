@@ -270,6 +270,9 @@ Inside each section, first you have, if it exists:
         text-align: center;
         width: 100%;
     }
+    .delivery-banner {
+        margin-bottom: 60px;
+    }
 
     /* newsletter */
     .newsletter-form-container {

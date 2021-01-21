@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'home.context_processors.add_my_login_form',
+                'home.context_processors.add_platform_management',
                 'django.template.context_processors.i18n',
             ],
         },

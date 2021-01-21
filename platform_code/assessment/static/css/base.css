@@ -784,6 +784,16 @@ h1 img {
     padding: 12px;
 }
 
+.delivery-banner{
+    color: white;
+    background-color: #E47F75;
+    padding: 15px;
+    margin-bottom: 30px;
+    margin-top: -20px;
+    text-align: center;
+    width: 100%;
+}
+
 /********************************************* END OTHER BANNERS *******************************************/
 
 
