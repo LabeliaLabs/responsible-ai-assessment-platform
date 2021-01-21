@@ -21,10 +21,15 @@
 </div>
 {% endif %}
 
-<div class="sidenav remove-smaller-than-tablet" id="mySidenav">
-    {% include "assessment/sidebar.html" %}
-</div>
-
+{% if platform_management.platform_update %}
+    <div class="sidenav remove-smaller-than-tablet margin-50">
+        {% include "assessment/sidebar.html" %}
+    </div>
+{% else %}
+    <div class="sidenav remove-smaller-than-tablet">
+        {% include "assessment/sidebar.html" %}
+    </div>
+{% endif %}
 
 <div class="main">
     <div id="content-section">

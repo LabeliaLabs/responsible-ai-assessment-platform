@@ -49,6 +49,9 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
             request, extra_context=extra
         )
 
+    def has_add_permission(self, request):
+        return False
+
     def upload_json(self, request):
         if request.method == "POST":
             form = JsonUploadForm(request.POST, request.FILES)
