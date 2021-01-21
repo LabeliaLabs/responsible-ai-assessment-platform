@@ -15,7 +15,7 @@ class AssessmentTranslationOptions(TranslationOptions):
 
 @register(MasterSection)
 class MasterSectionTranslationOptions(TranslationOptions):
-    fields = ('name', 'description')
+    fields = ('name', 'description', 'keyword',)
 
 
 @register(MasterEvaluationElement)

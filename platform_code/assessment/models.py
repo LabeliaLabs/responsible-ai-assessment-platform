@@ -719,6 +719,7 @@ class MasterSection(models.Model):
     name = models.CharField(max_length=200)
     # This class is a sub part of the class assessment, may be we need to check the on_delete
     assessment = models.ForeignKey(Assessment, blank=True, on_delete=models.CASCADE)
+    keyword = models.CharField(max_length=100, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     order_id = models.IntegerField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -207,6 +207,16 @@ class ImportAssessmentTestCase(TestCase):
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
+    def test_import_assessment_no_keyword_sections(self):
+        del self.assessment_data_fr["sections"]["section 1"]["keyword"]
+        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assertIn(
+            "You have a section without",
+            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+        )
+        with self.assertRaises(Exception):
+            Assessment.objects.get(name="assessment", version="1.0")
+
     def test_import_assessment_section_without_elements(self):
         del self.assessment_data_fr["sections"]["section 1"]["elements"]
         self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])

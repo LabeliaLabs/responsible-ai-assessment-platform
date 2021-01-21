@@ -75,6 +75,9 @@ class ImportAssessmentLanguageTestCase(TestCase):
             # Check that the name responds well
             self.assertIsNotNone(master_section.name_fr)
             self.assertIsNone(master_section.name_en)
+            # Check the keyword
+            self.assertIsNotNone(master_section.keyword_fr)
+            self.assertIsNone(master_section.keyword_en)
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
                 # Check the master evaluation element French fields
                 self.assertIsNotNone(master_evaluation_element.name_fr)
@@ -108,6 +111,9 @@ class ImportAssessmentLanguageTestCase(TestCase):
             # Check that the name responds well
             self.assertIsNotNone(master_section.name_en)
             self.assertIsNone(master_section.name_fr)
+            # Check the keyword
+            self.assertIsNotNone(master_section.keyword_en)
+            self.assertIsNone(master_section.keyword_fr)
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
                 # Check the master evaluation element English fields
                 self.assertIsNotNone(master_evaluation_element.name_en)
@@ -141,7 +147,9 @@ class ImportAssessmentLanguageTestCase(TestCase):
             self.assertIsNotNone(master_section.name_en)
             self.assertIsNotNone(master_section.name_fr)
             self.assertIsNotNone(master_section.description_fr)
-            self.assertIsNotNone(master_section.description_fr)
+            self.assertIsNotNone(master_section.description_en)
+            self.assertIsNotNone(master_section.keyword_fr)
+            self.assertIsNotNone(master_section.keyword_en)
             self.assertIn("en français", master_section.description_fr)
             self.assertIn("in English", master_section.description_en)
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
@@ -177,7 +185,9 @@ class ImportAssessmentLanguageTestCase(TestCase):
             self.assertIsNotNone(master_section.name_en)
             self.assertIsNotNone(master_section.name_fr)
             self.assertIsNotNone(master_section.description_fr)
-            self.assertIsNotNone(master_section.description_fr)
+            self.assertIsNotNone(master_section.description_en)
+            self.assertIsNotNone(master_section.keyword_fr)
+            self.assertIsNotNone(master_section.keyword_en)
             self.assertIn("en français", master_section.description_fr)
             self.assertIn("in English", master_section.description_en)
             for master_evaluation_element in master_section.masterevaluationelement_set.all():

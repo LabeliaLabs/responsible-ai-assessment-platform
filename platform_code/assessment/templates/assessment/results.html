@@ -46,20 +46,15 @@
             <div class="h2 font-weight-bold">{{evaluation_score}}<sup class="small"></sup></div>
         </div>
     </div>
-    <!-- END -->
-    <!--            Todo see how to adapt, it is kept as comment as it may be tricky to code again -->
-    <!--        &lt;!&ndash; Display none but keep it because may be used later &ndash;&gt;-->
-    <!--        <div class="row text-center mt-4" style="display: none">-->
-    <!--          <div class="col-6 border-right">-->
-    <!--            <div class="h4 font-weight-bold mb-0">28%</div><span class="small text-gray">Meilleure section</span>-->
-    <!--          </div>-->
-    <!--          <div class="col-6">-->
-    <!--            <div class="h4 font-weight-bold mb-0">60%</div><span class="small text-gray">Section à améliorer</span>-->
-    <!--          </div>-->
-    <!--        </div>-->
-    <!--        &lt;!&ndash; END &ndash;&gt;-->
-    <!--      </div>-->
 
+    <div>
+        <h6 class="font-weight-bold text-center mb-4 margin-70 remove-smaller-than-tablet">
+            {% trans "Score per section" %}
+        </h6>
+        <div class="remove-smaller-than-tablet">
+            {{radar_chart|safe}}
+        </div>
+    </div>
     <div class="margin-70 margin-bot-50">
         <p class="">{% blocktrans trimmed %}
             The synthetic score is on a total of 100 theoretical maximum points for your full
