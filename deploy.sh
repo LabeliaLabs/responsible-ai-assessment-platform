@@ -1,3 +1,4 @@
+#!/usr/bin/bash
 docker-compose -f docker-compose.prod.yml down && \
 	git fetch && \
 	git pull --rebase && \

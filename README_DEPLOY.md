@@ -332,6 +332,65 @@ docker-compose -f docker-compose.prod.yml down
 docker-compose -f docker-compose.prod.yml down -v # --volumes 
 ```
 
+## Database
+
+```sh
+# Login to postgresql container
+docker-compose -f docker-compose.prod.yml exec db psql -U postgres -W
+
+# List db
+\l
+
+# Connect to platform_db
+\c platform_db
+
+# List relations / tables
+\dt
+
+
+# Example script to export one table to csv
+
+CONTAINER="" # docker ps | grep postgres
+DB="platform_db_prod"
+TABLE="home_user"
+
+docker exec -u postgres ${CONTAINER} psql -d ${DB} -c "COPY ${TABLE} TO STDOUT WITH CSV HEADER " > db_${TABLE}.csv
+```
+
+list tables
+
+```sh
+assessment_assessment
+assessment_choice
+assessment_evaluation
+assessment_evaluationelement
+assessment_evaluationelementweight
+assessment_evaluationscore
+assessment_externallink
+assessment_masterchoice
+assessment_masterevaluationelement
+assessment_masterevaluationelement_external_links
+assessment_mastersection
+assessment_scoringsystem
+assessment_section
+assessment_upgrade
+auth_group
+auth_group_permissions
+auth_permission
+django_admin_log
+django_content_type
+django_migrations
+django_session
+home_membership
+home_organisation
+home_pendinginvitation
+home_user
+home_user_groups
+home_user_user_permissions
+home_userresources
+home_userresources_resources
+```
+
 ## Logs
 
 ```sh
