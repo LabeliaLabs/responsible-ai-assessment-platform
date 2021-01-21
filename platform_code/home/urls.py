@@ -1,5 +1,7 @@
-from django.urls import path, include, re_path, reverse_lazy
 from django.contrib.auth import views as auth_views
+from django.urls import path, include, re_path, reverse_lazy
+from django.views.generic import TemplateView
+
 
 from .views import (
     LoginView,
@@ -30,6 +32,9 @@ urlpatterns = [
     path("login/", LoginPageView.as_view(), name="login"),  # login page when redirect
     path("legal-notices/", legal_notices_view, name="legal-notices"),
     path("faq/", faq_view, name="faq"),
+    path("robots.txt", TemplateView.as_view(
+        template_name="robots.txt", content_type="text/plain"
+    )),
     path(
         "accounts/",
         include(
