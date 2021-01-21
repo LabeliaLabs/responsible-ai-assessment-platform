@@ -12,7 +12,8 @@ from assessment.views.utils.security_checks import membership_security_check
 from assessment.views.utils.utils import (
     manage_evaluation_max_points,
     manage_evaluation_score,
-    set_form_for_results
+    set_form_for_results,
+    create_radar_chart,
 )
 from home.models import Organisation
 
@@ -61,6 +62,13 @@ class ResultsView(LoginRequiredMixin, DetailView):
 
             context["dic_form_results"] = set_form_for_results(evaluation=evaluation)
             context["section_list"] = list(evaluation.section_set.all().order_by("master_section__order_id"))
+            context["radar_chart"] = create_radar_chart(
+                object_list=context["section_list"],
+                math_expression=lambda x: (x.points / x.max_points) * 100,
+                text_expression=lambda x: ("Section " + str(x.master_section.order_id) + _(": ") +
+                                           str(x.master_section.keyword)),
+                hovertext_expression=lambda x: "Score" + _(": ") + str(round((x.points / x.max_points) * 100, 1))
+            )
             context["evaluation_element_list"] = evaluation.get_list_all_elements()
             context["organisation"] = organisation
             return self.render_to_response(context)

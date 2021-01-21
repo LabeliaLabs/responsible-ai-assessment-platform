@@ -152,6 +152,7 @@ function resetChoice(id_form){
 
                  if(response['success']) {
                      setSectionProgressBar(response);
+                     setSectionProgressionSidebar(response);
                      // There is not necessarily a need to change the status if it was already not done!
                      if (response["element_status_changed"]){
                         setElementEvaluationStatusNotDone(element_id);
@@ -212,8 +213,8 @@ function submitForm(id_form){
                      }, 4000);
 
                  if(response['success']) {
-
                      setSectionProgressBar(response);
+                     setSectionProgressionSidebar(response);
                      if (response["element_status_changed"]){
                         setElementEvaluationStatusDone(element_id);
                      }
@@ -309,6 +310,16 @@ function setSectionProgressBar(response){
     progress_bar_content.setAttribute("style", "width:"+response["section_progression"]+"%;");
     progress_bar_content.setAttribute("aria-valuenow", response['section_progression']);
     progress_bar_content.setAttribute("title", "Progression de "+response['section_progression']+"%");
+}
+
+function setSectionProgressionSidebar(response) {
+// The progression is only displayed in the sidebar for screens larger than 1300px
+// For these screens, the sidebar link is changed to display the new user progression
+    if (screen.width > 1300) {
+       var sidebarLink = document.getElementById("sidebar-section-" + response["section_order_id"]);
+       var regProgression = new RegExp("[0-9]{1,3}%");
+       sidebarLink.textContent = sidebarLink.textContent.replace(regProgression, response['section_progression']+"%");
+    }
 }
 
 function setElementEvaluationStatusDone(element_id){

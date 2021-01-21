@@ -659,9 +659,27 @@ Inside each section, first you have, if it exists:
     }
 }
 
+@media (max-width: 1300px) {
+    .extra-large-screen {
+        display: none;
+    }
+    .smaller-1300 {
+        display: block;
+    }
+}
+
 @media (min-width: 1301px){
     .column-right-margin-left {
        margin-left: -80px;
+    }
+    .sidenav {
+        width: 230px;
+    }
+    .extra-large-screen {
+        display: block;
+    }
+    .smaller-1300 {
+        display: none;
     }
 }
 

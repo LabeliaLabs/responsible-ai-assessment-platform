@@ -1,4 +1,6 @@
 import logging
+import plotly.graph_objects as go
+import plotly.offline as opy
 
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.http import HttpResponseRedirect
@@ -170,3 +172,39 @@ def treat_evaluation_creation_valid_form(form, organisation, user):
 
     # redirect to a new URL:
     return redirect("assessment:evaluation", organisation.id, eval.slug, eval.pk)
+
+
+def create_radar_chart(object_list, math_expression, text_expression, hovertext_expression):
+    """
+    This function creates the radar chart of the object list, with the value coming from the object evaluated
+    with the math expression (lambda function) and the text from the text expression (lambda function).
+    If the math_expression and the text_expression are not lambda functions, it returns None
+
+    :param object_list: list of objects (section)
+    :param math_expression: lambda expression
+    :param text_expression: lambda expression
+    :param hovertext_expression: lambda expression
+    """
+    if math_expression.__name__ == "<lambda>" and text_expression.__name__ == "<lambda>":
+        fig = go.Figure(data=go.Scatterpolar(
+            # r is the radius, the first value is added at the end to loop the trace
+            r=[math_expression(obj) for obj in object_list] + [math_expression(object_list[0])],
+            # theta is the label
+            theta=[text_expression(obj) for obj in object_list] + [text_expression(object_list[0])],
+            fill='toself',
+            hoverinfo="text",
+            text=[hovertext_expression(obj) for obj in object_list] + [hovertext_expression(object_list[0])]
+        ))
+
+        fig.update_layout(
+            polar=dict(
+                radialaxis=dict(
+                    visible=True,
+                    range=[0, 100]
+                ),
+            ),
+            showlegend=False
+        )
+        return opy.plot(fig, auto_open=False, output_type='div')
+    else:
+        return None

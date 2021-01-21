@@ -3,29 +3,29 @@
 {% load i18n %}
 
 {% for section in section_list %}
-<a class="title-sidenav" href="{{ section.get_absolute_url }}"
-   title="{%trans 'Section' %} {{ section.master_section.order_id}}{% trans ':' %} {{section.master_section.name}}">
-    {%trans "Section" %} {{ section.master_section.order_id}}{% trans ":" %} {{section.master_section.name}}
+<a class="title-sidenav extra-large-screen " href="{{ section.get_absolute_url }}"
+   id="sidebar-section-{{section.master_section.order_id}}"
+   title="{%trans 'Section' %} {{ section.master_section.order_id}}{% trans ':' %} {{section.master_section.name}} ">
+    {%trans "Section" %} {{ section.master_section.order_id}}{% trans ":" %} {{section.master_section.keyword}} ({{section.user_progression}}%)
 </a>
+<a class="title-sidenav smaller-1300" href="{{ section.get_absolute_url }}"
+   id="small-sidebar-section-{{section.master_section.order_id}}"
+   title="{%trans 'Section' %} {{ section.master_section.order_id}}{% trans ':' %} {{section.master_section.name}} ">
+    {%trans "Section" %} {{ section.master_section.order_id}}{% trans ":" %} {{section.master_section.keyword}}
+</a>
+
 
 {% endfor %}
 
 <a class="title-sidenav" href="{{ evaluation.get_absolute_url }}">{% trans "Evaluation summary" %}</a>
 
 <script>
-var coll = document.getElementsByClassName("collapsible-section");
-var i;
-
-for (i = 0; i < coll.length; i++) {
-  coll[i].addEventListener("click", function() {
-    this.classList.toggle("active");
-    var content = this.nextElementSibling;
-    if (content.style.maxHeight){
-      content.style.maxHeight = null;
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    }
-  });
+if (screen.width > 1300) {
+    var currentSectionLink = document.getElementById("sidebar-section-" + {{section_order_id}});
+    currentSectionLink.style.color = "#5550ff";
+} else if (screen.width > 768) {
+    var currentSectionLink = document.getElementById("small-sidebar-section-" + {{section_order_id}});
+    currentSectionLink.style.color = "#5550ff";
 }
 
 </script>

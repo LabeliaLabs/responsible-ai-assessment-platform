@@ -131,6 +131,7 @@ def create_master_section(assessment, section_data, language):
         master_section = MasterSection(
             assessment=assessment,
             name_fr=section_data.get("name"),
+            keyword_fr=section_data.get("keyword"),
             order_id=section_data.get("order_id"),
             description_fr=section_data.get("description"),
         )
@@ -138,6 +139,7 @@ def create_master_section(assessment, section_data, language):
         master_section = MasterSection(
             assessment=assessment,
             name_en=section_data.get("name"),
+            keyword_en=section_data.get("keyword"),
             order_id=section_data.get("order_id"),
             description_en=section_data.get("description"),
         )
@@ -154,9 +156,11 @@ def add_language_master_section(assessment, section_data, language):
     )
     if language == "fr":
         master_section.name_fr = section_data.get("name")
+        master_section.keyword_fr = section_data.get("keyword")
         master_section.description_fr = section_data.get("description")
     else:
         master_section.name_en = section_data.get("name")
+        master_section.keyword_en = section_data.get("keyword")
         master_section.description_en = section_data.get("description")
     master_section.save()
     return master_section
@@ -673,7 +677,7 @@ def manage_master_section(section_data, assessment, language, first_language):
     """
     If the tests are ok, creates the master_section or add the fields in the new language
     """
-    if not test_keys_in_dic(section_data, ["name", "order_id", "elements"]):
+    if not test_keys_in_dic(section_data, ["name", "order_id", "elements", "keyword"]):
         clean_failed_assessment_import(assessment, language, first_language)
         return (
             False,

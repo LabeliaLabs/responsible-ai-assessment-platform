@@ -2,11 +2,12 @@
     "version": "0.63",
     "name": "DSRC Assessment",
     "language": "fr",
-    "timestamp": "19-Nov-2020 (11:57:48.991030)",
+    "timestamp": "21-Jan-2021 (14:43:19.224829)",
     "sections": {
         "section 1": {
             "order_id": "1",
             "name": "Protéger les données à caractère personnel ou confidentielles",
+            "keyword": "Protection des données",
             "description": "L'utilisation de données à caractère personnel ou confidentielles fait porter le risque d'exposition de celles-ci, ce qui peut avoir des conséquences très préjudiciables pour les producteurs, gestionnaires, ou sujets de ces données. En particulier dans les projets de data science, elles doivent donc être protégées et les risques qu'elles fuitent ou soient exposées doivent être minimisés.",
             "elements": {
                 "element 1": {
@@ -445,6 +446,7 @@
         "section 2": {
             "order_id": "2",
             "name": "Prévenir les biais, élaborer des modèles non discriminatoires",
+            "keyword": "Biais et discriminations",
             "description": "L'utilisation de modèles prédictifs élaborés à partir de données historiques peut se révéler contre-productive lorsque les données historiques sont contaminées par des phénomènes problématiques (e.g. qualité de certains points de données, données non comparables, phénomène social non souhaitable du fait de l'époque...). Or un enjeu-clé pour la data science responsable et de confiance est de respecter le principe de diversité, non-discrimination et équité (décrit par exemple à la section 1.5 des [Ethics Guidelines for Trustworthy AI](https://ec.europa.eu/newsroom/dae/document.cfm?doc_id=60419) de l'UE). Il apparaît donc indispensable de s'interroger sur ce risque et d'étudier la nature des données utilisées, les conditions dans lesquelles elles ont été produites et assembées, et ce qu'elles représentent.\nEntre autres, dans certains cas une spécification de l'équité recherchée entre populations doit également être définie. L'équité d'un modèle peut [être définie de plusieurs manières qui peuvent être incompatibles entre elles](https://papers.nips.cc/paper/6995-counterfactual-fairness), et l'interprétation de scores de performances doit donc se faire dans le cadre de l'une de ces définitions.",
             "elements": {
                 "element 1": {
@@ -600,6 +602,7 @@
         "section 3": {
             "order_id": "3",
             "name": "Evaluer la performance de manière rigoureuse",
+            "keyword": "Evaluation des performances",
             "description": "Les performances des modèles sont déterminantes pour leur adoption dans des produits, systèmes ou processus. L'évaluation de la performance se doit donc d'être rigoureuse.",
             "elements": {
                 "element 1": {
@@ -906,6 +909,7 @@
         "section 4": {
             "order_id": "4",
             "name": "Assurer la reproductibilité des modèles et en établir la chaîne de responsabilité",
+            "keyword": "Documentation des modèles",
             "description": "Un modèle prédictif est un objet informatique complexe qui peut évoluer au fil des apprentissages. Tracer les étapes de son élaboration et de son évolution permet d'en constituer une forme de **généalogie**, pré-requis pour **reproduire ou auditer** un modèle. Par ailleurs utiliser des systèmes automatiques basés sur des modèles dont les règles ont été \"apprises\" (et non définies et formalisées) interroge le fonctionnement des organisations. Il apparaît indispensable de garantir une chaîne de responsabilité claire, de personnes physiques ou morales, pour chaque modèle.",
             "elements": {
                 "element 1": {
@@ -1178,6 +1182,7 @@
         "section 5": {
             "order_id": "5",
             "name": "Utiliser des modèles en confiance et de manière responsable",
+            "keyword": "Utilisation des modèles",
             "description": "Un modèle prédictif peut-être utilisé comme un système automatique, dont les règles de fonctionnement ne sont pas écrites _in extenso_ et ne se prêtent pas ou mal à être explicitées, débattues, ajustées. Utiliser des systèmes automatiques basés sur des modèles dont les règles ont été \"apprises\" (et non définies et formalisées) interroge donc le fonctionnement des organisations. Il est important de préserver la capacité de réaction et la résilience de l'organisation utilisatrice, notamment pour traiter les cas de figure où les modèles prédictifs auront été à l'origine d'un résultat non souhaitable pour l'organisation ou ses parties prenantes. Par ailleurs, des efforts sont donc nécessaires sur l'interprétation et l'explication des choix réalisés à l'aide de ces systèmes.",
             "elements": {
                 "element 1": {
@@ -1484,6 +1489,7 @@
         "section 6": {
             "order_id": "6",
             "name": "Anticiper, suivre et minimiser les externalités négatives de l'activité data science",
+            "keyword": "Externalités négatives",
             "description": "La mise en place d'un système automatique basé sur un modèle prédictif peut générer des externalités négatives sociales et environnementales. En prendre conscience est indispensable, ainsi qu'anticiper, suivre et minimiser les différents impacts négatifs.",
             "elements": {
                 "element 1": {

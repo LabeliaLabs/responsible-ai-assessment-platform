@@ -7,6 +7,7 @@
         "section 1": {
             "order_id": "1",
             "name": "Section 1",
+            "keyword": "Data protection",
             "description": "This is the description of section 1 in English",
             "elements": {
                 "element 1": {
@@ -63,6 +64,7 @@
 		        "section 2": {
             "order_id": "2",
             "name": "Section 2",
+            "keyword": "Models documentation",
             "description": "Description section 2 in English",
             "elements": {
                 "element 1": {

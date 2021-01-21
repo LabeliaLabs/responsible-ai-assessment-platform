@@ -118,6 +118,7 @@ class SectionView(LoginRequiredMixin, ListView):
 
     def manage_pagination(self, section_query, num_page):
         num_page = int(num_page)
+        self.context["section_order_id"] = num_page
         # If there is a previous section
         if num_page > 1:
             self.context["previous_section"] = list(section_query)[num_page - 2]
@@ -433,6 +434,7 @@ class SectionView(LoginRequiredMixin, ListView):
 
         # The progression and status are added to the data_update dictionary
         self.data_update["section_progression"] = section.user_progression
+        self.data_update["section_order_id"] = section.master_section.order_id
         self.data_update["evaluation_element_treated"] = evaluation_element.status
         self.data_update["evaluation_finished"] = evaluation.is_finished
 
