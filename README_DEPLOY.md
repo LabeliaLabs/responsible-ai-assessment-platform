@@ -334,6 +334,9 @@ docker-compose -f docker-compose.prod.yml down -v # --volumes
 
 ## Database
 
+Before running the `dump_tables.sh` script, please fill in the variable `<CONTAINER>` with the postgresql container id (`docker ps | grep postgres`) and also check the `<DB>` name.
+
+### Overview
 ```sh
 # Login to postgresql container
 docker-compose -f docker-compose.prod.yml exec db psql -U postgres -W
@@ -357,7 +360,7 @@ TABLE="home_user"
 docker exec -u postgres ${CONTAINER} psql -d ${DB} -c "COPY ${TABLE} TO STDOUT WITH CSV HEADER " > db_${TABLE}.csv
 ```
 
-list tables
+### List tables
 
 ```sh
 assessment_assessment
@@ -389,6 +392,14 @@ home_user_groups
 home_user_user_permissions
 home_userresources
 home_userresources_resources
+```
+
+### Copy the zip file from the server to your local machine
+
+> Note: you will first need to add your ssh key to the server
+
+```sh
+scp <USER>@<IP>:/home/ubuntu/pf-assessment-dsrc/dump_tables/zipped.zip ./
 ```
 
 ## Logs
