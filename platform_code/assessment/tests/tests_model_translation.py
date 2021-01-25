@@ -7,7 +7,6 @@ from django.test import TestCase
 from assessment.models import (
     Assessment,
     MasterSection,
-    is_language_activation_allowed,
 )
 from assessment.import_assessment import (
     treat_and_save_dictionary_data,
@@ -251,13 +250,6 @@ class AssessmentLanguageTestCase(TestCase):
         save_new_assessment_language(self.assessment_data_fr, assessment)
         self.assertIn("fr", assessment.get_the_available_languages())
         self.assertIn("en", assessment.get_the_available_languages())
-
-    def test_is_language_activation_allowed(self):
-        treat_and_save_dictionary_data(self.assessment_data_fr)
-        self.assertFalse(is_language_activation_allowed())
-        assessment = Assessment.objects.get(version="1.0")
-        save_new_assessment_language(self.assessment_data_en, assessment)
-        self.assertTrue(is_language_activation_allowed())
 
     def test_assessment_delete_en(self):
         """

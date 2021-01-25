@@ -35,9 +35,7 @@ class PlatformManagement(models.Model):
     delivery_text_en = models.TextField(max_length=1000, default="Platform update ongoing")
     delivery_text_fr = models.TextField(max_length=1000, default="Mise à jour de la plateforme en cours")
     # Manage the language
-    activate_multi_languages = models.BooleanField(default=False, help_text="This should not be activated if an "
-                                                                            "assessment does not exist both in French "
-                                                                            "and English")
+    activate_multi_languages = models.BooleanField(default=False)
 
     def __str__(self):
         return "Platform management"

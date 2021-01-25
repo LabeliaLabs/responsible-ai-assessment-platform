@@ -1700,17 +1700,3 @@ def get_available_languages():
     This function returns the available languages according to the settings, ex ["fr", "en"]
     """
     return [lang[0] for lang in settings.LANGUAGES]
-
-
-def is_language_activation_allowed():
-    """
-    This function covers the assessments of the database and check if they are present in the available languages.
-    If they are, return 1, else, return 0 - number instead booleans because it is used in js.
-    This is used to display or not a warning in the admin interface when the user activate languages.
-    """
-    assessment_query = Assessment.objects.all()
-    available_languages = get_available_languages()
-    for assessment in assessment_query:
-        if available_languages != assessment.get_the_available_languages():
-            return 0
-    return 1
