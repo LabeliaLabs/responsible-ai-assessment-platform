@@ -1,0 +1,29 @@
+{% extends 'admin/change_form.html' %}
+{% load static %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+(function controlLanguageActivation() {
+    var languageActivationInput = document.getElementById("id_activate_multi_languages");
+    var isLanguageActivationAllowed = {{is_language_activation_allowed}};  //number type: 0 or 1
+    if (languageActivationInput) {
+        // If the input changes: checked or unchecked, for the case "checked", we need to be sure all
+        // the assessments have both languages available
+        if (isLanguageActivationAllowed === 0) {
+            const newElt = document.createElement("div");
+            newElt.style.color = "red";
+            newElt.textContent = "At least one assessment have not both French and English languages. You should not activate the languages.";
+            document.getElementsByClassName("checkbox-row")[1].appendChild(newElt);
+            console.log(languageActivationInput);
+        }
+        languageActivationInput.addEventListener('change', (event) => {
+            if (languageActivationInput.checked && isLanguageActivationAllowed === 0) {
+                alert("WARNING: You want to activate the languages (Fr/En) while an assessment hasn't both languages.");
+            }
+        })
+    }
+}) ();
+
+</script>
+{% endblock %}
