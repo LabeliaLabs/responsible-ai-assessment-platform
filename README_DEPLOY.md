@@ -4,6 +4,41 @@
 > At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`.
 > /!\ This will **remove** your images!
 
+## Use the makefile
+
+Help yourself and use the `Makefile` at the root of the repo! You might need to first install `build-essential` on linux or `make` on Windows (with chocolatey package manager for [example](https://chocolatey.org/packages/make)).
+
+You'll then be able to use `make dev_buildup` instead of typing `docker-compose up --build -d`.
+
+Available commands:
+
+- DEV
+  - dev_buildup
+  - dev_buildupd
+  - dev_migr
+  - dev_static
+  - dev_admin
+  - dev_down
+  - dev_test
+
+- PRODLIKE
+  - prodlike_buildup
+  - prodlike_buildupd
+  - prodlike_migr
+  - prodlike_static
+  - prodlike_admin
+  - prodlike_down
+  - prodlike_test
+
+- PROD
+  - prod_buildup
+  - prod_buildupd
+  - prod_migr
+  - prod_static
+  - prod_admin
+  - prod_down
+  - prod_test
+
 ## Updates
 
 Run this command but check packages to be updated before accepting!!
