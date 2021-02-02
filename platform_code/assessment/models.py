@@ -784,7 +784,7 @@ class Section(models.Model):
                 "slug": self.evaluation.slug,
                 "pk": self.evaluation.pk,
                 "id": self.id,
-                "name": replace_special_characters(self.master_section.name),
+                "name": slugify(self.master_section.keyword),
                 "page": self.master_section.order_id,
             },
         )

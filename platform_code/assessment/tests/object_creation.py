@@ -50,17 +50,18 @@ def create_evaluation(
         )
 
 
-def create_master_section(name, assessment, description, order_id):
+def create_master_section(name, assessment, description, order_id, keyword):
     """
     Create the master section
     :param name:
     :param assessment:
     :param description:
     :param order_id:
+    :param keyword:
     :return:
     """
     return MasterSection.objects.create(
-        name=name, assessment=assessment, description=description, order_id=order_id
+        name=name, assessment=assessment, description=description, order_id=order_id, keyword=keyword
     )
 
 
@@ -211,13 +212,18 @@ def create_assessment_body(
     """
     assessment = create_assessment(name="assessment", version=version)
     master_section1 = create_master_section(
-        name="master_section1", assessment=assessment, description="", order_id="1"
+        name="master_section1",
+        assessment=assessment,
+        description="",
+        order_id="1",
+        keyword="Protection des données",
     )
     master_section2 = create_master_section(
         name="master_section2",
         assessment=assessment,
         description="",
         order_id="2",
+        keyword="Documentation des modèles"
     )
     # Create and get resources (External Link)
     resource = create_external_link(text=resource_text)

@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.template.defaultfilters import slugify
 
 from assessment.models import (
     Assessment,
@@ -73,12 +74,14 @@ class MasterSectionTestCase(TestCase):
             assessment=assessment,
             description="description",
             order_id="1",
+            keyword="Protection des données"
         )
         self.master_section2 = create_master_section(
             name="master_section2",
             assessment=assessment,
             description="description",
             order_id="2",
+            keyword="Documentation des modèles"
         )
 
     def test_master_section_name(self):
@@ -102,12 +105,14 @@ class MasterEvaluationElementTestCase(TestCase):
             assessment=assessment,
             description="description",
             order_id="1",
+            keyword="Protection des données"
         )
         master_section2 = create_master_section(
             name="master_section2",
             assessment=assessment,
             description="description",
             order_id="2",
+            keyword="Documentation des modèles"
         )
         resource = create_external_link(text="text_test")
         self.master_evaluation_element1 = create_master_evaluation_element(
@@ -346,12 +351,12 @@ class SectionTestCase(TestCase):
         self.assertEquals(
             section1.get_absolute_url(),
             f"/fr/assessment/organisation/{organisation.id}/{evaluation.slug}/{evaluation.id}/section/"
-            f"{section1.id}/{section1.master_section.name}/{section1.master_section.order_id}",
+            f"{section1.id}/{slugify(section1.master_section.keyword)}/{section1.master_section.order_id}",
         )
         self.assertEquals(
             section1.get_absolute_url(),
             f"/fr/assessment/organisation/2/evaluation/{evaluation.id}/section/"  # evaluation_id = 10
-            f"{section1.id}/master_section1/1",
+            f"{section1.id}/protection-des-donnees/1",
         )  # section_id = 4
 
     def test_section_suppression(self):
