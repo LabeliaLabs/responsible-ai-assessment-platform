@@ -7,7 +7,7 @@ services:
     build:
       context: ./platform_code
       dockerfile: Dockerfile.prod
-    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8000 --workers=4 --timeout 10
+    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8080 --workers=4 --timeout 10
     networks:
       - main
     volumes:
