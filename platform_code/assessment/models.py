@@ -1588,13 +1588,14 @@ class EvaluationElementWeight(models.Model):
 
     def get_master_element_weight(self, master_element):
         """
-
+        Get the master element weight registered for the object in the
+        json field master_evaluation_element_weight_json
         :param master_element: a master choice of the assessment
         :return: float
         """
         if master_element.master_section.assessment == self.assessment:
             return float(
-                self.master_evaluation_element_weight_json[str(master_element)]
+                self.master_evaluation_element_weight_json[master_element.get_numbering()]
             )
         else:
             # SET ERROR
