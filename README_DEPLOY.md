@@ -39,6 +39,12 @@ Available commands:
   - prod_down
   - prod_test
 
+## Django shell
+
+```sh
+docker-compose exec web django-admin shell
+```
+
 ## Updates
 
 Run this command but check packages to be updated before accepting!!

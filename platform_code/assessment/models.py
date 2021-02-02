@@ -205,7 +205,7 @@ class Evaluation(models.Model):
         max_length=200,
         default="Evaluation",
     )
-    slug = models.SlugField()
+    slug = models.SlugField(null=False, unique=True)
     # Set to null if the user delete is account because other users in the orga could still use the evaluation
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL
