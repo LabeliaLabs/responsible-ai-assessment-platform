@@ -20,6 +20,7 @@ class UserAdmin(BaseUserAdmin):
         "last_name",
         "get_created_at",
         "get_last_login",
+        "organisations_user_is_member",
     )
     list_filter = ("admin",
                    "staff")
@@ -53,6 +54,15 @@ class UserAdmin(BaseUserAdmin):
             return obj.last_login.strftime("%d/%m/%Y")
         else:
             return "Not logged yet"
+
+    def organisations_user_is_member(self, obj):
+        """
+        Return the string of the organisations names where the user is member,
+        regardless the role, but it just doesn't count the admin users
+        who are automatically members.
+        """
+        membership_list = obj.membership_set.all().filter(hide_membership=False)
+        return ', '.join([membership.organisation.name for membership in membership_list])
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
