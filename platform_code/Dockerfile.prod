@@ -52,7 +52,7 @@ WORKDIR $APP_HOME
 RUN apk update && apk add libpq
 COPY --from=builder /code/wheels /wheels
 COPY --from=builder /code/requirements.txt .
-RUN python -m pip install --upgrade pip
+RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint-prod.sh
