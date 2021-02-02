@@ -681,7 +681,7 @@ def manage_master_section(section_data, assessment, language, first_language):
         clean_failed_assessment_import(assessment, language, first_language)
         return (
             False,
-            f"You have a section without the required keys {['name', 'order_id', 'elements']}",
+            f"You have a section without the required keys {['name', 'order_id', 'elements', 'keyword']}",
             None,
         )
 
@@ -744,7 +744,7 @@ def manage_master_element(
         )
 
         # Initiate a dictionary of the element weights, all set to 1 by default
-        dic_elements[str(master_evaluation_element)] = "1"
+        dic_elements[master_evaluation_element.get_numbering()] = "1"
 
     else:
         try:
