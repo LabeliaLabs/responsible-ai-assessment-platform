@@ -40,4 +40,7 @@ def need_login_page(full_path):
     return boolean, True if the previous page need to redirect the login in full_page (not pop-in), else False
     """
     list_need_full_login_page_redirection = ["/signup/", "/legal-notices/", "/faq/", "/login/"]
-    return full_path in list_need_full_login_page_redirection
+    for path in list_need_full_login_page_redirection:
+        if path in full_path:
+            return True
+    return False
