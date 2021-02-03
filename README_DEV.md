@@ -40,7 +40,7 @@
 
 Help yourself and use the `Makefile` at the root of the repo! You might need to first install `build-essential` on linux or `make` on Windows (with chocolatey package manager for [example](https://chocolatey.org/packages/make)).
 
-You'll then be able to use `make dev_buildup` instead of typing `docker-compose up --build -d`.
+You'll then be able to use `make buildupd` instead of typing `docker-compose up --build -d`.
 
 Available commands:
 
