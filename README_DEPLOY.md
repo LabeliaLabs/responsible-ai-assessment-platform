@@ -264,7 +264,8 @@ to implement it ), you need to use `gettext_lazy` or `i18n` or even `ngettext` t
 
 For example, in Python files, use the syntax: `_("English message to translate in French")` with the **underscore** for `gettext_lazy`.
 
-In the html files, at the beginning of the file, add `{% load i18n %}` and for the text you want to translate, use the tags `{% trans "English message to translate in French" %}` for short messages and `{% blocktrans trimmed %} text {% endblocktrans %}` for long messages which cannot be written in one line, as this tag handles line breaks.
+In the html files, at the beginning of the file, add `{% load i18n %}` and for the text you want to translate, use the tags `{% trans "English message to translate in French" %}` for short messages
+and `{% blocktrans trimmed %} text {% endblocktrans %}` for long messages which cannot be written in one line, as this tag handles line breaks.
 
 Then you can do the command:
 
@@ -273,7 +274,8 @@ django-admin makemessages -l fr
 >>> processing locale fr
 ```
 
-This will gather all the text between the tags in the file `django.po`. Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`. You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`. Be careful to the 'fuzzy' translations which are inaccurate (Tips: use `Ctrl + f "fuzzy"`). Make all your translations and then do the command:
+This will gather all the text between the tags in the file `django.po`.
+Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`. You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`. Be careful to the 'fuzzy' translations which are inaccurate (Tips: use `Ctrl + f "fuzzy"`). Make all your translations and then do the command:
 
 ```sh
 django-admin compilemessages
@@ -310,8 +312,7 @@ msgstr "\n"
 ### Tests
 
 The tests are implemented on each application, assessment and home, in a folder named "tests".
-You can add your own tests in these folders or create a new one. The only requirement is to make your python
-file starting with "test". For more details, refer to the [django documentation](https://docs.djangoproject.com/fr/3.0/topics/testing/overview/).
+You can add your own tests in these folders or create a new one. The only requirement is to make your python file starting with "test". For more details, refer to the [django documentation](https://docs.djangoproject.com/fr/3.0/topics/testing/overview/).
 
 To run the tests, use the following command:
 
@@ -374,9 +375,29 @@ docker-compose -f docker-compose.prod.yml down -v # --volumes
 
 ## Database
 
-Before running the `dump_tables.sh` script, please fill in the variable `<CONTAINER>` with the postgresql container id (`docker ps | grep postgres`) and also check the `<DB>` name.
+### Get the postgresql container id
 
-### Overview
+```sh
+docker ps | grep postgres | awk '{print $1}'
+```
+
+### Dump full db
+
+```sh
+docker exec -i -u postgres <CONTAINER_ID> pg_dump -Fc <DB> > <DB>.dump
+docker exec -i -u postgres 0fc151d00a20 pg_dump -Fc platform_db_prod > platform_db_prod.dump
+```
+
+### Restaure full db
+
+```sh
+docker exec -i -u postgres <CONTAINER_ID> pg_restore -d <DB> < <INPUT_FILE>
+docker exec -i -u postgres 52bf8c1b86cf pg_restore -d platform_db_prod --clean < platform_db_prod.dump
+```
+
+### Dump tables
+
+> Before running the `dump_tables.sh` script, please fill in the variable `<CONTAINER_ID>` with the postgresql container id (`docker ps | grep postgres | awk '{print $1}'`) and also check the `<DB>` name.
 
 ```sh
 # Login to postgresql container
@@ -391,14 +412,12 @@ docker-compose -f docker-compose.prod.yml exec db psql -U postgres -W
 # List relations / tables
 \dt
 
-
 # Example script to export one table to csv
-
-CONTAINER="" # docker ps | grep postgres
-DB="platform_db_prod"
+CONTAINER_ID="" # docker ps | grep postgres | awk '{print $1}'
+DB="platform_db_prod" # or platform_db
 TABLE="home_user"
 
-docker exec -u postgres ${CONTAINER} psql -d ${DB} -c "COPY ${TABLE} TO STDOUT WITH CSV HEADER " > db_${TABLE}.csv
+docker exec -u postgres ${CONTAINER_ID} psql -d ${DB} -c "COPY ${TABLE} TO STDOUT WITH CSV HEADER " > db_${TABLE}.csv
 ```
 
 ### List tables
