@@ -1,31 +1,48 @@
 #######
 # DEV #
 #######
-dev_buildup:
+
+up:
+	docker-compose up
+
+buildup:
 	docker-compose up --build
 
-dev_buildupd:
+buildupd:
 	docker-compose up --build -d
 
-dev_migr:
+migr:
 	docker-compose exec web python manage.py makemigrations
 	docker-compose exec web python manage.py migrate --noinput
 
-dev_static:
+static:
 	docker-compose exec web python manage.py collectstatic --no-input --clear
 
-dev_admin:
+admin:
 	docker-compose exec web python manage.py createsuperuser
 
-dev_down:
+down:
 	docker-compose down
+	
+downv:
+	docker-compose down -v
 
-dev_test:
+tests:
 	docker-compose exec web python manage.py test --verbosity 2
+
+dump:
+	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db > platform_db.dump && echo "Dumped"
+
+restore:
+	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db --clean < platform_db.dump && echo "Restored"
 
 ############
 # PRODLIKE #
 ############
+
+prodlike_up:
+	docker-compose -f docker-compose.prod-like-local.yml up
+
 prodlike_buildup:
 	docker-compose -f docker-compose.prod-like-local.yml up --build
 
@@ -45,12 +62,25 @@ prodlike_admin:
 prodlike_down:
 	docker-compose -f docker-compose.prod-like-local.yml down
 
-prodlike_test:
+prodlike_downv:
+	docker-compose -f docker-compose.prod-like-local.yml down -v
+
+prodlike_tests:
 	docker-compose -f docker-compose.prod-like-local.yaml exec web python manage.py test --verbosity 2
+
+prodlike_dump:
+	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump && echo "Dumped"
+
+prodlike_restore:
+	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod.dump && echo "Restored"
 
 ########
 # PROD #
 ########
+
+prod_up:
+	docker-compose -f docker-compose.prod.yml up
+
 prod_buildup:
 	docker-compose -f docker-compose.prod.yml up --build
 
@@ -70,5 +100,14 @@ prod_admin:
 prod_down:
 	docker-compose -f docker-compose.prod.yml down
 
-prod_test:
+prod_downv:
+	docker-compose -f docker-compose.prod.yml down -v
+
+prod_tests:
 	docker-compose -f docker-compose.prod.yaml exec web python manage.py test --verbosity 2
+
+prod_dump:
+	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump && echo "Dumped"
+
+prod_restore:
+	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod.dump && echo "Restored"
