@@ -12,7 +12,7 @@ trash/
 # PyCharm
 .idea/*
 
-#Dia
+# Dia
 *.dia~
 *.dia.autosave
 *.jpeg~
@@ -23,3 +23,8 @@ nohup.out
 data/certbot/
 nohup.out
 .coverage
+
+# DB
+*.dump
+*.sql
+
