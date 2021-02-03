@@ -13,31 +13,37 @@ You'll then be able to use `make dev_buildup` instead of typing `docker-compose 
 Available commands:
 
 - DEV
-  - dev_buildup
-  - dev_buildupd
-  - dev_migr
-  - dev_static
-  - dev_admin
-  - dev_down
-  - dev_test
+  - up
+  - buildup
+  - buildupd
+  - migr
+  - static
+  - admin
+  - down
+  - downv
+  - tests
 
 - PRODLIKE
+  - prodlike_up
   - prodlike_buildup
   - prodlike_buildupd
   - prodlike_migr
   - prodlike_static
   - prodlike_admin
   - prodlike_down
-  - prodlike_test
+  - prodlike_downv
+  - prodlike_tests
 
 - PROD
+  - prod_up
   - prod_buildup
   - prod_buildupd
   - prod_migr
   - prod_static
   - prod_admin
   - prod_down
-  - prod_test
+  - prod_downv
+  - prod_tests
 
 ## Django shell
 
