@@ -1,8 +1,40 @@
-# Deploy
+# Dev Setup
 
 > No deploy friday & use `tmux`!
 > At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`.
 > /!\ This will **remove** your images!
+
+- [Dev Setup](#dev-setup)
+  - [Use the makefile](#use-the-makefile)
+    - [Dev](#dev)
+    - [Prod-like-local](#prod-like-local)
+    - [Prod](#prod)
+  - [Django shell](#django-shell)
+  - [Server Update](#server-update)
+  - [Git](#git)
+  - [Environment variables](#environment-variables)
+  - [Nginx](#nginx)
+    - [Server config](#server-config)
+    - [Debug](#debug)
+  - [Certbot](#certbot)
+  - [ssh config](#ssh-config)
+  - [UFW: Uncomplicated FireWall](#ufw-uncomplicated-firewall)
+    - [[WIP] Port forward](#wip-port-forward)
+  - [Fail2ban: IP ban for script kiddies](#fail2ban-ip-ban-for-script-kiddies)
+  - [Docker Tips](#docker-tips)
+  - [Translation](#translation)
+    - [Tests](#tests)
+  - [Deploy on Prod](#deploy-on-prod)
+  - [Database](#database)
+    - [Get the postgresql container id](#get-the-postgresql-container-id)
+    - [Dump full db](#dump-full-db)
+    - [Restaure full db](#restaure-full-db)
+    - [Dump tables](#dump-tables)
+    - [List tables](#list-tables)
+    - [Copy the zip file from the server to your local machine](#copy-the-zip-file-from-the-server-to-your-local-machine)
+  - [Logs](#logs)
+  - [Django logs](#django-logs)
+  - [Platform admin account](#platform-admin-account)
 
 ## Use the makefile
 
@@ -12,46 +44,57 @@ You'll then be able to use `make dev_buildup` instead of typing `docker-compose 
 
 Available commands:
 
-- DEV
-  - up
-  - buildup
-  - buildupd
-  - migr
-  - static
-  - admin
-  - down
-  - downv
-  - tests
+### Dev
 
-- PRODLIKE
-  - prodlike_up
-  - prodlike_buildup
-  - prodlike_buildupd
-  - prodlike_migr
-  - prodlike_static
-  - prodlike_admin
-  - prodlike_down
-  - prodlike_downv
-  - prodlike_tests
+- up
+- buildup
+- buildupd
+- migr
+- static
+- admin
+- down
+- downv
+- tests
+- dump
+- restore
 
-- PROD
-  - prod_up
-  - prod_buildup
-  - prod_buildupd
-  - prod_migr
-  - prod_static
-  - prod_admin
-  - prod_down
-  - prod_downv
-  - prod_tests
+### Prod-like-local
+
+- prodlike_up
+- prodlike_buildup
+- prodlike_buildupd
+- prodlike_migr
+- prodlike_static
+- prodlike_admin
+- prodlike_down
+- prodlike_downv
+- prodlike_tests
+- prodlike_dump
+- prodlike_restore
+
+### Prod
+
+- prod_up
+- prod_buildup
+- prod_buildupd
+- prod_migr
+- prod_static
+- prod_admin
+- prod_down
+- prod_downv
+- prod_tests
+- prod_dump
+- prod_restore
 
 ## Django shell
+
+Start a django shell:
 
 ```sh
 docker-compose exec web django-admin shell
 ```
 
-## Updates
+## Server Update
 
 Run this command but check packages to be updated before accepting!!
 
@@ -239,9 +282,7 @@ sudo service fail2ban status
 tail -f /var/log/fail2ban.log
 ```
 
-## Docker
-
-### Dev
+## Docker Tips
 
 You can load different settings when starting django with this:
 
@@ -255,7 +296,7 @@ You can follow logged elements live with:
 docker-compose exec web watch cat dev.log
 ```
 
-#### Translation
+## Translation
 
 Note that all the content should be written in english. Currently, the languages accepted are
 French and English. The site is deployed in French. To realize the translation (refer to the
@@ -347,7 +388,7 @@ FAILED (failures=1)
 Destroying test database for alias 'default' ('test_platform_db')...
 ```
 
-### Prod
+## Deploy on Prod
 
 Use, **with caution**, the `deploy.sh` script
 
