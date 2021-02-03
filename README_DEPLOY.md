@@ -258,9 +258,7 @@ to implement it ), you need to use `gettext_lazy` or `i18n` or even `ngettext` t
 
 For example, in Python files, use the syntax: `_("English message to translate in French")` with the **underscore** for `gettext_lazy`.
 
-In the html files, at the beginning of the file, add `{% load i18n %}` and for the text you want to translate, 
-use the tags `{% trans "English message to translate in French" %}` for short messages
-and `{% blocktrans trimmed %} text {% endblocktrans %}` for long messages which cannot be written in one line, as this tag handles line breaks. 
+In the html files, at the beginning of the file, add `{% load i18n %}` and for the text you want to translate, use the tags `{% trans "English message to translate in French" %}` for short messages and `{% blocktrans trimmed %} text {% endblocktrans %}` for long messages which cannot be written in one line, as this tag handles line breaks.
 
 Then you can do the command:
 
@@ -269,11 +267,7 @@ django-admin makemessages -l fr
 >>> processing locale fr
 ```
 
-This will gather all the text between the tags in the file `django.po`. 
-Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`. 
-You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`. 
-Be careful to the 'fuzzy' translations which are inaccurate (Tips: use `Ctrl + f "fuzzy"`). 
-Make all your translations and then do the command:
+This will gather all the text between the tags in the file `django.po`. Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`. You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`. Be careful to the 'fuzzy' translations which are inaccurate (Tips: use `Ctrl + f "fuzzy"`). Make all your translations and then do the command:
 
 ```sh
 django-admin compilemessages
@@ -311,8 +305,7 @@ msgstr "\n"
 
 The tests are implemented on each application, assessment and home, in a folder named "tests".
 You can add your own tests in these folders or create a new one. The only requirement is to make your python
-file starting with "test". 
-For more details, refer to the [django documentation](https://docs.djangoproject.com/fr/3.0/topics/testing/overview/).
+file starting with "test". For more details, refer to the [django documentation](https://docs.djangoproject.com/fr/3.0/topics/testing/overview/).
 
 To run the tests, use the following command:
 
@@ -378,6 +371,7 @@ docker-compose -f docker-compose.prod.yml down -v # --volumes
 Before running the `dump_tables.sh` script, please fill in the variable `<CONTAINER>` with the postgresql container id (`docker ps | grep postgres`) and also check the `<DB>` name.
 
 ### Overview
+
 ```sh
 # Login to postgresql container
 docker-compose -f docker-compose.prod.yml exec db psql -U postgres -W
@@ -472,8 +466,7 @@ logger = logging.getLogger('monitoring')
 You can then writes new logs in this file with the code `logger.info("text")` for example.
 Refer to the [django documentation](https://docs.djangoproject.com/fr/3.1/topics/logging/) for more information.
 
-In order to categorize the logs and to use it in the admin dashboard, a tag is set at the beginning of the log text in 
-the project:
+In order to categorize the logs and to use it in the admin dashboard, a tag is set at the beginning of the log text in the project:
 
 ```python
 logger.info(f"[organisation_deletion] The organisation {organisation} has been created")
@@ -483,7 +476,6 @@ You are free to use the tag you want, but some are used for a certain purpose:
 
 - 'error' for all generic errors (400, 403, 404, 500)
 - '*action*_error' for errors caught in the code (as excepts)
-
 
 ## Platform admin account
 
