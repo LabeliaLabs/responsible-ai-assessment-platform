@@ -70,7 +70,7 @@
 <!--         If the user is admin member and the member displayed is not admin       -->
             {% if organisation|get_role:user == "admin" and not member.role == "admin" %}
             <td class="div-hidden-icons" id="member{{member.id}}">
-                <button class="btn btn-primary small-btn margin-10 small-screen-max-float-left"
+                <button class="btn btn-primary small-btn small-screen-max-float-left margin-btn-orga-members"
                         data-target="#modal-edit-role{{member.id}}"
                         data-toggle="modal">
                     <i class="fa fa-edit"></i>
@@ -83,7 +83,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-danger small-btn margin-10 small-screen-max-right"
+                <button class="btn btn-danger small-btn small-screen-max-right margin-btn-orga-members"
                         data-target="#modal-remove-member{{member.id}}"
                         data-toggle="modal">
                     <span class="fa fa-trash"></span>
@@ -112,7 +112,7 @@
             {% if organisation|get_role:user == "admin" %}
             <td class="div-hidden-icons background-white"
                 id="pendingMember{{pending_member.id}}">
-                <button class="btn btn-primary small-btn small-screen-max-float-left"
+                <button class="btn btn-primary small-btn small-screen-max-float-left margin-btn-orga-members"
                         data-target="#modal-edit-role-pending{{pending_member.id}}"
                         data-toggle="modal">
                     <i class="fa fa-edit"></i>
@@ -125,7 +125,7 @@
                     </div>
                 </div>
 
-                <button class="btn btn-danger small-btn large-screen-min-margin-10 small-screen-max-right"
+                <button class="btn btn-danger small-btn margin-btn-orga-members small-screen-max-right"
                         data-target="#modal-remove-member-pending{{pending_member.id}}"
                         data-toggle="modal">
                     <span class="fa fa-trash"></span>
