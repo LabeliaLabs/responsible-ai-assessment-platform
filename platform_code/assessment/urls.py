@@ -9,6 +9,7 @@ from .views import (
     leave_organisation,
     upgradeView,
     SectionView,
+    ResultsPDFView
 )
 
 
@@ -43,7 +44,11 @@ urlpatterns = [
                                 name="section",
                             ),
                             path(
-                                "results/", ResultsView.as_view(), name="results"
+                                "results/", include([
+                                    path("", ResultsView.as_view(), name="results"),
+                                    path("pdf/", ResultsPDFView.as_view(), name="resultsPDF")
+                                ])
+
                             ),
                         ]
                     ),

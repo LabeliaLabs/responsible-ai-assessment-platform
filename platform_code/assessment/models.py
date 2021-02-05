@@ -279,6 +279,18 @@ class Evaluation(models.Model):
                 list_all_elements.append(element)
         return list_all_elements
 
+    def get_dict_sections_elements_choices(self):
+        dict_sections_elements = {}
+        for section in self.section_set.all().order_by(
+                "master_section__order_id"):
+            dict_sections_elements[section] = {}
+            for element in section.evaluationelement_set.all().order_by(
+                    "master_evaluation_element__order_id"
+            ):
+                dict_sections_elements[section][element] = \
+                    [choice for choice in element.choice_set.all().order_by("id")]
+        return dict_sections_elements
+
     def create_evaluation_body(self):
         """
         Create the dynamic elements (section, evaluation elements, choices) for an evaluation after the being

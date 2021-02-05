@@ -149,6 +149,10 @@ Inside each section, first you have, if it exists:
     .select-feedback-popin{
         font-size: 12px;
     }
+    /* results */
+    .margin-top-export-pdf{
+        margin-top: 20px;
+    }
 }
 
 @media (max-width: 380px) {
@@ -218,6 +222,10 @@ Inside each section, first you have, if it exists:
     }
     .profile-settings-pills{
         width: 50%;
+    }
+    /* results */
+    .margin-top-export-pdf{
+        margin-top: 10px;
     }
 }
 
@@ -399,6 +407,10 @@ Inside each section, first you have, if it exists:
     .btn-submit-newsletter{
         margin-top: 15px;
     }
+    /* results */
+    .margin-top-export-pdf{
+        margin-top: 10px;
+    }
 }
 
 /* ALL SMALLER THAN 1024px */
@@ -571,6 +583,10 @@ Inside each section, first you have, if it exists:
 
     .btn-submit-newsletter{
         margin-top: 15px;
+    }
+    /* results */
+    .margin-top-export-pdf{
+        margin-top: 10px;
     }
 }
 
