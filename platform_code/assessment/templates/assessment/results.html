@@ -82,6 +82,10 @@
         <form action="{{ evaluation.get_absolute_url }}" class="float-right margin-auto smartphone-margin-top">
             <input class="btn btn-primary button-190-or-220" type="submit" value="{% trans 'Modify' %}"/>
         </form>
+
+        <form action="{{ evaluation.get_absolute_url }}results/pdf/" class="margin-auto margin-top-export-pdf">
+            <input class="btn btn-primary button-190-or-220" type="submit" value="{% trans 'Export PDF' %}"/>
+        </form>
     </div>
 </div>
     <div class="response margin-70" id="responses">
