@@ -49,12 +49,13 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
+
 ]
 
 ROOT_URLCONF = 'dev_platform.urls'
@@ -118,6 +119,8 @@ PROJECT_ID = os.environ.get('PROJECT_ID', None)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
+# Language by default for the user if the middleware LocaleMiddleware doesn't success
+# to identify the user language based on the url/request
 LANGUAGE_CODE = 'fr'
 
 # Lists of languages site supports.

@@ -44,7 +44,7 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
             # It means the user change his password
             if "old_password" in dic_form:
                 self.treat_password_change(request)
-
+            # For the form in the data settings (last name, first name and language preference)
             elif "last_name" in dic_form:
                 self.treat_name_change(request)
         return HttpResponse(json.dumps(self.data_update), content_type="application/json")
@@ -78,10 +78,12 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
         if form.is_valid():
             last_name = form.cleaned_data.get("last_name")
             first_name = form.cleaned_data.get("first_name")
+            language_preference = form.cleaned_data.get("language_preference")
+            user.language_preference = language_preference
             user.last_name = last_name
             user.first_name = first_name
             user.save()
             self.data_update["success"] = True
-            self.data_update["message"] = _("Your personal data have been updated!")
+            self.data_update["message"] = _("Your information has been updated!")
         else:
             self.data_update["message"] = _("The validation failed. Please check you have filled all the fields.")
