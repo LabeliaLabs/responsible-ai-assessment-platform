@@ -588,6 +588,9 @@ Inside each section, first you have, if it exists:
     .margin-top-export-pdf{
         margin-top: 10px;
     }
+    .margin-btn-orga-members {
+        margin-top: 10px;
+    }
 }
 
 /* SMALLER */
@@ -605,9 +608,6 @@ Inside each section, first you have, if it exists:
 /* LARGER */
 
 @media (min-width: 1025px) {
-    .large-screen-min-margin-10 {
-        margin-top: 10px;
-    }
     .hidden-delete-button{
         margin-top: 10px;
     }
@@ -628,6 +628,9 @@ Inside each section, first you have, if it exists:
     }
     td {
         max-width: 120px;
+    }
+    .margin-btn-orga-members {
+        margin-top: 7px;
     }
 }
 
