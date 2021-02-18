@@ -11,6 +11,7 @@ from assessment.models import (
     EvaluationElement,
     MasterChoice,
     Choice,
+    get_last_assessment_created,
 )
 
 from home.models import (
@@ -60,6 +61,10 @@ class AssessmentTestCase(TestCase):
         self.assertEqual(assessment2.version, "2.0")
         self.assertTrue(type(assessment1.version) == str)
         self.assertTrue(float(assessment1.version) < float(assessment2.version))
+
+    def test_get_last_assessment_created(self):
+        assessment2 = Assessment.objects.get(name="assessment2")
+        self.assertEqual(get_last_assessment_created(), assessment2)
 
 
 class MasterSectionTestCase(TestCase):
