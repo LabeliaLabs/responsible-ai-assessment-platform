@@ -1,0 +1,80 @@
+{% load static %}
+{% load add_attr %}
+{% load markdownify %}
+{% load i18n %}
+{% load home_tags %}
+
+<div class="content" id="content-user-notes">
+    {% for evaluation, sections in user_notes_dict.items %}
+    <div class="margin-10" id="accordion-evaluation-{{evaluation.id}}">
+        <div class="card">
+            <div class="grid-2-cols-resource-section card-header collapsed background-white"
+                 data-toggle="collapse"
+                 href="#collapse-evaluation-{{evaluation.id}}"
+                 id="cardHeader-evaluation-{{evaluation.id}}" onclick="changeIconResource(this)">
+                <div class="resource-section-icon fa fa-plus"
+                     id="iconUserNotesEvaluation{{evaluation.id}}">
+
+                </div>
+                <div class="">
+                    <span class="fake-link">{{evaluation.name}} - {{evaluation.organisation.name}} - {{evaluation.created_at}} - {{evaluation.calculate_progression}}%</span>
+                </div>
+            </div>
+            <div class="card-body collapse" data-parent="#accordion-evaluation-{{evaluation.id}}"
+                 id="collapse-evaluation-{{evaluation.id}}">
+                {% for section, elements in sections.items %}
+                <div class="card" id="note-section-{{section.id}}">
+                    <div class="card-header">
+                        <p class="margin-10">
+                            {{section}}
+                        </p>
+                    </div>
+
+
+                    <div class="card-body">
+                        {% for element, notes in elements.items %}
+                        <div id="note-element-{{element.id}}">
+                            <p class="mx-2 font-weight-bold">
+                                Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                                :
+                                {{element.master_evaluation_element.name|markdownify}}
+                            </p>
+                            <p class="mx-2">
+                                {{element.master_evaluation_element.question_text|markdownify}}
+                            </p>
+
+
+                            <div class="mx-2 row" id="note-wrapper-{{element.id}}">
+                                <p class="profile-notes-text">
+                                    <b>{% trans "My note" %}:</b>
+                                    {{notes|linebreaksbr|urlize|url_target_blank}}
+                                </p>
+                                <div class="margin-auto profile-notes-buttons">
+                                    <a href="{% url 'assessment:orga-summary' evaluation.organisation.id %}{{evaluation.name|slugify}}/{{evaluation.id}}/section/{{section.id}}/{{section.master_section.keyword|slugify}}/{{section.master_section.order_id}}?element={{element.master_evaluation_element.order_id}}">
+                                        <button class="btn btn-primary small-btn m-1"
+                                                title="{% trans 'Go to the note' %}">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                    </a>
+                                    <form class="m-1" action="{% url 'home:user-profile' %}"
+                                          id="form-element-{{element.id}}" method="post">
+                                        {% csrf_token %}
+                                        <a class="btn btn-danger small-btn btn-cursor"
+                                           onclick="removeNote({{element.id}})">
+                                            <i class="fa fa-trash white-color"></i>
+                                        </a>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <p id="empty_notes_text" {% if user_notes_dict %} hidden {% endif %}>{% trans "You don't have any notes in your evaluations" %}</p>
+</div>

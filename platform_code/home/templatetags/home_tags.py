@@ -1,4 +1,6 @@
 from django import template
+from django.utils.safestring import mark_safe
+
 from home.models import Membership
 
 register = template.Library()
@@ -44,3 +46,11 @@ def need_login_page(full_path):
         if path in full_path:
             return True
     return False
+
+
+@register.filter
+def url_target_blank(text):
+    """
+    This function adds the target="_blank" attribute to <a></a> tag
+    """
+    return mark_safe(text.replace('<a ', '<a target="_blank" '))

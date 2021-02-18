@@ -321,4 +321,9 @@ for (i = 0; i < coll.length; i++) {
     }
   });
 }
+var params = new URLSearchParams(window.location.search);
+var numElement = params.get('element');
+var card = document.querySelectorAll(".card")[numElement-1];
+card.children[1].classList.add("show");
+card.scrollIntoView();
 </script>

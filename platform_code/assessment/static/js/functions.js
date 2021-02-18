@@ -1,5 +1,32 @@
 // This file contains the javascript functions used in the project
 
+function manageAjaxRequest(ajax, form, ...args) {
+// Open the ajax object (XMLHttpRequest type)
+// Set headers to ajax object: crsf, action, method, etc
+// Send the request with the form and the args data
+// Args: string, with the format: "key=value"
+    ajax.open("POST", form.getAttribute("action"), true);
+    ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');  // allow django to recognize it is ajax
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    ajax.setRequestHeader("X-CSRFToken", csrftoken);
+    let arg = args;  // array
+    var data = arg.map(i => "&" + i);  // add "&" before each pair of key=value
+    var additionalData = data.join();
+    ajax.send(convertFormToString(form) + additionalData);
+}
+
+function convertFormToString(form) {
+// For a form, for all the fields, add them to a string which is returned
+// Used to pass form data into ajax call
+    var formData = new FormData(form);
+    var data = "";
+    for (var pair of formData.entries()) {
+        data = data + "&" + pair[0].toString() + "=" + pair[1].toString();
+    }
+    return data
+}
+
 // Functions to manage resources
 
 function like(element_id, resource_id) {
@@ -752,4 +779,50 @@ function registerNewsletter(event) {
             }
         })
     });
+}
+
+//this script is used on the profile page.it makes a request to remove a note from the model.
+//If success it removes it from the page.
+function removeNote(note_element_id) {
+    var form = document.getElementById("form-element-" + note_element_id);
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+            var response = JSON.parse(ajax.response);
+            if (response['success']) {
+                //first notify the success to the user and remove notes/buttons
+                var parentMessage = document.getElementById("note-wrapper-" + note_element_id);
+                parentMessage.textContent = '';
+                addMessage(parentMessage, response['message'], response["message_type"]);
+                parentMessage.classList.remove("hidden-div");
+                //after 4 seconds delete the notification and remove the question.
+                // Also remove section and evaluation if needed.
+                setTimeout(function () {
+                    parentMessage.classList.add("hidden-div");
+                    parentMessage.textContent = '';
+                    var element_div = document.getElementById("note-element-" + note_element_id);
+                    var section_div_body = element_div.parentElement
+                    element_div.remove();
+                    // if the section is empty, removes it
+                    if (section_div_body.childElementCount === 0) {
+                        var section_div = document.getElementById("note-section-" + response["section_id"])
+                        var evaluation_div_body = document.getElementById("collapse-evaluation-" + response["evaluation_id"])
+                        section_div.remove()
+                        // if the evaluation is empty removes it
+                        if (evaluation_div_body.childElementCount === 0) {
+                            var evaluation_div = document.getElementById("accordion-evaluation-" + response["evaluation_id"])
+                            evaluation_div.remove()
+                            var child_count = document.querySelectorAll("#content-user-notes > div").length;
+                            // if the child count is equals to 1, there is no more notes to display so we display a place-holder text
+                            if (child_count === 1) {
+                                document.getElementById("empty_notes_text").removeAttribute("hidden")
+                            }
+                        }
+                    }
+                }, 4000);
+
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form, "note_element_id=" + note_element_id);
 }
