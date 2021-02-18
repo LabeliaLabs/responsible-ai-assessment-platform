@@ -295,8 +295,21 @@ class TestScoreValues(TestCase):
     def test_section_set_points_with_condition_inter(self):
         kwargs = {"1.1.a": "5"}
         self.change_weight_choices(**kwargs)
-        self.set_progression_evaluation("1.1.a", "1.2.b")
+        self.set_progression_evaluation("1.1.a")
         self.assertEqual(self.section1.points, 5)  # Points of 1.2.b are not counted
+
+    def test_section_calculate_score_per_section(self):
+        self.set_progression_evaluation("1.1.b", "1.2.b")
+        self.assertEqual(self.section1.calculate_score_per_section(), 1.5)
+
+    def test_section_calculate_score_per_section_bis(self):
+        """
+        Test that the compensation is well calculated because 1.1.a sets conditions on the element 1.2
+        """
+        kwargs = {"1.1.a": "1", "1.2.b": "4"}
+        self.change_weight_choices(**kwargs)
+        self.set_progression_evaluation("1.1.a")
+        self.assertEqual(self.section1.calculate_score_per_section(), 4)
 
     def test_evaluation_element_calculate_points_not_concerned_no_conditions(self):
         self.assertEqual(self.evaluation_element1.calculate_points_not_concerned(), 0)  # No choice ticked

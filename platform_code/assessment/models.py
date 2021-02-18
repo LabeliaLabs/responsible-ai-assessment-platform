@@ -842,6 +842,35 @@ class Section(models.Model):
         self.max_points = max_points
         self.save()
 
+    def get_points_not_concerned(self):
+        """
+        Get the sum of the points not concerned within a section, due to conditions inter evaluation elements or
+        to conditions intra evaluation elements.
+        """
+        # todo tests
+        evaluation_score = self.evaluation.evaluationscore_set.first()
+        evaluation_element_weight = evaluation_score.get_element_weight()
+        sum_points_not_concerned = 0
+        for element in self.evaluationelement_set.all():
+            # Check this is useful to calculate points not concerned (condition intra or inter)
+            if element.has_condition_between_choices() or not element.is_applicable():
+                element_weight = evaluation_element_weight.get_master_element_weight(
+                    element.master_evaluation_element
+                )
+                sum_points_not_concerned += element.calculate_points_not_concerned() * element_weight
+        return sum_points_not_concerned
+
+    def calculate_score_per_section(self):
+        """
+        Apply the compensation in case there are points not concerned.
+        Multiply the dilatation factor with the points obtained and sum it with half the points not
+        concerned.
+        """
+        pts_not_concerned = self.get_points_not_concerned()
+        coeff = self.evaluation.evaluationscore_set.first().coefficient_scoring_system
+        dilatation_factor = (self.max_points - pts_not_concerned * coeff) / (self.max_points - pts_not_concerned)
+        return self.points * dilatation_factor + coeff * pts_not_concerned
+
 
 class MasterEvaluationElement(models.Model):
     """
