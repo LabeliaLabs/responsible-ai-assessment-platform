@@ -1,7 +1,10 @@
 import json
 
-from django.test import TestCase
+from django.contrib.messages import get_messages
+from django.test import TestCase, Client
+from django.core.files.uploadedfile import SimpleUploadedFile
 
+from assessment.forms import JsonUploadForm
 from assessment.models import (
     Assessment,
     MasterSection,
@@ -10,12 +13,13 @@ from assessment.models import (
     ExternalLink,
 )
 from assessment.import_assessment import (
-    treat_and_save_dictionary_data,
-    external_link_already_exist,
     test_order_id_number,
     test_order_id_letter,
+    ImportAssessment,
+    external_link_already_exist,
 )
 from assessment.scoring import check_and_valid_scoring_json
+from home.models import User
 
 
 class ImportAssessmentTestCase(TestCase):
@@ -28,24 +32,29 @@ class ImportAssessmentTestCase(TestCase):
 
     def setUp(self):
         with open(
-            "assessment/tests/import_test_files/assessment_test_fr_v1.json"
+                "assessment/tests/import_test_files/assessment_test_v1.json"
         ) as json_file:
-            self.assessment_data_fr = json.load(json_file)
+            self.assessment_data = json.load(json_file)
         json_file.close()
-        with open(
-                "assessment/tests/import_test_files/assessment_test_en_v1.json"
-        ) as json_file_en:
-            self.assessment_data_en = json.load(json_file_en)
-        json_file_en.close()
 
     def tearDown(self):
-        del self.assessment_data_fr
-        del self.assessment_data_en
+        del self.assessment_data
         for assessment in Assessment.objects.all():
             assessment.delete()
 
+    def test_check_assessment(self):
+        self.assertTrue(ImportAssessment(self.assessment_data).success)
+
+    def test_check_assessment_fail(self):
+        del self.assessment_data["version"]
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
+
+    def test_check_assessment_fail_bis(self):
+        del self.assessment_data["sections"]["section 1"]["elements"]
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
+
     def test_import_assessment(self):
-        self.assertTrue(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assertTrue(ImportAssessment(self.assessment_data).success)
         self.assertEqual(len(list(Assessment.objects.all())), 1)
         self.assertEqual(len(list(MasterSection.objects.all())), 2)
         self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 3)
@@ -53,347 +62,237 @@ class ImportAssessmentTestCase(TestCase):
         self.assertEqual(len(list(ExternalLink.objects.all())), 1)
 
     def test_import_assessment_conditions_elements(self):
-        self.assertTrue(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assertTrue(ImportAssessment(self.assessment_data).success)
         self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 3)
         self.assertEqual(len(list(MasterChoice.objects.all())), 6)
         master_evaluation_element1 = MasterEvaluationElement.objects.get(
-            name="Element 1", master_section__name="section 1"
+            name="Element 1 fr", master_section__name="section 1 fr"
         )
         master_choice1a = MasterChoice.objects.get(
-            master_evaluation_element=master_evaluation_element1, answer_text="answer a"
+            master_evaluation_element=master_evaluation_element1, answer_text="answer a fr"
         )
         master_evaluation_element2 = MasterEvaluationElement.objects.get(
-            name="Element 2"
+            name="Element 2 fr"
         )
         self.assertEqual(master_evaluation_element2.depends_on, master_choice1a)
 
     def test_import_assessment_conditions_choices(self):
-        self.assertTrue(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assertTrue(ImportAssessment(self.assessment_data).success)
         self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 3)
         self.assertEqual(len(list(MasterChoice.objects.all())), 6)
         master_evaluation_element2 = MasterEvaluationElement.objects.get(
-            name="Element 2", master_section__name="section 1"
+            name="Element 2 fr", master_section__name="section 1 fr"
         )
         master_choice2a = MasterChoice.objects.get(
-            master_evaluation_element=master_evaluation_element2, answer_text="answer a"
+            master_evaluation_element=master_evaluation_element2, answer_text="answer a fr"
         )
         master_choice2b = MasterChoice.objects.get(
-            master_evaluation_element=master_evaluation_element2, answer_text="answer b"
+            master_evaluation_element=master_evaluation_element2, answer_text="answer b fr"
         )
         self.assertTrue(master_choice2a.is_concerned_switch)
         self.assertFalse(master_choice2b.is_concerned_switch)
 
     def test_import_assessment_element_resources(self):
-        self.assertTrue(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assertTrue(ImportAssessment(self.assessment_data).success)
         self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 3)
         self.assertEqual(len(list(ExternalLink.objects.all())), 1)
         master_evaluation_element1 = MasterEvaluationElement.objects.get(
-            name="Element 1", master_section__name="section 1"
+            name="Element 1 fr", master_section__name="section 1 fr"
         )
         resource = ExternalLink.objects.all()[0]
         self.assertEqual(master_evaluation_element1.external_links.all()[0], resource)
 
+    # Test the assessment keys
+    def test_import_assessment_missing_assessment_key(self):
+        keys_list = ["name_fr", "name_en", "sections", "version"]
+        for key in keys_list:
+            del self.assessment_data[key]
+            self.assertFalse(ImportAssessment(self.assessment_data).success)
+            self.assertIn(
+                "You have missing keys for the assessment data",
+                ImportAssessment(self.assessment_data).message,
+            )
+            with self.assertRaises(Exception):
+                Assessment.objects.get(name="assessment", version="1.0")
+
     def test_import_assessment_prod_version(self):
-        self.assessment_data_fr["version"] = "0.63"
-        self.assertTrue(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assessment_data["version"] = "0.63"
+        self.assertTrue(ImportAssessment(self.assessment_data).success)
         self.assertTrue(Assessment.objects.all())  # There is an assessment in the BD
         assessment = Assessment.objects.first()
         self.assertEqual(assessment.version, "0.63")
 
     def test_import_assessment_negative_version(self):
-        self.assessment_data_fr["version"] = "-5"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertEqual(
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-            "The version must be convertible" " into a positive number",
+        self.assessment_data["version"] = "-5"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
+        self.assertIn(
+            "The version must be convertible into a positive number",
+            ImportAssessment(self.assessment_data).message,
         )
 
     def test_import_assessment_not_floatable_version(self):
-        self.assessment_data_fr["version"] = "1.0-alpha"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assessment_data["version"] = "1.0-alpha"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
-            "The version must not contain letters. It should be convertible into a float ('0.5', '1.0', etc)."
-            " The version you provided was",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            "The version must not contain letters. It should be convertible into a float ('0.5', '1.0', etc).",
+            ImportAssessment(self.assessment_data).message,
         )
 
-    def test_import_assessment_without_version(self):
-        del self.assessment_data_fr["version"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You need to provide an assessment version which could be converted into a float",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-
-    def test_import_assessment_without_name(self):
-        del self.assessment_data_fr["name"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertEqual(
-            "You need to provide a name for the assessment",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-
-    def test_import_assessment_without_language(self):
-        """
-        Delete the language key from the json, expect error
-        """
-        del self.assessment_data_fr["language"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You need to provide the language of the assessment",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-
-    def test_import_assessment_with_bad_language_value(self):
-        """
-        Set the language key to a random value (different from "en" or "fr") and the import should fail
-        """
-        self.assessment_data_fr["language"] = "de"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "The language is not a valid one",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_without_sections(self):
-        del self.assessment_data_fr["sections"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertEqual(
-            "You haven't sections in your assessment",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_without_section_name(self):
-        del self.assessment_data_fr["sections"]["section 1"]["name"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have a section without",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+    # Test the section keys
+    def test_import_assessment_missing_section_key(self):
+        section_keys = ["order_id", "name_fr", "name_en", "keyword_fr", "keyword_en",
+                        "description_fr", "description_en", "elements"]
+        for key in section_keys:
+            del self.assessment_data["sections"]["section 1"][key]
+            self.assertFalse(ImportAssessment(self.assessment_data).success)
+            self.assertIn(
+                "You have a section without the required keys",
+                ImportAssessment(self.assessment_data).message,
+            )
+            with self.assertRaises(Exception):
+                Assessment.objects.get(name="assessment", version="1.0")
 
     def test_import_assessment_letter_order_id_sections(self):
-        self.assessment_data_fr["sections"]["section 1"]["order_id"] = "a"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assessment_data["sections"]["section 1"]["order_id"] = "a"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "The section id is not an integer for this section",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
     def test_import_assessment_float_order_id_sections(self):
-        self.assessment_data_fr["sections"]["section 1"]["order_id"] = "0.25"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assessment_data["sections"]["section 1"]["order_id"] = "0.25"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "The section id is not an integer for this section",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
-    def test_import_assessment_no_order_id_sections(self):
-        del self.assessment_data_fr["sections"]["section 1"]["order_id"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have a section without",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+    # Test missing element keys
+    def test_import_assessment_element_without_a_key(self):
+        element_keys = ["order_id", "name_fr", "name_en", "condition", "question_text_fr", "question_text_en",
+                        "question_type", "answer_items", "explanation_text_fr", "explanation_text_en", "resources"]
+        for key in element_keys:
+            del self.assessment_data["sections"]["section 1"]["elements"]["element 1"][key]
+            self.assertFalse(ImportAssessment(self.assessment_data).success)
+            self.assertIn(
+                "without the required keys",
+                ImportAssessment(self.assessment_data).message,
+            )
+            with self.assertRaises(Exception):
+                Assessment.objects.get(name="assessment", version="1.0")
 
-    def test_import_assessment_no_keyword_sections(self):
-        del self.assessment_data_fr["sections"]["section 1"]["keyword"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have a section without",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_section_without_elements(self):
-        del self.assessment_data_fr["sections"]["section 1"]["elements"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have a section without",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_element_without_order_id(self):
-        del self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "order_id"
-        ]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have missing fields for the element",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_element_without_name(self):
-        del self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "name"
-        ]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have missing fields for the element",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_element_without_condition(self):
-        del self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "condition"
-        ]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have missing fields for the element",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_element_without_question_text(self):
-        del self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "question_text"
-        ]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have missing fields for the element",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_element_without_question_type(self):
-        del self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "question_type"
-        ]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have missing fields for the element",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
+    # Test element keys with bad values
     def test_import_assessment_element_bad_condition_format(self):
-        self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "condition"
-        ] = "55a"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assessment_data["sections"]["section 1"]["elements"]["element 1"]["condition"] = "55a"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "You have a condition for a choice which the numbering is",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
     def test_import_assessment_element_condition_on_nonexistent_choice(self):
-        self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "condition"
-        ] = "1.3.a"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assessment_data["sections"]["section 1"]["elements"]["element 1"]["condition"] = "1.3.a"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "You have set a condition on a choice which does not exist or which is",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
     def test_import_assessment_element_bad_order_id_format(self):
-        self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "order_id"
-        ] = "A"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assessment_data["sections"]["section 1"]["elements"]["element 1"]["order_id"] = "A"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "The order_id is not an convertible into an integer for this element",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
     def test_import_assessment_element_bad_order_id_format_bis(self):
-        self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "order_id"
-        ] = "1,"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assessment_data["sections"]["section 1"]["elements"]["element 1"]["order_id"] = "1,"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "The order_id is not an convertible into an integer for this element",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
-    def test_import_assessment_element_no_answer_items(self):
-        del self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "answer_items"
-        ]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have missing fields for the element",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+    # Test missing choice keys
+    def test_import_assessment_choice_without_key(self):
+        choice_keys = ["order_id", "answer_text_fr", "answer_text_en", "is_concerned_switch"]
+        for key in choice_keys:
+            del self.assessment_data["sections"]["section 1"]["elements"]["element 1"][
+                "answer_items"
+            ]["1.1.b"][key]
+            self.assertFalse(ImportAssessment(self.assessment_data).success)
+            self.assertIn(
+                "without the required keys",
+                ImportAssessment(self.assessment_data).message,
+            )
+            with self.assertRaises(Exception):
+                Assessment.objects.get(name="assessment", version="1.0")
 
+    # Test bad choice key values
     def test_import_assessment_bad_condition_intra_element(self):
-        self.assessment_data_fr["sections"]["section 1"]["elements"]["element 2"][
+        self.assessment_data["sections"]["section 1"]["elements"]["element 2"][
             "answer_items"
         ]["1.2.b"]["is_concerned_switch"] = "c"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "The choice has not a boolean value for is_concerned_switch",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
     def test_import_assessment_choice_bad_order_id(self):
-        self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
+        self.assessment_data["sections"]["section 1"]["elements"]["element 1"][
             "answer_items"
         ]["1.1.b"]["order_id"] = "1"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
-            "The order_id is not a letter for this choice",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
-        )
-        with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
-
-    def test_import_assessment_choice_no_answer_text(self):
-        del self.assessment_data_fr["sections"]["section 1"]["elements"]["element 1"][
-            "answer_items"
-        ]["1.1.b"]["answer_text"]
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
-        self.assertIn(
-            "You have missing fields for the choice",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            "The order_id of the choice is not a letter",
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
 
     def test_import_assessment_duplicate_choice_numbering(self):
-        self.assessment_data_fr["sections"]["section 1"]["elements"]["element 2"][
+        self.assessment_data["sections"]["section 1"]["elements"]["element 2"][
             "order_id"
         ] = "1"
-        self.assertFalse(treat_and_save_dictionary_data(self.assessment_data_fr)[0])
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "You have duplicate choice numbering so please verify your",
-            treat_and_save_dictionary_data(self.assessment_data_fr)[1],
+            ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
             Assessment.objects.get(name="assessment", version="1.0")
+
+    # Test resource keys
+    def test_import_assessment_resource_keys(self):
+        resource_keys = ["resource_type", "resource_text_fr", "resource_text_en"]
+        for key in resource_keys:
+            del self.assessment_data["sections"]["section 1"]["elements"]["element 1"][
+                "resources"
+            ]["0"][key]
+            self.assertFalse(ImportAssessment(self.assessment_data).success)
+            self.assertIn(
+                "without the required keys",
+                ImportAssessment(self.assessment_data).message,
+            )
+            with self.assertRaises(Exception):
+                Assessment.objects.get(name="assessment", version="1.0")
 
 
 class TestOrderIdTestCase(TestCase):
@@ -449,12 +348,13 @@ class ScoringImportTestCase(TestCase):
     """
     def setUp(self):
         with open(
-            "assessment/tests/import_test_files/assessment_test_fr_v1.json"
+            "assessment/tests/import_test_files/assessment_test_v1.json"
         ) as json_file:
-            self.assessment_data_fr = json.load(json_file)
+            self.assessment_data = json.load(json_file)
         json_file.close()
-        treat_and_save_dictionary_data(self.assessment_data_fr)
-        self.assessment = Assessment.objects.get(name="assessment")
+        import_assessment = ImportAssessment(self.assessment_data)
+        self.assertTrue(import_assessment.success)
+        self.assessment = Assessment.objects.get(name="assessment fr")
         with open(
             "assessment/tests/import_test_files/scoring_test_v1.json"
         ) as scoring_json:
@@ -562,6 +462,68 @@ class ScoringImportTestCase(TestCase):
             )[1],
         )
 
-# todo test the scoring and evaluation element weight creation while importing assessment
 
-# todo test the upgrade table
+class TestJsonUpload(TestCase):
+    """"
+    Test the import assessment & scoring json validation function
+    """
+    def setUp(self):
+        self.email = "admin@hotmail.com"
+        self.password = "admin_password"
+        self.user = User.object.create_superuser(email=self.email, password=self.password)
+        self.client = Client()
+        self.client.login(email=self.email, password=self.password)
+
+    def test_upload_json_form(self):
+        scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json', 'rb')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1.json', 'rb')
+        post_data = {
+            "assessment_json_file": "",  # just the field need to not be empty
+            "scoring_json_file": ""
+        }
+        files = {"assessment_json_file": SimpleUploadedFile("assessment_json_file", assessment_file.read()),
+                 "scoring_json_file": SimpleUploadedFile("scoring_json_file", scoring_file.read())
+                 }
+        form = JsonUploadForm(post_data, files=files)
+        self.assertTrue(form.is_valid())
+
+    def test_upload_json_invalid_form(self):
+        """
+        Missing scoring, only assessment file
+        """
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1.json')
+        post_data = {
+            "assessment_json_file": assessment_file,
+        }
+        form = JsonUploadForm(post_data)
+        self.assertFalse(form.is_valid())
+        response = self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertIn("There was an error in the form", str(messages[0]))
+
+    def test_upload_json_post(self):
+        scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1.json')
+        post_data = {
+            "assessment_json_file": assessment_file,  # just the field need to not be empty
+            "scoring_json_file": scoring_file
+        }
+        response = self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertEqual(len(messages), 2)
+        self.assertEqual(str(messages[0]), "The scoring system has been imported!")
+        self.assertEqual(str(messages[1]), "The assessment has been imported!")
+
+    def test_upload_json_invalid_file_type(self):
+        """
+        Not a json file
+        """
+        assessment_file = open('assessment/tests/tests_assessment_models.py')
+        scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json')
+        post_data = {
+            "assessment_json_file": assessment_file,
+            "scoring_json_file": scoring_file
+        }
+        response = self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertIn("Incorrect file type, one is not a json:", str(messages[0]))

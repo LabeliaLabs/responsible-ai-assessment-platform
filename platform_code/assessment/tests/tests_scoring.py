@@ -16,7 +16,7 @@ from assessment.models import (
 from .object_creation import (
     create_evaluation,
 )
-from assessment.import_assessment import treat_and_save_dictionary_data
+from assessment.import_assessment import ImportAssessment
 
 """
 In this file, the scoring is tested: the class EvaluationScore, the calculation of the max score
@@ -32,13 +32,14 @@ class TestEvaluationScoreStatic(TestCase):
     """
 
     def setUp(self):
-        with open("assessment/tests/import_test_files/assessment_test_fr_v1.json") as json_file:
+        with open("assessment/tests/import_test_files/assessment_test_v1.json") as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
         self.set_test_objects()
 
     def set_test_objects(self):
-        self.assessment = treat_and_save_dictionary_data(self.assessment_data, return_assessment=True)
+        import_assessment = ImportAssessment(self.assessment_data)
+        self.assessment = import_assessment.assessment
         # self.assertTrue(treat_and_save_dictionary_data(self.assessment_data)[0])
         # self.assessment = Assessment.objects.get(name="assessment")
         # Create the evaluation object linked to the assessment but without body yet
@@ -167,13 +168,13 @@ class TestEvaluationScoreStatic(TestCase):
 
 class TestScoreValues(TestCase):
     def setUp(self):
-        with open("assessment/tests/import_test_files/assessment_test_fr_v1.json") as json_file:
+        with open("assessment/tests/import_test_files/assessment_test_v1.json") as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
         self.set_test_objects()
 
     def set_test_objects(self):
-        self.assessment = treat_and_save_dictionary_data(self.assessment_data, return_assessment=True)
+        self.assessment = ImportAssessment(self.assessment_data).assessment
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(assessment=self.assessment, name="evaluation")
         with open("assessment/tests/import_test_files/scoring_test_v1.json") as scoring_json:
@@ -236,7 +237,6 @@ class TestScoreValues(TestCase):
         kwargs with choice numbering as key and string of float as value
         :return:
         """
-        # Todo refactor DRY as this is the same method than in the previous class (?)
         for key, value in kwargs.items():
             if key in self.dic_choices.keys():
                 self.dic_choices[key] = value

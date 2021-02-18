@@ -1,0 +1,118 @@
+{
+    "version": "1.0",
+    "name_fr": "assessment fr",
+    "name_en": "assessment en",
+    "timestamp": "03-Sep-2020 (15:23:55.801132)",
+    "sections": {
+        "section 1": {
+            "order_id": "1",
+            "name_fr": "section 1 fr",
+            "name_en": "section 1 en",
+            "keyword_fr": "Protection des données",
+            "keyword_en": "Data protection",
+            "description_fr": "C'est la description de la section 1 en français.",
+            "description_en": "This is the description of section 1 in English",
+            "elements": {
+                "element 1": {
+                    "order_id": "1",
+                    "name_fr": "Element 1 fr",
+                    "name_en": "Element 1 en",
+                    "condition": "n/a",
+                    "question_text_fr": "Question element 1",
+                    "question_text_en": "The question element 1",
+                    "question_type": "checkbox",
+                    "answer_hint": "Sélectionner une seule réponse, correspondant le mieux au niveau de maturité de l'organisation sur ce sujet",
+                    "explanation_text_fr": "Explication 1 fr",
+                    "explanation_text_en": "Explication 1 en",
+                    "resources": {
+                        "0": {
+                            "resource_type": "official report",
+                            "resource_text_fr": "[Big data, artificial intelligence, machine learning and data protection](https://ico.org.uk/media/for-organisations/documents/2013559/big-data-ai-ml-and-data-protection.pdf), EU Information Commissioner's Office, 2017",
+                            "resource_text_en": "[Big data, artificial intelligence, machine learning and data protection](https://ico.org.uk/media/for-organisations/documents/2013559/big-data-ai-ml-and-data-protection.pdf), EU Information Commissioner's Office, 2017 EN"
+                        }
+                    },
+                    "answer_items": {
+                        "1.1.a": {
+                            "order_id": "a",
+                            "answer_text_fr": "answer a fr",
+                            "answer_text_en": "answer a en",
+                            "is_concerned_switch": 0
+                        },
+                        "1.1.b": {
+                            "order_id": "b",
+                            "answer_text_fr": "answer b fr",
+                            "answer_text_en": "answer b en",
+                            "is_concerned_switch": 0
+                        }
+                    }
+                },
+                "element 2": {
+                    "order_id": "2",
+                    "name_fr": "Element 2 fr",
+                    "name_en": "Element 2 en",
+                    "condition": "1.1.a",
+                    "question_text_fr": "Question element 2 fr",
+                    "question_text_en": "Question element 2 en",
+                    "question_type": "checkbox",
+                    "answer_hint": "Sélectionner tous les éléments de réponse correspondant à des pratiques de votre organisation",
+                    "explanation_text_fr": "Explication 2 fr",
+                    "explanation_text_en": "Explication 2 en",
+                    "resources": {},
+                    "answer_items": {
+                        "1.2.a": {
+                            "order_id": "a",
+                            "answer_text_fr": "answer a fr",
+                            "answer_text_en": "answer a en",
+                            "is_concerned_switch": 1
+                        },
+                        "1.2.b": {
+                            "order_id": "b",
+                            "answer_text_fr": "answer b fr",
+                            "answer_text_en": "answer b en",
+                            "is_concerned_switch": 0
+                        }
+                    }
+                }
+			}
+		},
+        "section 2": {
+            "order_id": "2",
+            "name_fr": "Section 2 fr",
+            "name_en": "Section 2 en",
+            "keyword_fr": "Documentation des modèles",
+            "keyword_en": "Models documentation",
+            "description_fr": "Description section 2 en français",
+            "description_en": "Description section 2 in English",
+            "elements": {
+                "element 1": {
+                    "order_id": "1",
+                    "name_fr": "Element 1 fr",
+                    "name_en": "Element 1 en",
+                    "condition": "n/a",
+                    "question_text_fr": "Question element 1 fr",
+                    "question_text_en": "Question element 1 en",
+                    "question_type": "radio",
+                    "answer_hint": "Sélectionner une seule réponse, correspondant le mieux au niveau de maturité de l'organisation sur ce sujet",
+                    "explanation_text_fr": "Explication 1 fr",
+                    "explanation_text_en": "Explication 1 en",
+                    "resources": {},
+                    "answer_items": {
+                        "2.1.a": {
+                            "order_id": "a",
+                            "answer_text_fr": "answer a fr",
+                            "answer_text_en": "answer a en",
+                            "is_concerned_switch": 0
+                        },
+                        "2.1.b": {
+                            "order_id": "b",
+                            "answer_text_fr": "answer b fr",
+                            "answer_text_en": "answer b en",
+                            "is_concerned_switch": 0
+                        }
+                    }
+                }
+			}
+		}
+	}
+}
+				
