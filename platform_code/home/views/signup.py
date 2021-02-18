@@ -36,6 +36,7 @@ def signup(request):
             email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(email=email, password=raw_password)
+            user.language_preference = request.LANGUAGE_CODE
             user.active = False
             user.save()
             # create user_resources so the user can access resources, this could be integrated to user creation ?
