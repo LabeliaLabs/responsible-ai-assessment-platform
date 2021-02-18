@@ -151,7 +151,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         for section in context["dict_sections_elements"]:
             string = f"{_('Section')} {section.id}: {section.master_section.name}"
             self.draw_centered_string_on_pdf(string, 500)
-            section_points = (section.points / section.max_points) * 100
+            section_points = (section.calculate_score_per_section() / section.max_points) * 100
             self.draw_centered_string_on_pdf(
                 f"{section_points:.1f} %",
                 400,

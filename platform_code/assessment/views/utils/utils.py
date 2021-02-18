@@ -200,7 +200,12 @@ def create_radar_chart(object_list, math_expression, text_expression, hovertext_
             polar=dict(
                 radialaxis=dict(
                     visible=True,
-                    range=[0, 100]
+                    range=[0, 100],
+                    tickmode="array",
+                    tickvals=[0, 20, 40, 60, 80, 100],
+                    ticktext=["0%", "20%", "40%", "60%", "80%", "100%"],
+                    ticks="outside",
+                    angle=90
                 ),
             ),
             showlegend=False

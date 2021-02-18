@@ -64,10 +64,12 @@ class ResultsView(LoginRequiredMixin, DetailView):
             context["section_list"] = list(evaluation.section_set.all().order_by("master_section__order_id"))
             context["radar_chart"] = create_radar_chart(
                 object_list=context["section_list"],
-                math_expression=lambda x: (x.points / x.max_points) * 100,
+                math_expression=lambda x: (x.calculate_score_per_section() / x.max_points) * 100,
                 text_expression=lambda x: ("Section " + str(x.master_section.order_id) + _(": ") +
                                            str(x.master_section.keyword)),
-                hovertext_expression=lambda x: "Score" + _(": ") + str(round((x.points / x.max_points) * 100, 1))
+                hovertext_expression=lambda x: "Score" + _(": ")
+                                               + str(round((x.calculate_score_per_section() / x.max_points) * 100, 1))
+                                               + "%"
             )
             context["evaluation_element_list"] = evaluation.get_list_all_elements()
             context["organisation"] = organisation

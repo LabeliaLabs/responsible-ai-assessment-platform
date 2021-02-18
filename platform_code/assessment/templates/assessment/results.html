@@ -72,6 +72,16 @@
             building skills on your topics of interest.
             {% endblocktrans %}
         </p>
+        <p>{% blocktrans trimmed %}
+            Where the evaluation score provides a synthetic summary of an organization maturity level
+            on responsible and trustworthy data science and enables to compare with other organizations,
+            one might be interested in breaking it down to evaluation main sections. To that end, the maturity
+            levels per section allows you to identify how your organization performs on each section.
+            Please note that they are expressed in percentages, as the scoring model, taking into account
+            the fact same organizations might not be concerned by all areas of risks and all evaluations items,
+            doesn't allow a simple additive breakdown.
+            {% endblocktrans %}
+        </p>
     </div>
     <div class="row">
         <form action="{% url 'assessment:orga-summary' organisation.id %}" class="float-left margin-auto">
