@@ -44,7 +44,12 @@
                        onclick="displayTextLink('{% trans 'My resources' %}', 'active-profile')"
                     >{% trans "My resources" %}</a>
                 </li>
-
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-user-notes"
+                       id="tab-user-notes" name="column-button"
+                       onclick="displayTextLink('{% trans 'My notes' %}', 'active-profile')"
+                    >{% trans "My notes" %}</a>
+                </li>
                 <li class="nav-item column-button">
                     <a class="nav-link profile-column" href="{% url 'home:user-profile-settings'%}"
                        name="column-button">{% trans "User settings" %}</a>
@@ -61,6 +66,9 @@
                 </div>
                 <div class="container-profile tab-pane fade" id="content-ressource"><br>
                     {% include "home/profile-my-ressources.html" %}
+                </div>
+                <div class="container-profile tab-pane fade" id="content-user-notes"><br>
+                    {% include "home/profile-user-notes.html" %}
                 </div>
 
             </div>
