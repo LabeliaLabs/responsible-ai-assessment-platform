@@ -12,7 +12,7 @@ from assessment.models import Evaluation, Section, get_last_assessment_created
 from assessment.views.utils.security_checks import membership_security_check, can_edit_security_check
 from home.models import Organisation
 from .utils.edit_evaluation_name import treat_evaluation_name_edition
-from .utils.utils import treat_evaluation_creation_valid_form
+from .utils.utils import treat_evaluation_creation_valid_form, manage_missing_language
 
 logger = logging.getLogger('monitoring')
 
@@ -35,7 +35,7 @@ class EvaluationView(LoginRequiredMixin, DetailView):
         evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
-
+        manage_missing_language(request, evaluation)
         # I dont know why I cannot do in one line: list.sort() (test in shell not working)
         section_list_ = get_list_or_404(Section, evaluation=evaluation)
         section_list = sorted(

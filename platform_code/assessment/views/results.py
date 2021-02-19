@@ -13,7 +13,7 @@ from assessment.views.utils.utils import (
     manage_evaluation_max_points,
     manage_evaluation_score,
     set_form_for_results,
-    create_radar_chart,
+    create_radar_chart, manage_missing_language,
 )
 from home.models import Organisation
 
@@ -39,7 +39,7 @@ class ResultsView(LoginRequiredMixin, DetailView):
             return redirect('home:homepage')
 
         evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
-
+        manage_missing_language(request, evaluation)
         # If the evaluation is finished, which should always be the case here, set the score of the evaluation
         if evaluation.is_finished:
 

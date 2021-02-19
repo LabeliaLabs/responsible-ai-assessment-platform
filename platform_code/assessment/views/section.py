@@ -13,7 +13,7 @@ from assessment.models import Section, Evaluation, EvaluationElement, Evaluation
 from assessment.utils import get_client_ip
 from assessment.views.utils.security_checks import can_edit_security_check, membership_security_check
 from assessment.views.utils.treat_feedback_and_resources import treat_resources, treat_feedback
-from assessment.views.utils.utils import set_form_for_sections
+from assessment.views.utils.utils import set_form_for_sections, manage_missing_language
 from home.models import Organisation
 
 logger = logging.getLogger('monitoring')
@@ -58,6 +58,7 @@ class SectionView(LoginRequiredMixin, ListView):
 
         # Get ids and objects form the url
         evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
+        manage_missing_language(request, evaluation)
         section_query = self.get_queryset(evaluation=evaluation)
         self.object_list = section_query
 
