@@ -426,19 +426,29 @@ docker ps | grep postgres | awk '{print $1}'
 
 ```sh
 docker exec -i -u postgres <CONTAINER_ID> pg_dump -Fc <DB> > <DB>.dump
-docker exec -i -u postgres 0fc151d00a20 pg_dump -Fc platform_db_prod > platform_db_prod.dump
+
+# prod
+docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump
+
+# dev
+docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db > platform_db.dump
 ```
 
 ### Restaure full db
 
 ```sh
 docker exec -i -u postgres <CONTAINER_ID> pg_restore -d <DB> < <INPUT_FILE>
-docker exec -i -u postgres 52bf8c1b86cf pg_restore -d platform_db_prod --clean < platform_db_prod.dump
+
+# prod
+docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod.dump
+
+# dev
+docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db --clean < platform_db.dump
 ```
 
 ### Dump tables
 
-> Before running the `dump_tables.sh` script, please fill in the variable `<CONTAINER_ID>` with the postgresql container id (`docker ps | grep postgres | awk '{print $1}'`) and also check the `<DB>` name.
+> /!\ Before running the `dump_tables.sh` script, please update the `<DB>`  and `<TABLE>` values.
 
 ```sh
 # Login to postgresql container
@@ -454,11 +464,10 @@ docker-compose -f docker-compose.prod.yml exec db psql -U postgres -W
 \dt
 
 # Example script to export one table to csv
-CONTAINER_ID="" # docker ps | grep postgres | awk '{print $1}'
 DB="platform_db_prod" # or platform_db
 TABLE="home_user"
 
-docker exec -u postgres ${CONTAINER_ID} psql -d ${DB} -c "COPY ${TABLE} TO STDOUT WITH CSV HEADER " > db_${TABLE}.csv
+docker exec -u postgres $(docker ps | grep postgres | awk '{print $1}') psql -d ${DB} -c "COPY ${TABLE} TO STDOUT WITH CSV HEADER " > db_${TABLE}.csv
 ```
 
 ### List tables
