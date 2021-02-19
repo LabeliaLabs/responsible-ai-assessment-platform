@@ -1,7 +1,7 @@
 import json
 from ast import literal_eval
 
-from django.test import TestCase
+from django.test import TestCase, Client
 
 from assessment.models import (
     Assessment,
@@ -17,6 +17,7 @@ from .object_creation import (
     create_evaluation,
 )
 from assessment.import_assessment import ImportAssessment
+from home.models import User
 
 """
 In this file, the scoring is tested: the class EvaluationScore, the calculation of the max score
@@ -542,3 +543,69 @@ class TestScoreValues(TestCase):
         self.evaluation_score.process_score_calculation()
         self.assertEqual(self.evaluation_score.points_obtained, 9)
         self.assertEqual(self.evaluation_score.score, 100)
+
+
+class TestEvaluationCompletion(TestCase):
+    def setUp(self):
+        """
+        Import the assessment V2 because it is more complex and create a evaluation
+        """
+        self.email = "admin@hotmail.com"
+        self.password = "admin_password"
+        self.user = User.object.create_superuser(email=self.email, password=self.password)
+        self.client = Client()
+        self.client.login(email=self.email, password=self.password)
+        scoring_file = open('assessment/tests/import_test_files/scoring_test_v2.json')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v2.json')
+        post_data = {
+            "assessment_json_file": assessment_file,  # just the field need to not be empty
+            "scoring_json_file": scoring_file
+        }
+        # Create the assessment
+        self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
+        self.client.get('/fr/admin/')  # To pop the messages of the first import
+        self.evaluation = Evaluation(name="Evaluation", assessment=Assessment.objects.first())
+        self.evaluation.save()
+        self.evaluation.create_evaluation_body()
+
+    def test_complete_evaluation_normal(self):
+        self.assertFalse(self.evaluation.is_finished)
+        self.evaluation.complete_evaluation(characteristic="normal")
+        self.assertTrue(self.evaluation.is_finished)
+        evaluation_score = EvaluationScore.objects.get(evaluation=self.evaluation)
+        self.assertIsNotNone(evaluation_score.score)
+        self.assertTrue(evaluation_score.score > 0)
+        self.assertTrue(evaluation_score.score < 100)
+
+    def test_complete_evaluation_min(self):
+        self.assertFalse(self.evaluation.is_finished)
+        self.evaluation.complete_evaluation(characteristic="min")
+        self.assertTrue(self.evaluation.is_finished)
+        evaluation_score = EvaluationScore.objects.get(evaluation=self.evaluation)
+        self.assertIsNotNone(evaluation_score.score)
+        # 1.5 * 100 / 5
+        self.assertTrue(evaluation_score.score == 30.0)
+
+    def test_complete_evaluation_max(self):
+        self.assertFalse(self.evaluation.is_finished)
+        self.evaluation.complete_evaluation(characteristic="max")
+        self.assertTrue(self.evaluation.is_finished)
+        evaluation_score = EvaluationScore.objects.get(evaluation=self.evaluation)
+        self.assertIsNotNone(evaluation_score.score)
+        self.assertTrue(evaluation_score.score == 100.0)
+
+    def test_complete_evaluation_conditions(self):
+        """
+        score = (pts obtained * dilatation factor + pts not concerned * coeff) * 100 / max_pts
+        Score = (X * 1.055556 + 0.5 * 0.5) * 100 / 5
+        we cannot know X as random choice, 0 < X < 2
+        """
+        self.assertFalse(self.evaluation.is_finished)
+        self.evaluation.complete_evaluation(characteristic="conditions")
+        self.assertTrue(self.evaluation.is_finished)
+        evaluation_score = EvaluationScore.objects.get(evaluation=self.evaluation)
+        evaluation_score.set_max_points()
+        self.assertEqual(evaluation_score.max_points, 5)
+        self.assertIsNotNone(evaluation_score.score)
+        self.assertTrue(evaluation_score.score < 48)
+        self.assertTrue(evaluation_score.score >= 5)

@@ -10,6 +10,7 @@ and the score.
 """
 
 import re
+import random
 
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -53,10 +54,10 @@ class Assessment(models.Model):
         list_all_choices = []
         for master_section in self.mastersection_set.all().order_by("order_id"):
             for (
-                master_element
+                    master_element
             ) in master_section.masterevaluationelement_set.all().order_by("order_id"):
                 for master_choice in master_element.masterchoice_set.all().order_by(
-                    "order_id"
+                        "order_id"
                 ):
                     list_all_choices.append(master_choice.get_numbering())
         return list_all_choices
@@ -82,26 +83,26 @@ class Assessment(models.Model):
         dic = ManageAssessmentTranslation().dic_translated_fields
         # For all the fields which have a translation in the Assessment class, check if they are not None
         for fields in dic["assessment"]:
-            if not getattr(self, fields+"_"+language):
+            if not getattr(self, fields + "_" + language):
                 return False
         # Check that all the fields of MasterSection which are registered to have a translation,
         # are not None for the language
         for master_section in self.mastersection_set.all():
             for fields in dic["master_section"]:
-                if not getattr(master_section, fields+"_"+language):
+                if not getattr(master_section, fields + "_" + language):
                     return False
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
                 for fields in dic["master_evaluation_element"]:
-                    if not getattr(master_evaluation_element, fields+"_"+language) and \
+                    if not getattr(master_evaluation_element, fields + "_" + language) and \
                             master_evaluation_element.get_numbering() != "2.2":
                         return False
                 for master_choice in master_evaluation_element.masterchoice_set.all():
                     for fields in dic["master_choice"]:
-                        if not getattr(master_choice, fields+"_"+language):
+                        if not getattr(master_choice, fields + "_" + language):
                             return False
                 for external_link in master_evaluation_element.external_links.all():
                     for fields in dic["external_link"]:
-                        if not getattr(external_link, fields+"_"+language):
+                        if not getattr(external_link, fields + "_" + language):
                             return False
         return True
 
@@ -116,27 +117,27 @@ class Assessment(models.Model):
         dic = ManageAssessmentTranslation().dic_translated_fields
         # For all the fields which have a translation in the Assessment class, check if they are not None
         for fields in dic["assessment"]:
-            if not getattr(self, fields+"_"+language):
-                dic_fields[self] = fields+"_"+language
+            if not getattr(self, fields + "_" + language):
+                dic_fields[self] = fields + "_" + language
         # Check that all the fields of MasterSection which are registered to have a translation,
         # are not None for the language
         for master_section in self.mastersection_set.all():
             for fields in dic["master_section"]:
-                if not getattr(master_section, fields+"_"+language):
-                    dic_fields[master_section] = fields+"_"+language
+                if not getattr(master_section, fields + "_" + language):
+                    dic_fields[master_section] = fields + "_" + language
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
                 for fields in dic["master_evaluation_element"]:
-                    if not getattr(master_evaluation_element, fields+"_"+language) and \
+                    if not getattr(master_evaluation_element, fields + "_" + language) and \
                             master_evaluation_element.get_numbering() != "2.2":
-                        dic_fields[master_evaluation_element] = fields+"_"+language
+                        dic_fields[master_evaluation_element] = fields + "_" + language
                 for master_choice in master_evaluation_element.masterchoice_set.all():
                     for fields in dic["master_choice"]:
-                        if not getattr(master_choice, fields+"_"+language):
-                            dic_fields[master_choice] = fields+"_"+language
+                        if not getattr(master_choice, fields + "_" + language):
+                            dic_fields[master_choice] = fields + "_" + language
                 for external_link in master_evaluation_element.external_links.all():
                     for fields in dic["external_link"]:
-                        if not getattr(external_link, fields+"_"+language):
-                            dic_fields[external_link] = fields+"_"+language
+                        if not getattr(external_link, fields + "_" + language):
+                            dic_fields[external_link] = fields + "_" + language
         return dic_fields
 
     def delete_language(self, language):
@@ -186,10 +187,10 @@ class Upgrade(models.Model):
 
     def __str__(self):
         return (
-            "Upgrade from V"
-            + str(self.origin_assessment.version)
-            + " to V"
-            + str(self.final_assessment.version)
+                "Upgrade from V"
+                + str(self.origin_assessment.version)
+                + " to V"
+                + str(self.final_assessment.version)
         )
 
 
@@ -274,7 +275,7 @@ class Evaluation(models.Model):
         list_all_elements = []
         for section in self.section_set.all().order_by("master_section__order_id"):
             for element in section.evaluationelement_set.all().order_by(
-                "master_evaluation_element__order_id"
+                    "master_evaluation_element__order_id"
             ):
                 list_all_elements.append(element)
         return list_all_elements
@@ -517,6 +518,49 @@ class Evaluation(models.Model):
         else:
             return 0
 
+    def complete_evaluation(self, **kwargs):
+        """
+        Accepted kwargs key: characteristic
+        and values: "min", "max", "normal", "conditions"
+        """
+        characteristic = kwargs.get("characteristic")
+        for section in self.section_set.all():
+            for evaluation_element in \
+                    section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
+                # Select randomly a choice not setting condition inter and ticked it and save it
+                evaluation_element.reset_choices()
+                if evaluation_element.is_applicable():
+                    if characteristic == "min":
+                        evaluation_element.get_choice_min_points().set_choice_ticked()
+                    elif characteristic == "max":
+                        for choice in evaluation_element.get_choices_list_max_points():
+                            choice.set_choice_ticked()
+                    elif characteristic == "conditions":
+                        # If at least one choice has a condition inter/intra
+                        if evaluation_element.get_list_of_choices_with_conditions():
+                            evaluation_element.get_list_of_choices_with_conditions()[0].set_choice_ticked()
+                        else:
+                            random.choice(
+                                evaluation_element.get_choices_list()
+                            ).set_choice_ticked()
+                    else:
+                        random.choice(
+                            evaluation_element.get_list_of_choices_without_condition_inter()
+                        ).set_choice_ticked()
+                    if random.randint(0, 10) > 7:
+                        evaluation_element.fill_notes()
+                evaluation_element.set_status()
+                evaluation_element.set_points()
+            if random.randint(0, 10) > 7:
+                section.fill_notes()
+            section.set_progression()
+            section.set_points()
+        self.set_finished()
+        evaluation_score = EvaluationScore.objects.get(evaluation=self)
+        evaluation_score.need_to_calculate = True
+        evaluation_score.save()
+        evaluation_score.process_score_calculation()
+
 
 class EvaluationScore(models.Model):
     """
@@ -698,8 +742,8 @@ class EvaluationScore(models.Model):
         """
 
         score_after_dilatation = (
-            self.dilatation_factor * self.points_to_dilate
-            + self.points_not_concerned * self.coefficient_scoring_system
+                self.dilatation_factor * self.points_to_dilate
+                + self.points_not_concerned * self.coefficient_scoring_system
         )
         self.score = round(score_after_dilatation * 100 / self.max_points, 1)
         self.save()
@@ -777,7 +821,7 @@ class Section(models.Model):
     def __str__(self):
         if self.master_section.order_id:
             return (
-                "S" + str(self.master_section.order_id) + " " + self.master_section.name
+                    "S" + str(self.master_section.order_id) + " " + self.master_section.name
             )
         else:
             return self.master_section.name
@@ -801,6 +845,15 @@ class Section(models.Model):
             },
         )
 
+    def fill_notes(self):
+        """
+        Fill the notes with random string
+        """
+        words = ["les moutons", "sont", "bien", "gardés", "dans la bergerie"]
+        random.shuffle(words)
+        self.user_notes = ' '.join(words)
+        self.save()
+
     def set_progression(self):
         """
         Update the status of the section which is a float number calculated by dividing
@@ -813,7 +866,7 @@ class Section(models.Model):
         if list(evaluation_element_list):
             for element in evaluation_element_list:
                 if (
-                    element.status or not element.is_applicable()
+                        element.status or not element.is_applicable()
                 ):  # the element has been answered or is not applicable
                     count_element_done += 1
             self.user_progression = int(
@@ -921,12 +974,12 @@ class MasterEvaluationElement(models.Model):
     def __str__(self):
         if self.master_section.order_id and self.order_id:
             return (
-                "Q"
-                + str(self.master_section.order_id)
-                + "."
-                + str(self.order_id)
-                + " "
-                + self.name
+                    "Q"
+                    + str(self.master_section.order_id)
+                    + "."
+                    + str(self.order_id)
+                    + " "
+                    + self.name
             )
         else:
             return self.name
@@ -963,16 +1016,16 @@ class EvaluationElement(models.Model):
 
     def __str__(self):
         if (
-            self.master_evaluation_element.master_section.order_id
-            and self.master_evaluation_element.order_id
+                self.master_evaluation_element.master_section.order_id
+                and self.master_evaluation_element.order_id
         ):
             return (
-                "Q"
-                + str(self.master_evaluation_element.master_section.order_id)
-                + "."
-                + str(self.master_evaluation_element.order_id)
-                + " "
-                + self.master_evaluation_element.name
+                    "Q"
+                    + str(self.master_evaluation_element.master_section.order_id)
+                    + "."
+                    + str(self.master_evaluation_element.order_id)
+                    + " "
+                    + self.master_evaluation_element.name
             )
         else:
             return self.master_evaluation_element.name
@@ -984,6 +1037,65 @@ class EvaluationElement(models.Model):
         )
         evaluation_element.save()
         return evaluation_element
+
+    def get_choices_list(self):
+        """
+        Return the list of choices of the evaluation element
+        """
+        return [choice for choice in self.choice_set.all()]
+
+    def get_choice_min_points(self):
+        """
+        Get the choice of the element with the minimum points
+        It doesn't count the choices with conditions inter or intra as they always count 0 points
+        but give automatically half the points
+        """
+        scoring_choices = self.get_scoring_system().master_choices_weight_json
+        return sorted(
+            self.get_list_of_choices_without_conditions(),
+            key=lambda choice: float(scoring_choices[choice.master_choice.get_numbering()])
+        )[0]
+
+    def get_choices_list_max_points(self):
+        """
+        Get the choice of the element with the max points
+        """
+        scoring_choices = self.get_scoring_system().master_choices_weight_json
+        choices_list = []
+        if self.master_evaluation_element.question_type == "radio":
+            choices_list = [sorted(
+                self.get_list_of_choices_without_conditions(),
+                key=lambda choice: float(scoring_choices[choice.master_choice.get_numbering()])
+            )[-1]]
+        else:
+            choices_list = self.get_list_of_choices_without_conditions()
+        return choices_list
+
+    def get_list_of_choices_without_condition_inter(self):
+        """
+        Return the list of the choices of the evaluation element which do not set condition on
+        an other evaluation element
+        """
+        return [choice for choice in self.choice_set.all() if not choice.has_element_conditioned_on()]
+
+    def get_list_of_choices_without_conditions(self):
+        """
+        Return the list of the choices of the evaluation element which do not set condition intra or inter
+        """
+        return [
+            choice for choice in self.choice_set.all()
+            if not choice.has_element_conditioned_on() and not choice.set_conditions_on_other_choices()
+        ]
+
+    def get_list_of_choices_with_conditions(self):
+        """
+        Return the list of the choices of the evaluation element which has conditions on
+        an other evaluation element or condition on other choices
+        """
+        return [
+            choice for choice in self.choice_set.all()
+            if choice.has_element_conditioned_on() or choice.set_conditions_on_other_choices()
+        ]
 
     def get_choices_as_tuple(self):
         """ parse the choices field and return a tuple formatted appropriately
@@ -1022,6 +1134,15 @@ class EvaluationElement(models.Model):
             return True
         else:
             return False
+
+    def fill_notes(self):
+        """
+        Fill the notes with random string
+        """
+        words = ["Jean-Pierre", "mange", "un lapin dodu", "avec ses convives", "dans sa cuisine"]
+        random.shuffle(words)
+        self.user_notes = ' '.join(words)
+        self.save()
 
     def get_list_choices_ticked(self):
         """Returns the list of choices ticked for this evaluation element"""
@@ -1333,10 +1454,10 @@ class EvaluationElement(models.Model):
 
         # We return the sum_points_not_concerned weighted by the evaluation element weight
         return (
-            sum_points_not_concerned
-            * master_evaluation_element_weight.get_master_element_weight(
-                self.master_evaluation_element
-            )
+                sum_points_not_concerned
+                * master_evaluation_element_weight.get_master_element_weight(
+                    self.master_evaluation_element
+                )
         )
 
 
@@ -1367,16 +1488,16 @@ class MasterChoice(models.Model):
         Get the numbering of the master choice, like 1.2.a for the section 1, evaluation element 2 and choice a
         """
         if (
-            self.master_evaluation_element.master_section.order_id
-            and self.master_evaluation_element.order_id
-            and self.order_id
+                self.master_evaluation_element.master_section.order_id
+                and self.master_evaluation_element.order_id
+                and self.order_id
         ):
             return (
-                str(self.master_evaluation_element.master_section.order_id)
-                + "."
-                + str(self.master_evaluation_element.order_id)
-                + "."
-                + self.order_id
+                    str(self.master_evaluation_element.master_section.order_id)
+                    + "."
+                    + str(self.master_evaluation_element.order_id)
+                    + "."
+                    + self.order_id
             )
         else:
             print(f"You need to have an order id for the section "
@@ -1432,9 +1553,9 @@ class Choice(models.Model):
     def __str__(self):
         if self.master_choice.get_numbering() and self.master_choice.answer_text:
             return (
-                self.master_choice.get_numbering()
-                + " "
-                + self.master_choice.answer_text
+                    self.master_choice.get_numbering()
+                    + " "
+                    + self.master_choice.answer_text
             )
         else:
             return self.master_choice.answer_text
@@ -1582,8 +1703,8 @@ class ScoringSystem(models.Model):
         :return: float
         """
         if (
-            master_choice.master_evaluation_element.master_section.assessment
-            == self.assessment
+                master_choice.master_evaluation_element.master_section.assessment
+                == self.assessment
         ):
             try:
                 choice_points = float(
@@ -1730,7 +1851,7 @@ def delete_language_translation_field(obj, obj_name, lang):
     if lang in get_available_languages():
         if obj_name in dic_translated_fields.keys():
             for fields in dic_translated_fields[obj_name]:
-                setattr(obj, fields+"_"+lang, None)
+                setattr(obj, fields + "_" + lang, None)
             obj.save()
         else:
             raise KeyError(f"The obj_name {obj_name} is not a key of the dictionary of translated fields,"
