@@ -1,20 +1,23 @@
 import json
 import logging
-
-import plotly.graph_objects as go
 import plotly.offline as opy
+import plotly.graph_objects as go
+
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
-from django.utils.translation import gettext as _
+from django.utils.translation import gettext as _, activate
+from django.utils.translation import LANGUAGE_SESSION_KEY
+
 
 from assessment.forms import ChoiceForm, ResultsForm
 from assessment.models import EvaluationScore, Evaluation, get_last_assessment_created, Assessment, \
     EvaluationElement
 from assessment.views.utils.error_handler import error_500_view_handler
 
+LANGUAGE_QUERY_PARAMETER = 'language'
 logger = logging.getLogger('monitoring')
 
 
@@ -262,3 +265,18 @@ def treat_delete_note(request):
             f"the user {request.user.email} is not an element or the user can't access it"
         )
         return error_500_view_handler(request, exception=e)
+
+
+def manage_missing_language(request, evaluation, **kwargs):
+    """
+    If the user wants to change the language of the platform while not having the evaluation in the same
+    language, reactive the language of the evaluation
+    """
+    # LANGUAGE_SESSION_KEY is the language the user asked to set
+    lang_code = request.session[LANGUAGE_SESSION_KEY]
+    print(lang_code, evaluation.assessment.get_the_available_languages())
+    if lang_code not in evaluation.assessment.get_the_available_languages():
+        valid_lang = evaluation.assessment.get_the_available_languages()[0]
+        messages.warning(request, _("Your evaluation has not this language"))
+        request.session[LANGUAGE_SESSION_KEY] = valid_lang
+        activate(valid_lang)

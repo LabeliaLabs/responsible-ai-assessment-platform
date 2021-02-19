@@ -8,7 +8,7 @@ from django.shortcuts import redirect, get_object_or_404
 
 from assessment.models import Evaluation, get_last_assessment_created
 from assessment.views.utils.security_checks import membership_security_check
-from assessment.views.utils.utils import manage_upgrade_next_url
+from assessment.views.utils.utils import manage_upgrade_next_url, manage_missing_language
 from home.models import Organisation
 
 
@@ -32,6 +32,7 @@ def upgradeView(request, *args, **kwargs):
 
     evaluation_id = kwargs.get("pk")
     evaluation = get_object_or_404(Evaluation, id=evaluation_id, organisation=organisation)
+    manage_missing_language(request, evaluation)
     evaluation_version = evaluation.assessment.version
     latest_version = get_last_assessment_created().version
     data_update = {"success": False, "message": _("The operation failed. Please try again or"

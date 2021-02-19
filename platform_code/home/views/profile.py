@@ -18,7 +18,7 @@ from assessment.views.utils.utils import (
     manage_evaluation_max_points,
     manage_evaluation_score,
     treat_evaluation_creation_valid_form,
-    treat_delete_note,
+    treat_delete_note, manage_missing_language,
 )
 from home.forms import OrganisationCreationForm
 from home.models import User, Membership
@@ -59,7 +59,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         # This can be modified if we want all the evaluations of the organisations the user belong to
         # Can be empty
         self.add_evaluations_context(user)
-
+        for evaluation in self.context['evaluations']:
+            manage_missing_language(request, evaluation)
         # Get user notes on evaluations from the organizations to which the user belongs
         self.add_notes_context(user)
 
