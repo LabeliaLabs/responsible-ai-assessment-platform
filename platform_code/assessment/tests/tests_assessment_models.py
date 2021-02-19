@@ -364,6 +364,14 @@ class SectionTestCase(TestCase):
             f"{section1.id}/protection-des-donnees/1",
         )  # section_id = 4
 
+    def test_fill_notes(self):
+        section1 = Section.create_section(
+            master_section=self.master_section1, evaluation=self.evaluation
+        )
+        self.assertFalse(section1.user_notes)
+        section1.fill_notes()
+        self.assertTrue(section1.user_notes)
+
     def test_section_suppression(self):
         section1 = Section.create_section(
             master_section=self.master_section1, evaluation=self.evaluation
@@ -413,6 +421,14 @@ class EvaluationElementTestCase(TestCase):
         self.choice2 = Choice.objects.get(
             master_choice__order_id="b",
             evaluation_element__master_evaluation_element__name="master_element1",
+        )
+        self.choice3 = Choice.objects.get(
+            master_choice__order_id="a",
+            evaluation_element__master_evaluation_element__name="master_element2",
+        )
+        self.choice4 = Choice.objects.get(
+            master_choice__order_id="b",
+            evaluation_element__master_evaluation_element__name="master_element2",
         )
         self.choice5 = Choice.objects.get(
             master_choice__order_id="a",
@@ -526,6 +542,95 @@ class EvaluationElementTestCase(TestCase):
                 section__master_section__order_id="1",
             )
         self.assertEqual(len(list(EvaluationElement.objects.all())), 1)
+
+    def test_get_list_of_choices(self):
+        self.assertEqual(
+            sorted(
+                self.evaluation_element1.get_choices_list(),
+                key=lambda choice: choice.master_choice.order_id
+            ),
+            [self.choice1, self.choice2]
+        )
+        self.assertEqual(
+            sorted(
+                self.evaluation_element2.get_choices_list(),
+                key=lambda choice: choice.master_choice.order_id
+            ),
+            [self.choice3, self.choice4]
+        )
+
+    def test_get_list_of_choices_without_condition_inter(self):
+        # Choice 1 has conditions inter
+        self.assertEqual(
+            self.evaluation_element1.get_list_of_choices_without_condition_inter(),
+            [self.choice2]
+        )
+        # No conditions inter
+        self.assertEqual(
+            sorted(
+                self.evaluation_element2.get_list_of_choices_without_condition_inter(),
+                key=lambda choice: choice.master_choice.order_id
+            ),
+            [self.choice3, self.choice4]
+        )
+
+    def test_list_of_choices_without_conditions(self):
+        # Choice 1 has conditions inter
+        self.assertEqual(
+            self.evaluation_element1.get_list_of_choices_without_conditions(),
+            [self.choice2]
+        )
+        # Choice 3 has conditions intra
+        self.assertEqual(
+            self.evaluation_element2.get_list_of_choices_without_conditions(),
+            [self.choice4]
+        )
+
+    def test_get_list_of_choices_with_conditions(self):
+        self.assertEqual(
+            self.evaluation_element1.get_list_of_choices_with_conditions(),
+            [self.choice1]
+        )
+        self.assertEqual(
+            self.evaluation_element2.get_list_of_choices_with_conditions(),
+            [self.choice3]
+        )
+        self.assertEqual(
+            self.evaluation_element3.get_list_of_choices_with_conditions(),
+            []
+        )
+
+    def test_get_choice_min_points(self):
+        """
+        Get the choice without condition with the min points
+        """
+        self.assertEqual(
+            self.evaluation_element1.get_choice_min_points(),
+            self.choice2
+        )
+        self.assertEqual(
+            self.evaluation_element2.get_choice_min_points(),
+            self.choice4
+        )
+        self.assertEqual(
+            self.evaluation_element3.get_choice_min_points(),
+            self.choice5
+        )
+
+    def test_get_choices_list_max_points(self):
+        self.assertEqual(
+            self.evaluation_element1.get_choices_list_max_points(),
+            [self.choice2]
+        )
+        self.assertEqual(
+            self.evaluation_element2.get_choices_list_max_points(),
+            [self.choice4]
+        )
+
+    def test_fill_notes(self):
+        self.assertFalse(self.evaluation_element1.user_notes)
+        self.evaluation_element1.fill_notes()
+        self.assertTrue(self.evaluation_element1.user_notes)
 
 
 class ChoiceTestCase(TestCase):
