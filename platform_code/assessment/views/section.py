@@ -255,8 +255,9 @@ class SectionView(LoginRequiredMixin, ListView):
         form = ChoiceForm(request.POST, evaluation_element=evaluation_element, prefix=evaluation_element.id)
         if form.is_valid():
             element_notes = form.cleaned_data.get("notes")
+            initial_note = form.fields["notes"].initial if form.fields["notes"].initial is not None else ''
             # Case the notes have changed, else no message
-            if element_notes and element_notes != form.fields["notes"].initial:
+            if element_notes != initial_note:
                 evaluation_element.user_notes = element_notes
                 evaluation_element.save()
                 # Update only the note message and not the "message" key nor "success"
