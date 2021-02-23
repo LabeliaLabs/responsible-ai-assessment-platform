@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
-from django.utils.translation import gettext as _, activate
+from django.utils.translation import gettext as _, activate, get_language_from_request
 from django.utils.translation import LANGUAGE_SESSION_KEY
 
 
@@ -272,9 +272,7 @@ def manage_missing_language(request, evaluation, **kwargs):
     If the user wants to change the language of the platform while not having the evaluation in the same
     language, reactive the language of the evaluation
     """
-    # LANGUAGE_SESSION_KEY is the language the user asked to set
-    lang_code = request.session[LANGUAGE_SESSION_KEY]
-    print(lang_code, evaluation.assessment.get_the_available_languages())
+    lang_code = get_language_from_request(request)
     if lang_code not in evaluation.assessment.get_the_available_languages():
         valid_lang = evaluation.assessment.get_the_available_languages()[0]
         messages.warning(request, _("Your evaluation has not this language"))
