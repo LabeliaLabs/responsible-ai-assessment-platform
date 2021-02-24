@@ -57,7 +57,8 @@ class ImportAssessment:
             dic_elements = section_data.get("elements")
             for element_data in list(dic_elements.values()):
                 depends_on = self.manage_conditions_inter_elements(element_data)
-                # If the condition inter did not fail
+                # If the condition inter failed, break the loop and the assessment is deleted inside
+                # the function manage_conditions_inter_elements
                 if not self.success:
                     return None
                 element = create_element(element_data, section, depends_on)
@@ -69,6 +70,7 @@ class ImportAssessment:
                 for choice_data in list(dic_choices.values()):
                     choice = create_choice(choice_data, element)
                     self.verify_choice(choice, scoring_system_dic)
+                    # If the choice has duplicate, break the loop and delete assessment
                     if not self.success:
                         return None
                     scoring_system_dic[choice.get_numbering()] = "0"
@@ -331,32 +333,75 @@ def create_resource(resource_data):
 def add_resources(element_data, element):
     """
     This method manages the resources of the evaluation element.
-    It creates the resources which do not exist yet or it adds it to the evaluation element.
+    It creates the resources which do not exist yet, based on French language,
+    or it adds it to the evaluation element.
     """
     external_links_element = []
     resources_data_dic = element_data.get("resources")
     if resources_data_dic:
         for resource_data in list(resources_data_dic.values()):
-            # If it is not an addition of another language, we check if we need to create the external links
-            if not external_link_already_exist(
+            # If the resource already exists as it is in the import data
+            if external_link_already_exist(
                     resource_data.get("resource_text_fr"),
+                    resource_data.get("resource_text_en"),
                     resource_data.get("resource_type")
             ):
-                # Note that there is no condition on the resource type or resource text as
-                # it is only markdownify (no need to respect a format with a template tags)
-                resource = create_resource(resource_data)
-
-            # Else, it already exists so we get it
-            else:
                 resource = ExternalLink.objects.get(
                     text_fr=resource_data.get("resource_text_fr"),
+                    text_en=resource_data.get("resource_text_en"),
                     type=resource_data.get("resource_type"),
                 )
+            # It doesn't exactly exist in the data, so may be partially or not at all
+            else:
+                resource = manage_update_resource_language(resource_data)
+
+                # we check if we need to create the external links (doesnt exist either in French or English)
+                if not resource and not external_link_already_exist(
+                    resource_data.get("resource_text_fr"),
+                    resource_data.get("resource_text_en"),
+                    resource_data.get("resource_type")
+                ):
+                    # Note that there is no condition on the resource type or resource text as
+                    # it is only markdownify (no need to respect a format with a template tags)
+                    resource = create_resource(resource_data)
+
             # Add the resource to the list to add it later to the element
             external_links_element.append(resource)
         # After the loop, associate the resources to the master evaluation element (m2m field)
         element.external_links.add(*external_links_element)
         element.save()
+
+
+def manage_update_resource_language(resource_data):
+    """
+    Missing one language (text_fr or text_en) so add the missing one and return the resource
+    """
+    resource = None
+    # Elif it already exists in French, so we get it and update English part
+    if external_link_already_exist_lang(
+            resource_data.get("resource_text_fr"),
+            resource_data.get("resource_type"),
+            "fr"
+    ):
+        resource = ExternalLink.objects.get(
+            text_fr=resource_data.get("resource_text_fr"),
+            type=resource_data.get("resource_type"),
+        )
+        resource.text_en = resource_data.get("resource_text_en")
+        resource.save()
+    # It already exists in English so we add the French text
+    elif external_link_already_exist_lang(
+            resource_data.get("resource_text_en"),
+            resource_data.get("resource_type"),
+            "en"
+    ):
+        resource = ExternalLink.objects.get(
+            text_en=resource_data.get("resource_text_en"),
+            type=resource_data.get("resource_type"),
+        )
+        resource.text_fr = resource_data.get("resource_text_fr")
+        resource.save()
+    return resource
 
 
 def test_keys_in_dic(dic, keys_list):
@@ -391,11 +436,26 @@ def test_choice_numbering(numbering):
     return reg != []
 
 
-def external_link_already_exist(text_fr, resource_type):
+def external_link_already_exist_lang(text, resource_type, lang):
+    """
+    Check if there is already a resource in the table ExternalLinks based on lang.
+    Return boolean (True if it exists).
+    """
+    if lang == "fr":
+        return list(ExternalLink.objects.filter(text_fr=text, type=resource_type)) != []
+    elif lang == "en":
+        return list(ExternalLink.objects.filter(text_en=text, type=resource_type)) != []
+
+
+def external_link_already_exist(text_fr, text_en, resource_type,):
     """
     Check if there is already a resource in the table ExternalLinks. Return boolean (True if it exists).
     """
-    return list(ExternalLink.objects.filter(text_fr=text_fr, type=resource_type)) != []
+    return list(ExternalLink.objects.filter(
+        text_fr=text_fr,
+        text_en=text_en,
+        type=resource_type)
+    ) != []
 
 
 def check_upgrade(dict_upgrade_data):
