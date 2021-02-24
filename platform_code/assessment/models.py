@@ -1774,31 +1774,9 @@ class ExternalLink(models.Model):
     will be displayed.
 
     """
-    WEB_ARTICLE = "web article"
-    ACADEMIC_PAPER = "academic paper"
-    SOFTWARE = "software"
-    TECHNICAL_GUIDE = "technical guide"
-    TOOL = "tool"
-    CODE_REPOSITORY = "code repository"
-    PUBLIC_DECLARATION = "public declaration"
-    OFFICIAL_REPORT = "official report"
-
-    RESOURCE_TYPES = (
-        (WEB_ARTICLE, "web article"),
-        (ACADEMIC_PAPER, "academic paper"),
-        (SOFTWARE, "software"),
-        (TECHNICAL_GUIDE, "technical guide"),
-        (TOOL, "tool"),
-        (CODE_REPOSITORY, "code repository"),
-        (PUBLIC_DECLARATION, "public declaration"),
-        (OFFICIAL_REPORT, "official report"),
-    )
-
     # Name of the resource, will be displayed to the user
     text = models.TextField(max_length=4000, blank=True)
-    type = models.CharField(
-        choices=RESOURCE_TYPES, default="web_article", max_length=500
-    )
+    type = models.CharField(default="Web article", max_length=500)
 
     def __str__(self):
         return self.text + " (" + self.type + ")"

@@ -16,7 +16,8 @@ from assessment.import_assessment import (
     test_order_id_number,
     test_order_id_letter,
     ImportAssessment,
-    external_link_already_exist,
+    external_link_already_exist_lang,
+    add_resources,
 )
 from assessment.scoring import check_and_valid_scoring_json
 from home.models import User
@@ -113,7 +114,7 @@ class ImportAssessmentTestCase(TestCase):
                 ImportAssessment(self.assessment_data).message,
             )
             with self.assertRaises(Exception):
-                Assessment.objects.get(name="assessment", version="1.0")
+                Assessment.objects.get(version="1.0")
 
     def test_import_assessment_prod_version(self):
         self.assessment_data["version"] = "0.63"
@@ -150,7 +151,7 @@ class ImportAssessmentTestCase(TestCase):
                 ImportAssessment(self.assessment_data).message,
             )
             with self.assertRaises(Exception):
-                Assessment.objects.get(name="assessment", version="1.0")
+                Assessment.objects.get(version="1.0")
 
     def test_import_assessment_letter_order_id_sections(self):
         self.assessment_data["sections"]["section 1"]["order_id"] = "a"
@@ -160,7 +161,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     def test_import_assessment_float_order_id_sections(self):
         self.assessment_data["sections"]["section 1"]["order_id"] = "0.25"
@@ -170,7 +171,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     # Test missing element keys
     def test_import_assessment_element_without_a_key(self):
@@ -184,7 +185,7 @@ class ImportAssessmentTestCase(TestCase):
                 ImportAssessment(self.assessment_data).message,
             )
             with self.assertRaises(Exception):
-                Assessment.objects.get(name="assessment", version="1.0")
+                Assessment.objects.get(version="1.0")
 
     # Test element keys with bad values
     def test_import_assessment_element_bad_condition_format(self):
@@ -195,7 +196,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     def test_import_assessment_element_condition_on_nonexistent_choice(self):
         self.assessment_data["sections"]["section 1"]["elements"]["element 1"]["condition"] = "1.3.a"
@@ -205,7 +206,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     def test_import_assessment_element_bad_order_id_format(self):
         self.assessment_data["sections"]["section 1"]["elements"]["element 1"]["order_id"] = "A"
@@ -215,7 +216,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     def test_import_assessment_element_bad_order_id_format_bis(self):
         self.assessment_data["sections"]["section 1"]["elements"]["element 1"]["order_id"] = "1,"
@@ -225,7 +226,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     # Test missing choice keys
     def test_import_assessment_choice_without_key(self):
@@ -240,7 +241,7 @@ class ImportAssessmentTestCase(TestCase):
                 ImportAssessment(self.assessment_data).message,
             )
             with self.assertRaises(Exception):
-                Assessment.objects.get(name="assessment", version="1.0")
+                Assessment.objects.get(version="1.0")
 
     # Test bad choice key values
     def test_import_assessment_bad_condition_intra_element(self):
@@ -253,7 +254,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     def test_import_assessment_choice_bad_order_id(self):
         self.assessment_data["sections"]["section 1"]["elements"]["element 1"][
@@ -265,7 +266,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     def test_import_assessment_duplicate_choice_numbering(self):
         self.assessment_data["sections"]["section 1"]["elements"]["element 2"][
@@ -277,7 +278,7 @@ class ImportAssessmentTestCase(TestCase):
             ImportAssessment(self.assessment_data).message,
         )
         with self.assertRaises(Exception):
-            Assessment.objects.get(name="assessment", version="1.0")
+            Assessment.objects.get(version="1.0")
 
     # Test resource keys
     def test_import_assessment_resource_keys(self):
@@ -292,7 +293,7 @@ class ImportAssessmentTestCase(TestCase):
                 ImportAssessment(self.assessment_data).message,
             )
             with self.assertRaises(Exception):
-                Assessment.objects.get(name="assessment", version="1.0")
+                Assessment.objects.get(version="1.0")
 
 
 class TestOrderIdTestCase(TestCase):
@@ -314,16 +315,22 @@ class TestOrderIdTestCase(TestCase):
         self.assertFalse(test_order_id_letter("a,"))
 
 
-class ExternalLinkAlreadyExistsTestCase(TestCase):
+class ResourceTestCase(TestCase):
     def setUp(self):
-        self.resource1 = ExternalLink(text="test resource", type="Official report")
+        self.resource1 = ExternalLink(
+            text_fr="test resource",
+            text_en="test resource en",
+            type="Official report")
         self.resource1.save()
 
     def test_external_link_already_exists(self):
         self.assertEqual(len(list(ExternalLink.objects.all())), 1)
-        same_resource1 = ExternalLink(text="test resource", type="Official report")
+        same_resource1 = ExternalLink(text_fr="test resource", type="Official report")
         self.assertTrue(
-            external_link_already_exist(same_resource1.text, same_resource1.type)
+            external_link_already_exist_lang(same_resource1.text_fr, same_resource1.type, "fr")
+        )
+        self.assertFalse(
+            external_link_already_exist_lang(same_resource1.text_en, same_resource1.type, "en")
         )
         self.assertTrue(
             ExternalLink.objects.get(text="test resource", type="Official report")
@@ -331,14 +338,196 @@ class ExternalLinkAlreadyExistsTestCase(TestCase):
 
     def test_external_resource_already_exists_fails(self):
         self.assertEqual(len(list(ExternalLink.objects.all())), 1)
-        new_resource1 = ExternalLink(text="test resource", type="Academic paper")
-        new_resource2 = ExternalLink(text="test_resource", type="Official report")
+        new_resource1 = ExternalLink(text_fr="test resource", type="Academic paper")
+        new_resource2 = ExternalLink(text_fr="test_resource", type="Official report")
         self.assertFalse(
-            external_link_already_exist(new_resource1.text, new_resource1.type)
+            external_link_already_exist_lang(new_resource1.text_fr, new_resource1.type, "fr")
         )
         self.assertFalse(
-            external_link_already_exist(new_resource2.text, new_resource2.type)
+            external_link_already_exist_lang(new_resource2.text_fr, new_resource2.type, "fr")
         )
+
+    def test_add_resource(self):
+        with open(
+                "assessment/tests/import_test_files/assessment_test_v1.json"
+        ) as json_file:
+            assessment_data = json.load(json_file)
+        ImportAssessment(assessment_data)
+        master_element = MasterEvaluationElement.objects.first()
+        master_element_data = {
+            'resources': {
+                '0': {
+                    'resource_type': 'Academic paper',
+                    'resource_text_fr': '*[Counterfactual Explanations without Opening theBlack Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018',
+                    'resource_text_en': '*[Counterfactual Explanations without Opening the Black Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018'
+                }
+            }
+        }
+        initial_resources = len(master_element.external_links.all())
+        add_resources(master_element_data, master_element)
+        self.assertEqual(len(master_element.external_links.all()), initial_resources + 1)
+
+    def test_add_english_resource_text(self):
+        """
+        Test add resource empty English text, so first it is created, text_en=None.
+        Then import again with text_en not empty so it should catch the existing resource and add English field
+        instead of creating new one.
+        """
+        with open(
+                "assessment/tests/import_test_files/assessment_test_v1.json"
+        ) as json_file:
+            assessment_data = json.load(json_file)
+        ImportAssessment(assessment_data)
+        master_element = MasterEvaluationElement.objects.filter(external_links=None)[0]
+        master_element_data_initial = {
+            'resources': {
+                '0': {
+                    'resource_type': 'Academic paper',
+                    'resource_text_fr': '*[Counterfactual Explanations without Opening theBlack Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018',
+                    'resource_text_en': ''
+                }
+            }
+        }
+        master_element_data = {
+            'resources': {
+                '0': {
+                    'resource_type': 'Academic paper',
+                    'resource_text_fr': '*[Counterfactual Explanations without Opening theBlack Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018',
+                    'resource_text_en': '*[Counterfactual Explanations without Opening the Black Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018'
+                }
+            }
+        }
+        self.assertEqual(len(master_element.external_links.all()), 0)
+        add_resources(master_element_data_initial, master_element)
+        self.assertEqual(len(master_element.external_links.all()), 1)
+        resource = master_element.external_links.all()[0]
+        self.assertEqual(resource.text_en, '')
+        add_resources(master_element_data, master_element)
+        # No new resource created
+        self.assertEqual(len(master_element.external_links.all()), 1)
+        # English text set
+        resource.refresh_from_db()
+        self.assertEqual(
+            resource.text_en,
+            '*[Counterfactual Explanations without Opening the Black Box: Automated'
+            'Decisions and the GDPR]'
+            '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+            'B.Mittelstadt, C.Russell, 2018'
+        )
+
+    def test_add_french_resource_text(self):
+        """
+        Test add resource empty French text, so first it is created, text_fr=None.
+        Then import again with text_fr not empty so it should catch the existing resource and add English field
+        instead of creating new one.
+        """
+        with open(
+                "assessment/tests/import_test_files/assessment_test_v1.json"
+        ) as json_file:
+            assessment_data = json.load(json_file)
+        ImportAssessment(assessment_data)
+        master_element = MasterEvaluationElement.objects.filter(external_links=None)[0]
+        master_element_data_initial = {
+            'resources': {
+                '0': {
+                    'resource_type': 'Academic paper',
+                    'resource_text_fr': '',
+                    'resource_text_en': '*[Counterfactual Explanations without Opening the Black Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018'
+                }
+            }
+        }
+        master_element_data = {
+            'resources': {
+                '0': {
+                    'resource_type': 'Academic paper',
+                    'resource_text_fr': '*[Counterfactual Explanations without Opening theBlack Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018',
+                    'resource_text_en': '*[Counterfactual Explanations without Opening the Black Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018'
+                }
+            }
+        }
+        self.assertEqual(len(master_element.external_links.all()), 0)
+        add_resources(master_element_data_initial, master_element)
+        self.assertEqual(len(master_element.external_links.all()), 1)
+        resource = master_element.external_links.all()[0]
+        self.assertEqual(resource.text_fr, '')
+        add_resources(master_element_data, master_element)
+        # No new resource created
+        self.assertEqual(len(master_element.external_links.all()), 1)
+        # English text set
+        resource.refresh_from_db()
+        self.assertNotEqual(resource.text_fr, '')
+
+    def test_add_new_resource_text(self):
+        """
+        Test add resource empty French text and then import new resource (french text modified)
+        so new resource created
+        """
+        with open(
+                "assessment/tests/import_test_files/assessment_test_v1.json"
+        ) as json_file:
+            assessment_data = json.load(json_file)
+        ImportAssessment(assessment_data)
+        master_element = MasterEvaluationElement.objects.filter(external_links=None)[0]
+        master_element_data_initial = {
+            'resources': {
+                '0': {
+                    'resource_type': 'Academic paper',
+                    'resource_text_fr': '',
+                    'resource_text_en': '*[Counterfactual Explanations without Opening the Black Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018'
+                }
+            }
+        }
+        master_element_data_bis = {
+            'resources': {
+                '0': {
+                    'resource_type': 'Academic paper',
+                    'resource_text_fr': '*[Counterfactual Explanations without Opening theBlack Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, 2018',
+                    'resource_text_en': '*[Counterfactual Explanations without Opening the Black Box: Automated'
+                                        'Decisions and the GDPR]'
+                                        '(https: // arxiv.org / abs / 1711.00399) *, S.Wachter, '
+                                        'B.Mittelstadt, C.Russell, '
+                                        '2018 BUT THE RESOURCE HAS CHANGED'
+                }
+            }
+        }
+        self.assertEqual(len(master_element.external_links.all()), 0)
+        add_resources(master_element_data_initial, master_element)
+        self.assertEqual(len(master_element.external_links.all()), 1)
+        resource = master_element.external_links.all()[0]
+        self.assertEqual(resource.text_fr, '')
+        add_resources(master_element_data_bis, master_element)
+        # New resource created as text_en has changed
+        self.assertEqual(len(master_element.external_links.all()), 2)
 
 
 class ScoringImportTestCase(TestCase):
@@ -346,9 +535,10 @@ class ScoringImportTestCase(TestCase):
     Test the logic of the scoring import (same number of choices than in the assessment, weights are convertible
     into floats, etc)
     """
+
     def setUp(self):
         with open(
-            "assessment/tests/import_test_files/assessment_test_v1.json"
+                "assessment/tests/import_test_files/assessment_test_v1.json"
         ) as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
@@ -356,7 +546,7 @@ class ScoringImportTestCase(TestCase):
         self.assertTrue(import_assessment.success)
         self.assessment = Assessment.objects.get(name="assessment fr")
         with open(
-            "assessment/tests/import_test_files/scoring_test_v1.json"
+                "assessment/tests/import_test_files/scoring_test_v1.json"
         ) as scoring_json:
             self.decoded_file = scoring_json.read()
 
@@ -467,6 +657,7 @@ class TestJsonUpload(TestCase):
     """"
     Test the import assessment & scoring json validation function
     """
+
     def setUp(self):
         self.email = "admin@hotmail.com"
         self.password = "admin_password"

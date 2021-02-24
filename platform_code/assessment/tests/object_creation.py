@@ -191,7 +191,7 @@ def create_choice(master_choice, evaluation_element, is_ticked=False, fetch=True
     )
 
 
-def create_external_link(text, type_link=ExternalLink.WEB_ARTICLE):
+def create_external_link(text, type_link="Web article"):
     """
     Create an external link (resource)
     :param type_link:
