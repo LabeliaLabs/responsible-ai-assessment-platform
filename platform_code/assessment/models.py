@@ -1005,6 +1005,7 @@ class EvaluationElement(models.Model):
     )  # TODO remove blank
     section = models.ForeignKey(Section, blank=True, on_delete=models.CASCADE)
     user_notes = models.TextField(blank=True, null=True, max_length=20000)
+    user_notes_archived = models.BooleanField(default=False)
     status = models.BooleanField(default=False)
     points = models.FloatField(default=0)
     # Max points of this evaluation elements according to the scoring used

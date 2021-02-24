@@ -781,48 +781,116 @@ function registerNewsletter(event) {
     });
 }
 
-//this script is used on the profile page.it makes a request to remove a note from the model.
-//If success it removes it from the page.
-function removeNote(note_element_id) {
-    var form = document.getElementById("form-element-" + note_element_id);
+//script used to archive and remove notes.
+//it creates the ajax request with params, executes it, notify the result to the user and executes func()
+//form name is
+function ajaxRequestAndNotify(form_name, note_element_id, notification_div_name, req_arg_name, func) {
+    var form = document.getElementById(form_name + note_element_id);
     var ajax = new XMLHttpRequest();
     ajax.onreadystatechange = function () {
         if (ajax.readyState === 4 && ajax.status === 200) {
+            //notify the result to the user
             var response = JSON.parse(ajax.response);
-            if (response['success']) {
-                //first notify the success to the user and remove notes/buttons
-                var parentMessage = document.getElementById("note-wrapper-" + note_element_id);
+            var parentMessage = document.getElementById(notification_div_name + note_element_id);
+            addMessage(parentMessage, response['message'], response["message_type"]);
+            parentMessage.classList.remove("hidden-div");
+            //execute the param function
+            func(response, note_element_id)
+            //remove the notification after 4 secondes
+            setTimeout(function () {
+                parentMessage.classList.add("hidden-div");
                 parentMessage.textContent = '';
-                addMessage(parentMessage, response['message'], response["message_type"]);
-                parentMessage.classList.remove("hidden-div");
-                //after 4 seconds delete the notification and remove the question.
-                // Also remove section and evaluation if needed.
+            }, 4000);
+        }
+    }
+    manageAjaxRequest(ajax, form, req_arg_name + note_element_id);
+}
+
+//function used in on profile and on evaluation to archive and unarchive notes
+function archiveNote(note_element_id, notif_div) {
+    ajaxRequestAndNotify("form-archive-note-", note_element_id, notif_div,
+        "archive_note_id=",
+        function (response, note_element_id) {
+            //if request succeed tick the checkbox and modify ever
+            // the textarea or the text depending on where it is used
+            if (response['success']) {
+                var notesArea = document.getElementById("id_" + note_element_id + "-notes");
+                var icon = document.getElementById("icon-" + note_element_id);
+                var note_wrapper = document.getElementById("note-" + note_element_id);
+                if (response["is_archived"]) {
+                    if (note_wrapper)
+                        note_wrapper.classList.add("note-disabled");
+                    if (notesArea) {
+                        notesArea.classList.add("note-disabled");
+                        notesArea.setAttribute("disabled", "disabled");
+                    }
+                    icon.classList.remove("fa-square-o");
+                    icon.classList.add("fa-check-square-o");
+
+                } else {
+                    if (note_wrapper)
+                        note_wrapper.classList.remove("note-disabled");
+                    if (notesArea) {
+                        notesArea.classList.remove("note-disabled");
+                        notesArea.removeAttribute("disabled");
+                    }
+
+                    icon.classList.remove("fa-check-square-o");
+                    icon.classList.add("fa-square-o");
+                }
+            }
+        })
+}
+
+//this function is used in the evaluation to remove a note
+function removeNoteEvaluation(note_element_id, notification_div_id) {
+    ajaxRequestAndNotify("form-delete-element-", note_element_id, notification_div_id,
+        "delete_note_id=",
+        function (response, note_element_id) {
+            if (response['success']) {
+                var notesArea = document.getElementById("id_" + note_element_id + "-notes");
+                var icon = document.getElementById("icon-" + note_element_id);
+                notesArea.value = '';
+                notesArea.classList.remove("note-disabled");
+                notesArea.removeAttribute("disabled");
+                icon.classList.remove("fa-check-square-o");
+                icon.classList.add("fa-square-o");
+            }
+        });
+}
+
+//this function is used on profile to remove a note
+function removeNoteProfile(note_element_id, notification_div_id) {
+    ajaxRequestAndNotify("form-delete-element-", note_element_id, notification_div_id,
+        "delete_note_id=",
+        function (response, note_element_id) {
+            if (response['success']) {
+                //if the request succeed remove the element content
+                var note_wrapper = document.getElementById("note-wrapper-" + note_element_id);
+                note_wrapper.textContent = '';
+                //after 4 seconds remove the element and if needed the section, and the evaluation
                 setTimeout(function () {
-                    parentMessage.classList.add("hidden-div");
-                    parentMessage.textContent = '';
                     var element_div = document.getElementById("note-element-" + note_element_id);
                     var section_div_body = element_div.parentElement
                     element_div.remove();
                     // if the section is empty, removes it
                     if (section_div_body.childElementCount === 0) {
-                        var section_div = document.getElementById("note-section-" + response["section_id"])
-                        var evaluation_div_body = document.getElementById("collapse-evaluation-" + response["evaluation_id"])
-                        section_div.remove()
+                        var section_div = document.getElementById("note-section-" + response["section_id"]);
+                        var evaluation_div_body = document.getElementById("collapse-evaluation-" + response["evaluation_id"]);
+                        section_div.remove();
                         // if the evaluation is empty removes it
                         if (evaluation_div_body.childElementCount === 0) {
-                            var evaluation_div = document.getElementById("accordion-evaluation-" + response["evaluation_id"])
-                            evaluation_div.remove()
+                            var evaluation_div = document.getElementById("accordion-evaluation-" + response["evaluation_id"]);
+                            evaluation_div.remove();
                             var child_count = document.querySelectorAll("#content-user-notes > div").length;
                             // if the child count is equals to 1, there is no more notes to display so we display a place-holder text
                             if (child_count === 1) {
-                                document.getElementById("empty_notes_text").removeAttribute("hidden")
+                                document.getElementById("empty-notes-text").removeAttribute("hidden");
                             }
                         }
+
                     }
                 }, 4000);
-
             }
-        }
-    }
-    manageAjaxRequest(ajax, form, "note_element_id=" + note_element_id);
+        });
 }

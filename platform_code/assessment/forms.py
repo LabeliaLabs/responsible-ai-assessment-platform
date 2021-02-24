@@ -2,14 +2,22 @@ from ast import literal_eval
 
 from django import forms
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.db.models import Q
 from django.forms import ModelForm
 from django.forms import widgets
 from django.forms.renderers import get_default_renderer
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django.utils import timezone
-from django.db.models import Q
 
+from assessment.utils import (
+    markdownify_bold,
+    markdownify_italic,
+    select_label_choice,
+    remove_markdown_bold,
+    remove_markdownify_italic,
+)
+from home.models import Organisation
 from .models import (
     Assessment,
     ScoringSystem,
@@ -20,9 +28,6 @@ from .models import (
     Section,
 )
 from .scoring import check_and_valid_scoring_json
-from home.models import Organisation
-from assessment.utils import markdownify_bold, markdownify_italic, select_label_choice, remove_markdown_bold, \
-    remove_markdownify_italic
 
 element_feedback_list = [
     ["element_fit", _("No evaluation element fits to my case")],
@@ -372,7 +377,9 @@ class ChoiceForm(ModelForm):
                         "size": 100,
                         "width": "100%",
                         "class": "textarea textarea-empty",
-                        "placeholder": _("Enter your notes on the evaluation element here."),
+                        "placeholder": _(
+                            "Enter your notes on the evaluation element here."
+                        ),
                     }
                 ),
                 required=False,
@@ -380,16 +387,18 @@ class ChoiceForm(ModelForm):
 
         # Elif the user has already registered the champ user_notes for this element, it is displayed as initial
         elif evaluation_element.user_notes is not None:
+            form_attr = {
+                "rows": 5,
+                "size": 100,
+                "width": "100%",
+                "class": "textarea textarea-data",
+            }
+            if evaluation_element.user_notes_archived:
+                form_attr["disabled"] = "disabled"
+                form_attr["class"] += " note-disabled"
             notes = forms.CharField(
                 label=_("My notes"),
-                widget=forms.Textarea(
-                    attrs={
-                        "rows": 5,
-                        "size": 100,
-                        "width": "100%",
-                        "class": "textarea textarea-data",
-                    }
-                ),
+                widget=forms.Textarea(form_attr),
                 initial=evaluation_element.user_notes,
                 required=False,
             )

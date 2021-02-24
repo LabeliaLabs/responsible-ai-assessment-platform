@@ -180,21 +180,26 @@
                                         </fieldset>
                                     {% endif %}
 
-                                    <!-- Reset the answers -->
                                     {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
-                                        {% if element.has_condition_on and element|is_not_applicable %}
-                                            <a class="reset-response float-right remove-smaller-than-small-screen"
-                                               id="reset_{{element.id}}"
-                                               title="Inactive">
-                                                {% trans "Reset the answer" %}</a>
-                                        {% else %}
-                                            <a class="reset-response float-right" id="reset{{element.id}}"
-                                               onclick="resetChoice('{{element.id}}')">
-                                                <span class="remove-smaller-than-small-screen">{% trans "Reset the answer" %}</span>
-                                                <i class="fa fa-refresh remove-larger-than-large-screen"></i>
+                                    <div class="flex-column mr-3">
+                                        <a class="reset-response row justify-content-end"
+                                           onclick="removeNoteEvaluation({{element.id}}, 'confirmationform')">
+                                            <p class="m-0">{% trans "Delete this note" %}</p>
+                                        </a>
+                                        <div class="row ml-1 justify-content-end">
+                                            <a class="btn-cursor"
+                                               onclick="archiveNote({{element.id}}, 'confirmationform')">
+                                                {% if element.user_notes_archived %}
+                                                <i class="fa fa-check-square-o"
+                                                   id="icon-{{element.id}}"></i>
+                                                {% else %}
+                                                <i class="fa fa-square-o"
+                                                   id="icon-{{element.id}}"></i>
+                                                {% endif %}
                                             </a>
-
-                                            {% endif %}
+                                            <p class="m-0 ml-1">{% trans 'Archive this note' %}</p>
+                                        </div>
+                                    </div>
                                     {% endif %}
                                 </div>
                             </div>
@@ -253,7 +258,23 @@
                                     </div>
                                   {% endif %}
                             </div>
+                            {% if evaluation.organisation|get_role:user == "admin" or evaluation.organisation|get_role:user == "editor" %}
+                            <div class="full-width center mt-2">
+                                {% if element.has_condition_on and element|is_not_applicable %}
+                                <a class="reset-response remove-smaller-than-small-screen"
+                                   id="reset_{{element.id}}"
+                                   title="Inactive">
+                                    <p class="m-0">{% trans "Reset the answer" %}</p></a>
+                                {% else %}
+                                <a class="reset-response" id="reset{{element.id}}"
+                                   onclick="resetChoice('{{element.id}}')">
+                                    <span class="remove-smaller-than-small-screen">{% trans "Reset the answer" %}</span>
+                                    <i class="fa fa-refresh remove-larger-than-large-screen"></i>
+                                </a>
 
+                                {% endif %}
+                            </div>
+                            {% endif %}
                             <div class="margin-10" id="confirmationform{{element.id}}"></div>
 
                             <div class='alert alert-warning' id="warningmessage_temporary{{element.id}}"
@@ -262,6 +283,15 @@
                                 This evaluation element is not applicable due to the answer to this evaluation element
                                 {% endblocktrans %} {depends_on_dic|get_item:element}}
                             </div>
+                        </form>
+                        <!-- form used by archiveNote function-->
+                        <form action="{% url 'home:user-profile' %}"
+                              id="form-archive-note-{{element.id}}" method="post">
+                            {% csrf_token %}
+                        </form>
+                        <form class="m-1" action="{% url 'home:user-profile' %}"
+                              id="form-delete-element-{{element.id}}" method="post">
+                            {% csrf_token %}
                         </form>
 
                         {% if element.master_evaluation_element.has_resources %}
@@ -331,7 +361,9 @@ for (i = 0; i < coll.length; i++) {
 }
 var params = new URLSearchParams(window.location.search);
 var numElement = params.get('element');
-var card = document.querySelectorAll(".card")[numElement-1];
-card.children[1].classList.add("show");
-card.scrollIntoView();
+if (numElement){
+    var card = document.querySelectorAll(".card")[numElement-1];
+    card.children[1].classList.add("show");
+    card.scrollIntoView();
+}
 </script>
