@@ -1,21 +1,19 @@
 import json
 import logging
-import plotly.offline as opy
-import plotly.graph_objects as go
 
+import plotly.graph_objects as go
+import plotly.offline as opy
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import redirect, get_object_or_404
-from django.utils.translation import gettext as _, activate, get_language_from_request
 from django.utils.translation import LANGUAGE_SESSION_KEY
-
+from django.utils.translation import gettext as _, activate, get_language_from_request
 
 from assessment.forms import ChoiceForm, ResultsForm
 from assessment.models import EvaluationScore, Evaluation, get_last_assessment_created, Assessment, \
     EvaluationElement
-from assessment.views.utils.error_handler import error_500_view_handler
 
 LANGUAGE_QUERY_PARAMETER = 'language'
 logger = logging.getLogger('monitoring')
@@ -222,51 +220,6 @@ def create_radar_chart(object_list, math_expression, text_expression, hovertext_
         return None
 
 
-def treat_delete_note(request):
-    """
-    This function treats the POST methods when the user delete a note on the profile page.
-    It checks if the note exist and if the user can delete the note.
-    If so the note is deleted and a successful response is returned.
-    Else nothing appends and an error response is returned
-    """
-    user = request.user
-    element_id = request.POST.dict().get("note_element_id")
-    try:
-        # try to get an element that matchs the specified id, that has note and that the user can delete it
-        element = (
-            EvaluationElement.objects.filter(id=element_id)
-            .filter(
-                Q(
-                    section__evaluation__organisation__membership__user=user,
-                    section__evaluation__organisation__membership__role="admin",
-                )
-                | Q(
-                    section__evaluation__organisation__membership__user=user,
-                    section__evaluation__organisation__membership__role="editor",
-                )
-            )
-            .exclude(user_notes__isnull=True)
-            .get()
-        )
-        element.user_notes = None
-        element.save()
-        response = {
-            "success": True,
-            "message_type": "alert-success",
-            "message": _("Your note has been deleted!"),
-            "section_id": element.section.id,
-            "evaluation_id": element.section.evaluation.id,
-        }
-        return HttpResponse(json.dumps(response), content_type="application/json")
-    except ObjectDoesNotExist as e:
-        # if the element is not found returns an error
-        logger.error(
-            f"[user_note_error] The element id {element_id} from the post of "
-            f"the user {request.user.email} is not an element or the user can't access it"
-        )
-        return error_500_view_handler(request, exception=e)
-
-
 def manage_missing_language(request, evaluation, **kwargs):
     """
     If the user wants to change the language of the platform while not having the evaluation in the same
@@ -278,3 +231,111 @@ def manage_missing_language(request, evaluation, **kwargs):
         messages.warning(request, _("Your evaluation has not this language"))
         request.session[LANGUAGE_SESSION_KEY] = valid_lang
         activate(valid_lang)
+
+
+def treat_delete_note(request):
+    """
+    This function treats the POST methods when the user delete a note on the profile page.
+    It checks if the note exist and if the user can delete the note.
+    If so the note is deleted and a successful response is returned.
+    Else nothing appends and an error response is returned
+    """
+    user = request.user
+    element_id = request.POST.dict().get("delete_note_id")
+    try:
+        # try to get an element that matchs the specified id and that the user can delete it
+        element = get_element_has_notes(element_id, user)
+        # if notes are not empty delete it and return success
+        # else return an error
+        if element.user_notes is not None and element.user_notes != '':
+            element.user_notes = None
+            element.user_notes_archived = False
+            element.save()
+            response = {
+                "success": True,
+                "message_type": "alert-success",
+                "message": _("Your note has been deleted!"),
+                "section_id": element.section.id,
+                "evaluation_id": element.section.evaluation.id,
+            }
+        else:
+            response = {
+                "success": False,
+                "message_type": "alert-warning",
+                "message": _("You can't delete an empty note!"),
+            }
+    except ObjectDoesNotExist:
+        # if the element is not found returns an error
+        logger.error(
+            f"[user_note_error] The element id {element_id} from the post of "
+            f"the user {request.user.email} is not an element or the user can't access it"
+        )
+        response = {
+            "success": False,
+            "message_type": "alert-warning",
+            "message": _("You can't delete this note!"),
+        }
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+def treat_archive_note(request):
+    user = request.user
+    element_id = request.POST.dict().get("archive_note_id")
+    try:
+        # try to get an element that matchs the specified id and that the user can access
+        element = get_element_has_notes(element_id, user)
+        # if notes are not empty archive it and return success
+        # else return an error
+        if element.user_notes is not None and element.user_notes != '':
+            element.user_notes_archived = not element.user_notes_archived
+            element.save()
+            response = {
+                "success": True,
+                "message_type": "alert-success",
+            }
+            if element.user_notes_archived:
+                response["is_archived"] = True
+                response["message"] = _("Your note has been archived!")
+            else:
+                response["is_archived"] = False
+                response["message"] = _("Your note has been un-archived!")
+        else:
+            response = {
+                "success": False,
+                "message_type": "alert-warning",
+                "message": _("You can't archive an empty note!"),
+            }
+    except ObjectDoesNotExist:
+        # if the element is not found returns an error
+        logger.error(
+            f"[user_note_error] The element id {element_id} from the post of "
+            f"the user {request.user.email} is not an element or the user can't access it"
+        )
+        response = {
+            "success": False,
+            "message_type": "alert-warning",
+            "message": _("You can't archive this note!"),
+        }
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+def get_element_has_notes(element_id, user):
+    """
+    This method takes an element id and a user and returns the element that has this id
+    if the user can access it and if this element has notes
+    If the element is not found raises an ObjectNotFound exception
+    """
+    return (
+        EvaluationElement.objects.filter(id=element_id)
+        .filter(
+            Q(
+                section__evaluation__organisation__membership__user=user,
+                section__evaluation__organisation__membership__role="admin",
+            )
+            | Q(
+                section__evaluation__organisation__membership__user=user,
+                section__evaluation__organisation__membership__role="editor",
+            )
+        )
+        .get()
+    )
