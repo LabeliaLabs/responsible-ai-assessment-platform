@@ -102,7 +102,7 @@ def manage_evaluation_max_points(request, evaluation_list):
         except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
             logger.warning(f"[evaluation_score_error] The query to return the evaluation score for the evaluation "
                            f"(id {evaluation.id}) failed, error {e}, request {request}")
-            messages.warning(request, _("An error occurred."))
+            messages.warning(request, _("An error occurred with the score calculation."))
             success = False
     return success
 
