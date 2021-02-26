@@ -30,7 +30,8 @@ class EvaluationAdmin(admin.ModelAdmin):
         'complete_normal_without_conditions',
         'complete_max_points',
         'complete_min_points',
-        'complete_with_conditions'
+        'complete_with_conditions',
+        'upgrade_evaluation',
     ]
 
     def get_version(self, obj):
@@ -92,6 +93,32 @@ class EvaluationAdmin(admin.ModelAdmin):
                     request,
                     f"An error occurred, {e}, when completing the evaluation{evaluation}",
                     messages.ERROR
+                )
+        return redirect(request.path_info)
+
+    def upgrade_evaluation(self, request, queryset):
+        for evaluation in queryset:
+            if evaluation.is_upgradable():
+                try:
+                    new_eval = evaluation.upgrade(user=evaluation.created_by)
+                    self.message_user(request,
+                                      f"The evaluation {evaluation} ({evaluation.calculate_progression()}%)"
+                                      f" has been upgraded from the version "
+                                      f"{evaluation.assessment.version} to version "
+                                      f"{new_eval.assessment.version} and has "
+                                      f"{new_eval.calculate_progression()}% of progression",
+                                      messages.SUCCESS)
+                except Exception as e:
+                    self.message_user(
+                        request,
+                        f"An error occurred, {e}, when upgrading the evaluation {evaluation}",
+                        messages.ERROR
+                    )
+            else:
+                self.message_user(
+                    request,
+                    f"The evaluation {evaluation} is not upgradable (version {evaluation.assessment.version})",
+                    messages.WARNING
                 )
         return redirect(request.path_info)
 

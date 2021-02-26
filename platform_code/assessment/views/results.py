@@ -54,7 +54,8 @@ class ResultsView(LoginRequiredMixin, DetailView):
 
             # Get the score and calculate it if needed
             evaluation_score_dic = manage_evaluation_score(request=request, evaluation_list=[evaluation])
-            if evaluation_score_dic[evaluation.id]:
+            # Compare to None because the score can be 0.0
+            if evaluation_score_dic[evaluation.id] is not None:
                 context["evaluation_score"] = evaluation_score_dic[evaluation.id]
             # Error to get the score, the score is None so redirection
             else:
