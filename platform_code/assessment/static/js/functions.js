@@ -894,3 +894,15 @@ function removeNoteProfile(note_element_id, notification_div_id) {
             }
         });
 }
+
+function changeIconRelease(divHeader) {
+    var children = divHeader.children;
+    if(children) {
+        var divIcon = children[0];
+        if(divIcon.classList.contains("fa-angle-down")){
+            divIcon.classList.replace("fa-angle-down", "fa-angle-up");
+        } else {
+            divIcon.classList.replace("fa-angle-up", "fa-angle-down");
+        }
+    }
+}

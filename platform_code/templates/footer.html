@@ -35,6 +35,9 @@
     <a class="link-with-border" href="{% url 'home:faq' %}">{% trans "FAQ" %}</a>
 </div>
 <div class="col-md-3 col-md-3-footer">
+    <a class="link-with-border" href="{% url 'home:release-notes' %}">{% trans "Release Notes" %}</a>
+</div>
+<div class="col-md-3 col-md-3-footer">
     {% if platform_management.activate_multi_languages %}
         <form action="{% url 'set_language' %}" method="post">
             {% csrf_token %}

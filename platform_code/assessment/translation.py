@@ -1,4 +1,5 @@
 from modeltranslation.translator import register, TranslationOptions
+
 from assessment.models import (
     Assessment,
     MasterSection,
@@ -6,6 +7,7 @@ from assessment.models import (
     MasterChoice,
     ExternalLink,
 )
+from home.models import ReleaseNote
 
 
 @register(Assessment)
@@ -31,3 +33,9 @@ class MasterChoiceTranslationOptions(TranslationOptions):
 @register(ExternalLink)
 class ExternalLinkTranslationOptions(TranslationOptions):
     fields = ('text',)
+
+
+@register(ReleaseNote)
+class ReleaseNoteTranslationOptions(TranslationOptions):
+    fields = ('text',)
+    required_languages = {'default': ('text',)}
