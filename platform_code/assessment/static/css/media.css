@@ -610,6 +610,37 @@ Inside each section, first you have, if it exists:
     .height-title {
         height: 5em;
     }
+
+    .date-release-note {
+        display: none;
+    }
+
+    .box-release-note {
+        float: left;
+        border-left: 0;
+        position: relative;
+        width: 100%;
+        margin: 0 3%;
+        padding-bottom: 0.5em;
+    }
+
+    .circle-release-note{
+        display: none;
+    }
+
+    .arrow-release-note{
+        position: relative;
+    }
+
+    .text-release-note{
+        margin-top: 32px;
+        padding-right: 0;
+    }
+
+    .htext-release-note {
+        padding: 0 64px;
+        margin: 0;
+    }
 }
 
 /* LARGER */

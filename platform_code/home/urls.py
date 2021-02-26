@@ -17,7 +17,8 @@ from .views import (
     export_user_data,
     PasswordReset,
     ResourcesView,
-    LoginPageView
+    LoginPageView,
+    ReleaseNotesView,
 )
 
 
@@ -31,6 +32,7 @@ urlpatterns = [
             ),
     path("login/", LoginPageView.as_view(), name="login"),  # login page when redirect
     path("legal-notices/", legal_notices_view, name="legal-notices"),
+    path("release-notes/", ReleaseNotesView.as_view(), name="release-notes"),
     path("faq/", faq_view, name="faq"),
     path("robots.txt", TemplateView.as_view(
         template_name="robots.txt", content_type="text/plain"

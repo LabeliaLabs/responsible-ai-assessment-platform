@@ -717,6 +717,64 @@ h1 img {
 
 /****************************************** END NEWSLETTER ****************************************************/
 
+/****************************************** RELEASE NOTES ***************************************************/
+
+.date-release-note{
+    float: left;
+    margin-bottom: 2em;
+    margin-top: 2em;
+    width: 10%;
+    text-align: right;
+}
+
+.box-release-note{
+    float: left;
+    border-left: 3px solid #5550FF;
+    position: relative;
+    width: 83%;
+    margin: 0 3%;
+    padding-bottom: 0.5em;
+}
+
+.circle-release-note{
+    background-color: #fff;
+    border: 3px solid #5550FF;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 45px;
+    left: -13px;
+}
+
+.arrow-release-note{
+    display: inline-block;
+    position: absolute;
+    top: 1em;
+    left: 0.8em;
+    color: #5550FF;
+    font-size: 2em;
+}
+
+.text-release-note{
+    padding: 0 64px;
+    margin: 32px 0;
+}
+
+.htext-release-note{
+    padding: 0 64px;
+    margin: 34px 0;
+}
+
+.text-release-note li{
+    display: list-item;
+    list-style-type: disc;
+    line-height: 25px;
+    margin: 10px 0;
+}
+
+/**************************************** END RELEASE NOTES **************************************************/
+
 /****************************************** BETA BANNER ******************************************************/
 
 .ribbon {

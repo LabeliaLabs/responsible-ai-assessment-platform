@@ -1,12 +1,12 @@
-from django.utils import timezone
+from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django.db.models import Q
-from django_countries.fields import CountryField
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth.models import PermissionsMixin
-from django.conf import settings
+from django_countries.fields import CountryField
 
 
 # In this model file, the user authentication system is completed to add the fact that a user is part of an
@@ -576,6 +576,15 @@ class Organisation(models.Model):
         :return: list of dictionaries
         """
         return list(PendingInvitation.objects.filter(organisation=self))
+
+
+class ReleaseNote(models.Model):
+    """
+    Release Notes are used in the release-notes.html page by release_notes.py
+    """
+    date = models.DateField()
+    text = models.TextField(null=False, blank=False)
+    version = models.CharField(max_length=150)
 
 
 def turn_list_orga_into_tuple(list_orga):
