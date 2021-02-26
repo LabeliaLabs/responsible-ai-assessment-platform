@@ -65,14 +65,10 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             manage_missing_language(request, evaluation)
         # Get user notes on evaluations from the organizations to which the user belongs
         self.add_notes_context(user)
-
         # If the scoring system has changed, it set the max points again for the evaluation, sections, EE
-        success_max_points = manage_evaluation_max_points(
+        manage_evaluation_max_points(
             request=request, evaluation_list=self.context["evaluations"]
         )
-        if not success_max_points:
-            return redirect("home:user-profile")
-
         self.context["evaluation_score_dic"] = manage_evaluation_score(
             request=request, evaluation_list=self.context["evaluations"]
         )
