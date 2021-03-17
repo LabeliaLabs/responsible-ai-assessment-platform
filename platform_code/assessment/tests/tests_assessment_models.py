@@ -90,8 +90,8 @@ class MasterSectionTestCase(TestCase):
         )
 
     def test_master_section_name(self):
-        self.assertEqual(str(self.master_section1), "S1 master_section1")
-        self.assertEqual(str(self.master_section2), "S2 master_section2")
+        self.assertEqual(str(self.master_section1), "Master section S1 master_section1")
+        self.assertEqual(str(self.master_section2), "Master section S2 master_section2")
 
     def test_numbering(self):
         self.assertEqual(self.master_section1.get_numbering(), "1")
@@ -146,8 +146,8 @@ class MasterEvaluationElementTestCase(TestCase):
         self.assertEqual(self.master_evaluation_element3.get_numbering(), "2.1")
 
     def test_master_evaluation_element_name(self):
-        self.assertEqual(str(self.master_evaluation_element1), "Q1.1 master_element1")
-        self.assertEqual(str(self.master_evaluation_element3), "Q2.1 master_element3")
+        self.assertEqual(str(self.master_evaluation_element1), "Master Q1.1 master_element1")
+        self.assertEqual(str(self.master_evaluation_element3), "Master Q2.1 master_element3")
 
 
 class MasterChoiceTestcase(TestCase):
@@ -191,9 +191,9 @@ class MasterChoiceTestcase(TestCase):
         master_choice5 = MasterChoice.objects.get(
             master_evaluation_element=self.master_element3, order_id="a"
         )
-        self.assertEqual(str(master_choice1), "1.1.a answer")
-        self.assertEqual(str(master_choice2), "1.1.b answer")
-        self.assertEqual(str(master_choice5), "2.1.a answer")
+        self.assertEqual(str(master_choice1), "Master choice 1.1.a answer")
+        self.assertEqual(str(master_choice2), "Master choice 1.1.b answer")
+        self.assertEqual(str(master_choice5), "Master choice 2.1.a answer")
 
     def test_master_choice_test_numbering(self):
         master_choice1 = MasterChoice.objects.get(

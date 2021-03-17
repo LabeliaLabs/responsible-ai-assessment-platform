@@ -225,7 +225,7 @@ def is_user_spam_feedback(url, headers, user, delta_days, max_feedback):
     # Always the last 20 issues created
     issues_list = response.json()
     count = 0
-    if len(issues_list) > 0:
+    if isinstance(issues_list, list) and len(issues_list) > 0:
         i = 0
         while i < len(issues_list) and count <= max_feedback:
             issue = issues_list[i]
