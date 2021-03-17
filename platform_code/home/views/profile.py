@@ -18,9 +18,7 @@ from assessment.views.utils.utils import (
     manage_evaluation_max_points,
     manage_evaluation_score,
     treat_evaluation_creation_valid_form,
-    treat_delete_note,
-    treat_archive_note,
-    manage_missing_language,
+    treat_delete_note, manage_missing_language,
 )
 from home.forms import OrganisationCreationForm
 from home.models import User, Membership
@@ -65,10 +63,14 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             manage_missing_language(request, evaluation)
         # Get user notes on evaluations from the organizations to which the user belongs
         self.add_notes_context(user)
+
         # If the scoring system has changed, it set the max points again for the evaluation, sections, EE
-        manage_evaluation_max_points(
+        success_max_points = manage_evaluation_max_points(
             request=request, evaluation_list=self.context["evaluations"]
         )
+        if not success_max_points:
+            return redirect("home:user-profile")
+
         self.context["evaluation_score_dic"] = manage_evaluation_score(
             request=request, evaluation_list=self.context["evaluations"]
         )
@@ -151,11 +153,9 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             ):
                 return treat_evaluation_name_edition(request)
 
-            elif "delete_note_id" in request.POST.dict():
+            elif "note_element_id" in request.POST.dict():
                 return treat_delete_note(request)
 
-            elif "archive_note_id" in request.POST.dict():
-                return treat_archive_note(request)
             # Case there is a post which is not managed by the function
             else:
                 logger.error(

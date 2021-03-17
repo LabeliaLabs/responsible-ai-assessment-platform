@@ -30,7 +30,9 @@
             <div class="grid-container-2-cols" id="div_resource_fav{{resource.id}}">
                 <div class="grid-item">
                     <li class="object-linked list-with-disc margin-10 " id="resource_fav{{resource.id}}">
+                        {% if resource.text %}
                         [{{resource.type}}] - {{resource.text|markdownify}}
+                        {% endif %}
                     </li>
                 </div>
                 <div class="icon-list">
@@ -89,7 +91,9 @@
                                     <div class="grid-container-2-cols">
                                         <div class="grid-item">
                                             <li class="list-with-disc margin-10">
+                                                {% if resource.text %}
                                                 [{{resource.type}}] - {{resource.text|markdownify}}
+                                                {% endif %}
                                             </li>
                                         </div>
                                         <div class="icon-list">

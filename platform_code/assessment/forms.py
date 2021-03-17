@@ -2,13 +2,13 @@ from ast import literal_eval
 
 from django import forms
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
-from django.db.models import Q
 from django.forms import ModelForm
 from django.forms import widgets
 from django.forms.renderers import get_default_renderer
-from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Q
+from django.utils import timezone
 
 from assessment.utils import (
     markdownify_bold,
@@ -209,7 +209,12 @@ class EvaluationElementWeightForm(forms.ModelForm):
         dic_weight = {}
         for section in obj_assessment.mastersection_set.all():
             for element in section.masterevaluationelement_set.all():
-                dic_weight[str(element)] = "1"
+                # Todo just: dic_weight[str(element)] = "1"
+                try:
+                    dic_weight[str(element)] = "1"
+                except Exception as e:
+                    print(f"ERROR {e}")
+                    pass
 
         self.fields["master_evaluation_element_weight_json"].initial = dic_weight
 
@@ -393,9 +398,6 @@ class ChoiceForm(ModelForm):
                 "width": "100%",
                 "class": "textarea textarea-data",
             }
-            if evaluation_element.user_notes_archived:
-                form_attr["disabled"] = "disabled"
-                form_attr["class"] += " note-disabled"
             notes = forms.CharField(
                 label=_("My notes"),
                 widget=forms.Textarea(form_attr),

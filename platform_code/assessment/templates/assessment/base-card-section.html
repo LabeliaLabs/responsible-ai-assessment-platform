@@ -41,7 +41,11 @@
         {% endif %}
     </div>
     <div class="card-body-section">
-        <p class="card-text-section">{{section.master_section.description|markdownify}}</p>
+        <p class="card-text-section">
+            {% if section.master_section.description %}
+            {{section.master_section.description|markdownify}}
+            {% endif %}
+        </p>
         <a class="btn btn-primary card-button-section"
            href="{{ section.get_absolute_url }}">{% trans "Go to the section" %}</a>
     </div>

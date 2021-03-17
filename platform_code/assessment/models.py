@@ -18,7 +18,6 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import gettext as _
 
 from home.models import Organisation
 
@@ -44,7 +43,10 @@ class Assessment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return self.name
+        else:
+            return f"Assessment {str(self.pk)}"
 
     def get_list_all_choices(self):
         """
@@ -223,7 +225,10 @@ class Evaluation(models.Model):
     finished_at = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return self.name
+        else:
+            return f"Evaluation {str(self.pk)}"
 
     def save(self, *args, **kwargs):
         if not self.id:
@@ -396,7 +401,7 @@ class Evaluation(models.Model):
             user_eval = user_request
 
         new_eval = Evaluation.create_evaluation(
-            name=self.name + _(" (new version)"),
+            name=self.name,
             assessment=final_assessment,
             organisation=self.organisation,
             user=user_eval,
@@ -785,10 +790,12 @@ class MasterSection(models.Model):
         ordering = ["order_id"]
 
     def __str__(self):
-        if self.order_id:
-            return "S" + str(self.order_id) + " " + self.name
+        if self.order_id and self.name:
+            return f"Master section S{str(self.order_id)} {self.name}"
+        elif self.order_id and not self.name:
+            return f"Master section S{str(self.order_id)}"
         else:
-            return self.name
+            return f"Master section (id {str(self.pk)})"
 
     def get_numbering(self):
         """
@@ -972,17 +979,19 @@ class MasterEvaluationElement(models.Model):
         ordering = ["order_id"]
 
     def __str__(self):
-        if self.master_section.order_id and self.order_id:
+        if self.master_section.order_id and self.order_id and self.name:
             return (
-                    "Q"
+                    "Master Q"
                     + str(self.master_section.order_id)
                     + "."
                     + str(self.order_id)
                     + " "
                     + self.name
             )
+        elif self.master_section.order_id and self.order_id and not self.name:
+            return f"Master evaluation element Q{str(self.master_section.order_id)}.{str(self.order_id)}"
         else:
-            return self.name
+            return f"Master evaluation element (id {str(self.pk)})"
 
     def get_numbering(self):
         if self.order_id and self.master_section.order_id:
@@ -1005,7 +1014,6 @@ class EvaluationElement(models.Model):
     )  # TODO remove blank
     section = models.ForeignKey(Section, blank=True, on_delete=models.CASCADE)
     user_notes = models.TextField(blank=True, null=True, max_length=20000)
-    user_notes_archived = models.BooleanField(default=False)
     status = models.BooleanField(default=False)
     points = models.FloatField(default=0)
     # Max points of this evaluation elements according to the scoring used
@@ -1479,10 +1487,12 @@ class MasterChoice(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        if self.get_numbering():
-            return self.get_numbering() + " " + self.answer_text
+        if self.get_numbering() and self.answer_text:
+            return f"Master choice {self.get_numbering()} {self.answer_text}"
+        elif self.get_numbering() and not self.answer_text:
+            return f"Master choice {self.get_numbering()}"
         else:
-            return self.answer_text
+            return f"Master choice (id {str(self.pk)})"
 
     def get_numbering(self):
         """
@@ -1558,8 +1568,10 @@ class Choice(models.Model):
                     + " "
                     + self.master_choice.answer_text
             )
+        elif self.master_choice.get_numbering() and not self.master_choice.answer_text:
+            return self.master_choice.get_numbering()
         else:
-            return self.master_choice.answer_text
+            return f"Choice (id {str(self.pk)})"
 
     @classmethod
     def create_choice(cls, master_choice, evaluation_element):
@@ -1694,7 +1706,10 @@ class ScoringSystem(models.Model):
     attributed_points_coefficient = models.FloatField(default=0.5)
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return self.name
+        else:
+            return f"Scoring system (id {str(self.pk)})"
 
     def get_master_choice_points(self, master_choice):
         """
@@ -1747,7 +1762,10 @@ class EvaluationElementWeight(models.Model):
     master_evaluation_element_weight_json = JSONField()
 
     def __str__(self):
-        return self.name
+        if self.name:
+            return self.name
+        else:
+            return f"Evaluation elements weight (id {str(self.pk)})"
 
     def get_master_element_weight(self, master_element):
         """
@@ -1780,7 +1798,10 @@ class ExternalLink(models.Model):
     type = models.CharField(default="Web article", max_length=500)
 
     def __str__(self):
-        return self.text + " (" + self.type + ")"
+        if self.text and self.type:
+            return f"{self.text} ({self.type})"
+        else:
+            return f"Resource (id {str(self.pk)})"
 
 
 def replace_special_characters(sentence):
@@ -1789,6 +1810,7 @@ def replace_special_characters(sentence):
     :param sentence:
     :return:
     """
+    # Todo delete if not used
     sentence_modified = sentence.replace("é", "e")
     return sentence_modified.replace(" ", "-")
 

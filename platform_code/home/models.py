@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.core.exceptions import MultipleObjectsReturned
@@ -98,7 +97,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     case, the field wasn't caught. This issue forced me to overwrite some methods and class to reset the user password.
 
     """
-    languages = settings.LANGUAGES
 
     email = models.EmailField(
         verbose_name="email",
@@ -114,7 +112,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     staff = models.BooleanField(default=False)  # a admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
     created_at = models.DateTimeField(default=timezone.now)
-    language_preference = models.CharField(default="fr", choices=languages, max_length=5)
     # notice the absence of a "Password field", that is built in.
 
     object = UserManager()
@@ -135,9 +132,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_short_name(self):
         # The user is identified by their email address
         return self.email
-
-    def get_language_preference(self):
-        return self.language_preference
 
     def __str__(self):  # __unicode__ on Python 2
         return self.email
