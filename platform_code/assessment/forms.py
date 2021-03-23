@@ -398,6 +398,9 @@ class ChoiceForm(ModelForm):
                 "width": "100%",
                 "class": "textarea textarea-data",
             }
+            if evaluation_element.user_notes_archived:
+                form_attr["disabled"] = "disabled"
+                form_attr["class"] += " note-disabled"
             notes = forms.CharField(
                 label=_("My notes"),
                 widget=forms.Textarea(form_attr),

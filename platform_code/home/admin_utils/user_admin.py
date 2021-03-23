@@ -20,6 +20,7 @@ class UserAdmin(BaseUserAdmin):
         "last_name",
         "get_created_at",
         "get_last_login",
+        "language_preference",
         "organisations_user_is_member",
     )
     list_filter = ("admin",

@@ -11,7 +11,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
-from django.utils.translation import gettext as _, ngettext
+from django.utils.translation import gettext as _, ngettext, get_language
 from django.conf import settings
 
 from home.forms import SignUpForm
@@ -36,6 +36,7 @@ def signup(request):
             email = form.cleaned_data.get("email")
             raw_password = form.cleaned_data.get("password1")
             user = authenticate(email=email, password=raw_password)
+            user.language_preference = get_language()
             user.active = False
             user.save()
             # create user_resources so the user can access resources, this could be integrated to user creation ?

@@ -78,6 +78,8 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
         if form.is_valid():
             last_name = form.cleaned_data.get("last_name")
             first_name = form.cleaned_data.get("first_name")
+            language_preference = form.cleaned_data.get("language_preference")
+            user.language_preference = language_preference
             user.last_name = last_name
             user.first_name = first_name
             user.save()

@@ -18,7 +18,9 @@ from assessment.views.utils.utils import (
     manage_evaluation_max_points,
     manage_evaluation_score,
     treat_evaluation_creation_valid_form,
-    treat_delete_note, manage_missing_language,
+    treat_delete_note,
+    manage_missing_language,
+    treat_archive_note,
 )
 from home.forms import OrganisationCreationForm
 from home.models import User, Membership
@@ -153,9 +155,11 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             ):
                 return treat_evaluation_name_edition(request)
 
-            elif "note_element_id" in request.POST.dict():
+            elif "delete_note_id" in request.POST.dict():
                 return treat_delete_note(request)
 
+            elif "archive_note_id" in request.POST.dict():
+                return treat_archive_note(request)
             # Case there is a post which is not managed by the function
             else:
                 logger.error(
