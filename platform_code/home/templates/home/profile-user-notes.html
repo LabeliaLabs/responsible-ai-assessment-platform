@@ -33,7 +33,7 @@
 
                     <div class="card-body">
                         {% for element, notes in elements.items %}
-                        <div id="note-element-{{element.id}}">
+                        <div id="note-element-{{element.id}}" class="element-notes-card">
                             <p class="mx-2 font-weight-bold">
                                 Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
                                 :
@@ -48,8 +48,13 @@
                             </p>
 
 
-                            <div class="mx-2 row" id="note-wrapper-{{element.id}}">
-                                <p class="profile-notes-text">
+                            <div class="mx-2 row " id="note-wrapper-{{element.id}}">
+                                {% if element.user_notes_archived %}
+                                <p class="profile-notes-text note-disabled" id="note-{{element.id}}">
+                                {% else %}
+                                <p class="profile-notes-text" id="note-{{element.id}}">
+                                {% endif %}
+
                                     <b>{% trans "My note" %}:</b>
                                     {{notes|linebreaksbr|urlize|url_target_blank}}
                                 </p>
@@ -61,16 +66,31 @@
                                         </button>
                                     </a>
                                     <form class="m-1" action="{% url 'home:user-profile' %}"
-                                          id="form-element-{{element.id}}" method="post">
+                                          id="form-delete-element-{{element.id}}" method="post">
                                         {% csrf_token %}
                                         <a class="btn btn-danger small-btn btn-cursor"
-                                           onclick="removeNote({{element.id}})">
+                                           onclick="removeNoteProfile({{element.id}}, 'notification-')">
                                             <i class="fa fa-trash white-color"></i>
                                         </a>
                                     </form>
                                 </div>
-
+                                <div class="mx-2 row">
+                                    <form action="{% url 'home:user-profile' %}"
+                                          id="form-archive-note-{{element.id}}" method="post">
+                                        {% csrf_token %}
+                                        <a class="btn-cursor"
+                                           onclick="archiveNote({{element.id}}, 'notification-')">
+                                            {% if element.user_notes_archived %}
+                                            <i class="fa fa-check-square-o" id="icon-{{element.id}}"></i>
+                                            {% else %}
+                                            <i class="fa fa-square-o" id="icon-{{element.id}}"></i>
+                                            {% endif %}
+                                        </a>
+                                    </form>
+                                    <p class="ml-1">{% trans "Archive this note" %}</p>
+                                </div>
                             </div>
+                            <div id="notification-{{element.id}}"></div>
                         </div>
                         {% endfor %}
                     </div>
@@ -80,5 +100,5 @@
         </div>
     </div>
     {% endfor %}
-        <p id="empty_notes_text" {% if user_notes_dict %} hidden {% endif %}>{% trans "You don't have any notes in your evaluations" %}</p>
+    <p id="empty-notes-text" {% if user_notes_dict %} hidden {% endif %}>{% trans "You don't have any notes in your evaluations" %}</p>
 </div>

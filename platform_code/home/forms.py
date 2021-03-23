@@ -70,6 +70,7 @@ class DataSettingsForm(ModelForm):
         fields = (
             "first_name",
             "last_name",
+            "language_preference",
         )
 
     def __init__(self, *args, **kwargs):
@@ -77,10 +78,14 @@ class DataSettingsForm(ModelForm):
         super(DataSettingsForm, self).__init__(*args, **kwargs)
         self.fields["first_name"].initial = user.first_name
         self.fields["last_name"].initial = user.last_name
+        self.fields["language_preference"].initial = user.language_preference
         self.fields["first_name"].label = _("First name")
         self.fields["last_name"].label = _("Last name")
+        self.fields["language_preference"].label = _("Language preference")
+        self.fields["language_preference"].widget.attrs = {"class": "full-width "}
         self.fields["last_name"].required = True
         self.fields["first_name"].required = True
+        self.fields["language_preference"].required = True
 
 
 # USER PART #
