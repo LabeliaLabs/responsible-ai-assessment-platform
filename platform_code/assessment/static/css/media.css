@@ -281,7 +281,9 @@ Inside each section, first you have, if it exists:
     .delivery-banner {
         margin-bottom: 60px;
     }
-
+    .margin-normal-navbar {
+        margin-top: 150px;
+    }
     /* newsletter */
     .newsletter-form-container {
         width: 100%;
@@ -345,6 +347,12 @@ Inside each section, first you have, if it exists:
         float: left;
         padding: 10px;
         flex: 1;
+    }
+}
+
+@media (max-width: 571px) {
+    .upgrade-button-width {
+        width: 100px;
     }
 }
 
@@ -508,6 +516,9 @@ Inside each section, first you have, if it exists:
         -ms-flex-direction: row;
         flex-direction: row;
     }
+    .navbar-collapse {
+        margin-top: -15px;
+    }
     .adapted-width-button{
         width: 220px;
     }
@@ -582,7 +593,7 @@ Inside each section, first you have, if it exists:
 
 @media (min-width: 1025px) and (max-width: 1200px){
     .organisation-settings{
-        width: 700px;
+        width: 400px;
     }
     .margin-left-large-screen {
         margin-left: -50px;
@@ -706,6 +717,10 @@ Inside each section, first you have, if it exists:
     }
     .height-title {
         height: 3em;
+    }
+    .organisation-settings {
+        width: 700px;
+        max-width: 80%;
     }
 }
 

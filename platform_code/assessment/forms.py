@@ -621,13 +621,13 @@ class ResultsForm(ModelForm):
         # If the user has registered the champ user_notes for this element, it is displayed
         if evaluation_element.user_notes and evaluation_element.user_notes != "":
             notes = forms.CharField(
-                label=_("My notes"),
+                label=_("My notes:"),
                 widget=forms.Textarea(
                     attrs={
                         "rows": 3,
                         "size": 100,
                         "width": "100%",
-                        "class": "textarea textarea-data",
+                        "class": "textarea textarea-data-results",
                     }
                 ),
                 initial=evaluation_element.user_notes,
@@ -637,6 +637,41 @@ class ResultsForm(ModelForm):
 
             self.fields["notes"] = notes  # add the notes (empty or not) in the form
 
+
+class SectionResultsForm(ModelForm):
+    """
+    Form to display the results of an evaluation
+    This form is only readable and can not be edited
+    The widgets of radio and checkbox are edited to add css style
+    """
+
+    class Meta:
+        model = Section
+        fields = []
+
+    def __init__(self, *args, **kwargs):
+        # Catch the section
+        section = kwargs.pop("section")
+        super(SectionResultsForm, self).__init__(*args, **kwargs)
+
+        # If the user has registered the champ user_notes for the section
+        if section.user_notes and section.user_notes != "":
+            notes = forms.CharField(
+                label=_("My section notes:"),
+                widget=forms.Textarea(
+                    attrs={
+                        "rows": 3,
+                        "size": 100,
+                        "width": "100%",
+                        "class": "textarea textarea-data-results",
+                    }
+                ),
+                initial=section.user_notes,
+                disabled=True,
+                required=False,
+            )
+
+            self.fields["notes"] = notes  # add the notes (empty or not) in the form
 
 # Import files #
 

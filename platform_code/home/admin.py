@@ -26,4 +26,4 @@ admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
 admin.site.register(ReleaseNote)
 
-admin_dashboard = DashboardAdminSite(name='admin-dashboard')
+admin_dashboard = DashboardAdminSite(name='admin-monitoring')

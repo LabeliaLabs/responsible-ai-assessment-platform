@@ -55,7 +55,7 @@
                                 <p class="profile-notes-text" id="note-{{element.id}}">
                                 {% endif %}
 
-                                    <b>{% trans "My note" %}:</b>
+                                    <b>{% trans "My note:" %}</b>
                                     {{notes|linebreaksbr|urlize|url_target_blank}}
                                 </p>
                                 <div class="margin-auto profile-notes-buttons">
@@ -100,5 +100,5 @@
         </div>
     </div>
     {% endfor %}
-    <p id="empty-notes-text" {% if user_notes_dict %} hidden {% endif %}>{% trans "You don't have any notes in your evaluations" %}</p>
+    <p id="empty-notes-text" class="margin-30" {% if user_notes_dict %} hidden {% endif %}>{% trans "You don't have any notes in your evaluations" %}</p>
 </div>

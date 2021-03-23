@@ -43,7 +43,7 @@
                 <div>{{member.user.email}}</div>
             </td>
             <td class="case-array member-td">
-                <div>{{member.role}}</div>
+                <div>{{member.role|get_member_role_as_str}}</div>
             </td>
             <td class="case-array member-td">
                 <div>{{member|evaluation_created_by:evaluation_list}}</div>
@@ -107,7 +107,7 @@
         <tr class="row-array" id="rowPendingMember{{pending_member.id}}">
             <td class="case-array">{{pending_member.email}}</td>
             <td class="case-array">{{pending_member.email}}</td>
-            <td class="case-array">{{pending_member.role}} (pending)</td>
+            <td class="case-array">{{pending_member.role|get_member_role_as_str}} {% trans "(pending)" %}</td>
             <td class="case-array"></td>
             {% if organisation|get_role:user == "admin" %}
             <td class="div-hidden-icons background-white"

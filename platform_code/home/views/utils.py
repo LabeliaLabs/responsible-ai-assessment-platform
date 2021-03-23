@@ -34,7 +34,7 @@ def manage_message_login_page(request):
     else:
         message = {
             " alert-info": _("Please, enter your email and your password to login to your account.\n "
-                             "If you don't have an account, click on the 'I do not have an account' button.")
+                             "If you don't have an account, click on the \"I haven't an account\" button.")
         }
     return message
 

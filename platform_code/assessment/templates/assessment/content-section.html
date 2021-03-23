@@ -72,12 +72,12 @@
                     <div class="card-header row grid-container-3-cols " id="heading{{element.id}}">
                         <div aria-controls="collapse{{element.id}}"
                              aria-expanded="true"
-                             class="display-line div-button"
+                             class="display-line div-button btn-cursor"
                              data-target="#collapse{{element.id}}"
                              id="collapsible{{element.id}}"
                              data-toggle="collapse">
                             <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left " type="button">
+                                <button class="btn btn-link btn-block text-left" type="button">
                                     Q{{section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} :
                                     {% if element.master_evaluation_element.name %}
                                         {{element.master_evaluation_element.name|markdownify}}

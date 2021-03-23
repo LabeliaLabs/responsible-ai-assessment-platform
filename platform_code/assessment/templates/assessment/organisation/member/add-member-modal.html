@@ -46,8 +46,8 @@
                 {% csrf_token %}
                 {% for field in add_member_form %}
                 <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                <span class="float-left">{{ field.label}}</span>
-                <p> {{field}} </p>
+                <span class="float-left">{% blocktrans with label=field.label %}{{ label }}{% endblocktrans %}</span>
+                <p> {{ field }} </p>
                 {% endfor %}
             </div>
         </div>

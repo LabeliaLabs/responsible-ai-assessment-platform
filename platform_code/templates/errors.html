@@ -22,13 +22,15 @@
     <link href="{% static 'css/base.css' %}" rel="stylesheet" type="text/css">
 </head>
 
-<div class="center">
-    <div id="image">
-        <img alt="logo substra" src="{% static 'image/Substra_Logo_couleur_RVB.png' %}" title="logo substra">
+<body>
+    <div class="center">
+        <div id="image">
+            <img alt="logo substra" src="{% static 'image/Substra_Logo_couleur_RVB.png' %}" title="logo substra">
+        </div>
+        <div id="text">
+            <h1>{{title}}</h1>
+            <p>{{content}}</p>
+        </div>
+        <a class="btn btn-primary card-button" href="{% url 'home:homepage' %}">{% trans "Homepage" %}</a>
     </div>
-    <div id="text">
-        <h1>{{title}}</h1>
-        <p>{{content}}</p>
-    </div>
-    <a class="btn btn-primary card-button" href="{% url 'home:homepage' %}">{% trans "Homepage" %}</a>
-</div>
+</body>

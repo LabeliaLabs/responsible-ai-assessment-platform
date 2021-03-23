@@ -26,6 +26,7 @@ from assessment.views.utils.utils import (
     manage_evaluation_score,
     treat_evaluation_creation_valid_form,
 )
+from home.forms import OrganisationEditionForm
 from home.models import Organisation, User, Membership, PendingInvitation
 from home.views.utils import add_last_version_last_assessment_dictionary
 
@@ -127,6 +128,8 @@ class SummaryView(LoginRequiredMixin, DetailView):
 
         self.context["form"] = EvaluationForm()
 
+        self.context["edit_organisation_form"] = OrganisationEditionForm(organisation=organisation,
+                                                                         prefix="edit-organisation")
         # Add all the information for member management (forms, member list, etc)
         self.add_member_data_and_forms_to_context(organisation)
 
@@ -176,12 +179,11 @@ class SummaryView(LoginRequiredMixin, DetailView):
         if not can_edit_security_check(request, organisation=organisation):
             messages.warning(request, _("You don't have the right to do this action."))
             return redirect("assessment:orga-summary", organisation.id)
-
         if request.method == "POST":
             user = request.user
 
             # case it is an evaluation creation
-            if "name" in request.POST:
+            if "name" in request.POST and not request.is_ajax():
                 # create a form instance and populate it with data from the request:
                 form = EvaluationForm(request.POST)
                 # check whether it's valid:
@@ -216,6 +218,9 @@ class SummaryView(LoginRequiredMixin, DetailView):
 
                 elif "edit_invitation_id" in request.POST:
                     self.treat_edit_invitation_role(request, organisation, user)
+
+                elif "edit-organisation-name" in request.POST:
+                    self.treat_edit_organisation(request, organisation, user)
                 return HttpResponse(json.dumps(self.data_update), content_type="application/json")
 
     def treat_add_member(self, request, organisation, user):
@@ -446,6 +451,33 @@ class SummaryView(LoginRequiredMixin, DetailView):
                                f"role of the invitation to {invitation.email}, from {invitation.role} to "
                                f"{new_role} which not a valid one, "
                                f"in the organisation {organisation.name} (id {organisation.id})")
+
+    def treat_edit_organisation(self, request, organisation, user):
+        form = OrganisationEditionForm(request.POST, prefix="edit-organisation")
+        if form.is_valid():
+            name = form.cleaned_data.get("name")
+            size = form.cleaned_data.get("size")
+            country = form.cleaned_data.get("country")
+            sector = form.cleaned_data.get("sector")
+            organisation.name = name
+            organisation.size = size
+            organisation.country = country
+            organisation.sector = sector
+            organisation.save()
+            self.data_update["organisation_name"] = _("Name:") + " " + name
+            self.data_update["organisation_name_only"] = name
+            self.data_update["organisation_size"] = _("Size:") + " " + size
+            self.data_update["organisation_country"] = _("Country:") + " " + country
+            self.data_update["organisation_sector"] = _("Sector:") + " " + sector
+            logger.info(f"[organisation_edited] The user {user}, with the role {organisation.get_role_user(user)},"
+                        f"edited the information of the organisation {str(organisation)}")
+            self.data_update["message"] = _("The organisation information has been updated.")
+            self.data_update["message_type"] = "alert-success"
+            self.data_update["success"] = True
+        else:
+            self.data_update["message"] = _("An error occurred, please verify the data you entered.")
+            self.data_update["message_type"] = "alert-danger"
+            self.data_update["success"] = False
 
 
 def get_object_to_action(request, organisation, user, object_class, object_name, action, **kwargs):
