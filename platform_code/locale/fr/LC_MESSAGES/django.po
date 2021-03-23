@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-19 17:39+0100\n"
+"POT-Creation-Date: 2021-03-23 11:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,48 +33,48 @@ msgstr "Changer %s"
 msgid "View %s"
 msgstr "Voir %s"
 
-#: .\platform_code\assessment\forms.py:28
+#: .\platform_code\assessment\forms.py:33
 msgid "No evaluation element fits to my case"
 msgstr "Aucun élément de réponse ne me convient"
 
-#: .\platform_code\assessment\forms.py:29
+#: .\platform_code\assessment\forms.py:34
 msgid "This evaluation element is poorly formulated"
 msgstr "Cet élément est mal formulé ou mal expliqué"
 
-#: .\platform_code\assessment\forms.py:32
+#: .\platform_code\assessment\forms.py:37
 msgid "My organisation is not concerned by this evaluation element"
 msgstr "Cela ne s’applique pas à mon organisation ou mon secteur"
 
-#: .\platform_code\assessment\forms.py:34
+#: .\platform_code\assessment\forms.py:39
 msgid "There is an issue or a typo in the element"
 msgstr "Il y a une erreur ou une typo dans la question"
 
-#: .\platform_code\assessment\forms.py:35
+#: .\platform_code\assessment\forms.py:40
 msgid "I have a new resource to add to this evaluation element"
 msgstr "J’ai une ressource supplémentaire à proposer"
 
-#: .\platform_code\assessment\forms.py:36
+#: .\platform_code\assessment\forms.py:41
 msgid "A resource is not available"
 msgstr "Une ressource n'est pas disponible"
 
-#: .\platform_code\assessment\forms.py:37
-#: .\platform_code\assessment\forms.py:45
+#: .\platform_code\assessment\forms.py:42
+#: .\platform_code\assessment\forms.py:50 .\platform_code\home\models.py:360
 msgid "Other"
 msgstr "Autres"
 
-#: .\platform_code\assessment\forms.py:42
+#: .\platform_code\assessment\forms.py:47
 msgid "I find that an evaluation element is not appropriated"
 msgstr "Un élément d’évaluation ne me semble pas approprié"
 
-#: .\platform_code\assessment\forms.py:43
+#: .\platform_code\assessment\forms.py:48
 msgid "I would like to propose a new evaluation element"
 msgstr "J’ai une suggestion d’un nouvel élément d’évaluation"
 
-#: .\platform_code\assessment\forms.py:44
+#: .\platform_code\assessment\forms.py:49
 msgid "I would like to propose a new resource to this section"
 msgstr "J’ai une ressource à proposer pour cette section"
 
-#: .\platform_code\assessment\forms.py:68
+#: .\platform_code\assessment\forms.py:73
 msgid ""
 "The json file has to contain the choice ids as keys ('1.1.a' for exemple) "
 "and the weight as value"
@@ -82,8 +82,8 @@ msgstr ""
 "Le fichier json doit contenir les ids des choix comme clé et leur pour comme "
 "valeur"
 
-#: .\platform_code\assessment\forms.py:237
-#: .\platform_code\assessment\forms.py:267
+#: .\platform_code\assessment\forms.py:247
+#: .\platform_code\assessment\forms.py:277
 #: .\platform_code\assessment\templates\assessment\evaluation.html:14
 #: .\platform_code\assessment\templates\assessment\section.html:13
 msgid "Evaluation"
@@ -95,12 +95,12 @@ msgstr "Evaluation"
 # msgstr ""
 # "Le json doit contenir les id des choix comme clés ('1.1.a' par exemple) "
 # "et les poids comme valeur"
-#: .\platform_code\assessment\forms.py:238
-#: .\platform_code\assessment\forms.py:258
+#: .\platform_code\assessment\forms.py:248
+#: .\platform_code\assessment\forms.py:268
 msgid "Evaluation title"
 msgstr "Titre de l'évaluation"
 
-#: .\platform_code\assessment\forms.py:260
+#: .\platform_code\assessment\forms.py:270
 #: .\platform_code\assessment\templates\assessment\evaluation.html:12
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:11
 #: .\platform_code\assessment\templates\assessment\section.html:11
@@ -109,46 +109,54 @@ msgstr "Titre de l'évaluation"
 msgid "Organisation"
 msgstr "Organisation"
 
-#: .\platform_code\assessment\forms.py:292
-#: .\platform_code\assessment\forms.py:307
+#: .\platform_code\assessment\forms.py:302
+#: .\platform_code\assessment\forms.py:317
 msgid "My notes on the section"
 msgstr "Mes notes sur la section"
 
-#: .\platform_code\assessment\forms.py:299
+#: .\platform_code\assessment\forms.py:309
 msgid "Enter your notes on the section here."
 msgstr "Entrer vos notes sur la section ici."
 
-#: .\platform_code\assessment\forms.py:368
-#: .\platform_code\assessment\forms.py:384
-#: .\platform_code\assessment\forms.py:610
+#: .\platform_code\assessment\forms.py:378
+#: .\platform_code\assessment\forms.py:405
 #: .\platform_code\assessment\views\resultsPDF.py:330
 #: .\platform_code\home\templates\home\profile.html:50
 #: .\platform_code\home\templates\home\profile.html:51
 msgid "My notes"
 msgstr "Mes notes"
 
-#: .\platform_code\assessment\forms.py:375
+#: .\platform_code\assessment\forms.py:386
 msgid "Enter your notes on the evaluation element here."
 msgstr "Entrer vos notes sur l'élément d'évaluation ici."
 
-#: .\platform_code\assessment\forms.py:517
-#: .\platform_code\assessment\forms.py:544
+#: .\platform_code\assessment\forms.py:531
+#: .\platform_code\assessment\forms.py:558
 msgid "Your feedback"
 msgstr "Votre avis"
 
-#: .\platform_code\assessment\forms.py:524
-#: .\platform_code\assessment\forms.py:551
+#: .\platform_code\assessment\forms.py:538
+#: .\platform_code\assessment\forms.py:565
 msgid "My feedback"
 msgstr "Mon avis"
 
+#: .\platform_code\assessment\forms.py:624
+msgid "My notes:"
+msgstr "Mes notes :"
+
+#: .\platform_code\assessment\forms.py:660
+msgid "My section notes:"
+msgstr "Mes notes de section :"
+
 #: .\platform_code\assessment\forms_\member_forms.py:15
 #: .\platform_code\assessment\forms_\member_forms.py:26
-msgid "rights"
-msgstr "droits"
+#: .\platform_code\assessment\templates\assessment\organisation\member\orga-members.html:27
+msgid "Rights"
+msgstr "Droits"
 
-#: .\platform_code\assessment\models.py:399
-msgid " (new version)"
-msgstr " (nouvelle version)"
+#: .\platform_code\assessment\forms_\member_forms.py:16
+msgid "read_only"
+msgstr "lecteur"
 
 #: .\platform_code\assessment\templates\assessment\admin\import-new-language.html:10
 #, python-format
@@ -185,7 +193,7 @@ msgstr "La progression est de %(progression)s%%"
 msgid "%(name)s"
 msgstr "%(name)s"
 
-#: .\platform_code\assessment\templates\assessment\base-card-section.html:46
+#: .\platform_code\assessment\templates\assessment\base-card-section.html:50
 msgid "Go to the section"
 msgstr "Aller à la section"
 
@@ -195,28 +203,28 @@ msgstr "Aller à la section"
 msgid "%(progression)s%% is done"
 msgstr "La progression est de %(progression)s%%"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:47
+#: .\platform_code\assessment\templates\assessment\content-section.html:49
 msgid "Save the notes"
 msgstr "Sauvegarder les notes"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:48
-#: .\platform_code\assessment\templates\assessment\content-section.html:54
+#: .\platform_code\assessment\templates\assessment\content-section.html:50
+#: .\platform_code\assessment\templates\assessment\content-section.html:56
 msgid "Save"
 msgstr "Enregistrer"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:53
-#: .\platform_code\assessment\templates\assessment\content-section.html:238
+#: .\platform_code\assessment\templates\assessment\content-section.html:55
+#: .\platform_code\assessment\templates\assessment\content-section.html:250
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:58
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:92
 msgid "You do not have the right to do this action"
 msgstr "Vous n'avez pas le droit de faire cette action."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:99
+#: .\platform_code\assessment\templates\assessment\content-section.html:103
 msgid "You have already answered to this evaluation element"
 msgstr "Vous avez déjà répondu à cet élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:106
-#: .\platform_code\assessment\templates\assessment\content-section.html:133
+#: .\platform_code\assessment\templates\assessment\content-section.html:110
+#: .\platform_code\assessment\templates\assessment\content-section.html:137
 msgid ""
 "You are not concerned by this evaluation element due to your answer to this "
 "evaluation element"
@@ -224,24 +232,24 @@ msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
 "l'élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:112
+#: .\platform_code\assessment\templates\assessment\content-section.html:116
 msgid "You have not yet answered to this evaluation element"
 msgstr "Vous n'avez pas encore répondu à cet élément d'évaluation."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:128
+#: .\platform_code\assessment\templates\assessment\content-section.html:132
 msgid "This evaluation element is not applicable due to your previous answers"
 msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à vos réponses "
 "précédentes."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:154
+#: .\platform_code\assessment\templates\assessment\content-section.html:160
 msgid ""
 "Please select one answer which best matches to your organisation situation."
 msgstr ""
 "Veuillez sélectionner une seule réponse correspondant le mieux à la maturité "
 "de l'organisation à ce sujet."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:160
+#: .\platform_code\assessment\templates\assessment\content-section.html:166
 #: .\platform_code\assessment\views\resultsPDF.py:258
 msgid ""
 "Please select all the answers which best match to your organisation "
@@ -251,25 +259,30 @@ msgstr ""
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:189
 #: .\platform_code\assessment\templates\assessment\content-section.html:193
-msgid "Reset the answer"
-msgstr "Réinitialiser les réponses"
+msgid "Delete this note"
+msgstr "Supprimer la note"
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:206
+#: .\platform_code\home\templates\home\profile-user-notes.html:90
+msgid "Archive this note"
+msgstr "Archiver les notes"
+
+#: .\platform_code\assessment\templates\assessment\content-section.html:218
 msgid "Go to the previous evaluation element"
 msgstr "Aller à l'élément d'évaluation précédent"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:222
-#: .\platform_code\assessment\templates\assessment\content-section.html:231
-#: .\platform_code\assessment\templates\assessment\content-section.html:240
+#: .\platform_code\assessment\templates\assessment\content-section.html:234
+#: .\platform_code\assessment\templates\assessment\content-section.html:243
+#: .\platform_code\assessment\templates\assessment\content-section.html:252
 #: .\platform_code\home\templates\home\login-modal.html:30
 #: .\platform_code\home\templates\home\login.html:59
 msgid "Validate"
 msgstr "Valider"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:229
+#: .\platform_code\assessment\templates\assessment\content-section.html:241
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:73
+#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:48
 #: .\platform_code\assessment\templates\assessment\results.html:93
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:72
 #: .\platform_code\home\templates\home\settings-data.html:22
@@ -277,11 +290,16 @@ msgstr "Valider"
 msgid "Modify"
 msgstr "Modifier"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:246
+#: .\platform_code\assessment\templates\assessment\content-section.html:258
 msgid "Go to the next evaluation element"
 msgstr "Aller à l'élément d'évaluation suivant"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:261
+#: .\platform_code\assessment\templates\assessment\content-section.html:274
+#: .\platform_code\assessment\templates\assessment\content-section.html:278
+msgid "Reset the answer"
+msgstr "Réinitialiser les réponses"
+
+#: .\platform_code\assessment\templates\assessment\content-section.html:290
 msgid ""
 "This evaluation element is not applicable due to the answer to this "
 "evaluation element"
@@ -289,18 +307,18 @@ msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
 "l'élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:272
+#: .\platform_code\assessment\templates\assessment\content-section.html:310
 #: .\platform_code\templates\navbar.html:32
 msgid "Resources"
 msgstr "Ressources"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:292
-#: .\platform_code\home\templates\home\profile-my-ressources.html:100
+#: .\platform_code\assessment\templates\assessment\content-section.html:332
+#: .\platform_code\home\templates\home\profile-my-ressources.html:104
 msgid "Click to like the resource"
 msgstr "Cliquez pour ajouter la ressource à vos favoris"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:298
-#: .\platform_code\home\templates\home\profile-my-ressources.html:107
+#: .\platform_code\assessment\templates\assessment\content-section.html:338
+#: .\platform_code\home\templates\home\profile-my-ressources.html:111
 msgid "Click to unlike the resource"
 msgstr "Cliquez pour retirer la ressource de vos favoris"
 
@@ -335,7 +353,7 @@ msgstr "Version du référentiel d'évaluation"
 #: .\platform_code\assessment\templates\assessment\organisation\member\leave-organisation.html:23
 #: .\platform_code\assessment\templates\assessment\organisation\member\remove-member.html:33
 #: .\platform_code\assessment\templates\assessment\organisation\member\remove-pending-member.html:27
-#: .\platform_code\assessment\templates\assessment\upgrade-modal.html:29
+#: .\platform_code\assessment\templates\assessment\upgrade-modal.html:28
 #: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:32
 #: .\platform_code\home\templates\home\logout-page.html:10
 #: .\platform_code\home\templates\home\profile-orga-creation-modal.html:29
@@ -419,6 +437,8 @@ msgstr "Créée le"
 #: .\platform_code\assessment\templates\assessment\evaluation.html:74
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:13
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:18
+#: .\platform_code\home\templates\home\release-notes.html:22
+#: .\platform_code\home\templates\home\release-notes.html:41
 msgid "Version"
 msgstr "Version"
 
@@ -535,6 +555,11 @@ msgstr ""
 "nous vous recommendons d'ajouter des utilisateurs avec le droit 'Editeur'</"
 "strong>."
 
+#: .\platform_code\assessment\templates\assessment\organisation\member\add-member-modal.html:49
+#, python-format
+msgid "%(label)s"
+msgstr ""
+
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-modal.html:59
 msgid "Send the invitation"
 msgstr "Envoyer l'invitation"
@@ -600,7 +625,7 @@ msgstr ""
 #: .\platform_code\assessment\templates\assessment\organisation\member\leave-organisation.html:20
 #: .\platform_code\assessment\templates\assessment\organisation\member\remove-member.html:29
 #: .\platform_code\assessment\templates\assessment\organisation\member\remove-pending-member.html:23
-#: .\platform_code\assessment\templates\assessment\upgrade-modal.html:25
+#: .\platform_code\assessment\templates\assessment\upgrade-modal.html:24
 msgid "Yes"
 msgstr "Oui"
 
@@ -620,13 +645,13 @@ msgstr "Nom de l'utilisateur"
 msgid "Email"
 msgstr "Email"
 
-#: .\platform_code\assessment\templates\assessment\organisation\member\orga-members.html:27
-msgid "Rights"
-msgstr "Droits"
-
 #: .\platform_code\assessment\templates\assessment\organisation\member\orga-members.html:28
 msgid "Evaluations created"
 msgstr "Evaluations créées"
+
+#: .\platform_code\assessment\templates\assessment\organisation\member\orga-members.html:110
+msgid "(pending)"
+msgstr "(en attente)"
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\remove-member.html:6
 msgid "Are you sure you want to remove the user"
@@ -718,34 +743,54 @@ msgstr "Consulter"
 msgid "Continue"
 msgstr "Continuer"
 
-#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:5
+#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:6
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:42
 msgid "Organisation's parameters"
 msgstr " Paramètres de l'organisation "
 
-#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:8
+#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:9
+#: .\platform_code\assessment\views\organisation.py:467
 msgid "Name:"
 msgstr "Nom :"
 
-#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:9
+#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:10
 msgid "Activity:"
 msgstr "Secteur :"
 
-#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:10
+#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:11
+#: .\platform_code\assessment\views\organisation.py:469
 msgid "Size:"
 msgstr "Taille :"
 
-#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:11
-msgid "Number of member(s):"
-msgstr "Nombre de membre(s) :"
-
 #: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:12
-msgid "Number of in progress evaluation(s):"
-msgstr "Nombre d'évaluation(s) en cours : "
+#: .\platform_code\assessment\views\organisation.py:470
+msgid "Country:"
+msgstr "Pays :"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:13
-msgid "Number of finished evaluation(s):"
-msgstr "Nombre d'évaluation(s) terminée(s) : "
+#, python-format
+msgid "Number of member: %(counter)s"
+msgid_plural "Number of members: %(counter)s"
+msgstr[0] "Nombre de membre : %(counter)s"
+msgstr[1] "Nombre de membres : %(counter)s"
+
+#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:19
+#, python-format
+msgid "Number of in progress evaluation: %(counter)s"
+msgid_plural "Number of in progress evaluations: %(counter)s"
+msgstr[0] "Nombre d'évaluation en cours : %(counter)s"
+msgstr[1] "Nombre d'évaluations en cours : %(counter)s"
+
+#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:25
+#, python-format
+msgid "Number of finished evaluation: %(counter)s"
+msgid_plural "Number of finished evaluations: %(counter)s"
+msgstr[0] "Nombre d'évaluation terminée : %(counter)s"
+msgstr[1] "Nombre d'évaluations terminées : %(counter)s"
+
+#: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:33
+msgid "Edit"
+msgstr ""
 
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:14
 msgid "Organisation: "
@@ -885,7 +930,7 @@ msgstr ""
 "simple addition."
 
 #: .\platform_code\assessment\templates\assessment\results.html:89
-msgid "Back to the organisation summary"
+msgid "Back to organisation"
 msgstr "Retour à l'organisation"
 
 #: .\platform_code\assessment\templates\assessment\results.html:97
@@ -896,12 +941,12 @@ msgstr "Export PDF"
 msgid "Your answers"
 msgstr "Vos réponses"
 
-#: .\platform_code\assessment\templates\assessment\results.html:118
+#: .\platform_code\assessment\templates\assessment\results.html:126
 #: .\platform_code\assessment\views\resultsPDF.py:310
 msgid "You are not concerned by this evaluation element"
 msgstr "Vous n'êtes pas concerné par cet élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\results.html:123
+#: .\platform_code\assessment\templates\assessment\results.html:131
 #: .\platform_code\assessment\templates\assessment\sidebar.html:8
 #: .\platform_code\assessment\templates\assessment\sidebar.html:9
 #: .\platform_code\assessment\templates\assessment\sidebar.html:13
@@ -909,14 +954,14 @@ msgstr "Vous n'êtes pas concerné par cet élément d'évaluation"
 msgid ":"
 msgstr " :"
 
-#: .\platform_code\assessment\templates\assessment\results.html:129
+#: .\platform_code\assessment\templates\assessment\results.html:137
 msgid ""
 ": Please select one answer which best matches to your organisation situation"
 msgstr ""
 " : Veuillez sélectionner une seule réponse correspondant le mieux à la "
 "maturité de l'organisation à ce sujet"
 
-#: .\platform_code\assessment\templates\assessment\results.html:135
+#: .\platform_code\assessment\templates\assessment\results.html:143
 msgid ""
 ": Please select all the answers which best match to your organisation "
 "situation. Be careful, some combinations are not coherent."
@@ -925,7 +970,7 @@ msgstr ""
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes"
 
-#: .\platform_code\assessment\templates\assessment\results.html:151
+#: .\platform_code\assessment\templates\assessment\results.html:162
 msgid "Top of the page"
 msgstr "Retour haut de page"
 
@@ -973,9 +1018,9 @@ msgstr ""
 #: .\platform_code\assessment\views\evaluation.py:54
 #: .\platform_code\assessment\views\evaluation.py:96
 #: .\platform_code\assessment\views\evaluation.py:130
-#: .\platform_code\assessment\views\organisation.py:177
-#: .\platform_code\assessment\views\organisation.py:196
-#: .\platform_code\assessment\views\organisation.py:197
+#: .\platform_code\assessment\views\organisation.py:180
+#: .\platform_code\assessment\views\organisation.py:198
+#: .\platform_code\assessment\views\organisation.py:199
 #: .\platform_code\assessment\views\section.py:188
 msgid "You don't have the right to do this action."
 msgstr "Vous n'avez pas le droit de faire cette action."
@@ -985,11 +1030,11 @@ msgstr "Vous n'avez pas le droit de faire cette action."
 msgid "The evaluation %(evaluation)s has been deleted."
 msgstr "L'évaluation %(evaluation)s a bien été supprimée."
 
-#: .\platform_code\assessment\views\organisation.py:56
+#: .\platform_code\assessment\views\organisation.py:57
 msgid "An issue occurred."
 msgstr "Une erreur est survenue."
 
-#: .\platform_code\assessment\views\organisation.py:61
+#: .\platform_code\assessment\views\organisation.py:62
 #, python-format
 msgid ""
 "You cannot leave the organisation %(organisation_name)s because you are the "
@@ -998,39 +1043,38 @@ msgstr ""
 "Vous ne pouvez pas quitter l'organisation %(organisation_name)s parce que "
 "vous êtes l'unique membre administrateur."
 
-#: .\platform_code\assessment\views\organisation.py:77
+#: .\platform_code\assessment\views\organisation.py:78
 #, python-format
 msgid "You are no longer member of the organisation %(organisation_name)s."
 msgstr ""
 "Vous n'êtes désormais plus membre de l'organisation %(organisation_name)s."
 
-#: .\platform_code\assessment\views\organisation.py:94
+#: .\platform_code\assessment\views\organisation.py:95
 #: .\platform_code\assessment\views\section.py:40
 #: .\platform_code\assessment\views\utils\edit_evaluation_name.py:24
-#: .\platform_code\assessment\views\utils\utils.py:84
-#: .\platform_code\assessment\views\utils\utils.py:107
+#: .\platform_code\assessment\views\utils\utils.py:86
 msgid "An error occurred."
 msgstr "Une erreur est survenue."
 
-#: .\platform_code\assessment\views\organisation.py:242
+#: .\platform_code\assessment\views\organisation.py:247
 msgid "The user is already member. Please, edit his rights instead."
 msgstr ""
 "L'utilisateur est déjà membre de l'organisation. Editez ses droits à la "
 "place."
 
-#: .\platform_code\assessment\views\organisation.py:260
+#: .\platform_code\assessment\views\organisation.py:265
 msgid "Please enter a valid email."
 msgstr "Entrez une adresse email valide."
 
-#: .\platform_code\assessment\views\organisation.py:297
+#: .\platform_code\assessment\views\organisation.py:302
 msgid "The user has been added to the organisation."
 msgstr "L'utilisateur a été ajouté à l'organisation."
 
-#: .\platform_code\assessment\views\organisation.py:310
+#: .\platform_code\assessment\views\organisation.py:315
 msgid "Substra - Invitation to join an organisation"
 msgstr "Substra - Invitation à rejoindre l'organisation"
 
-#: .\platform_code\assessment\views\organisation.py:332
+#: .\platform_code\assessment\views\organisation.py:337
 msgid ""
 "The user does not yet have an account on the platform. An invitation has "
 "been sent to him."
@@ -1038,7 +1082,7 @@ msgstr ""
 "L'utilisateur n'a pas encore de compte sur la plateforme. Une invitation lui "
 "a été envoyée."
 
-#: .\platform_code\assessment\views\organisation.py:361
+#: .\platform_code\assessment\views\organisation.py:366
 #, python-format
 msgid ""
 "The user %(member_deleted_email)s is no longer a member of the organisation "
@@ -1047,27 +1091,27 @@ msgstr ""
 "L'utlisateur %(member_deleted_email)s n'est plus membre de l'organisation et "
 "ne peut plus y accéder."
 
-#: .\platform_code\assessment\views\organisation.py:367
+#: .\platform_code\assessment\views\organisation.py:372
 msgid "You cannot remove an admin member from the organisation."
 msgstr "Vous ne pouvez pas retirer un membre administrateur de l'organisation."
 
-#: .\platform_code\assessment\views\organisation.py:378
+#: .\platform_code\assessment\views\organisation.py:383
 #, python-format
 msgid "The invitation to %(invitation)s has been deleted."
 msgstr "L'invitation à %(invitation)s a bien été supprimée."
 
-#: .\platform_code\assessment\views\organisation.py:401
+#: .\platform_code\assessment\views\organisation.py:406
 #, python-format
 msgid ""
 "The user %(member_email)s has now the %(new_role)s rights in the "
 "organisation."
 msgstr "L'utilisateur %(member_email)s a maintenant le role %(new_role)s."
 
-#: .\platform_code\assessment\views\organisation.py:416
+#: .\platform_code\assessment\views\organisation.py:421
 msgid "You cannot change the rights of an admin member."
 msgstr "On ne peut pas changer les droits d'un membre administrateur."
 
-#: .\platform_code\assessment\views\organisation.py:432
+#: .\platform_code\assessment\views\organisation.py:437
 #, python-format
 msgid ""
 "The invitation to %(invitation_email)s to join the organisation is now with "
@@ -1076,12 +1120,24 @@ msgstr ""
 "L'invitation à %(invitation_email)s pour rejoindre l'organisation est "
 "maintenant avec le rôle %(new_role)s."
 
-#: .\platform_code\assessment\views\results.py:68
-#: .\platform_code\assessment\views\results.py:70
+#: .\platform_code\assessment\views\organisation.py:471
+msgid "Sector:"
+msgstr "Secteur :"
+
+#: .\platform_code\assessment\views\organisation.py:474
+msgid "The organisation information has been updated."
+msgstr "Les informations sur l'organisation ont été mises à jour !"
+
+#: .\platform_code\assessment\views\organisation.py:478
+msgid "An error occurred, please verify the data you entered."
+msgstr "Un problème est survenu. Vérifiez les données que vous avez saisies."
+
+#: .\platform_code\assessment\views\results.py:69
+#: .\platform_code\assessment\views\results.py:71
 msgid ": "
 msgstr " : "
 
-#: .\platform_code\assessment\views\results.py:81
+#: .\platform_code\assessment\views\results.py:82
 #: .\platform_code\assessment\views\resultsPDF.py:544
 msgid "You cannot do this action!"
 msgstr "Vous ne pouvez pas faire cette action !"
@@ -1112,23 +1168,23 @@ msgid "Evaluation details"
 msgstr "Détails de l'évaluation"
 
 #: .\platform_code\assessment\views\section.py:242
-#: .\platform_code\assessment\views\section.py:263
+#: .\platform_code\assessment\views\section.py:264
 msgid "Your notes have been saved!"
 msgstr "Vos notes ont été sauvegardées !"
 
-#: .\platform_code\assessment\views\section.py:269
+#: .\platform_code\assessment\views\section.py:270
 msgid "Your notes have not been saved, an error occurred."
 msgstr "Vos notes n'ont pas été sauvegardées, une erreur est survenue."
 
-#: .\platform_code\assessment\views\section.py:283
+#: .\platform_code\assessment\views\section.py:284
 msgid "Your answers have been reset!"
 msgstr "Votre réponse à été réinitialisée !"
 
-#: .\platform_code\assessment\views\section.py:365
+#: .\platform_code\assessment\views\section.py:366
 msgid "Your answer has been saved!"
 msgstr "Votre réponse a été enregistrée !"
 
-#: .\platform_code\assessment\views\section.py:372
+#: .\platform_code\assessment\views\section.py:373
 msgid ""
 "You can not combine these answers, please select an appropriate combination "
 "of choices."
@@ -1136,11 +1192,11 @@ msgstr ""
 "Vous ne pouvez pas combiner ces choix, veuillez sélectionner une combinaison "
 "possible."
 
-#: .\platform_code\assessment\views\section.py:384
+#: .\platform_code\assessment\views\section.py:385
 msgid "No answer is selected."
 msgstr "Aucune réponse n'est sélectionnée."
 
-#: .\platform_code\assessment\views\section.py:451
+#: .\platform_code\assessment\views\section.py:452
 msgid "You cannot do this action."
 msgstr "Vous ne pouvez pas faire cette action."
 
@@ -1237,20 +1293,24 @@ msgstr ""
 "Veuillez utiliser cette feature avec modération ! Si vous pensez qu'il y a "
 "un problème, contactez le support."
 
-#: .\platform_code\assessment\views\utils\utils.py:121
+#: .\platform_code\assessment\views\utils\utils.py:109
+msgid "An error occurred with the score calculation."
+msgstr "Un problème est survenu avec le calcul du score d'une évaluation."
+
+#: .\platform_code\assessment\views\utils\utils.py:123
 msgid "Your evaluation has been upgraded! You have been redirected to it. "
 msgstr ""
 "Votre évaluation a bien été mise à jour ! Vous avez été redirigé vers celle-"
 "ci."
 
-#: .\platform_code\assessment\views\utils\utils.py:126
-#: .\platform_code\assessment\views\utils\utils.py:146
+#: .\platform_code\assessment\views\utils\utils.py:128
+#: .\platform_code\assessment\views\utils\utils.py:148
 msgid "Your evaluation has been upgraded! You have been redirected to it."
 msgstr ""
 "Votre évaluation a bien été mise à jour ! Vous avez été redirigé vers celle-"
 "ci."
 
-#: .\platform_code\assessment\views\utils\utils.py:133
+#: .\platform_code\assessment\views\utils\utils.py:135
 msgid ""
 "Your evaluation has been upgraded! You have been redirected to it. You have "
 "to complete the new items before the validation."
@@ -1258,18 +1318,38 @@ msgstr ""
 "Votre évaluation a bien été mise à jour ! Vous avez été redirigé vers celle-"
 "ci. Vous devez la terminer avant de pouvoir accéder aux résultats."
 
-#: .\platform_code\assessment\views\utils\utils.py:139
-#: .\platform_code\assessment\views\utils\utils.py:142
+#: .\platform_code\assessment\views\utils\utils.py:141
+#: .\platform_code\assessment\views\utils\utils.py:144
 msgid "Your evaluation has been upgraded!"
 msgstr "Votre évaluation a bien été mise à jour à la dernière version."
 
-#: .\platform_code\assessment\views\utils\utils.py:256
+#: .\platform_code\assessment\views\utils\utils.py:261
 msgid "Your note has been deleted!"
 msgstr "Votre note a bien été supprimée !"
 
+#: .\platform_code\assessment\views\utils\utils.py:269
+msgid "You can't delete an empty note!"
+msgstr "Vous ne pouvez pas supprimer une note vide."
+
 #: .\platform_code\assessment\views\utils\utils.py:280
-msgid "Your evaluation has not this language"
-msgstr "Votre évaluation n'a pas la langue demandée"
+msgid "You can't delete this note!"
+msgstr "Vous ne pouvez pas supprimer cette note !"
+
+#: .\platform_code\assessment\views\utils\utils.py:302
+msgid "Your note has been archived!"
+msgstr "Vos notes ont été archivées !"
+
+#: .\platform_code\assessment\views\utils\utils.py:305
+msgid "Your note has been un-archived!"
+msgstr "Vos notes ont été dé-archivées !"
+
+#: .\platform_code\assessment\views\utils\utils.py:310
+msgid "You can't archive an empty note!"
+msgstr "Vous ne pouvez pas archiver une note vide !"
+
+#: .\platform_code\assessment\views\utils\utils.py:321
+msgid "You can't archive this note!"
+msgstr "Vous ne pouvez pas archiver cette note !"
 
 #: .\platform_code\dev_platform\settings.py:128
 #: .\platform_code\dev_platform\settings_prod.py:125
@@ -1285,15 +1365,15 @@ msgstr "Français"
 msgid "Export the organisation evaluations as CSV file"
 msgstr "Exporter les évaluations des organisation dans un fichier csv"
 
-#: .\platform_code\home\forms.py:17
-msgid "First_name"
+#: .\platform_code\home\forms.py:17 .\platform_code\home\forms.py:117
+msgid "First name"
 msgstr "Prénom"
 
-#: .\platform_code\home\forms.py:20
-msgid "Last_name"
+#: .\platform_code\home\forms.py:20 .\platform_code\home\forms.py:118
+msgid "Last name"
 msgstr "Nom"
 
-#: .\platform_code\home\forms.py:23 .\platform_code\home\forms.py:100
+#: .\platform_code\home\forms.py:23 .\platform_code\home\forms.py:135
 #: .\platform_code\home\templates\home\profile-settings.html:32
 #: .\platform_code\home\templates\home\profile-settings.html:33
 msgid "Password"
@@ -1309,39 +1389,31 @@ msgstr ""
 "Votre mot de passe doit contenir au moins 8 caractères avec au moins une "
 "lettre et un chiffre"
 
-#: .\platform_code\home\forms.py:57
+#: .\platform_code\home\forms.py:57 .\platform_code\home\forms.py:92
 msgid "Name"
 msgstr "Nom"
 
-#: .\platform_code\home\forms.py:58
+#: .\platform_code\home\forms.py:58 .\platform_code\home\forms.py:93
 msgid "Size"
 msgstr "Taille"
 
-#: .\platform_code\home\forms.py:59
+#: .\platform_code\home\forms.py:59 .\platform_code\home\forms.py:94
 msgid "Country"
 msgstr "Pays"
 
-#: .\platform_code\home\forms.py:60
+#: .\platform_code\home\forms.py:60 .\platform_code\home\forms.py:95
 msgid "Sector"
 msgstr "Secteur"
 
-#: .\platform_code\home\forms.py:82
-msgid "First name"
-msgstr "Prénom"
-
-#: .\platform_code\home\forms.py:83
+#: .\platform_code\home\forms.py:119
 msgid "Language preference"
 msgstr "Préférence de langage"
 
-#: .\platform_code\home\forms.py:85
-msgid "Last name"
-msgstr "Nom"
-
-#: .\platform_code\home\forms.py:102
+#: .\platform_code\home\forms.py:137
 msgid "Password confirmation"
 msgstr "Confirmation du mot de passe"
 
-#: .\platform_code\home\forms.py:114
+#: .\platform_code\home\forms.py:149
 msgid "Passwords don't match"
 msgstr "Votre mot de passe est erroné"
 
@@ -1362,12 +1434,36 @@ msgid "last name"
 msgstr "Nom"
 
 #: .\platform_code\home\models.py:273
-msgid "read_only"
+msgid "read only"
 msgstr "lecteur"
 
 #: .\platform_code\home\models.py:274
 msgid "editor"
 msgstr "éditeur"
+
+#: .\platform_code\home\models.py:354
+msgid "Industrial - Large company"
+msgstr "Industriel - Grande entreprise"
+
+#: .\platform_code\home\models.py:355
+msgid "Industrial - Mid-sized company"
+msgstr "Industriel - ETI"
+
+#: .\platform_code\home\models.py:356
+msgid "Small and Medium-Sized Businesses"
+msgstr "Industriel - PME"
+
+#: .\platform_code\home\models.py:357
+msgid "B2B Service Provider - Software publisher"
+msgstr "Prestataire B2B - Editeur de logiciels"
+
+#: .\platform_code\home\models.py:358
+msgid "B2B service provider - Consulting agency"
+msgstr "Prestataire B2B - Cabinet de conseil"
+
+#: .\platform_code\home\models.py:359
+msgid "Research organisation"
+msgstr "Organisme de recherche"
 
 #: .\platform_code\home\templates\home\account\acc_activate_done.html:7
 msgid "We have sent you a validation link by email."
@@ -2052,8 +2148,8 @@ msgstr "Toutes les ressources"
 msgid "Glossary"
 msgstr "Glossaire"
 
-#: .\platform_code\home\templates\home\profile-my-ressources.html:48
-#: .\platform_code\home\templates\home\profile-my-ressources.html:55
+#: .\platform_code\home\templates\home\profile-my-ressources.html:50
+#: .\platform_code\home\templates\home\profile-my-ressources.html:57
 msgid ""
 "You do not have selected resources as favorite yet. You can do this in the "
 "next tab or during the evaluation by clicking on the small icon next to the "
@@ -2063,11 +2159,11 @@ msgstr ""
 "dans l'onglet suivant ou lors de l'évaluation en cliquant sur l'icône à côté "
 "de la ressource."
 
-#: .\platform_code\home\templates\home\profile-my-ressources.html:131
+#: .\platform_code\home\templates\home\profile-my-ressources.html:135
 msgid "Privacy:"
 msgstr "Vie privée"
 
-#: .\platform_code\home\templates\home\profile-my-ressources.html:131
+#: .\platform_code\home\templates\home\profile-my-ressources.html:135
 msgid ""
 "the right to an individual to control who have access to his personal data."
 msgstr ""
@@ -2167,15 +2263,15 @@ msgstr "Créer mon évaluation"
 msgid "There is no assessment available."
 msgstr "Nous sommes désolé, il n'y a pas d'assessment disponible actuellement."
 
-#: .\platform_code\home\templates\home\profile-user-notes.html:49
-msgid "My note"
-msgstr "Mes notes"
+#: .\platform_code\home\templates\home\profile-user-notes.html:58
+msgid "My note:"
+msgstr "Ma note :"
 
-#: .\platform_code\home\templates\home\profile-user-notes.html:55
+#: .\platform_code\home\templates\home\profile-user-notes.html:64
 msgid "Go to the note"
 msgstr "Aller à la note"
 
-#: .\platform_code\home\templates\home\profile-user-notes.html:79
+#: .\platform_code\home\templates\home\profile-user-notes.html:103
 msgid "You don't have any notes in your evaluations"
 msgstr "Vous n'avez aucune note dans vos évaluations"
 
@@ -2251,6 +2347,11 @@ msgstr "Réinitialiser"
 #: .\platform_code\home\templates\home\registration\password_reset_subject.html:2
 msgid "Reset password - Substra assessment"
 msgstr "Réinitialiser le mot de passe - Substra"
+
+#: .\platform_code\home\templates\home\release-notes.html:9
+#: .\platform_code\templates\footer.html:38
+msgid "Release Notes"
+msgstr "Notes de mise à jour"
 
 #: .\platform_code\home\templates\home\settings-data.html:16
 #, python-format
@@ -2397,8 +2498,7 @@ msgstr "La combinaison email/mot de passe est erronée. Réessayez !"
 #: .\platform_code\home\views\utils.py:36
 msgid ""
 "Please, enter your email and your password to login to your account.\n"
-" If you don't have an account, click on the 'I do not have an account' "
-"button."
+" If you don't have an account, click on the \"I haven't an account\" button."
 msgstr ""
 "Veuillez entrer votre email et votre mot de passe pour vous connecter. \n"
 " Si vous n'avez pas de compte, cliquez sur \"je n'ai pas de compte\"."
@@ -2420,7 +2520,7 @@ msgstr ""
 msgid "Django site admin"
 msgstr ""
 
-#: .\platform_code\templates\errors.html:33
+#: .\platform_code\templates\errors.html:34
 msgid "Homepage"
 msgstr "Page d'accueil"
 
@@ -2428,17 +2528,26 @@ msgstr "Page d'accueil"
 msgid "With the support of "
 msgstr "Avec le soutien de "
 
-#: .\platform_code\templates\footer.html:49
+#: .\platform_code\templates\footer.html:52
 msgid "Passer en version française"
 msgstr "Switch in English"
 
-#: .\platform_code\templates\footer.html:58
+#: .\platform_code\templates\footer.html:61
 msgid "Legal notices"
 msgstr "Mentions légales"
 
 #: .\platform_code\templates\navbar.html:21
 msgid "Admin"
 msgstr "Admin"
+
+#~ msgid "My note"
+#~ msgstr "Ma note"
+
+#~ msgid " (new version)"
+#~ msgstr " (nouvelle version)"
+
+#~ msgid "Your evaluation has not this language"
+#~ msgstr "Votre évaluation n'a pas la langue demandée"
 
 #~ msgid "Platform update ongoing"
 #~ msgstr "Mise à jour de la plateforme en cours"
@@ -2576,9 +2685,6 @@ msgstr "Admin"
 
 #~ msgid "An error occurred. Please, do not modify the html!"
 #~ msgstr "Une erreur est survenue. Ne modifiez pas le contenu html !"
-
-#~ msgid "An issue occurred, please try again."
-#~ msgstr "Un problème est survenu. Veuillez réessayer."
 
 #~ msgid ""
 #~ "This assessment is aimed at all organisations wishing to evaluate their "

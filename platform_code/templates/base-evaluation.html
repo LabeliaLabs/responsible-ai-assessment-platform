@@ -29,7 +29,7 @@
 </head>
 
 <body class="navbar-is-fixed-top">
-    <header>
+    <header class="navbar-fixed">
         <!--Beta banner-->
         <div class="ribbon"><span>Beta</span></div>
         <nav class="navbar navbar-expand-lg  is-fixed-top">
@@ -59,7 +59,7 @@
         </div>
     </div>
 
-    <div id="page-container">
+    <div id="page-container" class="margin-normal-navbar">
         <div class="content container" id="content-wrap">
             {% block content %}
             {% endblock %}
@@ -74,3 +74,27 @@
 
 </body>
 </html>
+
+<script>
+
+
+function adaptNavbar() {
+    var pageContainer = document.getElementById("page-container");
+    var header = document.getElementsByTagName("header")[0];
+    var navbarButton = document.getElementById("navbar-button");
+    pageContainer.classList.remove("expand-navbar");
+    pageContainer.classList.add("margin-normal-navbar");
+    navbarButton.addEventListener("click", function(evt) {
+        if (header.offsetHeight < 100) {
+            pageContainer.classList.remove("margin-normal-navbar");
+            pageContainer.classList.add("expand-navbar");
+        } else {
+            pageContainer.classList.add("margin-normal-navbar");
+        }
+    });
+}
+
+adaptNavbar();
+window.addEventListener('resize', adaptNavbar);
+
+</script>

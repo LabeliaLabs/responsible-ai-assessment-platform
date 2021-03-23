@@ -15,20 +15,18 @@
     </p>
 </div>
 
-<div class="modal-footer one-column">
-    <div class="column center">
+<div class="modal-footer self-center">
         <form action="{% url 'assessment:upgrade' evaluation.organisation.id evaluation.slug evaluation.id %}"
-              id="upgrade_form{{evaluation.id}}" method="get">
-            <button class="btn btn-primary same-size-250 margin-auto"
+              id="upgrade_form{{evaluation.id}}" method="get" class="margin-auto">
+            <button class="btn btn-primary upgrade-button-width margin-auto"
                     onclick="upgrade('modal-upgrade-eval{{evaluation.id}}', 'upgrade_form{{evaluation.id}}', '{{evaluation.id}}')"
                     type="submit"
             >{% trans 'Yes' %}
             </button>
         </form>
-        <button class="btn btn-danger same-size-250 margin-10" data-dismiss="modal"
+        <button class="btn btn-danger upgrade-button-width margin-auto" data-dismiss="modal"
                 type="button">{% trans 'Cancel' %}
         </button>
-    </div>
 </div>
 
 <div class="alert margin-10 display-none" id="upgrade_message{{evaluation.id}}">

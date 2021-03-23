@@ -270,7 +270,7 @@ class Membership(models.Model):
     EDITOR = "editor"
 
     ROLES = (
-        (READ_ONLY, _("read_only")),
+        (READ_ONLY, _("read only")),
         (EDITOR, _("editor")),
         (ADMIN, "admin"),
     )
@@ -341,7 +341,7 @@ class Organisation(models.Model):
         (PLUS, ">5000"),
     )
 
-    # TODO translation
+    # I kept the French name as this is already used in production
     LARGE_COMPANY = "Industriel - Grande entreprise"
     MIDSIZE_COMPANY = "Industriel - ETI"
     SMB = "Industriel - PME"
@@ -351,13 +351,13 @@ class Organisation(models.Model):
     OTHER = "autres"
 
     SECTOR = (
-        (LARGE_COMPANY, "Industriel - Grande entreprise"),
-        (MIDSIZE_COMPANY, "Industriel - ETI"),
-        (SMB, "Industriel - PME"),
-        (SOFTWARE_COMPANY, "Prestataire B2B - Editeur de logiciels"),
-        (CONSULTING_AGENCY, "Prestataire B2B - Cabinet de conseil"),
-        (RESEARCH_ORGANISATION, "Organisme de recherche"),
-        (OTHER, "autres"),
+        (LARGE_COMPANY, _("Industrial - Large company")),
+        (MIDSIZE_COMPANY, _("Industrial - Mid-sized company")),
+        (SMB, _("Small and Medium-Sized Businesses")),
+        (SOFTWARE_COMPANY, _("B2B Service Provider - Software publisher")),
+        (CONSULTING_AGENCY, _("B2B service provider - Consulting agency")),
+        (RESEARCH_ORGANISATION, _("Research organisation")),
+        (OTHER, _("Other")),
     )
 
     name = models.CharField(max_length=200)

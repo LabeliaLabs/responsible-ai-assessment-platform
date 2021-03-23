@@ -11,9 +11,9 @@ from django.urls import path
 
 
 class DashboardAdminSite(admin.AdminSite):
-    site_header = "Admin dashboard"
-    site_title = "Dashboard"
-    index_title = "Welcome to the admin dashboard"
+    site_header = "Admin monitoring"
+    site_title = "Monitoring"
+    index_title = "Welcome to the admin monitoring dashboard"
     context = {"graph_list": []}
 
     def get_urls(self):
@@ -21,7 +21,7 @@ class DashboardAdminSite(admin.AdminSite):
         # Replace the admin-dashboard:index by admin:index in order to route well in the template
         urls[0] = admin.site.urls[0][0]
         urls += [
-            path('dashboard/', self.admin_view(self.get_view), name="dashboard")
+            path('monitoring/', self.admin_view(self.get_view), name="monitoring")
         ]
         return urls
 
@@ -33,7 +33,7 @@ class DashboardAdminSite(admin.AdminSite):
         user = request.user
         if user.is_admin:
             self.set_context()
-            return TemplateResponse(request, "admin/dashboard.html", self.context)
+            return TemplateResponse(request, "admin/monitoring.html", self.context)
         else:
             return redirect("home:homepage")
 

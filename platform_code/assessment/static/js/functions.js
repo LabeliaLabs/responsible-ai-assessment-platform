@@ -27,6 +27,31 @@ function convertFormToString(form) {
     return data
 }
 
+function timerMessageSlow(parentMessage, classCSS, timer, slow) {
+// parentMessage: element of the DOM
+// classCSS: string ('display-none' or 'hidden-div')
+// timer: number (thousands, ex 5000 for 5 seconds)
+// slow: boolean
+// This function sets a timer to display the div "parentMessage". First it removes the css class (either 'hidden-div'
+// or 'display-none', depending on the fact the height of the div is used or not). So the div is displayed as well
+// as the children containing the messages and after a timer (number, ex 5000), the css class is added again to mask the
+// div and the content of the div is destroyed.
+    parentMessage.classList.remove(classCSS);
+    // First timeout to create a slow remove effect
+    if (slow) {
+        setTimeout(function() {
+            parentMessage.classList.add("transition");
+        }, timer);
+    }
+    // After the css effect (1s) or not (slow=false), we clean the div
+    var delaySlow = slow ? 1000 : 0;
+    setTimeout(function() {
+        parentMessage.textContent = '';
+        parentMessage.classList.add(classCSS);
+        parentMessage.classList.remove("transition");
+    }, timer + delaySlow);
+}
+
 // Functions to manage resources
 
 function like(element_id, resource_id) {
@@ -580,6 +605,46 @@ function editRoleMember(form_id, object_id, is_pending){
         }
     });
 }
+
+function submitOrganisationForm(formId, organisation_id) {
+    var form = document.getElementById(formId);
+    var ajax = new XMLHttpRequest();
+
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            // First thing we do is to inform the user whether the action succeeded or not
+            var parentMessage = document.getElementById("confirmation"+formId);
+            parentMessage.textContent = '';
+            addMessage(parentMessage, response['message'], response["message_type"]);
+            timerMessageSlow(parentMessage, "hidden-div", 4000, true);
+            if (response['success']) {
+                document.getElementById("organisation-name").textContent = response["organisation_name"];
+                document.getElementById("organisation-sector").textContent = response["organisation_sector"];
+                document.getElementById("organisation-size").textContent = response["organisation_size"];
+                document.getElementById("organisation-country").textContent = response["organisation_country"];
+                // Modify the page title
+                var regex = /(Organisation\s?\:\s)(.*)/gi;
+                var title = document.getElementsByTagName("h1")[0];
+                title.textContent = title.textContent.replace(regex, '$1' + response["organisation_name_only"])
+                setTimeout(() => {
+                    document.getElementById("organisation-settings-form").classList.add("transition");
+                    }, 4500
+                );
+                setTimeout(() => {
+                    document.getElementById("organisation-settings-form").classList.remove("transition");
+                    document.getElementById("organisation-settings-form").classList.add("display-none");
+                    }, 5500
+                );
+            } else {
+                document.getElementById("editOrganisationSettings" + organisation_id).reset();
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form);
+}
+
+
 
 function submitSectionNotes(form_id, section_id){
 // this function is used to save the notes of the section

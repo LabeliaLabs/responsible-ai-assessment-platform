@@ -14,10 +14,10 @@ class SignUpForm(UserCreationForm):
     # username = forms.CharField(required=False) # Username not used as it is replaced by email
     email = forms.EmailField(max_length=254)
     first_name = forms.CharField(
-        max_length=30, required=True, label=_("First_name")
+        max_length=30, required=True, label=_("First name")
     )
     last_name = forms.CharField(
-        max_length=30, required=True, label=_("Last_name")
+        max_length=30, required=True, label=_("Last name")
     )
     password1 = forms.CharField(
         label=_("Password"),
@@ -62,6 +62,41 @@ class OrganisationCreationForm(ModelForm):
         self.fields["country"].widget.attrs = {"class": "full-width center-select center"}
         self.fields["sector"].widget.attrs = {"class": "full-width center-select center"}
         self.fields["name"].widget.attrs = {"class": "full-width center-select center"}
+
+
+class OrganisationEditionForm(ModelForm):
+    """
+
+    """
+
+    class Meta:
+        model = Organisation
+        fields = [
+            'name',
+            'sector',
+            'size',
+            'country',
+        ]
+
+    def __init__(self, *args, **kwargs):
+        if "organisation" in kwargs:
+            organisation = kwargs.pop("organisation")
+        else:
+            organisation = None
+        super(OrganisationEditionForm, self).__init__(*args, **kwargs)
+        if organisation:
+            self.fields["name"].initial = organisation.name
+            self.fields["sector"].initial = organisation.sector
+            self.fields["size"].initial = organisation.size
+            self.fields["country"].initial = organisation.country
+        self.fields["name"].label = _("Name")
+        self.fields["size"].label = _("Size")
+        self.fields["country"].label = _("Country")
+        self.fields["country"].label = _("Sector")
+        self.fields["size"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
+        self.fields["country"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
+        self.fields["sector"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
+        self.fields["name"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
 
 
 class DataSettingsForm(ModelForm):

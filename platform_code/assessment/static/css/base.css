@@ -13,7 +13,7 @@ The media are mainly stored in media.css even if some may remain in this file.
 /*************************************** GLOBAL PROPERTIES *******************************************/
 
 body{
-    margin: 20px 0 0 0;
+    margin: 0 0 0 0;
     font-family: Ubuntu;
     font-weight: 400;
     font-style: normal;
@@ -194,6 +194,11 @@ a:hover {
     overflow: auto;
 }
 
+.transition {
+    opacity: 0;
+    transition-duration: 1s;
+}
+
 /******************************************* END GLOBAL PROPERTIES *******************************************/
 
 /************************************************** MARGIN ***************************************************/
@@ -264,6 +269,10 @@ a:hover {
 
 .margin-left-1em{
     margin-left: 1em;
+}
+
+.margin-left-20 {
+    margin-left: 20px;
 }
 
 .margin-right-1em{
@@ -484,6 +493,10 @@ li {
    color: #70788B;
 }
 
+.upgrade-button-width {
+    width: 220px;
+}
+
 /* button in the profile and the organisation column */
 .profile-column{
     background-color: #FCE180;
@@ -518,7 +531,9 @@ a[name="column-button"]:hover{
 }
 
 .btn-new:hover{
-    cursor: default;
+    cursor: pointer;
+    color: #848482;
+    text-decoration: none;
 }
 
 .top-section{
@@ -779,7 +794,8 @@ h1 img {
 
 .ribbon {
   position: absolute;
-  left: -5px; top: -5px;
+  left: -5px;
+  margin-top: 2px;
   z-index: 1;
   overflow: hidden;
   width: 75px; height: 75px;
@@ -862,9 +878,24 @@ h1 img {
 /********************************************* NAVBAR *******************************************************/
 
 .navbar {
-    margin-bottom: 60px;
+    /* margin-bottom: 60px; */
     border-bottom: solid lightgrey;
     margin-left: 10px;
+    padding-top: 20px;
+    padding-bottom: 0;
+}
+
+.navbar-fixed {
+    position: fixed;
+    width: 100%;
+    background-color: #fff;
+    z-index: 2;
+}
+
+.navbar-brand {
+    padding-top: 0;
+    margin-top: -5px;
+    padding-bottom: 0.5em;
 }
 
 .navbar>.container {
@@ -919,6 +950,15 @@ body.navbar-is-fixed-top {
 
 .language-options{
     font-family: Ubuntu;
+}
+
+.margin-normal-navbar {
+    margin-top: 110px;
+}
+
+.expand-navbar {
+    margin-top: 338px;
+    -webkit-transition: margin-top 0.3s ease-out;
 }
 
 /*********************************************** END NAVBAR ***********************************************/
@@ -1264,6 +1304,18 @@ tr.spaceUnder>td {
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 15px;
+}
+
+.section-notes-results {
+    flex-direction: column;
+    display: flex;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.5em;
+    margin-top: 20px;
+    margin-bottom: 40px;
+
 }
 
 /*********************************************** END DIVERS ************************************************/

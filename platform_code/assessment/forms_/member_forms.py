@@ -12,8 +12,8 @@ class AddMemberForm(forms.Form):
                              widget=forms.EmailInput(attrs={'class': 'full-width'}),
                              )
     role = forms.ChoiceField(choices=Membership.ROLES,
-                             label=_("rights"),
-                             initial="read_only",
+                             label=_("Rights"),
+                             initial=_("read_only"),
                              widget=forms.Select(attrs={'class': 'full-width'})
                              )
 
@@ -23,7 +23,7 @@ class EditRoleForm(forms.Form):
     This form is used to edit the role of members/invitations in an organisation
     """
     role = forms.ChoiceField(choices=Membership.ROLES,
-                             label=_("rights"),
+                             label=_("Rights"),
                              widget=forms.Select(attrs={'class': 'full-width'})
                              )
 

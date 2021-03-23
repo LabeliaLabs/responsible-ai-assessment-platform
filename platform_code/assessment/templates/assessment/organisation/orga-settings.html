@@ -1,14 +1,77 @@
 {% load static %}
 {% load add_attr %}
+{% load home_tags %}
 {% load i18n %}
 
 <h3 class="title-column">{% trans "Organisation's parameters" %}</h3>
 
-<div class="organisation-evaluation-cards organisation-settings">
-    <p>{% trans "Name:" %} {{organisation.name}}</p>
-    <p>{% trans "Activity:" %} {{organisation.sector}}</p>
-    <p>{% trans "Size:"%} {{organisation.size}}</p>
-    <p>{% trans "Number of member(s):" %} {{organisation.count_displayed_members}}</p>
-    <p>{% trans "Number of in progress evaluation(s):" %} {{organisation.get_list_evaluations|count_in_progress}}</p>
-    <p>{% trans "Number of finished evaluation(s):" %} {{organisation.get_list_evaluations|count_finished}}</p>
+<div class="organisation-evaluation-cards organisation-settings" id="organisation-settings">
+    <p id="organisation-name">{% trans "Name:" %} {{organisation.name}}</p>
+    <p id="organisation-sector">{% trans "Activity:" %} {{organisation.sector}}</p>
+    <p id="organisation-size">{% trans "Size:"%} {{organisation.size}}</p>
+    <p id="organisation-country">{% trans "Country:"%} {{organisation.country.name}}</p>
+    <p>{% blocktrans trimmed count counter=organisation.count_displayed_members %}
+        Number of member: {{ counter }}
+        {% plural %}
+        Number of members: {{ counter }}
+        {% endblocktrans %}
+    </p>
+    <p>{% blocktrans trimmed count counter=organisation.get_list_evaluations|count_in_progress %}
+        Number of in progress evaluation: {{ counter }}
+        {% plural %}
+        Number of in progress evaluations: {{ counter }}
+        {% endblocktrans %}
+    </p>
+    <p>{% blocktrans trimmed count counter=organisation.get_list_evaluations|count_finished %}
+        Number of finished evaluation: {{ counter }}
+        {% plural %}
+        Number of finished evaluations: {{ counter }}
+        {% endblocktrans %}
+    </p>
+
+    {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor" %}
+        <button class="btn btn-primary" id="edit-organisation-settings">{% trans "Edit" %}</button>
+    {% endif %}
 </div>
+
+<div class="display-none organisation-settings organisation-evaluation-cards margin-30" id="organisation-settings-form">
+    <form action="{% url 'assessment:orga-summary' organisation.id %}"
+          class="form" id="editOrganisationSettings{{organisation.id}}" method='post'
+          role="form">
+        {% csrf_token %}
+        <div>
+            {{ edit_organisation_form }}
+        </div>
+        <div class="center">
+            <input class="btn btn-modify margin-10 margin-bot-30 center"
+                   onclick="submitOrganisationForm('editOrganisationSettings{{organisation.id}}', {{organisation.id}})"
+                   value="{% trans 'Modify' %}"
+                   type="button"
+            >
+        </div>
+        <div id="confirmationeditOrganisationSettings{{organisation.id}}">
+        </div>
+    </form>
+
+
+</div>
+
+<script>
+
+var button = document.getElementById("edit-organisation-settings");
+
+if (button) {
+    button.addEventListener("click", function(evt) {
+        var organisationForm = document.getElementById("organisation-settings-form");
+        var button = document.getElementById("edit-organisation-settings");
+        if (organisationForm.classList.contains("display-none")) {
+            organisationForm.classList.remove("display-none");
+        } else {
+            organisationForm.classList.add("display-none");
+        }
+    })
+}
+
+
+
+</script>

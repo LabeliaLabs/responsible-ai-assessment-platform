@@ -11,7 +11,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.utils.translation import LANGUAGE_SESSION_KEY
 from django.utils.translation import gettext as _, activate, get_language_from_request
 
-from assessment.forms import ChoiceForm, ResultsForm
+from assessment.forms import ChoiceForm, ResultsForm, SectionResultsForm
 from assessment.models import EvaluationScore, Evaluation, get_last_assessment_created, Assessment, \
     EvaluationElement
 
@@ -47,6 +47,10 @@ def set_form_for_results(evaluation):
     """
     dic_form = {}
     for section in evaluation.section_set.all().order_by("master_section__order_id"):
+        dic_form[section] = SectionResultsForm(
+            section=section,
+            prefix=section.id,
+        )
         for evaluation_element in section.evaluationelement_set.all().order_by(
                 "master_evaluation_element__order_id"
         ):

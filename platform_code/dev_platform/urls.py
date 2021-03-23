@@ -27,7 +27,7 @@ urlpatterns = i18n_patterns(
     path('i18n/', include('django.conf.urls.i18n')),
     path("assessment/", include("assessment.urls")),
     path("admin/", admin.site.urls),
-    path('admin-dashboard/', admin_dashboard.urls),
+    path('admin-monitoring/', admin_dashboard.urls),
     prefix_default_language=True
 ) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

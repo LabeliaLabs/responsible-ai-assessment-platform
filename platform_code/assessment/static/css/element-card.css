@@ -122,6 +122,16 @@ div.evaluation-title: h3 {
     color: #4D566B;
     border-radius: 0.25em;
     border: 1px solid lightsteelblue;
+    padding: 10px;
+}
+
+.textarea-data-results {
+    width: 95%;
+    color: #4D566B;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    padding: 10px;
+    margin: 2%;
 }
 
 .textarea{
@@ -160,13 +170,9 @@ div.evaluation-title: h3 {
     position: relative;
 }
 
-.div-button:hover {
+.div-button:hover h2>button {
     cursor: pointer;
     text-decoration: underline;
-    color: #0056b3;
-}
-
-.div-button:hover button {
     color: #0056b3;
 }
 

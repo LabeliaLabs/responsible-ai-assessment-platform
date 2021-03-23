@@ -2,6 +2,8 @@
 from django import template
 from django.utils.html import format_html
 
+from home.models import Membership
+
 register = template.Library()
 
 
@@ -152,3 +154,9 @@ def get_item_converted_str(dictionary, key):
         return dictionary.get(key)
     else:
         return None
+
+
+@register.filter
+def get_member_role_as_str(role):
+    roles_tuple = Membership.ROLES
+    return [role_tuple[1] for role_tuple in roles_tuple if role_tuple[0] == role][0]
