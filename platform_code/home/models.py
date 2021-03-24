@@ -114,7 +114,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     staff = models.BooleanField(default=False)  # a admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
     created_at = models.DateTimeField(default=timezone.now)
-    language_preference = models.CharField(default="fr", choices=languages, max_length=5)
+    language_preference = models.CharField(default="fr", choices=languages, max_length=15)
     # notice the absence of a "Password field", that is built in.
 
     object = UserManager()
