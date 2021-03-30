@@ -1,7 +1,7 @@
 # Rename this file to .env.dev
 
 # Django configuration
-SECRET_KEY=<CHANGE_ME>
+SECRET_KEY=pliplaploup
 DJANGO_ALLOWED_HOSTS=["*"]
 DJANGO_SETTINGS_MODULE=dev_platform.settings
 
@@ -21,5 +21,3 @@ POSTGRES_DB=platform_db
 # Gitlab issue tracker / Feedback
 PRIVATE_TOKEN=<CHANGE_ME> # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/settings/access_tokens
 PROJECT_ID=65925 # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/issues
-
-

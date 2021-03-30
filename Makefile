@@ -5,6 +5,9 @@
 up:
 	docker-compose up
 
+upd:
+	docker-compose up -d
+
 buildup:
 	docker-compose up --build
 
@@ -14,6 +17,12 @@ buildupd:
 migr:
 	docker-compose exec web python manage.py makemigrations
 	docker-compose exec web python manage.py migrate --noinput
+
+migr-show:
+	docker-compose exec web python manage.py showmigrations
+
+migr-fake:
+	docker-compose exec web python manage.py migrate --fake
 
 static:
 	docker-compose exec web python manage.py collectstatic --no-input --clear
@@ -30,11 +39,14 @@ downv:
 tests:
 	docker-compose exec web python manage.py test --verbosity 2
 
-dump:
-	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db > platform_db.dump && echo "Dumped"
+trans-prep:
+	django-admin makemessages -l fr
 
-restore:
-	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db --clean < platform_db.dump && echo "Restored"
+translate:
+	django-admin compilemessages
+
+backup:
+	./dump/dump_db.sh
 
 ############
 # PRODLIKE #
@@ -68,12 +80,6 @@ prodlike_downv:
 prodlike_tests:
 	docker-compose -f docker-compose.prod-like-local.yaml exec web python manage.py test --verbosity 2
 
-prodlike_dump:
-	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump && echo "Dumped"
-
-prodlike_restore:
-	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod.dump && echo "Restored"
-
 ########
 # PROD #
 ########
@@ -106,8 +112,5 @@ prod_downv:
 prod_tests:
 	docker-compose -f docker-compose.prod.yaml exec web python manage.py test --verbosity 2
 
-prod_dump:
-	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump && echo "Dumped"
-
-prod_restore:
-	docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod.dump && echo "Restored"
+prod_backup:
+	./dump/dump_db_prod.sh
