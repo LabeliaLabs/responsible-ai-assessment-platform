@@ -1,102 +1,65 @@
 # Dev Setup
 
-> No deploy friday & use `tmux`!
-> At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`.
-> /!\ This will **remove** your images!
+> Reminder: No deploy friday!
 
 - [Dev Setup](#dev-setup)
-  - [Use the makefile](#use-the-makefile)
-    - [Dev](#dev)
-    - [Prod-like-local](#prod-like-local)
-    - [Prod](#prod)
-  - [Django shell](#django-shell)
-  - [Server Update](#server-update)
-  - [Git](#git)
-  - [Environment variables](#environment-variables)
-  - [Nginx](#nginx)
-    - [Server config](#server-config)
-    - [Debug](#debug)
-  - [Certbot](#certbot)
-  - [ssh config](#ssh-config)
-  - [UFW: Uncomplicated FireWall](#ufw-uncomplicated-firewall)
-    - [[WIP] Port forward](#wip-port-forward)
-  - [Fail2ban: IP ban for script kiddies](#fail2ban-ip-ban-for-script-kiddies)
-  - [Docker Tips](#docker-tips)
-  - [Translation](#translation)
+  - [1. Linux](#1-linux)
+    - [Config](#config)
+    - [[monthly] Server Update](#monthly-server-update)
+    - [SSH](#ssh)
+      - [Generate key](#generate-key)
+      - [Connection](#connection)
+      - [SCP](#scp)
+    - [Install Docker & docker-compose](#install-docker--docker-compose)
+    - [Install Nginx & configure](#install-nginx--configure)
+    - [Install Certbot](#install-certbot)
+    - [UFW: Uncomplicated FireWall](#ufw-uncomplicated-firewall)
+    - [Port forward](#port-forward)
+    - [Install Antivirus](#install-antivirus)
+    - [Install Fail2ban](#install-fail2ban)
+    - [Configure DNS](#configure-dns)
+    - [Use the makefile](#use-the-makefile)
+    - [Logs](#logs)
+    - [Deploy a new release aka deploy on Prod](#deploy-a-new-release-aka-deploy-on-prod)
+  - [2. Docker](#2-docker)
+    - [Environments & environment variables](#environments--environment-variables)
+    - [Run in detached mode and follow docker logs](#run-in-detached-mode-and-follow-docker-logs)
+  - [3. Django](#3-django)
+    - [Python Recommended tools](#python-recommended-tools)
+    - [Djnago settings](#djnago-settings)
+    - [Start a django shell in the django container](#start-a-django-shell-in-the-django-container)
+    - [Translation](#translation)
     - [Tests](#tests)
-  - [Deploy on Prod](#deploy-on-prod)
-  - [Database](#database)
+    - [Reset migrations](#reset-migrations)
+    - [Django logs](#django-logs)
+    - [Django check](#django-check)
+  - [4. Postgresql](#4-postgresql)
+    - [Start a postgresql shell](#start-a-postgresql-shell)
+    - [Debugger (pdb, ipdb)](#debugger-pdb-ipdb)
     - [Get the postgresql container id](#get-the-postgresql-container-id)
     - [Dump full db](#dump-full-db)
     - [Restaure full db](#restaure-full-db)
     - [Dump tables](#dump-tables)
     - [List tables](#list-tables)
+  - [5. Tips](#5-tips)
     - [Copy the zip file from the server to your local machine](#copy-the-zip-file-from-the-server-to-your-local-machine)
-  - [Logs](#logs)
-  - [Django logs](#django-logs)
-  - [Platform admin account](#platform-admin-account)
+    - [Utils](#utils)
+    - [SEO](#seo)
+    - [Debug & logs](#debug--logs)
 
-## Use the makefile
+## 1. Linux
 
-Help yourself and use the `Makefile` at the root of the repo! You might need to first install `build-essential` on linux or `make` on Windows (with chocolatey package manager for [example](https://chocolatey.org/packages/make)).
+> Warning: Treat with caution ssh keys and if you find some viruses on your machine, please let other members of the team know and update your keys once the issue is solved.
 
-You'll then be able to use `make buildupd` instead of typing `docker-compose up --build -d`.
+### Config
 
-Available commands:
+On a new server, change unix user password: `whoami` & `sudo passwd`
 
-### Dev
+### [monthly] Server Update
 
-- up
-- buildup
-- buildupd
-- migr
-- static
-- admin
-- down
-- downv
-- tests
-- dump
-- restore
+Use the `update.sh` script (with `./update.sh`), but be careful with programs! For instance, it is better to stop docker (down) before installing docker upgrades.
 
-### Prod-like-local
-
-- prodlike_up
-- prodlike_buildup
-- prodlike_buildupd
-- prodlike_migr
-- prodlike_static
-- prodlike_admin
-- prodlike_down
-- prodlike_downv
-- prodlike_tests
-- prodlike_dump
-- prodlike_restore
-
-### Prod
-
-- prod_up
-- prod_buildup
-- prod_buildupd
-- prod_migr
-- prod_static
-- prod_admin
-- prod_down
-- prod_downv
-- prod_tests
-- prod_dump
-- prod_restore
-
-## Django shell
-
-Start a django shell:
-
-```sh
-docker-compose exec web django-admin shell
-```
-
-## Server Update
-
-Run this command but check packages to be updated before accepting!!
+This script basilly does this:
 
 ```sh
 sudo apt update && \
@@ -105,37 +68,79 @@ sudo apt update && \
         sudo apt autoclean
 ```
 
-## Git
+### SSH
 
-TODO: readonly token
+> Note: OVH requires rsa keys in order to add it to the server with the web interface (to regain access to the server in case of reinstallation).
 
-## Environment variables
+[OVH ssh keys admin](https://www.ovh.com/manager/dedicated/#/billing/autorenew/ssh)
 
-If you want to use the *test* configuration, please use:
+[quick server config](https://docs.ovh.com/fr/vps/conseils-securisation-vps/)
 
-- `docker-compose.yaml`
-- [env_dev_template](./env_dev_template)
+#### Generate key
 
-If you want to use the *production* configuration, please use:
+> Note: add your public key (`.pub`) to OVH or on a server and keep your private key for yourself!
 
-- `docker-compose.prod.yaml`  
-- [env_prod_template](./env_prod_template)
+Generate a dedicated ssh key (RSA 4096 bit key with email as a comment):
 
-Then, please follow the recommendations inside the relevant template:
+```sh
+# OVH needs a rsa key if you want to add it from web interface
+ssh-keygen -t rsa -b 4096 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY>
+# if ppossible use ed25519
+ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY>
+```
 
-- Rename the file as advised in the first line of the template file, for example with `cp env_dev_template .env.dev`
-- Update values flagged as `<CHANGE_ME>`
+Use the OVH web interface for first login, then you will be authorized to append this ssh key to `.ssh/authorized_keys` or with `ssh-copy-id`. When it's done you can connect to preprod server.
 
-## Nginx
+#### Connection
+
+```sh
+ssh -i ~/.ssh/<PRIVATE_KEY> <UNIX_USER>@<IP>
+# For example, to connect preprod
+ssh -i ~/.ssh/preprod ubuntu@51.68.125.118
+```
+
+You use this config to avoid some mistakes. When it is ready, you can simply use `ssh preprod` or `ssh prod`!
+
+```sh
+Host preprod 
+        HostName 51.68.125.118
+        User ubuntu
+        IdentityFile ~/.ssh/<KEY>
+
+Host prod
+        HostName 146.59.147.178
+        User ubuntu
+        IdentityFile ~/.ssh/<KEY>
+```
+
+#### SCP
+
+- Copy a **local file to a remote host**: `scp {{path/to/local_file}} {{remote_host}}:{{path/to/remote_file}}`
+
+- Copy a file **from a remote host to a local directory**: `scp {{remote_host}}:{{path/to/remote_file}} {{path/to/local_directory}}`
+
+```sh
+scp -i ~/.ssh/<CLE> <UNIX_USER>@<IP>:/home/ubuntu/platform_db_prod.dump .
+# For example
+scp -i .ssh/preprod ubuntu@51.68.125.118:/home/ubuntu/platform_db_prod.dump .
+# with .ssh/config ready
+scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump .
+```
+
+> Please have a look at the /dump/dump_db_prod.sh script: a zip file containing several dumps can be generated and fetched!
+
+### Install Docker & docker-compose
+
+- [docker](https://docs.docker.com/engine/install/ubuntu/)
+- Don't forget to `sudo usermod -aG docker $USER`
+- [docker-compose](https://docs.docker.com/compose/install/)
+
+### Install Nginx & configure
 
 ```sh
 # Ubuntu install
 sudo apt install nginx
-```
 
-### Server config
-
-```sh
 # [only once] Dereference default conf from enabled websites
 sudo unlink /etc/nginx/sites-enabled/default
 
@@ -151,39 +156,7 @@ sudo nginx -t && sudo nginx -s reload
 sudo nginx -T
 ```
 
-### Debug
-
-```sh
-# Container status
-docker ps -a
-
-# Network overview, useful for checking ports
-sudo netstat -tlpn
-sudo lsof -P -i -n
-
-# Nginx
-# Follow logs from container
-docker logs -f nginx
-docker logs -f web
-
-# GET on port 8000 & 443
-curl http://0.0.0.0:8000
-curl 0.0.0.0:8000
-curl --insecure -I -k localhost:443
-
-# From your local machine
-nmap -F preprod.assessment.substra.ai # Fast
-nmap -A preprod.assessment.substra.ai # longer
-nmap -sV preprod.assessment.substra.ai # version
-
-# nginx logs path
-tail -f /var/log/nginx/access.log
-tail -f /var/log/nginx/error.log
-```
-
-## Certbot
-
-TODO: cronjob renew but faut pas que ça dérape...
+### Install Certbot
 
 ```sh
 # Ubuntu snap install, as advised on certbot website
@@ -200,16 +173,7 @@ sudo certbot renew --dry-run --verbose
 sudo certbot renew
 ```
 
-## ssh config
-
-TODO:
-
-- change port 22
-- unix user  
-- export conf here (no password, timeout, etc.)
-- definir une politique sec (que faire si on découvre un virus sur sa machine locale qui a des clés ssh pour des serveurs => PREVENIR les autres ayant accès à la machine)
-
-## UFW: Uncomplicated FireWall
+### UFW: Uncomplicated FireWall
 
 ```sh
 # Status/On/Off
@@ -244,7 +208,7 @@ As of now, available applications:
 - 22
 - 587 (email)
 
-### [WIP] Port forward
+### Port forward
 
 Enable `sysctl net.ipv4.forward` by editing `/etc/sysctl.conf` & `/etc/ufw/sysctl.conf` and running `sysctl -p`.
 
@@ -266,13 +230,19 @@ sudo ufw reload
 sudo systemctl restart ufw
 ```
 
-## Fail2ban: IP ban for script kiddies
+### Install Antivirus
+
+clamav: `sudo apt install clamav`
+
+### Install Fail2ban
 
 Ubuntu package: <https://packages.ubuntu.com/search?keywords=fail2ban>
 
 ```sh
 # Install
+# Please use the latest version
 curl -LO http://fr.archive.ubuntu.com/ubuntu/pool/universe/f/fail2ban/fail2ban_0.11.1-1_all.deb
+
 sudo dpkg -i fail2ban_0.11.1-1_all.deb
 
 # Check service status 
@@ -282,7 +252,157 @@ sudo service fail2ban status
 tail -f /var/log/fail2ban.log
 ```
 
-## Docker Tips
+### Configure DNS
+
+On Gandi.net interface (just [here](https://admin.gandi.net/domain/3547e9fe-5ee6-11ea-ba20-00163e8fd4b8/substra.ai/records)), set A and AAAA records to the servers IP (ipv4 & ipv6).
+
+### Use the makefile
+
+Help yourself and use the `Makefile` at the root of the repo! You might need to first install `build-essential` on linux or `make` (with chocolatey package manager for [example](https://chocolatey.org/packages/make) on Windows).
+
+You'll then be able to use `make buildupd` instead of typing `docker-compose up --build -d` and so on!
+
+Available commands:
+
+```sh
+# Dev
+- up
+- upd
+- buildup
+- buildupd
+- migr
+- migr-show
+- migr-fake
+- static
+- admin
+- down
+- downv
+- tests
+- trans-prep
+- translate
+- backup
+
+# Prod-like-local
+- prodlike_up
+- prodlike_buildup
+- prodlike_buildupd
+- prodlike_migr
+- prodlike_static
+- prodlike_admin
+- prodlike_down
+- prodlike_downv
+- prodlike_tests
+
+# Prod
+- prod_up
+- prod_buildup
+- prod_buildupd
+- prod_migr
+- prod_static
+- prod_admin
+- prod_down
+- prod_downv
+- prod_tests
+```
+
+### Logs
+
+```sh
+# live logs
+journalctl -f
+
+tail -f /var/log/nginx/access.log;
+tail -f /var/log/nginx/error.log;
+tail -f /var/log/ufw.log
+tail -f /var/log/letsencrypt/letsencrypt.log
+
+tail -f /var/log/fail2ban.log
+tail -f /var/log/auth.log
+tail -f /var/log/syslog
+```
+
+### Deploy a new release aka deploy on Prod
+
+The deploy script (`./deploy.sh`) is ready to handle this but as an overview of the required steps, here is what is happening during a code release:
+
+- [optional] Apply server updates (especially docker updates!): `./update.sh`
+- Backup: `docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump`
+- Stop docker: `docker-compose -f docker-compose.prod.yml down`
+- Pull the code with the "*deploy*" user (**read-only**): `git fetch && git pull --rebase`
+- Re-build the code: `docker-compose -f docker-compose.prod.yml up --build -d`
+- Apply migrations:
+  - `docker-compose -f docker-compose.prod.yml exec web python manage.py makemigrations`
+  - `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput`
+- Update statics: `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
+
+If needed, use backup:
+
+- Postgresql `pg_restore`
+
+```sh
+docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod.dump
+```
+
+- migrate
+
+```sh
+docker-compose exec python manage.py showmigrations
+docker-compose exec python manage.py makemigrations
+docker-compose exec python manage.py migrate
+# In case of failing migrations, you can try
+docker-compose exec python manage.py migrate --fake
+docker-compose exec python manage.py showmigrations
+```
+
+## 2. Docker
+
+> At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`.
+> /!\ This will **remove** your images!
+
+### Environments & environment variables
+
+If you want to use the *test* configuration (`debug=True`), please use:
+
+- `docker-compose.yaml`
+- [env_dev_template](./env_dev_template)
+
+If you want to use the *production* configuration (`debug=False`), please use:
+
+- `docker-compose.prod.yaml`  
+- [env_prod_template](./env_prod_template)
+
+Then, please follow the recommendations inside the relevant template:
+
+- Rename the file as advised in the first line of the template file, for example with `cp env_dev_template .env.dev`
+- Update values flagged as `<CHANGE_ME>`
+
+### Run in detached mode and follow docker logs
+
+```sh
+# show containers
+docker ps
+
+# django app logs
+docker logs -f $(docker ps | grep web | awk '{print $1}')
+# or
+docker-compose -f docker-compose.prod.yml logs --tail=0 --follow
+
+# Show django logs in the "web" container
+docker-compose exec web watch cat dev.log
+
+# Open a shell in the "web" container
+docker-compose exec web sh
+```
+
+## 3. Django
+
+### Python Recommended tools
+
+- [flake8](flake8.pycqa.org/)
+- [black](https://github.com/psf/black)
+- [safety](https://pyup.io/safety/)
+
+### Djnago settings
 
 You can load different settings when starting django with this:
 
@@ -290,13 +410,13 @@ You can load different settings when starting django with this:
 python manage.py runserver 0.0.0.0:8000 --settings=dev_platform.settings
 ```
 
-You can follow logged elements live with:
+### Start a django shell in the django container
 
 ```sh
-docker-compose exec web watch cat dev.log
+docker-compose exec web django-admin shell
 ```
 
-## Translation
+### Translation
 
 Note that all the content should be written in english. Currently, the languages accepted are
 French and English. The site is deployed in French. To realize the translation (refer to the
@@ -388,33 +508,106 @@ FAILED (failures=1)
 Destroying test database for alias 'default' ('test_platform_db')...
 ```
 
-## Deploy on Prod
+### Reset migrations
 
-Use, **with caution**, the `deploy.sh` script
+At some point you might want to reset migrations, proceed with caution:
 
 ```sh
-# Power up Docker & build image, in detached mode
-docker-compose -f docker-compose.prod.yml up --build -d
+docker-compose exec web python manage.py showmigrations
 
-# Create migrations
-docker-compose -f docker-compose.prod.yml exec web python manage.py makemigrations
+# Delete migration files
+find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
+find . -path "*/migrations/*.pyc" -delete
 
-# Apply migrations
-docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput
+docker-compose exec web python manage.py makemigrations
 
-# Collectstatic
-docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear
+docker-compose exec web python manage.py showmigrations
 
-# [only once] Createsuperuser (please do not create too many admin users)
-docker-compose -f docker-compose.prod.yml exec web python manage.py createsuperuser
+docker-compose exec web python manage.py migrate
 
-# Turn off Docker
-docker-compose -f docker-compose.prod.yml down
-# or /!\ Removes volumes, including db!
-docker-compose -f docker-compose.prod.yml down -v # --volumes 
+# In case of errors, you can try
+docker-compose exec web python manage.py migrate --fake
 ```
 
-## Database
+You can also apply migrations one by one:
+
+```sh
+docker-compose exec web python manage.py migrate <APP> <MIGR_NB>
+# for example
+docker-compose exec web python manage.py migrate home 0002 --fake
+docker-compose exec web python manage.py migrate assessment 0002 --fake
+```
+
+### Django logs
+
+A logger is created in the settings (dev and prod), called *monitoring*. It creates logs
+in the file `prod.log` in the `platform_code` folder.
+You can retrieve this logger in python files (in the views for example) with the following code:
+
+```python
+logger = logging.getLogger('monitoring')
+```
+
+You can then writes new logs in this file with the code `logger.info("text")` for example.
+Refer to the [django documentation](https://docs.djangoproject.com/fr/3.1/topics/logging/) for more information.
+
+In order to categorize the logs and to use it in the admin dashboard, a tag is set at the beginning of the log text in the project:
+
+```python
+logger.info(f"[organisation_deletion] The organisation {organisation} has been created")
+```
+
+You are free to use the tag you want, but some are used for a certain purpose:
+
+- 'error' for all generic errors (400, 403, 404, 500)
+- '*action*_error' for errors caught in the code (as excepts)
+
+You can grab django logs inside its container like this:
+
+```sh
+# It will be saved where you run the command
+docker cp $(docker ps | grep web | awk '{print $1}'):/home/app/web/prod.log .
+```
+
+And you can then save it on your local machine, from your local machine:
+
+```sh
+scp ubuntu@prod:/home/ubuntu/prod.log .
+```
+
+### Django check
+
+You can use the builtin `check` command to get an overview of issues on the plateform:
+
+```sh
+docker-compose exec web python manage.py check --deploy
+docker-compose exec web python manage.py check --deploy --fail-level WARNING
+```
+
+## 4. Postgresql
+
+### Start a postgresql shell
+
+```sh
+# check values from .env file
+# dev
+docker-compose exec db psql -U postgres -W --dbname platform_db
+# prod
+docker-compose exec db psql -U postgres -W --dbname platform_db_prod
+```
+
+### Debugger (pdb, ipdb)
+
+The dev docker-compose is configured to allow you to use debugger breakpoints:
+
+```sh
+# grab the django container_id
+docker ps | grep web
+# attach it
+docker attach <container_id>
+# you can now use pdb or ipdb directly in the code
+import pdb; pdb.set_trace()
+```
 
 ### Get the postgresql container id
 
@@ -504,54 +697,53 @@ home_userresources
 home_userresources_resources
 ```
 
+## 5. Tips
+
 ### Copy the zip file from the server to your local machine
 
 > Note: you will first need to add your ssh key to the server
 
 ```sh
 scp <USER>@<IP>:/home/ubuntu/pf-assessment-dsrc/dump_tables/zipped.zip ./
+# also works with dump files
 ```
 
-## Logs
+### Utils
+
+- `htop`: process manager
+- `ps aux | grep <name>`: search for an active process
+- `history`: shell history
+
+### SEO
+
+Use Lighthouse report! Don't pay!
+
+### Debug & logs
 
 ```sh
-# live logs
-journalctl -f
+# Container status
+docker ps -a
 
-tail -f /var/log/nginx/access.log;
-tail -f /var/log/nginx/error.log;
-tail -f /var/log/ufw.log
-tail -f /var/log/letsencrypt/letsencrypt.log
+# Network overview, useful for checking ports
+sudo netstat -tlpn
+sudo lsof -P -i -n
 
-tail -f /var/log/fail2ban.log
-tail -f /var/log/auth.log
-tail -f /var/log/syslog
+# GET on port 8000 & 443
+curl http://0.0.0.0:8000
+curl 0.0.0.0:8000
+curl --insecure -I -k localhost:443
+
+# From your local machine
+nmap -F preprod.assessment.substra.ai # Fast
+nmap -A preprod.assessment.substra.ai # longer
+nmap -sV preprod.assessment.substra.ai # version
+
+# Nginx
+# Follow logs from container
+docker logs -f nginx
+docker logs -f web
+
+# nginx logs path
+tail -f /var/log/nginx/access.log
+tail -f /var/log/nginx/error.log
 ```
-
-## Django logs
-
-A logger is created in the settings (dev and prod), called *monitoring*. It creates logs
-in the file `prod.log` in the `platform_code` folder.
-You can retrieve this logger in python files (in the views for example) with the following code:
-
-```python
-logger = logging.getLogger('monitoring')
-```
-
-You can then writes new logs in this file with the code `logger.info("text")` for example.
-Refer to the [django documentation](https://docs.djangoproject.com/fr/3.1/topics/logging/) for more information.
-
-In order to categorize the logs and to use it in the admin dashboard, a tag is set at the beginning of the log text in the project:
-
-```python
-logger.info(f"[organisation_deletion] The organisation {organisation} has been created")
-```
-
-You are free to use the tag you want, but some are used for a certain purpose:
-
-- 'error' for all generic errors (400, 403, 404, 500)
-- '*action*_error' for errors caught in the code (as excepts)
-
-## Platform admin account
-
-contact: nathanael.cretin@substra.org
