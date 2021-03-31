@@ -66,7 +66,8 @@ class OrganisationCreationForm(ModelForm):
 
 class OrganisationEditionForm(ModelForm):
     """
-
+    Form to edit the organisation fields (name, sector, size and country) for the organisation members as admin
+    or editor. Form available in the organisation page, in the "Organisation setting" tab.
     """
 
     class Meta:
@@ -92,7 +93,7 @@ class OrganisationEditionForm(ModelForm):
         self.fields["name"].label = _("Name")
         self.fields["size"].label = _("Size")
         self.fields["country"].label = _("Country")
-        self.fields["country"].label = _("Sector")
+        self.fields["sector"].label = _("Sector")
         self.fields["size"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
         self.fields["country"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
         self.fields["sector"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}

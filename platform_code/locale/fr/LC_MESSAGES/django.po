@@ -790,7 +790,7 @@ msgstr[1] "Nombre d'évaluations terminées : %(counter)s"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:33
 msgid "Edit"
-msgstr ""
+msgstr "Modifier"
 
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:14
 msgid "Organisation: "
