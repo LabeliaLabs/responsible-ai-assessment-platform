@@ -26,6 +26,7 @@ from assessment.views.utils.utils import (
     manage_evaluation_score,
     treat_evaluation_creation_valid_form,
 )
+from assessment.templatetags.add_attr import get_sector_as_str
 from home.forms import OrganisationEditionForm
 from home.models import Organisation, User, Membership, PendingInvitation
 from home.views.utils import add_last_version_last_assessment_dictionary
@@ -463,12 +464,13 @@ class SummaryView(LoginRequiredMixin, DetailView):
             organisation.size = size
             organisation.country = country
             organisation.sector = sector
+            sector_displayed = get_sector_as_str(sector)
             organisation.save()
             self.data_update["organisation_name"] = _("Name:") + " " + name
             self.data_update["organisation_name_only"] = name
             self.data_update["organisation_size"] = _("Size:") + " " + size
             self.data_update["organisation_country"] = _("Country:") + " " + country
-            self.data_update["organisation_sector"] = _("Sector:") + " " + sector
+            self.data_update["organisation_sector"] = _("Sector:") + " " + sector_displayed
             logger.info(f"[organisation_edited] The user {user}, with the role {organisation.get_role_user(user)},"
                         f"edited the information of the organisation {str(organisation)}")
             self.data_update["message"] = _("The organisation information has been updated.")

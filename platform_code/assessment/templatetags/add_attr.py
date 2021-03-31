@@ -2,7 +2,7 @@
 from django import template
 from django.utils.html import format_html
 
-from home.models import Membership
+from home.models import Membership, Organisation
 
 register = template.Library()
 
@@ -160,3 +160,9 @@ def get_item_converted_str(dictionary, key):
 def get_member_role_as_str(role):
     roles_tuple = Membership.ROLES
     return [role_tuple[1] for role_tuple in roles_tuple if role_tuple[0] == role][0]
+
+
+@register.filter
+def get_sector_as_str(sector):
+    sector_tuple = Organisation.SECTOR
+    return str([sector_tuple[1] for sector_tuple in sector_tuple if sector_tuple[0] == sector][0])

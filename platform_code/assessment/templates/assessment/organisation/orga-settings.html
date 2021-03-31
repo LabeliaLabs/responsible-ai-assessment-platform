@@ -6,10 +6,10 @@
 <h3 class="title-column">{% trans "Organisation's parameters" %}</h3>
 
 <div class="organisation-evaluation-cards organisation-settings" id="organisation-settings">
-    <p id="organisation-name">{% trans "Name:" %} {{organisation.name}}</p>
-    <p id="organisation-sector">{% trans "Activity:" %} {{organisation.sector}}</p>
-    <p id="organisation-size">{% trans "Size:"%} {{organisation.size}}</p>
-    <p id="organisation-country">{% trans "Country:"%} {{organisation.country.name}}</p>
+    <p id="organisation-name">{% trans "Name:" %} {{ organisation.name }}</p>
+    <p id="organisation-sector">{% trans "Activity:" %} {{ organisation.sector|get_sector_as_str }}</p>
+    <p id="organisation-size">{% trans "Size:"%} {{ organisation.size }}</p>
+    <p id="organisation-country">{% trans "Country:"%} {{ organisation.country.name }}</p>
     <p>{% blocktrans trimmed count counter=organisation.count_displayed_members %}
         Number of member: {{ counter }}
         {% plural %}
