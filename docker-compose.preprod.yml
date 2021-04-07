@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+  web:
+    container_name: web
+    restart: unless-stopped
+    build:
+      context: ./platform_code
+      dockerfile: Dockerfile.prod
+    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8080 --workers=4 --timeout 10 --log-file=./gunicorn_preprod.log
+    networks:
+      - main
+    volumes:
+      - static_volume:/home/app/web/static
+    expose:
+      - 8080
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:latest
+    networks:
+      - main
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env.prod
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - main
+    volumes:
+      - static_volume:/home/app/web/static
+      - ./data/nginx/nginx-preprod.conf:/etc/nginx/conf.d/custom.conf
+      - ../ssl/substra.ai.crt:/etc/ssl/preprodassessment.substra.ai.crt
+      - ../ssl/myserver.key:/etc/ssl/preprodassessment.substra.ai.key
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
+
+networks:
+  main:
