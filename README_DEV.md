@@ -4,17 +4,21 @@
 
 - [Dev Setup](#dev-setup)
   - [1. Linux](#1-linux)
-    - [Config](#config)
-    - [[monthly] Server Update](#monthly-server-update)
+    - [[new server] Config](#new-server-config)
     - [SSH](#ssh)
       - [Generate key](#generate-key)
       - [Connection](#connection)
       - [SCP](#scp)
+    - [[monthly] Server Update](#monthly-server-update)
     - [Install Docker & docker-compose](#install-docker--docker-compose)
-    - [Install Nginx & configure](#install-nginx--configure)
-    - [Install Certbot](#install-certbot)
+    - [Nginx](#nginx)
+    - [[not required] Install Certbot](#not-required-install-certbot)
+    - [Certificate Renewal](#certificate-renewal)
+      - [Resources](#resources)
+      - [Input](#input)
+      - [Required](#required)
     - [UFW: Uncomplicated FireWall](#ufw-uncomplicated-firewall)
-    - [Port forward](#port-forward)
+    - [[not required] Port forward](#not-required-port-forward)
     - [Install Antivirus](#install-antivirus)
     - [Install Fail2ban](#install-fail2ban)
     - [Configure DNS](#configure-dns)
@@ -26,13 +30,14 @@
     - [Run in detached mode and follow docker logs](#run-in-detached-mode-and-follow-docker-logs)
   - [3. Django](#3-django)
     - [Python Recommended tools](#python-recommended-tools)
-    - [Djnago settings](#djnago-settings)
+    - [Django settings](#django-settings)
     - [Start a django shell in the django container](#start-a-django-shell-in-the-django-container)
     - [Translation](#translation)
     - [Tests](#tests)
     - [Reset migrations](#reset-migrations)
     - [Django logs](#django-logs)
     - [Django check](#django-check)
+    - [Django admin](#django-admin)
   - [4. Postgresql](#4-postgresql)
     - [Start a postgresql shell](#start-a-postgresql-shell)
     - [Debugger (pdb, ipdb)](#debugger-pdb-ipdb)
@@ -42,7 +47,6 @@
     - [Dump tables](#dump-tables)
     - [List tables](#list-tables)
   - [5. Tips](#5-tips)
-    - [Copy the zip file from the server to your local machine](#copy-the-zip-file-from-the-server-to-your-local-machine)
     - [Utils](#utils)
     - [SEO](#seo)
     - [Debug & logs](#debug--logs)
@@ -51,26 +55,15 @@
 
 > Warning: Treat with caution ssh keys and if you find some viruses on your machine, please let other members of the team know and update your keys once the issue is solved.
 
-### Config
+### [new server] Config
 
 On a new server, change unix user password: `whoami` & `sudo passwd`
-
-### [monthly] Server Update
-
-Use the `update.sh` script (with `./update.sh`), but be careful with programs! For instance, it is better to stop docker (down) before installing docker upgrades.
-
-This script basilly does this:
-
-```sh
-sudo apt update && \
-        sudo apt upgrade && \
-        sudo apt autoremove --purge && \
-        sudo apt autoclean
-```
 
 ### SSH
 
 > Note: OVH requires rsa keys in order to add it to the server with the web interface (to regain access to the server in case of reinstallation).
+>
+> We use port 22222 instead of 22
 
 [OVH ssh keys admin](https://www.ovh.com/manager/dedicated/#/billing/autorenew/ssh)
 
@@ -94,23 +87,25 @@ Use the OVH web interface for first login, then you will be authorized to append
 #### Connection
 
 ```sh
-ssh -i ~/.ssh/<PRIVATE_KEY> <UNIX_USER>@<IP>
+ssh -i ~/.ssh/<PRIVATE_KEY> <UNIX_USER>@<IP> -p <PORT>
 # For example, to connect preprod
-ssh -i ~/.ssh/preprod ubuntu@51.68.125.118
+ssh -i ~/.ssh/preprod ubuntu@51.68.125.118 -p 22222
 ```
 
-You use this config to avoid some mistakes. When it is ready, you can simply use `ssh preprod` or `ssh prod`!
+You can also use this config to avoid some mistakes. When it is ready, you can simply use `ssh preprod` or `ssh prod`! Edit the `.ssh/config` file as follow:
 
 ```sh
 Host preprod 
         HostName 51.68.125.118
         User ubuntu
         IdentityFile ~/.ssh/<KEY>
+        Port 22222
 
 Host prod
         HostName 146.59.147.178
         User ubuntu
         IdentityFile ~/.ssh/<KEY>
+        Port 22222
 ```
 
 #### SCP
@@ -120,22 +115,37 @@ Host prod
 - Copy a file **from a remote host to a local directory**: `scp {{remote_host}}:{{path/to/remote_file}} {{path/to/local_directory}}`
 
 ```sh
-scp -i ~/.ssh/<CLE> <UNIX_USER>@<IP>:/home/ubuntu/platform_db_prod.dump .
+scp -i ~/.ssh/<CLE> -P <PORT> <UNIX_USER>@<IP>:/home/ubuntu/platform_db_prod.dump ./
 # For example
-scp -i .ssh/preprod ubuntu@51.68.125.118:/home/ubuntu/platform_db_prod.dump .
+scp -i ~.ssh/preprod -P 22222 ubuntu@51.68.125.118:/home/ubuntu/platform_db_prod.dump ./
 # with .ssh/config ready
-scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump .
+scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump ./
 ```
 
 > Please have a look at the /dump/dump_db_prod.sh script: a zip file containing several dumps can be generated and fetched!
 
+### [monthly] Server Update
+
+Use the `update.sh` script (with `./update.sh`), but be careful with programs! For instance, it is better to stop docker (down) before installing docker upgrades.
+
+This script basilly does this:
+
+```sh
+sudo apt update && \
+        sudo apt upgrade && \
+        sudo apt autoremove --purge && \
+        sudo apt autoclean
+```
+
 ### Install Docker & docker-compose
 
-- [docker](https://docs.docker.com/engine/install/ubuntu/)
-- Don't forget to `sudo usermod -aG docker $USER`
-- [docker-compose](https://docs.docker.com/compose/install/)
+1. [docker](https://docs.docker.com/engine/install/ubuntu/)
+2. Don't forget to `sudo usermod -aG docker $USER`
+3. [docker-compose](https://docs.docker.com/compose/install/)
 
-### Install Nginx & configure
+### Nginx
+
+Nginx is dockerized, so the following is not required, but it is still a good source of knowledge. Configuration files are located in the `nginx` folder.
 
 ```sh
 # Ubuntu install
@@ -156,7 +166,9 @@ sudo nginx -t && sudo nginx -s reload
 sudo nginx -T
 ```
 
-### Install Certbot
+### [not required] Install Certbot
+
+This part is not required anymore as the project is using an ssl certicate issued by Gandi, but it is still a good source of knowledge.
 
 ```sh
 # Ubuntu snap install, as advised on certbot website
@@ -173,7 +185,51 @@ sudo certbot renew --dry-run --verbose
 sudo certbot renew
 ```
 
+### Certificate Renewal
+
+> Note: Use the wildcard domain to catch all sub-domains `*.substra.ai`
+>
+> Validation method email: admin@substra.ai
+
+#### Resources
+
+- Follow Gandi CSR doc: <https://docs.gandi.net/en/ssl/common_operations/csr.html>
+- <https://nicolas.perriault.net/code/2012/gandi-standard-ssl-certificate-nginx/>
+- <https://jlecour.github.io/ssl-gandi-nginx-debian/>
+
+```sh
+openssl req -nodes -newkey rsa:2048 -sha256 -keyout myserver.key -out server.csr
+```
+
+- `newkey rsa:2048` - Generates a CSR request and a private key using RSA with 2048 bits. If you use the certificate with our Simple Hosting offer, your key can only be 2048 bits.
+- `sha256` - Use the SHA-2, SHA256 hash algorithm. Due to the deprecation of the SHA1 certificates, our partner, Sectigo, will automatically deliver a SHA2 certificate.
+- `keyout myserver.key`: Save the private key in the file “myserver.key” in the folder where the command was executed.
+- `out server.csr`: Save the CSR in the file “server.csr” in the folder where the command was executed.
+
+#### Input
+
+- `Country name`: Provide the two letter code of your country.
+- `State or Province Name`: Write out the name of your state or province; do not use an abbreviation.
+- `Locality Name`: Provide the name of your city or town.
+- `Organization Name`: Provide the name of your organization, such as the name of your business. This field is optional for Standard certificates standard_certificates, but for Pro and Business certificates, the organization name is mandatory.
+- `Organization Unit Name`: Provide the name of your organization unit within your company, such as the IT department.
+- `Common Name`: Provide the domain name you are wanting to secure. For more details see the previous section on this page.
+- `Email Address`: Provide your email address. The email address is **not mandatory**, but is recommended.
+- `A challenge password`: This is a rarely used and optional feature. We recommend you leave this blank.
+- `An optional company name`: We also recommend leaving this option blank.
+
+#### Required
+
+```sh
+# Append the key to your certificate
+cat GandiStandardSSLCA2.pem >> substra.ai.crt
+```
+
+Then refer to the `docker-compose` file to load the certificate into the containerized nginx.
+
 ### UFW: Uncomplicated FireWall
+
+> Warning: please make sure you keep an ssh access to the server *before* applying rules!
 
 ```sh
 # Status/On/Off
@@ -204,11 +260,10 @@ As of now, available applications:
 - Nginx Full
 - Nginx HTTP
 - Nginx HTTPS
-- OpenSSH
-- 22
+- OpenSSH (22222)
 - 587 (email)
 
-### Port forward
+### [not required] Port forward
 
 Enable `sysctl net.ipv4.forward` by editing `/etc/sysctl.conf` & `/etc/ufw/sysctl.conf` and running `sysctl -p`.
 
@@ -232,7 +287,22 @@ sudo systemctl restart ufw
 
 ### Install Antivirus
 
-clamav: `sudo apt install clamav`
+```sh
+# install
+sudo apt install clamav
+
+# update signatures
+sudo freshclam
+
+# help
+clamscan –-help
+
+# scan download folder
+clamscan -r -i /home/ubuntu/Downloads
+
+# scan all and remove infected files
+clamscan -r --remove /
+```
 
 ### Install Fail2ban
 
@@ -266,43 +336,65 @@ Available commands:
 
 ```sh
 # Dev
-- up
-- upd
-- buildup
-- buildupd
-- migr
-- migr-show
-- migr-fake
-- static
-- admin
-- down
-- downv
-- tests
-- trans-prep
-- translate
-- backup
+- up: start
+- upd: start in detached mode
+- buildup: build image
+- buildupd: build in detached mode
+- migr: generate migrations & apply it
+- migr-show: show migrations
+- migr-fake: force migrations
+- static: collect statics
+- admin: create admin user
+- down: stop
+- downv: stop & remove volume (including db)
+- tests: run tests
+- trans-prep: prepare translations (local only)
+- translate: make translations (local only)
+- backup: create a platform_db_<DATE>.dump from the whole database
 
 # Prod-like-local
-- prodlike_up
-- prodlike_buildup
-- prodlike_buildupd
-- prodlike_migr
-- prodlike_static
-- prodlike_admin
-- prodlike_down
-- prodlike_downv
-- prodlike_tests
+- prodlike_up: start
+- prodlike_upd: start in detached mode
+- prodlike_buildup: build image
+- prodlike_buildupd: build in detached mode
+- prodlike_migr: generate migrations & apply it
+- prodlike_migr-show: show migrations
+- prodlike_migr-fake: force migrations
+- prodlike_static: collect statics
+- prodlike_admin: create admin user
+- prodlike_down: stop
+- prodlike_downv: stop & remove volume (including db)
+- prodlike_tests: run tests
+
+# Preprod
+- preprod_up: start
+- preprod_upd: start in detached mode
+- preprod_buildup: build image
+- preprod_buildupd: build in detached mode
+- preprod_migr: generate migrations & apply it
+- preprod_migr-show: show migrations
+- preprod_migr-fake: force migrations
+- preprod_static: collect statics
+- preprod_admin: create admin user
+- preprod_down: stip
+- preprod_downv: stop & remove volume (including db)
+- preprod_tests: run tests
+- preprod_backup: create a platform_db_preprod_<DATE>.dump from the whole database
 
 # Prod
-- prod_up
-- prod_buildup
-- prod_buildupd
-- prod_migr
-- prod_static
-- prod_admin
-- prod_down
-- prod_downv
-- prod_tests
+- prod_up: start
+- prod_upd: start in detached mode
+- prod_buildup: build image
+- prod_buildupd: build in detached mode
+- prod_migr: generate migrations & apply it
+- prod_migr-show: show migrations
+- prod_migr-fake: force migrations
+- prod_static: collect statics
+- prod_admin: create admin user
+- prod_down: stip
+- prod_downv: stop & remove volume (including db)
+- prod_tests: run tests
+- prod_backup: create a platform_db_prod_<DATE>.dump from the whole database
 ```
 
 ### Logs
@@ -311,10 +403,10 @@ Available commands:
 # live logs
 journalctl -f
 
-tail -f /var/log/nginx/access.log;
-tail -f /var/log/nginx/error.log;
+tail -f /var/log/nginx/access.log;            # container
+tail -f /var/log/nginx/error.log;             # container
 tail -f /var/log/ufw.log
-tail -f /var/log/letsencrypt/letsencrypt.log
+tail -f /var/log/letsencrypt/letsencrypt.log  # obsolete
 
 tail -f /var/log/fail2ban.log
 tail -f /var/log/auth.log
@@ -326,14 +418,14 @@ tail -f /var/log/syslog
 The deploy script (`./deploy.sh`) is ready to handle this but as an overview of the required steps, here is what is happening during a code release:
 
 - [optional] Apply server updates (especially docker updates!): `./update.sh`
-- Backup: `docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump`
-- Stop docker: `docker-compose -f docker-compose.prod.yml down`
+- Backup: `docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump` (`make prod_backup`)
+- Stop docker: `docker-compose -f docker-compose.prod.yml down` (`make prod_down`)
 - Pull the code with the "*deploy*" user (**read-only**): `git fetch && git pull --rebase`
-- Re-build the code: `docker-compose -f docker-compose.prod.yml up --build -d`
-- Apply migrations:
+- Re-build the code: `docker-compose -f docker-compose.prod.yml up --build -d` (`make prod_buildupd`)
+- Apply migrations (`make prod_migr`):
   - `docker-compose -f docker-compose.prod.yml exec web python manage.py makemigrations`
   - `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput`
-- Update statics: `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
+- Update statics (`make prod_static`): `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
 
 If needed, use backup:
 
@@ -346,12 +438,12 @@ docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_re
 - migrate
 
 ```sh
-docker-compose exec python manage.py showmigrations
-docker-compose exec python manage.py makemigrations
-docker-compose exec python manage.py migrate
+docker-compose -f docker-compose.prod.yml exec python manage.py showmigrations # make prod_migr-show
+docker-compose -f docker-compose.prod.yml exec python manage.py makemigrations # make prod_migr
+docker-compose -f docker-compose.prod.yml exec python manage.py migrate        # make prod_migr
 # In case of failing migrations, you can try
-docker-compose exec python manage.py migrate --fake
-docker-compose exec python manage.py showmigrations
+docker-compose -f docker-compose.prod.yml exec python manage.py migrate --fake # make prod_migr-fake
+docker-compose -f docker-compose.prod.yml exec python manage.py showmigrations # make prod_migr-show
 ```
 
 ## 2. Docker
@@ -402,7 +494,7 @@ docker-compose exec web sh
 - [black](https://github.com/psf/black)
 - [safety](https://pyup.io/safety/)
 
-### Djnago settings
+### Django settings
 
 You can load different settings when starting django with this:
 
@@ -435,12 +527,16 @@ django-admin makemessages -l fr
 >>> processing locale fr
 ```
 
+or use `make trans-prep`.
+
 This will gather all the text between the tags in the file `django.po`.
 Then, the text to translate should appear after **msgid** `msgid "You must be connected to access this content"`. You must write the translation in the **msgtrs** following `msgstr "Vous devez vous connecter pour accéder à ce contenu"`. Be careful to the 'fuzzy' translations which are inaccurate (Tips: use `Ctrl + f "fuzzy"`). Make all your translations and then do the command:
 
 ```sh
 django-admin compilemessages
 ```
+
+Or use `make translate`.
 
 Do not forget to add and commit both of the files `django.po` and `django.mo`.
 
@@ -479,6 +575,8 @@ To run the tests, use the following command:
 
 ```sh
 docker-compose exec web python manage.py test --verbosity 2
+# or
+make tests
 ```
 
 If all your tests are passed, you should see something like this:
@@ -519,14 +617,11 @@ docker-compose exec web python manage.py showmigrations
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 find . -path "*/migrations/*.pyc" -delete
 
-docker-compose exec web python manage.py makemigrations
-
-docker-compose exec web python manage.py showmigrations
-
-docker-compose exec web python manage.py migrate
-
+docker-compose exec web python manage.py makemigrations # make migr
+docker-compose exec web python manage.py showmigrations # make migr-show
+docker-compose exec web python manage.py migrate        # make migr
 # In case of errors, you can try
-docker-compose exec web python manage.py migrate --fake
+docker-compose exec web python manage.py migrate --fake # make migr-fake
 ```
 
 You can also apply migrations one by one:
@@ -572,7 +667,7 @@ docker cp $(docker ps | grep web | awk '{print $1}'):/home/app/web/prod.log .
 And you can then save it on your local machine, from your local machine:
 
 ```sh
-scp ubuntu@prod:/home/ubuntu/prod.log .
+scp ubuntu@prod:/home/ubuntu/prod.log ./
 ```
 
 ### Django check
@@ -582,6 +677,41 @@ You can use the builtin `check` command to get an overview of issues on the plat
 ```sh
 docker-compose exec web python manage.py check --deploy
 docker-compose exec web python manage.py check --deploy --fail-level WARNING
+```
+
+### Django admin
+
+```sh
+django-admin check                       # Checks the entire django project for potential problems
+django-admin changepassword <username>   # Allows changing a user’s password. It prompts you to enter a new password twice for the given user.
+django-admin clearsessions               # Can be run as a cron job or directly to clean out expired sessions.
+django-admin collectstatic               # Helps to collect all the static files in the one mentioned directory
+django-admin createsuperuser             # Creates a superuser account (a user who has all permissions).
+django-admin compilemessages             # Compiles .po files to .mo files for use with builtin gettext support
+django-admin createcachetable            # Creates the tables needed to use the SQL cache backend.
+django-admin dbshell                     # Runs the command-line client for specified database, or the default database if none is provided.
+django-admin diffsettings                # Displays differences between the current settings.py and Django's default settings.
+django-admin dumpdata                    # Output the contents of the database as a fixture of the given format (using each model's default manager unless --all is specified).
+django-admin flush                       # Removes ALL DATA from the database, including data added during migrations. Does not achieve a "fresh install" state.
+django-admin inspectdb                   # Introspects the database tables in the given database and outputs a Django model module.
+django-admin loaddata                    # Installs the named fixture(s) in the database.
+django-admin makemessages                # Runs over the entire source tree of the current directory and pulls out all strings marked for translation. It creates (or updates) a message file in the conf/locale (in the django tree) or locale (for projects and applications) directory. You must run this command with one of either the --locale, --exclude, or --all options.
+django-admin help                        # display usage information and a list of the commands provided by each application
+django-admin makemigrations              # create new migrations to the database based on the changes detected in the models
+django-admin migrate                     # synchronize the database state with your current state project models and migrations
+django-admin remove_stale_contenttypes   # Deletes stale content types (from deleted models) in your database.y.
+django-admin runserver <port>            # start the development webserver at 127.0.0.1 with the port <port> default 8000
+django-admin sendtestemail               # Sends a test email to the email addresses specified as arguments.
+django-admin shell                       # Runs a Python interactive interpreter. Tries to use IPython or bpython, if one of them is available. Any standard input is executed as code.
+django-admin showmigrations              # Shows all available migrations for the current project.
+django-admin sqlflush                    # Returns a list of the SQL statements required to return all tables in the database to the state they were in just after they were installed.
+django-admin sqlmigrate                  # Prints the SQL statements for the named migration.
+django-admin sqlsequencereset            # Prints the SQL statements for resetting sequences for the given app name(s).
+django-admin squashmigrations            # Squashes an existing set of migrations (from first until specified) into a single new one.
+django-admin startapp <Appname>          # create a new django application with the specified name
+django-admin startproject <ProjectName>  # create a new project directory structure
+django-admin testserver                  # Runs a development server with data from the given fixture(s).
+django-admin version                     # display the current django version
 ```
 
 ## 4. Postgresql
@@ -622,9 +752,13 @@ docker exec -i -u postgres <CONTAINER_ID> pg_dump -Fc <DB> > <DB>.dump
 
 # prod
 docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump
+# or
+make prod_backup
 
 # dev
 docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db > platform_db.dump
+# or
+make backup
 ```
 
 ### Restaure full db
@@ -632,10 +766,10 @@ docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_du
 ```sh
 docker exec -i -u postgres <CONTAINER_ID> pg_restore -d <DB> < <INPUT_FILE>
 
-# prod
+# prod ex.
 docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod.dump
 
-# dev
+# dev ex.
 docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db --clean < platform_db.dump
 ```
 
@@ -699,29 +833,22 @@ home_userresources_resources
 
 ## 5. Tips
 
-### Copy the zip file from the server to your local machine
-
-> Note: you will first need to add your ssh key to the server
-
-```sh
-scp <USER>@<IP>:/home/ubuntu/pf-assessment-dsrc/dump_tables/zipped.zip ./
-# also works with dump files
-```
-
 ### Utils
 
 - `htop`: process manager
 - `ps aux | grep <name>`: search for an active process
 - `history`: shell history
+- `ncdu`: disk usage explorer
+- `tldr`: [repo](https://github.com/tldr-pages/tldr)
 
 ### SEO
 
-Use Lighthouse report! Don't pay!
+Use Lighthouse report! Don't pay for hacky stuff!
 
 ### Debug & logs
 
 ```sh
-# Container status
+# Container status (all)
 docker ps -a
 
 # Network overview, useful for checking ports
