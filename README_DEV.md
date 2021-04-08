@@ -10,6 +10,7 @@
       - [Connection](#connection)
       - [SCP](#scp)
     - [[monthly] Server Update](#monthly-server-update)
+    - [[monthly] Docker Update](#monthly-docker-update)
     - [Install Docker & docker-compose](#install-docker--docker-compose)
     - [Nginx](#nginx)
     - [[not required] Install Certbot](#not-required-install-certbot)
@@ -25,6 +26,7 @@
     - [Use the makefile](#use-the-makefile)
     - [Logs](#logs)
     - [Deploy a new release aka deploy on Prod](#deploy-a-new-release-aka-deploy-on-prod)
+    - [Deploy on local](#deploy-on-local)
   - [2. Docker](#2-docker)
     - [Environments & environment variables](#environments--environment-variables)
     - [Run in detached mode and follow docker logs](#run-in-detached-mode-and-follow-docker-logs)
@@ -46,7 +48,8 @@
     - [Restaure full db](#restaure-full-db)
     - [Dump tables](#dump-tables)
     - [List tables](#list-tables)
-  - [5. Tips](#5-tips)
+  - [5. Monthly routines](#5-monthly-routines)
+  - [6. Tips](#6-tips)
     - [Utils](#utils)
     - [SEO](#seo)
     - [Debug & logs](#debug--logs)
@@ -135,6 +138,38 @@ sudo apt update && \
         sudo apt upgrade && \
         sudo apt autoremove --purge && \
         sudo apt autoclean
+```
+
+### [monthly] Docker Update
+
+Check the server updates to be performed:
+
+```sh
+apt list --upgradable
+```
+
+If there is no Docker update, use `update.sh` (see [Server Update](#monthly-server-update))
+
+If there is Docker updates: 
+
+```sh
+# Create a dump 
+make prod_backup
+
+# Save locally your db - file name to be adapted
+scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump ./
+
+# Stop Docker
+make prod_down
+
+# Update servers 
+./update.sh
+
+# Restart Docker 
+make prod_buildupd
+
+# Check if everything is ok. If not, you can restore the DB
+docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod_<DATE>.dump
 ```
 
 ### Install Docker & docker-compose
@@ -415,6 +450,16 @@ tail -f /var/log/syslog
 
 ### Deploy a new release aka deploy on Prod
 
+[optional] Before deploying, if you want to save locally the db, you can run the following commands:
+
+```sh
+# Create a dump 
+make prod_backup
+
+# Save locally your db - file name to be adapted
+scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump ./
+```
+
 The deploy script (`./deploy.sh`) is ready to handle this but as an overview of the required steps, here is what is happening during a code release:
 
 - [optional] Apply server updates (especially docker updates!): `./update.sh`
@@ -444,6 +489,38 @@ docker-compose -f docker-compose.prod.yml exec python manage.py migrate        #
 # In case of failing migrations, you can try
 docker-compose -f docker-compose.prod.yml exec python manage.py migrate --fake # make prod_migr-fake
 docker-compose -f docker-compose.prod.yml exec python manage.py showmigrations # make prod_migr-show
+```
+
+### Deploy on local
+
+You may be required as a dev to deploy locally but also to perform some tests. 
+
+```sh
+# Switch to the branch you need 
+git fetch && git pull --rebase
+git checkout <branch>
+
+# Build your docker image
+make buildup
+
+# Create a super user to login to the platform: you will be requested an email and a password 
+make admin 
+
+# You have now access on your local machine to the platform: http://0.0.0.0:8080/  
+
+# Apply translations
+make trans-prep
+make translate
+
+# You can stop and start again if needed 
+make down
+make up 
+
+# For Dev: run tests 
+make tests
+
+# Delete your build
+make downv 
 ```
 
 ## 2. Docker
@@ -831,7 +908,14 @@ home_userresources
 home_userresources_resources
 ```
 
-## 5. Tips
+## 5. Monthly routines 
+
+Once a month: 
+
+- Check [antivirus](#install-antivirus). In doubt, scan the whole system with `clamscan -r -i /`, but it will be long... 
+- Check [server updates](#monthly-server-update), including [Docker updates](#monthly-docker-update)
+
+## 6. Tips
 
 ### Utils
 
