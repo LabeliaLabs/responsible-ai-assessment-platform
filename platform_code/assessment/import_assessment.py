@@ -311,7 +311,7 @@ def create_element(element_data, section, depends_on):
         question_text_en=element_data.get("question_text_en"),
         question_type=element_data.get("question_type"),
         explanation_text_fr=element_data.get("explanation_text_fr").replace("n/a", ""),
-        explanation_text_en=element_data.get("explanation_text_fr").replace("n/a", ""),
+        explanation_text_en=element_data.get("explanation_text_en").replace("n/a", ""),
         risk_domain_fr=element_data.get("risk_domain_fr").capitalize().replace("N/a", ""),
         risk_domain_en=element_data.get("risk_domain_en").capitalize().replace("N/a", ""),
         depends_on=depends_on,
