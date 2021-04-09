@@ -3,17 +3,17 @@ version: '3'
 services:
   web:
     container_name: web
-    restart: unless-stopped
+    restart: always
     build:
       context: ./platform_code
       dockerfile: Dockerfile.prod
-    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8080 --workers=4 --timeout 10
+    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8080 --workers=4 --threads 4 --timeout 10 --log-file=./gunicorn_prod.log
     networks:
       - main
     volumes:
       - static_volume:/home/app/web/static
-    ports:
-      - "8080:8080"
+    expose:
+        - 8080
     env_file:
       - .env.prod
     depends_on:
@@ -24,43 +24,28 @@ services:
     image: postgres:latest
     networks:
       - main
-    restart: unless-stopped
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env.prod
 
-  # nginx:
-  #   container_name: nginx
-  #   image: nginx:latest
-  #   restart: unless-stopped
-  #   #build: ./nginx
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   networks:
-  #     - main
-  #   volumes:
-  #     - static_volume:/home/app/web/static
-  #     - ./data/nginx/nginx.conf:/etc/nginx/nginx.conf
-  #     - ./data/certbot/conf:/etc/letsencrypt
-  #     - ./data/certbot:/var/www/certbot
-  #   depends_on:
-  #     - web
-  #   command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
-
-  # certbot:
-  #   container_name: certbot
-  #   image: certbot/certbot
-  #   restart: unless-stopped
-  #   networks:
-  #     - main
-  #   volumes:
-  #     - ./data/certbot/conf:/etc/letsencrypt
-  #     - ./data/certbot:/var/www/certbot
-  #   command: "certbot certonly --webroot --webroot-path=/var/www/certbot --email nathanael.cretin@substra.org --agree-tos --no-eff-email -d assessment.substra.ai -d www.assessment.substra.ai"
-  #   entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
-
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - main
+    volumes:
+      - static_volume:/home/app/web/static
+      - ./nginx/assessment.substra.ai.conf:/etc/nginx/conf.d/custom.conf
+      - ../ssl/substra.ai.crt:/etc/ssl/assessment.substra.ai.crt
+      - ../ssl/myserver.key:/etc/ssl/assessment.substra.ai.key
+    depends_on:
+      - web
 volumes:
   postgres_data:
   static_volume:

@@ -3,7 +3,7 @@ version: '3'
 services:
   web:
     container_name: web
-    restart: unless-stopped
+    restart: always
     build:
       context: ./platform_code
       dockerfile: Dockerfile.prod
@@ -24,7 +24,7 @@ services:
     image: postgres:latest
     networks:
       - main
-    restart: unless-stopped
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
@@ -33,7 +33,7 @@ services:
   nginx:
     container_name: nginx
     image: nginx:latest
-    restart: unless-stopped
+    restart: always
     ports:
       - "80:80"
       - "443:443"
@@ -41,7 +41,7 @@ services:
       - main
     volumes:
       - static_volume:/home/app/web/static
-      - ./data/nginx/nginx-preprod.conf:/etc/nginx/conf.d/custom.conf
+      - ./nginx/preprodassessment.substra.ai.conf:/etc/nginx/conf.d/custom.conf
       - ../ssl/substra.ai.crt:/etc/ssl/preprodassessment.substra.ai.crt
       - ../ssl/myserver.key:/etc/ssl/preprodassessment.substra.ai.key
     depends_on:
