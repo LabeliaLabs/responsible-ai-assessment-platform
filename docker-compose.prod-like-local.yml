@@ -3,11 +3,11 @@ version: '3'
 services:
   web:
     container_name: web
-    restart: unless-stopped
+    restart: always
     build:
       context: ./platform_code
       dockerfile: Dockerfile.prod
-    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8080 --workers=4 --timeout 10
+    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8080 --workers=4 --threads 4 --timeout 10 --log-file=./gunicorn_prodlike.log
     networks:
       - main
     volumes:
@@ -24,25 +24,25 @@ services:
     image: postgres:latest
     networks:
       - main
-    restart: unless-stopped
+    restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env.prod
 
   nginx:
-     container_name: nginx
-     image: nginx:latest
-     restart: unless-stopped
-     ports:
-       - "80:80"
-     networks:
-       - main
-     volumes:
-       - static_volume:/home/app/web/static
-       - ./data/nginx/nginx-prod-like-local.conf:/etc/nginx/nginx.conf
-     depends_on:
-       - web
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - main
+    volumes:
+      - static_volume:/home/app/web/static
+      - ./nginx/prod-like-local.conf:/etc/nginx/conf.d/custom.conf
+    depends_on:
+      - web
 
 volumes:
   postgres_data:

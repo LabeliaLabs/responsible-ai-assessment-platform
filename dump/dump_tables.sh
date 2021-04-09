@@ -27,6 +27,7 @@ TABLES=(
     home_membership
     home_organisation
     home_pendinginvitation
+    home_platformmanagement
     home_user
     home_user_groups
     home_user_user_permissions
