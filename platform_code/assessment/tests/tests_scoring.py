@@ -10,7 +10,8 @@ from assessment.models import (
     Section,
     EvaluationElement,
     MasterChoice,
-    Choice, ScoringSystem,
+    Choice,
+    ScoringSystem,
 )
 
 from .object_creation import (
@@ -543,6 +544,25 @@ class TestScoreValues(TestCase):
         self.evaluation_score.process_score_calculation()
         self.assertEqual(self.evaluation_score.points_obtained, 9)
         self.assertEqual(self.evaluation_score.score, 100)
+
+    def test_set_exposition_dic(self):
+        self.assertEqual(self.evaluation_score.exposition_dic, {})
+        self.set_progression_evaluation("1.1.b", "1.2.b", "2.1.b")
+        self.evaluation_score.set_exposition_dic()
+        self.assertEqual(len(self.evaluation_score.exposition_dic), 2)
+        self.assertIn("description e1", list(self.evaluation_score.exposition_dic.items())[0][0])
+        self.assertIn(", e2", list(self.evaluation_score.exposition_dic.items())[1][0])
+
+    def test_set_exposition_dic_bis(self):
+        # 1.1.a sets condition on the element 1.2 but still the risk domain of 1.2 in the dictionary
+        self.assertEqual(self.evaluation_score.exposition_dic, {})
+        self.set_progression_evaluation("1.1.a", "2.1.b")
+        self.evaluation_score.set_exposition_dic()
+        expo_dic = self.evaluation_score.exposition_dic
+        self.assertEqual(len(self.evaluation_score.exposition_dic), 2)
+        self.assertIn("description e1", list(expo_dic.items())[0][0])
+        self.assertIn(", e2", list(expo_dic.items())[1][0])
+        self.assertEqual(list(expo_dic.items())[1][1], [])
 
 
 class TestEvaluationCompletion(TestCase):

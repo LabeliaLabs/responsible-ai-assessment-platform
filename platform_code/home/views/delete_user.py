@@ -6,6 +6,7 @@ from django.shortcuts import redirect
 
 from django.utils.translation import gettext as _, ngettext
 
+from assessment.templatetags.add_attr import stringify_list
 
 logger = logging.getLogger('monitoring')
 
@@ -47,7 +48,7 @@ def delete_user(request):
                                            "%(list_organisations)s and their evaluations associated.",
                                            len(list_orga_user_is_admin)
                                            ) % {
-                             'list_organisation': str(list_orga_user_is_admin).replace('[', '').replace(']', '')
+                             'list_organisation': stringify_list(list_orga_user_is_admin)
                          }
                          )
     return redirect("home:homepage")

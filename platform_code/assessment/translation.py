@@ -22,7 +22,7 @@ class MasterSectionTranslationOptions(TranslationOptions):
 
 @register(MasterEvaluationElement)
 class MasterEvaluationElementTranslationOptions(TranslationOptions):
-    fields = ('name', 'question_text', 'explanation_text')
+    fields = ('name', 'question_text', 'explanation_text', 'risk_domain')
 
 
 @register(MasterChoice)

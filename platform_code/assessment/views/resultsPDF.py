@@ -15,6 +15,9 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
+from reportlab.platypus import Paragraph, Table, TableStyle
+from reportlab.lib import colors
+
 
 from assessment.models import Evaluation
 from assessment.models import Organisation
@@ -27,6 +30,7 @@ from assessment.views.utils.security_checks import membership_security_check
 from assessment.views.utils.utils import (
     manage_evaluation_score,
     manage_evaluation_max_points,
+    manage_evaluation_exposition_score,
 )
 
 logger = logging.getLogger("monitoring")
@@ -129,9 +133,11 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         self.print_stamp(context)
 
         # score
-        self.pdf.setFont("UbuntuRegular", 25)
+        self.pdf.setFont("UbuntuRegular", 18)
         self.pdf.drawCentredString(
-            self.PAGE_WIDTH / 2, self.cursor, _("Synthetic evaluation score")
+            self.PAGE_WIDTH / 2,
+            self.cursor,
+            _("Synthetic evaluation score"),
         )
         self.cursor -= self.LINE_JUMP * 2
         self.pdf.drawCentredString(
@@ -141,8 +147,8 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         )
         self.cursor -= self.LINE_JUMP * 2
 
-        # score per section
-        self.pdf.setFont("UbuntuRegular", 25)
+        # Score per section
+        self.pdf.setFont("UbuntuRegular", 18)
         self.pdf.drawCentredString(
             self.PAGE_WIDTH / 2, self.cursor, _("Score per section")
         )
@@ -159,7 +165,46 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
             self.cursor -= self.PARAGRAPH_SPACE
         self.cursor -= self.LINE_JUMP
 
-        # explanations text
+        # Risk exposition
+        # self.cursor -= self.LINE_JUMP * 2
+        self.page_break(evaluation_name=context["evaluation"].name)
+        self.pdf.setFillColorRGB(*self.COLOR_TEXT)
+        self.pdf.setFont("UbuntuRegular", 18)
+        self.pdf.drawCentredString(
+            self.PAGE_WIDTH / 2,
+            self.cursor,
+            _("Exposition score")
+        )
+        self.pdf.setFont("UbuntuRegular", 12)
+
+        self.cursor -= self.LINE_JUMP * 2
+        self.pdf.drawCentredString(
+            self.PAGE_WIDTH / 2,
+            self.cursor,
+            _("You are exposed to ") + str(context["nb_risks_exposed"]) + '/' + str(context["len_exposition_dic"]) +
+            ' ' + _("of the risks identified in the assessment.")
+        )
+        self.cursor -= self.LINE_JUMP * 2
+        data = convert_exposition_dic_to_data(context["exposition_dic"], 70)
+        table = Table(data, colWidths=[self.PAGE_WIDTH/3, 150], rowHeights=None)
+        table.setStyle(TableStyle([
+            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
+            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
+        ]))
+        table_width, table_height = table.wrap(0, 0)
+        table.wrapOn(self.pdf, 0, 0)
+        table.drawOn(self.pdf, self.PAGE_WIDTH/2 - table_width/2, self.PAGE_HEIGHT - 80 - table_height)
+
+        self.cursor -= table_height + self.LINE_JUMP * 2
+
+        # Explanations text
+        self.pdf.setFont("UbuntuRegular", 18)
+        self.pdf.drawCentredString(
+            self.PAGE_WIDTH / 2,
+            self.cursor,
+            _("Explanation")
+        )
+        self.cursor -= self.LINE_JUMP * 2
         self.pdf.setFont("UbuntuRegular", 12)
         self.draw_string_on_pdf(
             _(
@@ -434,7 +479,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         """
         string = remove_markdownify_italic(remove_markdown_bold(string))
         size = self.pdf.stringWidth(string) / (
-            self.PAGE_WIDTH - self.MARGIN_BASE - x - 25
+                self.PAGE_WIDTH - self.MARGIN_BASE - x - 25
         )
         if int(len(string) / size) < 1:
             list_string = [string]
@@ -526,6 +571,8 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
             ] = evaluation.get_dict_sections_elements_choices()
             context["evaluation"] = evaluation
             context["organisation"] = organisation
+            context['nb_risks_exposed'], context['len_exposition_dic'], context['exposition_dic'] = \
+                manage_evaluation_exposition_score(request, evaluation)
             today_date = date.today().strftime("%Y-%m-%d")
             evaluation_name = evaluation.name.replace(" ", "-")
             organisation_name = organisation.name.replace(" ", "-")
@@ -543,3 +590,21 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
             )
             messages.warning(request, _("You cannot do this action!"))
             return redirect("home:user-profile")
+
+
+def convert_exposition_dic_to_data(exposition_dic, size):
+    data = [[_("Risk domain"), _("Exposition to the risk")]]
+    for key, value in exposition_dic.items():
+        risk = key.risk_domain
+        if value:
+            text = format_string_to_paragraph(risk, size)
+            data.append([Paragraph(f'''<b>{text}</b>'''), _("Exposed")])
+        else:
+            text = format_string_to_paragraph(risk, size)
+            data.append([Paragraph(f'''<b>{text}</b>'''), _("Not exposed")])
+    return data
+
+
+def format_string_to_paragraph(text, size):
+    split = [text[i:i+size] for i in range(0, len(text), size)]
+    return split[0] + ''.join(t.replace(' ', '<br/>', 1) for t in split[1:])

@@ -2,6 +2,7 @@
 {% load add_attr %}
 {% load static %}
 {% load i18n %}
+{% load markdownify %}
 
 {% block content %}
 
@@ -55,7 +56,62 @@
             {{radar_chart|safe}}
         </div>
     </div>
+    <div>
+        <h6 class="font-weight-bold text-center mb-4 margin-30">
+            {% trans "Exposition score" %}
+        </h6>
+        {% if exposition_dic %}
+        <p class="center">{% blocktrans trimmed with nb_exposed=nb_risks_exposed %}
+            You are exposed to {{ nb_exposed }}/{{ len_exposition_dic }} of the risks identified in the assessment.
+            {% endblocktrans %}
+        </p>
+        <table class="table table-striped table-width margin-30" id="exposition-table">
+            <thead>
+                <tr>
+                    <th class="col-array" scope="col">{% trans "Risk domain" %}</th>
+                    <th class="col-array risk-column" scope="col">{% trans "Exposition to the risks" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for key, value in exposition_dic.items %}
+            <div>
+                <tr>
+                    <td>
+                        {% if key %}
+                        <div id="exposition-element-{{key.id}}" class="tooltip-exposition">
+                            {{ key.risk_domain }}
+                            {% if value|length %}
+                                <p class="tooltiptext-exposition">{{ value|stringify_list|markdownify }}</p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td class="center">
+                        {% if value|length %}
+                            <p class="red-color medium-font-weight">{% trans "Exposed" %}</p>
+                        {% else %}
+                            <p class="green-color medium-font-weight">{% trans "Not exposed" %}</p>
+                        {% endif %}
+                    </td>
+                </tr>
+            </div>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="center">
+            <p class="table-legend">{% trans "Legend: " %}
+            <span><span class="green-color medium-font-weight">{% trans "Not Exposed" %}</span>{% trans ": Not concerned by the risk" %}</span>
+            <span> <span class="red-color medium-font-weight">{% trans "Exposed" %}</span>{% trans ": Concerned by the risk" %}</span></p>
+        </div>
+        {% else %}
+        <p>{% trans "An error occured during the calculation of the exposition score..." %}</p>
+        {% endif %}
+    </div>
+
     <div class="margin-70 margin-bot-50">
+        <h6 class="font-weight-bold text-center mb-4 margin-30">
+            {% trans "Explanation" %}
+        </h6>
         <p class="">{% blocktrans trimmed %}
             The synthetic score is on a total of 100 theoretical maximum points for your full
             assessment. It provides an indication of the organization maturity level concerning a responsible and

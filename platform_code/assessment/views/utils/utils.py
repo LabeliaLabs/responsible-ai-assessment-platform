@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _, activate, get_language_from_r
 
 from assessment.forms import ChoiceForm, ResultsForm, SectionResultsForm
 from assessment.models import EvaluationScore, Evaluation, get_last_assessment_created, Assessment, \
-    EvaluationElement
+    EvaluationElement, unpack_exposition_dic
 
 LANGUAGE_QUERY_PARAMETER = 'language'
 logger = logging.getLogger('monitoring')
@@ -87,6 +87,33 @@ def manage_evaluation_score(request, evaluation_list):
             evaluation_score_dic[evaluation.id] = None
 
     return evaluation_score_dic
+
+
+def manage_evaluation_exposition_score(request, evaluation):
+    """
+    This function is aimed to calculate the exposition dic of one evaluation when the user is accessing to the
+    results. The dictionary has the elements with conditions as keys and whether the organisation
+    is concerned or not (boolean) as value.
+    It also counts the number of keys with True as value and the len of the dic.
+    """
+    exposition_dic = {}
+    nb_risk_exposed = None
+    try:
+        evaluation_score = EvaluationScore.objects.get(evaluation=evaluation)
+        if evaluation_score.need_to_calculate:
+            evaluation_score.process_score_calculation()
+        # For the evaluations finished before the release
+        if not evaluation_score.exposition_dic:
+            evaluation_score.set_exposition_dic()
+        exposition_dic = evaluation_score.exposition_dic
+        nb_risk_exposed = len([li for li in exposition_dic.values() if li])
+    except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
+        logger.warning(f"[evaluation_exposition_error] The query to return the evaluation exposition score "
+                       f"for the evaluation {evaluation.id} failed, error {e}")
+        messages.warning(request, _("An error occurred during the calculation of the exposition score."))
+
+    exposition_dic = unpack_exposition_dic(exposition_dic)
+    return nb_risk_exposed, len(exposition_dic), exposition_dic
 
 
 def manage_evaluation_max_points(request, evaluation_list):

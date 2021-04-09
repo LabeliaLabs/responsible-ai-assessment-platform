@@ -1,4 +1,14 @@
 import re
+from django.contrib.postgres.fields import JSONField
+
+
+class RawJSONField(JSONField):
+    """
+    Used for the exposition score, to keep the order of the json
+    """
+
+    def db_type(self, connection):
+        return 'json'
 
 
 def markdownify_bold(text):
