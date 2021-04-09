@@ -157,6 +157,16 @@ def get_item_converted_str(dictionary, key):
 
 
 @register.filter
+def stringify(element):
+    return str(element)
+
+
+@register.filter
+def stringify_list(list_to_display):
+    return str(list_to_display).replace('[', '').replace(']', '').replace('\'', '')
+
+
+@register.filter
 def get_member_role_as_str(role):
     roles_tuple = Membership.ROLES
     return [role_tuple[1] for role_tuple in roles_tuple if role_tuple[0] == role][0]

@@ -14,6 +14,7 @@ from django.contrib.auth import login, authenticate
 from django.utils.translation import gettext as _, ngettext, get_language
 from django.conf import settings
 
+from assessment.templatetags.add_attr import stringify_list
 from home.forms import SignUpForm
 from home.models import User, UserResources, Membership
 
@@ -93,7 +94,7 @@ def activate(request, uidb64, token):
             list_pending_invitation = user.get_list_pending_invitation()
             count = len(list_pending_invitation)
             list_organisations = [x.organisation.name for x in list_pending_invitation]
-            name = str(list_organisations).replace('[', '').replace(']', '').replace('\'', '')
+            name = stringify_list(list_organisations)
             Membership.create_membership_pending_invitations(user=user)
             logger.info(f"[account_creation][join_organisation] The user {user.email} created an account and has "
                         f"joined the organisations where he was invited, {list_pending_invitation}")

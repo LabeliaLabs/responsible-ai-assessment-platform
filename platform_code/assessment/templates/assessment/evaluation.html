@@ -44,7 +44,7 @@
         </li>
     </ul>
     {% else %}
-    <h1 class="h1-section">{{ evaluation.name }}</h1>
+    <h1 class="h1-section h1-margin-breadcrumbs overflow-auto">{{ evaluation.name }}</h1>
     {% endif %}
 
     <div aria-hidden="true" class="modal" id="modal-edit{{evaluation.id}}">
@@ -119,14 +119,16 @@ editEvaluationName();
 
 function editEvaluationName() {
     var title = document.getElementById("evaluationName");
-    title.addEventListener('mouseover', function() {
-        var hiddenButton = document.getElementById("hiddenButton");
-        hiddenButton.classList.remove("hidden-div");
-    });
-    title.addEventListener('mouseout', function() {
-        var hiddenButton = document.getElementById("hiddenButton");
-        hiddenButton.classList.add("hidden-div");
-    });
+    if (title) {
+        title.addEventListener('mouseover', function() {
+            var hiddenButton = document.getElementById("hiddenButton");
+            hiddenButton.classList.remove("hidden-div");
+        });
+        title.addEventListener('mouseout', function() {
+            var hiddenButton = document.getElementById("hiddenButton");
+            hiddenButton.classList.add("hidden-div");
+        });
+    }
 }
 
 </script>

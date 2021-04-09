@@ -19,6 +19,7 @@ from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
 
+from assessment.utils import RawJSONField
 from home.models import Organisation
 
 
@@ -84,27 +85,27 @@ class Assessment(models.Model):
         """
         dic = ManageAssessmentTranslation().dic_translated_fields
         # For all the fields which have a translation in the Assessment class, check if they are not None
-        for fields in dic["assessment"]:
-            if not getattr(self, fields + "_" + language):
+        for field in dic["assessment"]:
+            if not getattr(self, field + "_" + language):
                 return False
         # Check that all the fields of MasterSection which are registered to have a translation,
         # are not None for the language
         for master_section in self.mastersection_set.all():
-            for fields in dic["master_section"]:
-                if not getattr(master_section, fields + "_" + language):
+            for field in dic["master_section"]:
+                if not getattr(master_section, field + "_" + language):
                     return False
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
-                for fields in dic["master_evaluation_element"]:
-                    if not getattr(master_evaluation_element, fields + "_" + language) and \
+                for field in dic["master_evaluation_element"]:
+                    if not getattr(master_evaluation_element, field + "_" + language) and \
                             master_evaluation_element.get_numbering() != "2.2":
                         return False
                 for master_choice in master_evaluation_element.masterchoice_set.all():
-                    for fields in dic["master_choice"]:
-                        if not getattr(master_choice, fields + "_" + language):
+                    for field in dic["master_choice"]:
+                        if not getattr(master_choice, field + "_" + language):
                             return False
                 for external_link in master_evaluation_element.external_links.all():
-                    for fields in dic["external_link"]:
-                        if not getattr(external_link, fields + "_" + language):
+                    for field in dic["external_link"]:
+                        if not getattr(external_link, field + "_" + language):
                             return False
         return True
 
@@ -118,28 +119,28 @@ class Assessment(models.Model):
         dic_fields = {}
         dic = ManageAssessmentTranslation().dic_translated_fields
         # For all the fields which have a translation in the Assessment class, check if they are not None
-        for fields in dic["assessment"]:
-            if not getattr(self, fields + "_" + language):
-                dic_fields[self] = fields + "_" + language
+        for field in dic["assessment"]:
+            if not getattr(self, field + "_" + language):
+                dic_fields[self] = field + "_" + language
         # Check that all the fields of MasterSection which are registered to have a translation,
         # are not None for the language
         for master_section in self.mastersection_set.all():
-            for fields in dic["master_section"]:
-                if not getattr(master_section, fields + "_" + language):
-                    dic_fields[master_section] = fields + "_" + language
+            for field in dic["master_section"]:
+                if not getattr(master_section, field + "_" + language):
+                    dic_fields[master_section] = field + "_" + language
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
-                for fields in dic["master_evaluation_element"]:
-                    if not getattr(master_evaluation_element, fields + "_" + language) and \
+                for field in dic["master_evaluation_element"]:
+                    if not getattr(master_evaluation_element, field + "_" + language) and \
                             master_evaluation_element.get_numbering() != "2.2":
-                        dic_fields[master_evaluation_element] = fields + "_" + language
+                        dic_fields[master_evaluation_element] = field + "_" + language
                 for master_choice in master_evaluation_element.masterchoice_set.all():
-                    for fields in dic["master_choice"]:
-                        if not getattr(master_choice, fields + "_" + language):
-                            dic_fields[master_choice] = fields + "_" + language
+                    for field in dic["master_choice"]:
+                        if not getattr(master_choice, field + "_" + language):
+                            dic_fields[master_choice] = field + "_" + language
                 for external_link in master_evaluation_element.external_links.all():
-                    for fields in dic["external_link"]:
-                        if not getattr(external_link, fields + "_" + language):
-                            dic_fields[external_link] = fields + "_" + language
+                    for field in dic["external_link"]:
+                        if not getattr(external_link, field + "_" + language):
+                            dic_fields[external_link] = field + "_" + language
         return dic_fields
 
     def delete_language(self, language):
@@ -529,6 +530,7 @@ class Evaluation(models.Model):
         and values: "min", "max", "normal", "conditions"
         """
         characteristic = kwargs.get("characteristic")
+        probability_condition = kwargs.get("probability_condition", 0.3)
         for section in self.section_set.all():
             for evaluation_element in \
                     section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
@@ -540,18 +542,23 @@ class Evaluation(models.Model):
                     elif characteristic == "max":
                         for choice in evaluation_element.get_choices_list_max_points():
                             choice.set_choice_ticked()
-                    elif characteristic == "conditions":
-                        # If at least one choice has a condition inter/intra
-                        if evaluation_element.get_list_of_choices_with_conditions():
-                            evaluation_element.get_list_of_choices_with_conditions()[0].set_choice_ticked()
-                        else:
-                            random.choice(
-                                evaluation_element.get_choices_list()
-                            ).set_choice_ticked()
                     else:
-                        random.choice(
-                            evaluation_element.get_list_of_choices_without_condition_inter()
-                        ).set_choice_ticked()
+                        if characteristic == "conditions":
+                            probability_condition = 1
+                        elif characteristic == "no_condition":
+                            probability_condition = 0
+                        # Conditions case
+                        probability = random.random()
+                        if probability < probability_condition:
+                            if evaluation_element.get_list_of_choices_with_conditions():
+                                evaluation_element.get_list_of_choices_with_conditions()[0].set_choice_ticked()
+                            else:
+                                evaluation_element.tick_random_choices_no_condition()
+
+                        # No conditions
+                        elif probability >= probability_condition:
+                            evaluation_element.tick_random_choices_no_condition()
+
                     if random.randint(0, 10) > 7:
                         evaluation_element.fill_notes()
                 evaluation_element.set_status()
@@ -600,6 +607,9 @@ class EvaluationScore(models.Model):
     points_obtained = models.FloatField(default=0, blank=True, null=True)
     points_to_dilate = models.FloatField(default=0, blank=True, null=True)
     dilatation_factor = models.FloatField(default=0, blank=True, null=True)
+
+    # Json field with evaluation elements as keys and user exposition as value (boolean, True if concerned)
+    exposition_dic = RawJSONField(default=dict)
 
     score = models.FloatField(default=0, blank=True, null=True)
 
@@ -700,6 +710,65 @@ class EvaluationScore(models.Model):
         self.points_not_concerned = sum_points_not_concerned
         self.save()
 
+    def set_exposition_dic(self):
+        """
+        For an evaluation, it evaluates the risks for which the user is concerned according to his answers to the
+        evaluation elements with conditions.
+
+        It creates a dictionary of the risk descriptions as keys (unique) and whether
+        the organisation is exposed to the risk (only one element linked to the risk - which can be linked
+        to many elements - need to be concerned to trigger the fact the user is concerned to the risk)
+        or not, so boolean value.
+        By default, there is an exposition to the risks and if the choice which disables the other elements/choices
+        is ticked, this means the user is not exposed to these risks.
+
+        Conditions inter/intra = no risk
+        """
+        exposition_dic = {}
+        for section in self.evaluation.section_set.all().order_by("master_section__order_id"):
+            for element in section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
+                # Check condition inter elements
+                if element.has_condition_on():
+                    # No condition inter, so concerned by the risk, register it with evaluation setting conditions
+                    if element.is_applicable():
+                        if element.get_element_depending_on().master_evaluation_element.risk_domain not in \
+                                exposition_dic:
+                            exposition_dic[element.get_element_depending_on().master_evaluation_element.risk_domain] = [
+                                element.get_element_depending_on().master_evaluation_element.id
+                            ]
+
+                    # Condition inter, so not concerned by the risk, just register it
+                    else:
+                        if element.get_element_depending_on().master_evaluation_element.risk_domain not in \
+                                exposition_dic:
+                            exposition_dic[element.get_element_depending_on().master_evaluation_element.risk_domain] = \
+                                []
+                # Check conditions intra element (and not the case with condition intra)
+                if element.has_condition_between_choices() and element.is_applicable():
+                    # If the choice is ticked, so not concerned by the risk
+                    if element.get_choice_condition_intra().is_ticked:
+                        # The risk is not in the dictionary (if it already is, just let the list like this)
+                        if element.master_evaluation_element.risk_domain not in exposition_dic:
+                            exposition_dic[element.master_evaluation_element.risk_domain] = []
+                    # Choice not ticked, so concerned by the risk
+                    else:
+                        # The risk is not in the dictionary
+                        if element.master_evaluation_element.risk_domain not in exposition_dic:
+                            exposition_dic[element.master_evaluation_element.risk_domain] = \
+                                [element.master_evaluation_element.id]
+                        # Already the risk in the dictionary
+                        else:
+                            exposition_dic[element.master_evaluation_element.risk_domain].append(
+                                element.master_evaluation_element.id
+                            )
+                # Case element with condition intra and not applicable due to conditions inter, still add the risk as
+                # not exposed
+                if element.has_condition_between_choices() and not element.is_applicable():
+                    if element.master_evaluation_element.risk_domain not in exposition_dic:
+                        exposition_dic[element.master_evaluation_element.risk_domain] = []
+        self.exposition_dic = exposition_dic
+        self.save()
+
     def set_points_obtained(self):
         """
         This method calculates the points obtained in all the sections
@@ -766,6 +835,7 @@ class EvaluationScore(models.Model):
                 self.set_points_to_dilate()
                 self.set_dilatation_factor()
                 self.set_score()
+                self.set_exposition_dic()
                 self.need_to_calculate = False
         else:
             self.score = 0
@@ -960,6 +1030,7 @@ class MasterEvaluationElement(models.Model):
         max_length=200, choices=QUESTION_TYPES, default=RADIO
     )
     explanation_text = models.TextField(blank=True, null=True)
+    risk_domain = models.TextField(blank=True, null=True)
     # External links are the resources
     external_links = models.ManyToManyField(
         "assessment.ExternalLink", blank=True, related_name="external_links"
@@ -992,6 +1063,17 @@ class MasterEvaluationElement(models.Model):
             return f"Master evaluation element Q{str(self.master_section.order_id)}.{str(self.order_id)}"
         else:
             return f"Master evaluation element (id {str(self.pk)})"
+
+    def get_verbose_name(self):
+        if self.master_section.order_id and self.order_id and self.name:
+            return (
+                    "Q"
+                    + str(self.master_section.order_id)
+                    + "."
+                    + str(self.order_id)
+                    + " "
+                    + self.name
+            )
 
     def get_numbering(self):
         if self.order_id and self.master_section.order_id:
@@ -1163,6 +1245,26 @@ class EvaluationElement(models.Model):
                 list_choices_ticked.append(choice)
         return list_choices_ticked
 
+    def tick_random_choices_no_condition(self):
+        """
+        Randomly tick choices of the evaluation element (one if radio, random number if checkbox).
+        It only ticks choices without conditions intra/inter.
+        """
+        if self.master_evaluation_element.question_type == "checkbox":
+            # Select random number of choices without condition and tick them
+            choice_list = self.get_list_of_choices_without_conditions()
+            if choice_list:
+                random_int = random.randint(1, len(choice_list))
+                random_list = random.sample(choice_list, random_int)
+                for i, choice_to_tick in enumerate(random_list):
+                    if isinstance(choice_to_tick, Choice):
+                        choice_to_tick.set_choice_ticked()
+        else:
+            # Select one choice without condition and tick
+            random.choice(
+                self.get_list_of_choices_without_conditions()
+            ).set_choice_ticked()
+
     def are_choices_valid(self, choice_list):
         """
         Check that the strings contained in the list (choice_list) match with the evaluation element choices.
@@ -1230,7 +1332,6 @@ class EvaluationElement(models.Model):
         False if the choice this evaluation element depends on is ticked, else True
         :returns boolean
         """
-        # print("IS APPLICABLE", self, self.has_condition_on())
         if self.has_condition_on():
             choice = self.get_choice_depending_on()
             if choice.is_ticked:
@@ -1837,7 +1938,8 @@ class ManageAssessmentTranslation:
         for tuple_class in self.classes_with_translated_fields:
             class_name = tuple_class[0]
             self.dic_translated_fields[tuple_class[1]] = \
-                [field.name[:-3] for field in class_name._meta.get_fields() if field.name[-3:] == "_en"]
+                [field.name[:-3] for field in class_name._meta.get_fields()
+                 if field.name[-3:] == "_en" and field.name[:4] != "risk"]
 
 
 def delete_language_translation_field(obj, obj_name, lang):
@@ -1879,3 +1981,24 @@ def is_language_activation_allowed():
         if available_languages != assessment.get_the_available_languages():
             return 0
     return 1
+
+
+def unpack_exposition_dic(exposition_dic):
+    """
+    This function is used to set the exposition dic dynamically before rendering it in the results.html or in
+    resultPDF.html.
+    Indeed, the dictionary is saved as json in the database but the keys (risk_domains) need to be translated
+    for the rendering, so we need to set the risk_domain dynamically again.
+    """
+    new_exposition_dic = {}
+    for key, value in exposition_dic.items():
+        if EvaluationElement.objects.filter(master_evaluation_element__risk_domain_fr=key):
+            element = EvaluationElement.objects.filter(master_evaluation_element__risk_domain_fr=key)[0]
+        else:
+            element = EvaluationElement.objects.filter(master_evaluation_element__risk_domain_en=key)[0]
+        if element:
+            new_exposition_dic[element.master_evaluation_element] = [
+                master_element.get_verbose_name() for master_element_id in value
+                for master_element in MasterEvaluationElement.objects.filter(id=master_element_id)
+            ]
+    return new_exposition_dic

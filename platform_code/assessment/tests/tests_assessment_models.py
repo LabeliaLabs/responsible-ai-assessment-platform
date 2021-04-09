@@ -632,6 +632,25 @@ class EvaluationElementTestCase(TestCase):
         self.evaluation_element1.fill_notes()
         self.assertTrue(self.evaluation_element1.user_notes)
 
+    def test_tick_random_choices_no_condition(self):
+        # Test for the first element which has condition inter (on choice1)
+        self.assertEqual(self.evaluation_element1.get_list_choices_ticked(), [])
+        self.evaluation_element1.tick_random_choices_no_condition()
+        # As only one choice not setting condition for element 1, it must be ticked
+        self.assertEqual(self.evaluation_element1.get_list_choices_ticked(), [self.choice2])
+
+        # Same for the second element which has condition intra
+        self.assertEqual(self.evaluation_element2.get_list_choices_ticked(), [])
+        self.evaluation_element2.tick_random_choices_no_condition()
+        # As only one choice not setting condition for element 2, it must be ticked
+        self.assertEqual(self.evaluation_element2.get_list_choices_ticked(), [self.choice4])
+
+        # Same for the third element which has only one choice and is a radio
+        self.assertEqual(self.evaluation_element3.get_list_choices_ticked(), [])
+        self.evaluation_element3.tick_random_choices_no_condition()
+        # As only one choice not setting condition for element 2, it must be ticked
+        self.assertEqual(self.evaluation_element3.get_list_choices_ticked(), [self.choice5])
+
 
 class ChoiceTestCase(TestCase):
     """

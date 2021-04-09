@@ -151,7 +151,8 @@ class ImportAssessment:
         """
         # Test that the keys are present in the dictionary
         key_list = ["order_id", "name_fr", "name_en", "condition", "question_text_fr", "question_text_en",
-                    "question_type", "answer_items", "explanation_text_fr", "explanation_text_en", "resources"]
+                    "question_type", "answer_items", "explanation_text_fr", "explanation_text_en",
+                    "risk_domain_fr", "risk_domain_en", "resources"]
         if not test_keys_in_dic(element_data, keys_list=key_list):
             self.message = f"You have an element {element_data} without the required keys {key_list}"
             raise Exception(self.message)
@@ -168,11 +169,11 @@ class ImportAssessment:
             raise Exception(self.message)
 
         for choice in list(element_data["answer_items"].keys()):
-            self.check_choice(element_data.get("answer_items").get(choice))
+            self.check_choice(element_data.get("answer_items").get(choice), element_data)
         for resource_data in list(element_data["resources"].values()):
             self.check_resource(resource_data)
 
-    def check_choice(self, choice_data):
+    def check_choice(self, choice_data, element_data):
         """
         DO the check for the choice data:
             - all the keys are present
@@ -190,6 +191,10 @@ class ImportAssessment:
 
         if not choice_data.get("is_concerned_switch") in [0, 1, "True", "False"]:
             self.message = f"The choice has not a boolean value for is_concerned_switch {choice_data}"
+            raise Exception(self.message)
+
+        if not test_condition_and_risk_domain(choice_data, element_data):
+            self.message = f"The element {element_data} has conditions inter but has no risk description"
             raise Exception(self.message)
 
     def check_resource(self, resource_data):
@@ -218,6 +223,14 @@ class ImportAssessment:
                     master_evaluation_element__master_section__order_id=condition[0],
                     master_evaluation_element__master_section__assessment=self.assessment,
                 )
+                # If the element setting conditions intra elements has no risk domain, breaks the import process
+                if not depends_on.master_evaluation_element.risk_domain:
+                    self.success = False
+                    self.message = f"You have an element, {element_data}, setting conditions inter" \
+                                   f" but without risk domain"
+                    self.assessment.delete()
+                    return depends_on
+
             except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
                 self.success = False
                 self.message = f"You have set a condition on a choice which does not exist or which is not " \
@@ -299,6 +312,8 @@ def create_element(element_data, section, depends_on):
         question_type=element_data.get("question_type"),
         explanation_text_fr=element_data.get("explanation_text_fr").replace("n/a", ""),
         explanation_text_en=element_data.get("explanation_text_fr").replace("n/a", ""),
+        risk_domain_fr=element_data.get("risk_domain_fr").capitalize().replace("N/a", ""),
+        risk_domain_en=element_data.get("risk_domain_en").capitalize().replace("N/a", ""),
         depends_on=depends_on,
     )
     element.save()
@@ -402,6 +417,16 @@ def manage_update_resource_language(resource_data):
         resource.text_fr = resource_data.get("resource_text_fr")
         resource.save()
     return resource
+
+
+def test_condition_and_risk_domain(choice_data, element_data):
+    """
+    This function test that for an element with conditions intra (between its choices), there is a risk description.
+    """
+    if choice_data["is_concerned_switch"]:
+        if element_data["risk_domain_en"] == "n/a" and element_data["risk_domain_fr"] == "n/a":
+            return False
+    return True
 
 
 def test_keys_in_dic(dic, keys_list):

@@ -24,6 +24,8 @@
                     "answer_hint": "Sélectionner une seule réponse, correspondant le mieux au niveau de maturité de l'organisation sur ce sujet",
                     "explanation_text_fr": "Explication 1 fr",
                     "explanation_text_en": "Explication 1 en",
+                    "risk_domain_fr": "Risque description E1",
+                    "risk_domain_en": "Risk description E1",
                     "resources": {
                         "0": {
                             "resource_type": "official report",
@@ -57,6 +59,8 @@
                     "answer_hint": "Sélectionner tous les éléments de réponse correspondant à des pratiques de votre organisation",
                     "explanation_text_fr": "Explication 2 fr",
                     "explanation_text_en": "Explication 2 en",
+                    "risk_domain_fr": "Description du risque : J'ai un choix qui est switch, E2",
+                    "risk_domain_en": "Risk description: I got a switch choice, E2",
                     "resources": {},
                     "answer_items": {
                         "1.2.a": {
@@ -95,6 +99,8 @@
                     "answer_hint": "Sélectionner une seule réponse, correspondant le mieux au niveau de maturité de l'organisation sur ce sujet",
                     "explanation_text_fr": "Explication 1 fr",
                     "explanation_text_en": "Explication 1 en",
+                    "risk_domain_fr": "n/a",
+                    "risk_domain_en": "n/a",
                     "resources": {},
                     "answer_items": {
                         "2.1.a": {

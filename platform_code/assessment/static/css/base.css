@@ -46,6 +46,10 @@ body{
     color: #007BFF;
 }
 
+.green-color {
+    color: green;
+}
+
 .red-color {
     color: red;
 }
@@ -64,6 +68,10 @@ body{
 
 .italic{
     font-style: italic;
+}
+
+.medium-font-weight {
+    font-weight: 700;
 }
 
 h1 {
@@ -667,6 +675,55 @@ h1 img {
 }
 
 /****************************************** END FORM *********************************************************/
+
+/***************************************** RISK EXPOSITION ***************************************************/
+
+#exposition-table {
+    width: 80%;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.risk-column{
+    width: 20%;
+}
+
+.table-legend {
+    margin-top: 50px;
+}
+
+.table-legend>span {
+    padding: 20px;
+}
+
+.tooltip-exposition {
+    display: inline-block;
+}
+
+.tooltip-exposition .tooltiptext-exposition {
+    visibility: hidden;
+    width: 500px;
+    margin-top: 10px;
+    margin-left: 20px;
+    background-color: #F5F5F5;
+    text-align: justify;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip-exposition:hover .tooltiptext-exposition {
+  visibility: visible;
+}
+
+
+
+/**************************************** END EXPOSITION RISKS ***********************************************/
+
 
 /****************************************** NEWSLETTER *******************************************************/
 

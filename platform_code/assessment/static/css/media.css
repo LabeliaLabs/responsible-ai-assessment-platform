@@ -32,6 +32,11 @@ Inside each section, first you have, if it exists:
     .tbody {
         grid-template-columns: repeat(1, 1fr);
 	}
+    .tooltip-exposition .tooltiptext-exposition {
+	    width: 200px;
+	    margin-left: 0px;
+	    margin-top: 50px;
+	}
     .column-larger-tablet{
         flex: auto;
         float: none;
@@ -198,6 +203,11 @@ Inside each section, first you have, if it exists:
     }
     tbody {
         grid-template-columns: repeat(2, 1fr);
+	}
+	.tooltip-exposition .tooltiptext-exposition {
+	    width: 300px;
+	    margin-left: 0px;
+	    margin-top: 50px;
 	}
 	.organisation-evaluation-cards{
 	    width: 400px;
@@ -473,6 +483,17 @@ Inside each section, first you have, if it exists:
 	.table-striped tbody tr:nth-of-type(odd) {
         background-color: white;
     }
+    #exposition-table>tbody {
+        justify-items: center;
+        grid-template-columns: repeat(1, 1fr);
+    }
+    #exposition-table>tbody>tr {
+        width: 100%;
+    }
+    #exposition-table>tbody>tr>td {
+        width: 100%;
+        position: inherit;
+    }
 	.small-screen-max-center {
 	    text-align: center;
 	}
@@ -680,6 +701,10 @@ Inside each section, first you have, if it exists:
     }
     .margin-btn-orga-members {
         margin-top: 7px;
+    }
+    #exposition-table {
+        border-radius: 20px 20px 20px 20px;
+        box-shadow: 1px 1px 12px;
     }
 }
 

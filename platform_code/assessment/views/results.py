@@ -13,7 +13,9 @@ from assessment.views.utils.utils import (
     manage_evaluation_max_points,
     manage_evaluation_score,
     set_form_for_results,
-    create_radar_chart, manage_missing_language,
+    create_radar_chart,
+    manage_missing_language,
+    manage_evaluation_exposition_score,
 )
 from home.models import Organisation
 
@@ -52,7 +54,7 @@ class ResultsView(LoginRequiredMixin, DetailView):
             if not success_max_points:
                 return redirect("home:user-profile")
 
-            # Get the score and calculate it if needed
+            # Get the score and calculate it if needed (as well as the exposition score)
             evaluation_score_dic = manage_evaluation_score(request=request, evaluation_list=[evaluation])
             # Compare to None because the score can be 0.0
             if evaluation_score_dic[evaluation.id] is not None:
@@ -60,6 +62,10 @@ class ResultsView(LoginRequiredMixin, DetailView):
             # Error to get the score, the score is None so redirection
             else:
                 return redirect("home:user-profile")
+
+            # Exposition dic (calculated if needed at the same time as the score)
+            context['nb_risks_exposed'], context['len_exposition_dic'], context['exposition_dic'] = \
+                manage_evaluation_exposition_score(request, evaluation)
 
             context["dic_form_results"] = set_form_for_results(evaluation=evaluation)
             context["section_list"] = list(evaluation.section_set.all().order_by("master_section__order_id"))

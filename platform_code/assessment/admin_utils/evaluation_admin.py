@@ -27,7 +27,8 @@ class EvaluationAdmin(admin.ModelAdmin):
         "organisation",
     )
     actions = [
-        'complete_normal_without_conditions',
+        'complete_normal',
+        'complete_without_conditions',
         'complete_max_points',
         'complete_min_points',
         'complete_with_conditions',
@@ -44,10 +45,23 @@ class EvaluationAdmin(admin.ModelAdmin):
     def get_progression(self, obj):
         return obj.calculate_progression()
 
-    def complete_normal_without_conditions(self, request, queryset):
+    def complete_normal(self, request, queryset):
         for evaluation in queryset:
             try:
-                evaluation.complete_evaluation(characteristic="normal")
+                evaluation.complete_evaluation(characteristic="normal", probability_condition=0.8)
+                self.message_user(request, f"The evaluation {evaluation} has been completed!", messages.SUCCESS)
+            except Exception as e:
+                self.message_user(
+                    request,
+                    f"An error occurred, {e}, when completing the evaluation{evaluation}",
+                    messages.ERROR
+                )
+        return redirect(request.path_info)
+
+    def complete_without_conditions(self, request, queryset):
+        for evaluation in queryset:
+            try:
+                evaluation.complete_evaluation(characteristic="no_condition")
                 self.message_user(request, f"The evaluation {evaluation} has been completed!", messages.SUCCESS)
             except Exception as e:
                 self.message_user(
