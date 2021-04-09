@@ -727,6 +727,8 @@ class EvaluationScore(models.Model):
         exposition_dic = {}
         for section in self.evaluation.section_set.all().order_by("master_section__order_id"):
             for element in section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
+                if not element.master_evaluation_element.risk_domain:  # Skip if no risk domain
+                    continue
                 # Check condition inter elements
                 if element.has_condition_on():
                     # No condition inter, so concerned by the risk, register it with evaluation setting conditions
@@ -1994,8 +1996,11 @@ def unpack_exposition_dic(exposition_dic):
     for key, value in exposition_dic.items():
         if EvaluationElement.objects.filter(master_evaluation_element__risk_domain_fr=key):
             element = EvaluationElement.objects.filter(master_evaluation_element__risk_domain_fr=key)[0]
-        else:
+        elif EvaluationElement.objects.filter(master_evaluation_element__risk_domain_en=key):
             element = EvaluationElement.objects.filter(master_evaluation_element__risk_domain_en=key)[0]
+        # Key is not a risk domain (example "none" so the exposition dic is not rendered)
+        else:
+            return {}
         if element:
             new_exposition_dic[element.master_evaluation_element] = [
                 master_element.get_verbose_name() for master_element_id in value
