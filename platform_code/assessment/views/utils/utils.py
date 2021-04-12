@@ -102,8 +102,8 @@ def manage_evaluation_exposition_score(request, evaluation):
         evaluation_score = EvaluationScore.objects.get(evaluation=evaluation)
         if evaluation_score.need_to_calculate:
             evaluation_score.process_score_calculation()
-        # For the evaluations finished before the release
-        if not evaluation_score.exposition_dic:
+        # If the exposition idc is not set yet or a key is "null" which shouldn't happen, calculate it
+        if not evaluation_score.exposition_dic or "null" in evaluation_score.exposition_dic.keys():
             evaluation_score.set_exposition_dic()
         exposition_dic = evaluation_score.exposition_dic
         nb_risk_exposed = len([li for li in exposition_dic.values() if li])
@@ -112,7 +112,7 @@ def manage_evaluation_exposition_score(request, evaluation):
                        f"for the evaluation {evaluation.id} failed, error {e}")
         messages.warning(request, _("An error occurred during the calculation of the exposition score."))
 
-    exposition_dic = unpack_exposition_dic(exposition_dic)
+    exposition_dic = unpack_exposition_dic(exposition_dic)  # If a key is not a risk domain, exposition dic is just {}
     return nb_risk_exposed, len(exposition_dic), exposition_dic
 
 
