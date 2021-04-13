@@ -4,7 +4,7 @@
 
 - [Dev Setup](#dev-setup)
   - [1. Linux](#1-linux)
-    - [[new server] Config](#new-server-config)
+    - [[new server only] Config](#new-server-only-config)
     - [SSH](#ssh)
       - [Generate key](#generate-key)
       - [Connection](#connection)
@@ -58,7 +58,7 @@
 
 > Warning: Treat with caution ssh keys and if you find some viruses on your machine, please let other members of the team know and update your keys once the issue is solved.
 
-### [new server] Config
+### [new server only] Config
 
 On a new server, change unix user password: `whoami` & `sudo passwd`
 
@@ -150,7 +150,7 @@ apt list --upgradable
 
 If there is no Docker update, use `update.sh` (see [Server Update](#monthly-server-update))
 
-If there is Docker updates: 
+If there is Docker updates:
 
 ```sh
 # Create a dump 
@@ -180,7 +180,7 @@ docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_re
 
 ### Nginx
 
-Nginx is dockerized, so the following is not required, but it is still a good source of knowledge. Configuration files are located in the `nginx` folder.
+> Nginx is dockerized, so the following is not required, but it is still a good source of knowledge. Configuration files are located in the `nginx` folder.
 
 ```sh
 # Ubuntu install
@@ -203,7 +203,7 @@ sudo nginx -T
 
 ### [not required] Install Certbot
 
-This part is not required anymore as the project is using an ssl certicate issued by Gandi, but it is still a good source of knowledge.
+> This part is not required anymore as the project is using an ssl certicate issued by Gandi, but it is still a good source of knowledge.
 
 ```sh
 # Ubuntu snap install, as advised on certbot website
@@ -277,10 +277,12 @@ sudo ufw disable
 sudo ufw app list
 sudo ufw status numbered
 
-# Allow web connections, only
+# Allow required connections
 sudo ufw allow http
 sudo ufw allow https
-sudo ufw allow 'Nginx Full'
+sudo ufw allow 22222
+sudo ufw allow 587
+sudo ufw allow out 587
 
 # Custom
 sudo ufw delete <ID>
@@ -292,13 +294,35 @@ tail -f /var/log/ufw.log
 
 As of now, available applications:
 
-- Nginx Full
-- Nginx HTTP
-- Nginx HTTPS
-- OpenSSH (22222)
+- 80 (Nginx HTTP)
+- 443 (Nginx HTTPS)
+- 22222 (ssh)
 - 587 (email)
 
+Displayed like this:
+
+```sh
+sudo ufw status numbered 
+Status: active
+
+     To                         Action      From
+     --                         ------      ----
+[ 1] 22222                      ALLOW IN    Anywhere                  
+[ 2] 80/tcp                     ALLOW IN    Anywhere                  
+[ 3] 443/tcp                    ALLOW IN    Anywhere                  
+[ 4] 587                        ALLOW IN    Anywhere                  
+[ 5] 587                        ALLOW OUT   Anywhere                   (out)
+[ 6] 22222 (v6)                 ALLOW IN    Anywhere (v6)             
+[ 7] 80/tcp (v6)                ALLOW IN    Anywhere (v6)             
+[ 8] 443/tcp (v6)               ALLOW IN    Anywhere (v6)             
+[ 9] 587 (v6)                   ALLOW IN    Anywhere (v6)             
+[10] 587 (v6)                   ALLOW OUT   Anywhere (v6)              (out)
+      
+```
+
 ### [not required] Port forward
+
+> This is required anymore, but it's a good piece of knowledge
 
 Enable `sysctl net.ipv4.forward` by editing `/etc/sysctl.conf` & `/etc/ufw/sysctl.conf` and running `sysctl -p`.
 
@@ -311,7 +335,7 @@ Ufw: `/etc/ufw/before.rules`:
 COMMIT
 ```
 
-And reload ufw
+And reload `ufw`
 
 ```sh
 sudo ufw disable && sudo ufw enable
@@ -330,7 +354,7 @@ sudo apt install clamav
 sudo freshclam
 
 # help
-clamscan –-help
+clamscan --help
 
 # scan download folder
 clamscan -r -i /home/ubuntu/Downloads
@@ -359,7 +383,7 @@ tail -f /var/log/fail2ban.log
 
 ### Configure DNS
 
-On Gandi.net interface (just [here](https://admin.gandi.net/domain/3547e9fe-5ee6-11ea-ba20-00163e8fd4b8/substra.ai/records)), set A and AAAA records to the servers IP (ipv4 & ipv6).
+On Gandi.net interface (just [here](https://admin.gandi.net/domain/3547e9fe-5ee6-11ea-ba20-00163e8fd4b8/substra.ai/records)), set `A` and `AAAA` records to the servers IP (`ipv4` & `ipv6`).
 
 ### Use the makefile
 
@@ -440,12 +464,12 @@ journalctl -f
 
 tail -f /var/log/nginx/access.log;            # container
 tail -f /var/log/nginx/error.log;             # container
-tail -f /var/log/ufw.log
+tail -f /var/log/ufw.log                      # server
 tail -f /var/log/letsencrypt/letsencrypt.log  # obsolete
 
-tail -f /var/log/fail2ban.log
-tail -f /var/log/auth.log
-tail -f /var/log/syslog
+tail -f /var/log/fail2ban.log                 # server
+tail -f /var/log/auth.log                     # server
+tail -f /var/log/syslog                       # server
 ```
 
 ### Deploy a new release aka deploy on Prod
@@ -493,7 +517,7 @@ docker-compose -f docker-compose.prod.yml exec python manage.py showmigrations #
 
 ### Deploy on local
 
-You may be required as a dev to deploy locally but also to perform some tests. 
+You may be required as a dev to deploy locally but also to perform some tests.
 
 ```sh
 # Switch to the branch you need 
@@ -699,6 +723,11 @@ docker-compose exec web python manage.py showmigrations # make migr-show
 docker-compose exec web python manage.py migrate        # make migr
 # In case of errors, you can try
 docker-compose exec web python manage.py migrate --fake # make migr-fake
+# You can also try to apply migrations one by one
+docker-compose exec web python manage.py migrate home 0002 --fake
+docker-compose exec web python manage.py migrate assessment 0002 --fake
+docker-compose exec web python manage.py migrate home 0003
+docker-compose exec web python manage.py migrate assessment 0003
 ```
 
 You can also apply migrations one by one:
@@ -738,7 +767,7 @@ You can grab django logs inside its container like this:
 
 ```sh
 # It will be saved where you run the command
-docker cp $(docker ps | grep web | awk '{print $1}'):/home/app/web/prod.log .
+docker cp $(docker ps | grep web | awk '{print $1}'):/home/app/web/prod.log ./
 ```
 
 And you can then save it on your local machine, from your local machine:
@@ -908,11 +937,11 @@ home_userresources
 home_userresources_resources
 ```
 
-## 5. Monthly routines 
+## 5. Monthly routines
 
-Once a month: 
+Once a month:
 
-- Check [antivirus](#install-antivirus). In doubt, scan the whole system with `clamscan -r -i /`, but it will be long... 
+- Check [antivirus](#install-antivirus). In doubt, scan the whole system with `clamscan -r -i /`, but it will be long...
 - Check [server updates](#monthly-server-update), including [Docker updates](#monthly-docker-update)
 
 ## 6. Tips
@@ -923,7 +952,7 @@ Once a month:
 - `ps aux | grep <name>`: search for an active process
 - `history`: shell history
 - `ncdu`: disk usage explorer
-- `tldr`: [repo](https://github.com/tldr-pages/tldr)
+- `tldr`: install it on your local machine ([repo](https://github.com/tldr-pages/tldr))
 
 ### SEO
 
@@ -945,16 +974,16 @@ curl 0.0.0.0:8000
 curl --insecure -I -k localhost:443
 
 # From your local machine
-nmap -F preprod.assessment.substra.ai # Fast
-nmap -A preprod.assessment.substra.ai # longer
-nmap -sV preprod.assessment.substra.ai # version
+nmap -F preprod.assessment.substra.ai   # Fast
+nmap -A preprod.assessment.substra.ai   # longer
+nmap -sV preprod.assessment.substra.ai  # version
 
 # Nginx
 # Follow logs from container
 docker logs -f nginx
 docker logs -f web
 
-# nginx logs path
+# nginx logs path (inside the nginx container)
 tail -f /var/log/nginx/access.log
 tail -f /var/log/nginx/error.log
 ```
