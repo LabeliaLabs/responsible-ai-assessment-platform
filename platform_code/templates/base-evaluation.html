@@ -40,7 +40,7 @@
     {% if user.is_authenticated %}
         <div>
             {% if platform_management.platform_update %}
-            <div class="delivery-banner">
+            <div class="delivery-banner margin-110">
                 {% if LANGUAGE_CODE == "fr" %}
                     {{ platform_management.delivery_text_fr|linebreaksbr }}
                 {% else %}
@@ -58,8 +58,11 @@
             </div>
         </div>
     </div>
-
-    <div id="page-container" class="margin-normal-navbar">
+    {% if platform_management.platform_update and user.is_authenticated %}
+        <div name="page-container">
+    {% else %}
+        <div name="page-container" class="margin-normal-navbar">
+    {% endif %}
         <div class="content container" id="content-wrap">
             {% block content %}
             {% endblock %}
@@ -79,17 +82,29 @@
 
 
 function adaptNavbar() {
-    var pageContainer = document.getElementById("page-container");
+// When the width is < 768px
+    var pageContainer = document.getElementsByName("page-container")[0];
     var header = document.getElementsByTagName("header")[0];
     var navbarButton = document.getElementById("navbar-button");
+    var deliveryBanner = document.querySelector(".delivery-banner");
     pageContainer.classList.remove("expand-navbar");
-    pageContainer.classList.add("margin-normal-navbar");
     navbarButton.addEventListener("click", function(evt) {
-        if (header.offsetHeight < 100) {
-            pageContainer.classList.remove("margin-normal-navbar");
-            pageContainer.classList.add("expand-navbar");
+        if (deliveryBanner) {
+            if (header.offsetHeight < 100) {  // Toggle the navbar down
+                deliveryBanner.classList.remove("margin-110");
+                deliveryBanner.style.marginTop = "";
+                deliveryBanner.classList.add("expand-navbar");
+            } else {
+                // Set style instead of removing "expand-navbar" to keep smoothness
+                deliveryBanner.style.marginTop = "110px";
+            }
         } else {
-            pageContainer.classList.add("margin-normal-navbar");
+            if (header.offsetHeight < 100) {  // Toggle the navbar down
+                pageContainer.classList.remove("margin-normal-navbar");
+                pageContainer.classList.add("expand-navbar");
+            } else {
+                pageContainer.classList.add("margin-normal-navbar");
+            }
         }
     });
 }
