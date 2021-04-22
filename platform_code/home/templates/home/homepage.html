@@ -17,8 +17,8 @@
     <div class="column center-content">
         <h1 class="center">Substra Assessment</h1>
         <p class="margin-50">{% blocktrans trimmed %}
-            Are you sensitive to the notion of responsible and trustworthy data science
-            practices? Substra Assessment is a self-assessment and self-training tool: assess your organisation's level
+            Are you interested in the notion of responsible and trustworthy data science
+            practices? Substra Assessment is a self-assessment and training tool: assess your organisation's level
             of maturity now and access numerous technical references to increase your competence.
             {% endblocktrans %}
         </p>
@@ -27,7 +27,7 @@
             <a class="btn btn-primary margin-auto margin-50" href="{% url 'home:user-profile' %}">
                 {% trans "My dashboard" %}</a>
             {% else %}
-            <a class="btn btn-primary margin-auto margin-50" href="{% url 'home:signup' %}">{% trans "I register" %}</a>
+            <a class="btn btn-primary margin-auto" href="{% url 'home:signup' %}">{% trans "Sign up and start an evaluation" %}</a>
             {% endif %}
         </div>
     </div>
@@ -58,7 +58,7 @@
     <div class="column center-content">
         <p class="margin-50">
             {% blocktrans trimmed %}
-            A new space is emerging at the crossroads between the AI expansion in
+            A new territory is emerging at the crossroads between the AI expansion in
             organisations and public concerns about private data, transparency and robustness of algorithms. These are
             two powerful trends that are already beginning to collide. How can they be reconciled and combined
             together?
@@ -73,11 +73,11 @@
             {% endblocktrans %}
             <a href="{% trans 'https://www.substra.ai/en/blog/how-to-solve-the-tension-between-ai-potential-and-associated-concerns' %}"
                target="_blank">
-                {% trans "this article" %}
+                {% trans "this article," %}
             </a>
             {% blocktrans trimmed %}
-            , we have developed a repository of risks and
-            good practices to promote responsible and trustworthy data science. It has given rise to a self-assessment
+            we have developed a reference framework to promote responsible and trustworthy data
+            science. It has given rise to a self-assessment
             tool accompanied by numerous technical resources.
             {% endblocktrans %}
         </p>
@@ -92,7 +92,7 @@
     <div class="column">
         <img alt="image" class="centered-image middle-width" src="{% static 'image/picto_homepage_rose.png' %}">
         <p class="text-center"><strong>{% trans "Evaluate your organisation" %}</strong></p>
-        <p class="center">{% trans "Carry out your self-assessment on 6 themes of Responsible Data Science and Trust" %}
+        <p class="center">{% trans "Carry out your self-assessment on the 6 themes of Responsible Data Science and Trust" %}
         </p>
 
     </div>
@@ -117,7 +117,7 @@
     {% if user.is_authenticated %}
     <a class="btn btn-primary margin-auto" href="{% url 'home:user-profile' %}">{% trans "My dashboard" %}</a>
     {% else %}
-    <a class="btn btn-primary margin-auto" href="{% url 'home:signup' %}">{% trans "I register" %}</a>
+    <a class="btn btn-primary margin-auto" href="{% url 'home:signup' %}">{% trans "Sign up and start an evaluation" %}</a>
     {% endif %}
 </div>
 
