@@ -90,7 +90,7 @@ class ImportAssessment:
             self.message = f"You have missing keys for the assessment data, please provide {keys_list}"
             raise Exception(self.message)
 
-        version = self.data_dic["version"]
+        version = get_version(self.data_dic["version"])
 
         # If there already is an assessment with the same version, raise error and ask for change if it is the same
         # language
@@ -252,7 +252,7 @@ class ImportAssessment:
 
     def create_assessment(self):
         assessment = Assessment(
-            version=self.data_dic['version'],
+            version=get_version(self.data_dic['version']),
             name_fr=self.data_dic["name_fr"],
             name_en=self.data_dic["name_en"]
         )
@@ -481,6 +481,17 @@ def external_link_already_exist(text_fr, text_en, resource_type,):
         text_en=text_en,
         type=resource_type)
     ) != []
+
+
+def get_version(raw_version):
+    """
+    Get the version, do not take into consideration the subversion
+    """
+    split_version = raw_version.split(".")
+    if len(split_version) == 1:
+        return split_version[0]
+    else:
+        return split_version[0] + "." + split_version[1]
 
 
 def check_upgrade(dict_upgrade_data):

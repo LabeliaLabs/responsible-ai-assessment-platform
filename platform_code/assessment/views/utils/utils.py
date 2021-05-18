@@ -102,8 +102,10 @@ def manage_evaluation_exposition_score(request, evaluation):
         evaluation_score = EvaluationScore.objects.get(evaluation=evaluation)
         if evaluation_score.need_to_calculate:
             evaluation_score.process_score_calculation()
+        assessment = evaluation_score.evaluation.assessment
         # If the exposition idc is not set yet or a key is "null" which shouldn't happen, calculate it
-        if not evaluation_score.exposition_dic or "null" in evaluation_score.exposition_dic.keys():
+        if not evaluation_score.exposition_dic or "null" in evaluation_score.exposition_dic.keys() or \
+                len(evaluation_score.exposition_dic) < assessment.count_master_elements_with_risks():
             evaluation_score.set_exposition_dic()
         exposition_dic = evaluation_score.exposition_dic
         nb_risk_exposed = len([li for li in exposition_dic.values() if li])
