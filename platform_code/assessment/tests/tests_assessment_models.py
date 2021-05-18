@@ -1,3 +1,5 @@
+import json
+
 from django.test import TestCase
 from django.template.defaultfilters import slugify
 
@@ -32,6 +34,7 @@ from .object_creation import (
 # Create your tests here.
 
 # a master evaluation element can not depends on itself -> need to see for choice.depends_on in this case
+from ..import_assessment import ImportAssessment
 
 """
 In this file, we test the creation of the different objects (Assessment, MS, MEE, MC, Evaluation, Section, EE, Choice),
@@ -729,14 +732,23 @@ class ChoiceTestCase(TestCase):
         self.assertFalse(self.choice2.set_conditions_on_other_choices())
 
 
-# todo test the scoring evolution
+# Test models after import
 
-# class ScoringTest(TestCase):
-#     def setUp(self):
+class ModelsAfterImportTestCase(TestCase):
+    """
+    Test some methods of the assessment models (Assessment, Master classes, Evaluation, etc)
+    after the import process
+    """
+    def setUp(self):
+        # Import the v2 file
+        with open(
+                "assessment/tests/import_test_files/assessment_test_v2.json"
+        ) as json_file:
+            self.assessment_data = json.load(json_file)
+        json_file.close()
+        import_assessment = ImportAssessment(self.assessment_data)
+        self.assessment = import_assessment.assessment
 
-# todo test the upgrade of the evaluation
-
-# class UpgradeTest(TestCase):
-#     def setUp(self):
-#
-# todo test that we cannot check multiple choices for radio items (modifying html)
+    def test_assessment_count_risk_elements(self):
+        self.assertEqual(self.assessment.version, "1.3")
+        self.assertEqual(self.assessment.count_master_elements_with_risks(), 2)

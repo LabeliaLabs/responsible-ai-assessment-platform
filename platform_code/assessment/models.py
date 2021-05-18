@@ -11,6 +11,7 @@ and the score.
 
 import re
 import random
+import itertools
 
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -64,6 +65,19 @@ class Assessment(models.Model):
                 ):
                     list_all_choices.append(master_choice.get_numbering())
         return list_all_choices
+
+    def count_master_elements_with_risks(self):
+        """
+        Count all the risk domains defined in the assessment
+        """
+        list_risks = [
+            [master_element.risk_domain_fr for master_element in master_section.masterevaluationelement_set.all()
+                if master_element.risk_domain]
+            for master_section in self.mastersection_set.all()
+        ]
+        flatten_list = list(itertools.chain.from_iterable(list_risks))
+        # Set remove the duplicates
+        return len(set(flatten_list))
 
     def get_the_available_languages(self):
         """
@@ -278,6 +292,9 @@ class Evaluation(models.Model):
             return False
 
     def get_list_all_elements(self):
+        """
+        Returns the list of all the evaluation elements
+        """
         list_all_elements = []
         for section in self.section_set.all().order_by("master_section__order_id"):
             for element in section.evaluationelement_set.all().order_by(
@@ -727,7 +744,7 @@ class EvaluationScore(models.Model):
         exposition_dic = {}
         for section in self.evaluation.section_set.all().order_by("master_section__order_id"):
             for element in section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
-                if not element.master_evaluation_element.risk_domain:  # Skip if no risk domain
+                if not element.master_evaluation_element.risk_domain and not element.has_condition_on():
                     continue
                 # Check condition inter elements
                 if element.has_condition_on():
