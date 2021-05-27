@@ -17,7 +17,7 @@
                 {% with eval_form=evaluation_form_dic|get_item_converted_str:evaluation.id %}
                 {% for field in eval_form %}
                 <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
-                <span>{{ field.label}}</span>
+                <span>{{ field.label }}</span>
                 <p> {{field}} </p>
                 {% endfor %}
                 {% endwith %}

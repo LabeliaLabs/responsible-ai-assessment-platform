@@ -21,6 +21,11 @@
                         {% trans "Admin" %}
                     </a>
                 </li>
+                <li class="nav-item navbar-item">
+                    <a class="nav-link" href="{% url 'home:dashboard-view' %}">
+                        {% trans "Admin Dashboard" %}
+                    </a>
+                </li>
                 {% endif %}
             <li class="nav-item navbar-item">
                 <a class="nav-link" href="{% url 'home:user-profile' %}">

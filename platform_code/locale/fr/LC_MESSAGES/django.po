@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-05 15:27+0200\n"
+"POT-Creation-Date: 2021-07-19 17:11+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -58,7 +58,7 @@ msgid "A resource is not available"
 msgstr "Une ressource n'est pas disponible"
 
 #: .\platform_code\assessment\forms.py:43
-#: .\platform_code\assessment\forms.py:51 .\platform_code\home\models.py:360
+#: .\platform_code\assessment\forms.py:51 .\platform_code\home\models.py:359
 msgid "Other"
 msgstr "Autres"
 
@@ -133,7 +133,7 @@ msgstr "Entrer vos notes sur l'élément d'évaluation ici."
 #: .\platform_code\assessment\forms.py:429
 #: .\platform_code\assessment\forms.py:671
 #: .\platform_code\assessment\forms.py:683
-#: .\platform_code\assessment\templates\assessment\results.html:210
+#: .\platform_code\assessment\templates\assessment\results.html:211
 msgid "Answer justification"
 msgstr "Justification"
 
@@ -216,12 +216,12 @@ msgid "Save the notes"
 msgstr "Sauvegarder les notes"
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:50
-#: .\platform_code\assessment\templates\assessment\content-section.html:56
+#: .\platform_code\assessment\templates\assessment\content-section.html:55
 msgid "Save"
 msgstr "Enregistrer"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:55
-#: .\platform_code\assessment\templates\assessment\content-section.html:250
+#: .\platform_code\assessment\templates\assessment\content-section.html:54
+#: .\platform_code\assessment\templates\assessment\content-section.html:252
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:58
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:92
 msgid "You do not have the right to do this action"
@@ -231,8 +231,8 @@ msgstr "Vous n'avez pas le droit de faire cette action."
 msgid "You have already answered to this evaluation element"
 msgstr "Vous avez déjà répondu à cet élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:110
-#: .\platform_code\assessment\templates\assessment\content-section.html:137
+#: .\platform_code\assessment\templates\assessment\content-section.html:111
+#: .\platform_code\assessment\templates\assessment\content-section.html:139
 msgid ""
 "You are not concerned by this evaluation element due to your answer to this "
 "evaluation element"
@@ -240,24 +240,24 @@ msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
 "l'élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:116
+#: .\platform_code\assessment\templates\assessment\content-section.html:118
 msgid "You have not yet answered to this evaluation element"
 msgstr "Vous n'avez pas encore répondu à cet élément d'évaluation."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:132
+#: .\platform_code\assessment\templates\assessment\content-section.html:134
 msgid "This evaluation element is not applicable due to your previous answers"
 msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à vos réponses "
 "précédentes."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:160
+#: .\platform_code\assessment\templates\assessment\content-section.html:162
 msgid ""
 "Please select one answer which best matches to your organisation situation."
 msgstr ""
 "Veuillez sélectionner une seule réponse correspondant le mieux à la maturité "
 "de l'organisation à ce sujet."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:166
+#: .\platform_code\assessment\templates\assessment\content-section.html:168
 #: .\platform_code\assessment\views\resultsPDF.py:305
 msgid ""
 "Please select all the answers which best match to your organisation "
@@ -267,47 +267,47 @@ msgstr ""
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes."
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:193
+#: .\platform_code\assessment\templates\assessment\content-section.html:195
 msgid "Delete this note"
 msgstr "Supprimer la note"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:206
+#: .\platform_code\assessment\templates\assessment\content-section.html:208
 #: .\platform_code\home\templates\home\profile-user-notes.html:90
 msgid "Archive this note"
 msgstr "Archiver les notes"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:218
+#: .\platform_code\assessment\templates\assessment\content-section.html:220
 msgid "Go to the previous evaluation element"
 msgstr "Aller à l'élément d'évaluation précédent"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:234
-#: .\platform_code\assessment\templates\assessment\content-section.html:243
-#: .\platform_code\assessment\templates\assessment\content-section.html:252
+#: .\platform_code\assessment\templates\assessment\content-section.html:236
+#: .\platform_code\assessment\templates\assessment\content-section.html:245
+#: .\platform_code\assessment\templates\assessment\content-section.html:254
 #: .\platform_code\home\templates\home\login-modal.html:30
 #: .\platform_code\home\templates\home\login.html:59
 msgid "Validate"
 msgstr "Valider"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:241
+#: .\platform_code\assessment\templates\assessment\content-section.html:243
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:73
 #: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:48
-#: .\platform_code\assessment\templates\assessment\results.html:149
+#: .\platform_code\assessment\templates\assessment\results.html:150
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:72
 #: .\platform_code\home\templates\home\settings-data.html:22
 #: .\platform_code\home\templates\home\settings-password.html:30
 msgid "Modify"
 msgstr "Modifier"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:258
+#: .\platform_code\assessment\templates\assessment\content-section.html:260
 msgid "Go to the next evaluation element"
 msgstr "Aller à l'élément d'évaluation suivant"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:274
-#: .\platform_code\assessment\templates\assessment\content-section.html:278
+#: .\platform_code\assessment\templates\assessment\content-section.html:276
+#: .\platform_code\assessment\templates\assessment\content-section.html:280
 msgid "Reset the answer"
 msgstr "Réinitialiser les réponses"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:290
+#: .\platform_code\assessment\templates\assessment\content-section.html:292
 msgid ""
 "This evaluation element is not applicable due to the answer to this "
 "evaluation element"
@@ -315,17 +315,17 @@ msgstr ""
 "Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
 "l'élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:310
-#: .\platform_code\templates\navbar.html:32
+#: .\platform_code\assessment\templates\assessment\content-section.html:312
+#: .\platform_code\templates\navbar.html:37
 msgid "Resources"
 msgstr "Ressources"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:332
+#: .\platform_code\assessment\templates\assessment\content-section.html:334
 #: .\platform_code\home\templates\home\profile-my-ressources.html:104
 msgid "Click to like the resource"
 msgstr "Cliquez pour ajouter la ressource à vos favoris"
 
-#: .\platform_code\assessment\templates\assessment\content-section.html:338
+#: .\platform_code\assessment\templates\assessment\content-section.html:340
 #: .\platform_code\home\templates\home\profile-my-ressources.html:111
 msgid "Click to unlike the resource"
 msgstr "Cliquez pour retirer la ressource de vos favoris"
@@ -424,8 +424,8 @@ msgstr "Avis"
 msgid "Give a feedback on this element"
 msgstr "Donnez votre avis sur cet élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\element-feedback.html:38
-#: .\platform_code\assessment\templates\assessment\section-feedback.html:34
+#: .\platform_code\assessment\templates\assessment\element-feedback.html:39
+#: .\platform_code\assessment\templates\assessment\section-feedback.html:35
 msgid "Submit"
 msgstr "Envoyer"
 
@@ -433,6 +433,7 @@ msgstr "Envoyer"
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:9
 #: .\platform_code\assessment\templates\assessment\results.html:10
 #: .\platform_code\assessment\templates\assessment\section.html:9
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin.html:8
 #: .\platform_code\home\templates\home\profile-settings.html:9
 #: .\platform_code\home\templates\home\profile.html:9
 msgid "Dashboard"
@@ -440,10 +441,11 @@ msgstr "Tableau de bord"
 
 #: .\platform_code\assessment\templates\assessment\evaluation.html:72
 msgid "Creation date:"
-msgstr "Créée le"
+msgstr "Date de creation"
 
 #: .\platform_code\assessment\templates\assessment\evaluation.html:74
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:13
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:51
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:18
 #: .\platform_code\home\templates\home\release-notes.html:22
 #: .\platform_code\home\templates\home\release-notes.html:41
@@ -452,16 +454,16 @@ msgstr "Version"
 
 #: .\platform_code\assessment\templates\assessment\evaluation.html:93
 #: .\platform_code\assessment\templates\assessment\evaluation.html:104
-#: .\platform_code\assessment\templates\assessment\section.html:54
-#: .\platform_code\assessment\templates\assessment\section.html:63
-#: .\platform_code\assessment\templates\assessment\section.html:76
+#: .\platform_code\assessment\templates\assessment\section.html:55
+#: .\platform_code\assessment\templates\assessment\section.html:65
+#: .\platform_code\assessment\templates\assessment\section.html:78
 msgid "Validate and see the results"
 msgstr "Valider et voir les résultats"
 
 #: .\platform_code\assessment\templates\assessment\evaluation.html:99
 #: .\platform_code\assessment\templates\assessment\evaluation.html:102
-#: .\platform_code\assessment\templates\assessment\section.html:69
-#: .\platform_code\assessment\templates\assessment\section.html:74
+#: .\platform_code\assessment\templates\assessment\section.html:71
+#: .\platform_code\assessment\templates\assessment\section.html:76
 msgid "Please finish the evaluation before validating it"
 msgstr "Veuillez finir l'évaluation avant de pouvoir la valider"
 
@@ -805,6 +807,7 @@ msgid "Organisation: "
 msgstr "Organisation : "
 
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:32
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:41
 msgid "Evaluations"
 msgstr "Evaluations"
 
@@ -861,17 +864,17 @@ msgstr "Mes évaluations"
 msgid "Your score"
 msgstr "Votre score"
 
-#: .\platform_code\assessment\templates\assessment\results.html:53
+#: .\platform_code\assessment\templates\assessment\results.html:54
 #: .\platform_code\assessment\views\resultsPDF.py:155
 msgid "Score per section"
 msgstr "Score par section"
 
-#: .\platform_code\assessment\templates\assessment\results.html:61
+#: .\platform_code\assessment\templates\assessment\results.html:62
 #: .\platform_code\assessment\views\resultsPDF.py:178
 msgid "Exposition score"
 msgstr "Score d'exposition"
 
-#: .\platform_code\assessment\templates\assessment\results.html:64
+#: .\platform_code\assessment\templates\assessment\results.html:65
 #, python-format
 msgid ""
 "You are exposed to %(nb_exposed)s/%(len_exposition_dic)s of the risks "
@@ -880,52 +883,52 @@ msgstr ""
 "Vous êtes exposé à %(nb_exposed)s/%(len_exposition_dic)s des risques "
 "identifiés dans l'évaluation."
 
-#: .\platform_code\assessment\templates\assessment\results.html:71
-#: .\platform_code\assessment\views\resultsPDF.py:881
+#: .\platform_code\assessment\templates\assessment\results.html:72
+#: .\platform_code\assessment\views\resultsPDF.py:883
 msgid "Risk domain"
 msgstr "Domaine des risques"
 
-#: .\platform_code\assessment\templates\assessment\results.html:72
+#: .\platform_code\assessment\templates\assessment\results.html:73
 msgid "Exposition to the risks"
 msgstr "Exposition aux risques"
 
-#: .\platform_code\assessment\templates\assessment\results.html:91
-#: .\platform_code\assessment\templates\assessment\results.html:104
-#: .\platform_code\assessment\views\resultsPDF.py:886
+#: .\platform_code\assessment\templates\assessment\results.html:92
+#: .\platform_code\assessment\templates\assessment\results.html:105
+#: .\platform_code\assessment\views\resultsPDF.py:888
 msgid "Exposed"
 msgstr "Exposé"
 
-#: .\platform_code\assessment\templates\assessment\results.html:93
-#: .\platform_code\assessment\views\resultsPDF.py:889
+#: .\platform_code\assessment\templates\assessment\results.html:94
+#: .\platform_code\assessment\views\resultsPDF.py:891
 msgid "Not exposed"
 msgstr "Pas exposé"
 
-#: .\platform_code\assessment\templates\assessment\results.html:102
+#: .\platform_code\assessment\templates\assessment\results.html:103
 msgid "Legend: "
 msgstr "Légende : "
 
-#: .\platform_code\assessment\templates\assessment\results.html:103
+#: .\platform_code\assessment\templates\assessment\results.html:104
 msgid "Not Exposed"
 msgstr "Pas exposé"
 
-#: .\platform_code\assessment\templates\assessment\results.html:103
+#: .\platform_code\assessment\templates\assessment\results.html:104
 msgid ": Not concerned by the risk"
 msgstr " : pas concerné pas le risque"
 
-#: .\platform_code\assessment\templates\assessment\results.html:104
+#: .\platform_code\assessment\templates\assessment\results.html:105
 msgid ": Concerned by the risk"
 msgstr " : concerné par le risque"
 
-#: .\platform_code\assessment\templates\assessment\results.html:107
+#: .\platform_code\assessment\templates\assessment\results.html:108
 msgid "An error occured during the calculation of the exposition score..."
 msgstr "Un problème est survenu avec le calcul du score d'exposition..."
 
-#: .\platform_code\assessment\templates\assessment\results.html:113
+#: .\platform_code\assessment\templates\assessment\results.html:114
 #: .\platform_code\assessment\views\resultsPDF.py:207
 msgid "Explanation"
 msgstr "Explications"
 
-#: .\platform_code\assessment\templates\assessment\results.html:115
+#: .\platform_code\assessment\templates\assessment\results.html:116
 #: .\platform_code\assessment\views\resultsPDF.py:213
 msgid ""
 "The synthetic score is on a total of 100 theoretical maximum points for your "
@@ -939,7 +942,7 @@ msgstr ""
 "de la data science. À fin 2020, le seuil de 50/100 peut être considéré comme "
 "un niveau de maturité très avancé."
 
-#: .\platform_code\assessment\templates\assessment\results.html:122
+#: .\platform_code\assessment\templates\assessment\results.html:123
 msgid ""
 "The mechanism for calculating the score is described in the FAQ that you can "
 "consult"
@@ -947,19 +950,19 @@ msgstr ""
 "Le mécanisme de calcul du score est décrit dans la FAQ que vous pouvez "
 "consulter"
 
-#: .\platform_code\assessment\templates\assessment\results.html:124
+#: .\platform_code\assessment\templates\assessment\results.html:125
 #: .\platform_code\home\templates\home\faq.html:9
 #: .\platform_code\templates\footer.html:35
-#: .\platform_code\templates\navbar.html:37
-#: .\platform_code\templates\navbar.html:53
+#: .\platform_code\templates\navbar.html:42
+#: .\platform_code\templates\navbar.html:58
 msgid "FAQ"
 msgstr "FAQ"
 
-#: .\platform_code\assessment\templates\assessment\results.html:124
+#: .\platform_code\assessment\templates\assessment\results.html:125
 msgid "here."
 msgstr "ici."
 
-#: .\platform_code\assessment\templates\assessment\results.html:125
+#: .\platform_code\assessment\templates\assessment\results.html:126
 #: .\platform_code\assessment\views\resultsPDF.py:231
 msgid ""
 "Note: the score is a synthetic indication, not an end in itself. In "
@@ -972,7 +975,7 @@ msgstr ""
 "élément d'évaluation, qui sont d'excellents points d'entrée pour monter en "
 "compétences sur vos sujets d'intérêt."
 
-#: .\platform_code\assessment\templates\assessment\results.html:131
+#: .\platform_code\assessment\templates\assessment\results.html:132
 msgid ""
 "Where the evaluation score provides a synthetic summary of an organization "
 "maturity level on responsible and trustworthy data science and enables to "
@@ -995,24 +998,24 @@ msgstr ""
 "les domaines de risques et tous les éléments d'évaluation, ne permet pas une "
 "simple addition."
 
-#: .\platform_code\assessment\templates\assessment\results.html:145
+#: .\platform_code\assessment\templates\assessment\results.html:146
 msgid "Back to organisation"
 msgstr "Retour à l'organisation"
 
-#: .\platform_code\assessment\templates\assessment\results.html:153
+#: .\platform_code\assessment\templates\assessment\results.html:154
 msgid "Export PDF"
 msgstr "Export PDF"
 
-#: .\platform_code\assessment\templates\assessment\results.html:158
+#: .\platform_code\assessment\templates\assessment\results.html:159
 msgid "Your answers"
 msgstr "Vos réponses"
 
-#: .\platform_code\assessment\templates\assessment\results.html:182
+#: .\platform_code\assessment\templates\assessment\results.html:183
 #: .\platform_code\assessment\views\resultsPDF.py:505
 msgid "You are not concerned by this evaluation element"
 msgstr "Vous n'êtes pas concerné par cet élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\results.html:187
+#: .\platform_code\assessment\templates\assessment\results.html:188
 #: .\platform_code\assessment\templates\assessment\sidebar.html:8
 #: .\platform_code\assessment\templates\assessment\sidebar.html:9
 #: .\platform_code\assessment\templates\assessment\sidebar.html:13
@@ -1020,14 +1023,14 @@ msgstr "Vous n'êtes pas concerné par cet élément d'évaluation"
 msgid ":"
 msgstr " :"
 
-#: .\platform_code\assessment\templates\assessment\results.html:193
+#: .\platform_code\assessment\templates\assessment\results.html:194
 msgid ""
 ": Please select one answer which best matches to your organisation situation"
 msgstr ""
 " : Veuillez sélectionner une seule réponse correspondant le mieux à la "
 "maturité de l'organisation à ce sujet"
 
-#: .\platform_code\assessment\templates\assessment\results.html:199
+#: .\platform_code\assessment\templates\assessment\results.html:200
 msgid ""
 ": Please select all the answers which best match to your organisation "
 "situation. Be careful, some combinations are not coherent."
@@ -1036,7 +1039,7 @@ msgstr ""
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes"
 
-#: .\platform_code\assessment\templates\assessment\results.html:227
+#: .\platform_code\assessment\templates\assessment\results.html:228
 msgid "Top of the page"
 msgstr "Retour haut de page"
 
@@ -1204,7 +1207,7 @@ msgid ": "
 msgstr " : "
 
 #: .\platform_code\assessment\views\results.py:88
-#: .\platform_code\assessment\views\resultsPDF.py:876
+#: .\platform_code\assessment\views\resultsPDF.py:878
 msgid "You cannot do this action!"
 msgstr "Vous ne pouvez pas faire cette action !"
 
@@ -1245,7 +1248,7 @@ msgstr "Détails de l'évaluation"
 msgid "Your answer justification:"
 msgstr "Votre justification :"
 
-#: .\platform_code\assessment\views\resultsPDF.py:881
+#: .\platform_code\assessment\views\resultsPDF.py:883
 msgid "Exposition to the risk"
 msgstr "Exposition aux risques"
 
@@ -1490,6 +1493,8 @@ msgid "Name"
 msgstr "Nom"
 
 #: .\platform_code\home\forms.py:58 .\platform_code\home\forms.py:94
+#: .\platform_code\home\forms.py:291
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:71
 msgid "Size"
 msgstr "Taille"
 
@@ -1498,6 +1503,8 @@ msgid "Country"
 msgstr "Pays"
 
 #: .\platform_code\home\forms.py:60 .\platform_code\home\forms.py:96
+#: .\platform_code\home\forms.py:280
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:44
 msgid "Sector"
 msgstr "Secteur"
 
@@ -1513,51 +1520,85 @@ msgstr "Confirmation du mot de passe"
 msgid "Passwords don't match"
 msgstr "Votre mot de passe est erroné"
 
-#: .\platform_code\home\models.py:65
+#: .\platform_code\home\forms.py:219
+msgid "Inscription date"
+msgstr "Date d'inscription "
+
+#: .\platform_code\home\forms.py:237
+msgid "Created from the"
+msgstr "Créées à partir du"
+
+#: .\platform_code\home\forms.py:245
+#: .\platform_code\home\views\dashboard_view.py:293
+#: .\platform_code\home\views\dashboard_view.py:312
+#: .\platform_code\home\views\dashboard_view.py:333
+msgid "all sectors"
+msgstr "Tous les secteurs"
+
+#: .\platform_code\home\forms.py:246
+#: .\platform_code\home\views\dashboard_view.py:294
+#: .\platform_code\home\views\dashboard_view.py:313
+#: .\platform_code\home\views\dashboard_view.py:334
+msgid "all sizes"
+msgstr "Toutes les tailles"
+
+#: .\platform_code\home\forms.py:254
+msgid "All sectors"
+msgstr "Tous les secteurs"
+
+#: .\platform_code\home\forms.py:255
+msgid "All sizes"
+msgstr "Toutes les tailles"
+
+#: .\platform_code\home\forms.py:268
+msgid "Date"
+msgstr "Date "
+
+#: .\platform_code\home\models.py:64
 msgid "Users must have an email address"
 msgstr "Un utilisateur doit avoir un email"
 
-#: .\platform_code\home\models.py:107
+#: .\platform_code\home\models.py:106
 msgid "A user with that email already exists."
 msgstr "Un utilisateur a déjà cet email"
 
-#: .\platform_code\home\models.py:111
+#: .\platform_code\home\models.py:110
 msgid "first name"
 msgstr "Prénom"
 
-#: .\platform_code\home\models.py:112
+#: .\platform_code\home\models.py:111
 msgid "last name"
 msgstr "Nom"
 
-#: .\platform_code\home\models.py:273
+#: .\platform_code\home\models.py:272
 msgid "read only"
 msgstr "lecteur"
 
-#: .\platform_code\home\models.py:274
+#: .\platform_code\home\models.py:273
 msgid "editor"
 msgstr "éditeur"
 
-#: .\platform_code\home\models.py:354
+#: .\platform_code\home\models.py:353
 msgid "Industrial - Large company"
 msgstr "Industriel - Grande entreprise"
 
-#: .\platform_code\home\models.py:355
+#: .\platform_code\home\models.py:354
 msgid "Industrial - Mid-sized company"
 msgstr "Industriel - ETI"
 
-#: .\platform_code\home\models.py:356
+#: .\platform_code\home\models.py:355
 msgid "Small and Medium-Sized Businesses"
 msgstr "Industriel - PME"
 
-#: .\platform_code\home\models.py:357
+#: .\platform_code\home\models.py:356
 msgid "B2B Service Provider - Software publisher"
 msgstr "Prestataire B2B - Editeur de logiciels"
 
-#: .\platform_code\home\models.py:358
+#: .\platform_code\home\models.py:357
 msgid "B2B service provider - Consulting agency"
 msgstr "Prestataire B2B - Cabinet de conseil"
 
-#: .\platform_code\home\models.py:359
+#: .\platform_code\home\models.py:358
 msgid "Research organisation"
 msgstr "Organisme de recherche"
 
@@ -1597,6 +1638,121 @@ msgid ""
 msgstr ""
 "Si le lien ne fonctionne pas, veuillez le copier et le coller dans l'URL "
 "d'une nouvelle fenêtre."
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:14
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:13
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:14
+msgid "Reset Filter"
+msgstr "Réinitialiser les filtres"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:15
+msgid "reset filters"
+msgstr "Réinitialiser les filtres"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:17
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:16
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:17
+msgid "Filter"
+msgstr "Filtrer"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:29
+msgid "Number of evaluations, per version and per status, created after "
+msgstr "Nombre d'évaluations, par version et par statut, créées après le "
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:31
+msgid " for organisations with the specified size and sector "
+msgstr " pour les organisations de la taille et du secteur spécifiés "
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:52
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:80
+msgid "Number of Evaluations"
+msgstr "Nombre d'évaluations : "
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:79
+msgid "Status"
+msgstr "Statut"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:86
+msgid "Completed"
+msgstr "Complété"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:90
+msgid "In progress"
+msgstr "En cours"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:115
+msgid "Total number of Evaluations created after "
+msgstr "Nombre total d'évaluations créées après le : "
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:14
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:15
+msgid "reset filter"
+msgstr "Réinitialiser le filtre"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:25
+msgid ""
+"Number of organisations per sector and per size created after and including  "
+msgstr ""
+"Nombre d'organisations par secteur et par taille créées après et y compris "
+"le  "
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:35
+msgid "Organisations"
+msgstr "Organisation"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:45
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:72
+msgid "Number of organisations"
+msgstr "Nombre d'organisations"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:101
+msgid "Total number of organisations created after "
+msgstr "Nombre total d'organisations créées après le "
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:34
+msgid "Users"
+msgstr "Utilisateurs"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:43
+msgid "Month"
+msgstr "Mois"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:44
+msgid "Number of users "
+msgstr "Nombre d'utilisateurs"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:70
+msgid "Number of users per month over a year starting from "
+msgstr "Nombre d'utilisateurs par mois sur un an à partir de"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:70
+msgid ", including non-active users"
+msgstr ", y compris les utilisateurs non actifs"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:71
+msgid "Each line shows the total number of users up to the end of that month"
+msgstr ""
+"Chaque ligne indique le nombre total d'utilisateurs jusqu'à la fin de ce mois"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:76
+msgid "Number of users, active or inactive, who registered after "
+msgstr "Nombre d'utilisateurs ayant effectué leur inscription après le  "
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:79
+msgid "Total number of users"
+msgstr "Nombre total d'utilisateurs"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin.html:20
+msgid "User stats"
+msgstr "Statistiques des utilisateurs"
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin.html:31
+msgid "Organisations stats "
+msgstr "Statistiques des organisations "
+
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin.html:41
+msgid "Evaluations stats"
+msgstr "Statistiques des évaluations"
 
 #: .\platform_code\home\templates\home\faq.html:11
 msgid "The assessment"
@@ -2035,7 +2191,7 @@ msgstr ""
 #: .\platform_code\home\templates\home\homepage.html:28
 #: .\platform_code\home\templates\home\homepage.html:118
 #: .\platform_code\home\templates\home\profile.html:14
-#: .\platform_code\templates\navbar.html:27
+#: .\platform_code\templates\navbar.html:32
 msgid "My dashboard"
 msgstr "Mon tableau de bord"
 
@@ -2200,8 +2356,8 @@ msgstr "Veuillez vous connecter pour accéder à cette page."
 #: .\platform_code\home\templates\home\login.html:26
 #: .\platform_code\home\templates\home\registration\password_reset_complete.html:7
 #: .\platform_code\templates\footer.html:31
-#: .\platform_code\templates\navbar.html:64
-#: .\platform_code\templates\navbar.html:70
+#: .\platform_code\templates\navbar.html:69
+#: .\platform_code\templates\navbar.html:75
 msgid "Login"
 msgstr "Connexion"
 
@@ -2225,7 +2381,7 @@ msgstr "Voulez-vous vous déconnecter ?"
 
 #: .\platform_code\home\templates\home\logout-page.html:12
 #: .\platform_code\templates\footer.html:28
-#: .\platform_code\templates\navbar.html:47
+#: .\platform_code\templates\navbar.html:52
 msgid "Logout"
 msgstr "Déconnexion"
 
@@ -2512,6 +2668,11 @@ msgstr "Création du compte"
 msgid "already have an account?"
 msgstr "J'ai déjà un compte"
 
+#: .\platform_code\home\views\dashboard_view.py:191
+#: .\platform_code\home\views\dashboard_view.py:194
+msgid "Error"
+msgstr "Erreur"
+
 #: .\platform_code\home\views\delete_user.py:43
 msgid "Your account has been deleted."
 msgstr "Votre compte a bien été supprimé."
@@ -2641,6 +2802,33 @@ msgstr "Mentions légales"
 msgid "Admin"
 msgstr "Admin"
 
+#: .\platform_code\templates\navbar.html:26
+msgid "Admin Dashboard"
+msgstr "Dashboard admin"
+
+#~ msgid "%d-%m-%Y"
+#~ msgstr "%m-%d-%Y"
+
+#~ msgid "%d/%m/%Y"
+#~ msgstr "%m/%d/%Y"
+
+#~ msgid "Sector "
+#~ msgstr "Secteur"
+
+#, fuzzy
+#~| msgid "Size"
+#~ msgid "Size "
+#~ msgstr "Taille"
+
+#~ msgid "Number of evaluations, per "
+#~ msgstr "Nombre d'évaluations, par : "
+
+#~ msgid "version"
+#~ msgstr "Version"
+
+#~ msgid "and per "
+#~ msgstr "et par "
+
 #~ msgid ""
 #~ "Why don't we get a score per section? We are working on this feature, be "
 #~ "patient!"
@@ -2769,14 +2957,8 @@ msgstr "Admin"
 #~ msgid "Hello"
 #~ msgstr "Bonjour"
 
-#~ msgid "Evaluation status"
-#~ msgstr "Statut de l'évaluation"
-
 #~ msgid "Validated"
 #~ msgstr "Soumise"
-
-#~ msgid "In progress"
-#~ msgstr "En cours de progression"
 
 #~ msgid "email is taken"
 #~ msgstr "l'email est déjà pris"
