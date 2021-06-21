@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-22 10:10+0200\n"
+"POT-Creation-Date: 2021-07-05 15:27+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -33,48 +33,48 @@ msgstr "Changer %s"
 msgid "View %s"
 msgstr "Voir %s"
 
-#: .\platform_code\assessment\forms.py:33
+#: .\platform_code\assessment\forms.py:34
 msgid "No evaluation element fits to my case"
 msgstr "Aucun élément de réponse ne me convient"
 
-#: .\platform_code\assessment\forms.py:34
+#: .\platform_code\assessment\forms.py:35
 msgid "This evaluation element is poorly formulated"
 msgstr "Cet élément est mal formulé ou mal expliqué"
 
-#: .\platform_code\assessment\forms.py:37
+#: .\platform_code\assessment\forms.py:38
 msgid "My organisation is not concerned by this evaluation element"
 msgstr "Cela ne s’applique pas à mon organisation ou mon secteur"
 
-#: .\platform_code\assessment\forms.py:39
+#: .\platform_code\assessment\forms.py:40
 msgid "There is an issue or a typo in the element"
 msgstr "Il y a une erreur ou une typo dans la question"
 
-#: .\platform_code\assessment\forms.py:40
+#: .\platform_code\assessment\forms.py:41
 msgid "I have a new resource to add to this evaluation element"
 msgstr "J’ai une ressource supplémentaire à proposer"
 
-#: .\platform_code\assessment\forms.py:41
+#: .\platform_code\assessment\forms.py:42
 msgid "A resource is not available"
 msgstr "Une ressource n'est pas disponible"
 
-#: .\platform_code\assessment\forms.py:42
-#: .\platform_code\assessment\forms.py:50 .\platform_code\home\models.py:360
+#: .\platform_code\assessment\forms.py:43
+#: .\platform_code\assessment\forms.py:51 .\platform_code\home\models.py:360
 msgid "Other"
 msgstr "Autres"
 
-#: .\platform_code\assessment\forms.py:47
+#: .\platform_code\assessment\forms.py:48
 msgid "I find that an evaluation element is not appropriated"
 msgstr "Un élément d’évaluation ne me semble pas approprié"
 
-#: .\platform_code\assessment\forms.py:48
+#: .\platform_code\assessment\forms.py:49
 msgid "I would like to propose a new evaluation element"
 msgstr "J’ai une suggestion d’un nouvel élément d’évaluation"
 
-#: .\platform_code\assessment\forms.py:49
+#: .\platform_code\assessment\forms.py:50
 msgid "I would like to propose a new resource to this section"
 msgstr "J’ai une ressource à proposer pour cette section"
 
-#: .\platform_code\assessment\forms.py:73
+#: .\platform_code\assessment\forms.py:74
 msgid ""
 "The json file has to contain the choice ids as keys ('1.1.a' for exemple) "
 "and the weight as value"
@@ -82,8 +82,8 @@ msgstr ""
 "Le fichier json doit contenir les ids des choix comme clé et leur pour comme "
 "valeur"
 
-#: .\platform_code\assessment\forms.py:247
-#: .\platform_code\assessment\forms.py:277
+#: .\platform_code\assessment\forms.py:248
+#: .\platform_code\assessment\forms.py:278
 #: .\platform_code\assessment\templates\assessment\evaluation.html:14
 #: .\platform_code\assessment\templates\assessment\section.html:13
 msgid "Evaluation"
@@ -95,12 +95,12 @@ msgstr "Evaluation"
 # msgstr ""
 # "Le json doit contenir les id des choix comme clés ('1.1.a' par exemple) "
 # "et les poids comme valeur"
-#: .\platform_code\assessment\forms.py:248
-#: .\platform_code\assessment\forms.py:268
+#: .\platform_code\assessment\forms.py:249
+#: .\platform_code\assessment\forms.py:269
 msgid "Evaluation title"
 msgstr "Titre de l'évaluation"
 
-#: .\platform_code\assessment\forms.py:270
+#: .\platform_code\assessment\forms.py:271
 #: .\platform_code\assessment\templates\assessment\evaluation.html:12
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:11
 #: .\platform_code\assessment\templates\assessment\section.html:11
@@ -109,42 +109,50 @@ msgstr "Titre de l'évaluation"
 msgid "Organisation"
 msgstr "Organisation"
 
-#: .\platform_code\assessment\forms.py:302
-#: .\platform_code\assessment\forms.py:317
+#: .\platform_code\assessment\forms.py:303
+#: .\platform_code\assessment\forms.py:318
 msgid "My notes on the section"
 msgstr "Mes notes sur la section"
 
-#: .\platform_code\assessment\forms.py:309
+#: .\platform_code\assessment\forms.py:310
 msgid "Enter your notes on the section here."
 msgstr "Entrer vos notes sur la section ici."
 
-#: .\platform_code\assessment\forms.py:378
-#: .\platform_code\assessment\forms.py:405
-#: .\platform_code\assessment\views\resultsPDF.py:375
+#: .\platform_code\assessment\forms.py:381
+#: .\platform_code\assessment\forms.py:408
 #: .\platform_code\home\templates\home\profile.html:50
 #: .\platform_code\home\templates\home\profile.html:51
 msgid "My notes"
 msgstr "Mes notes"
 
-#: .\platform_code\assessment\forms.py:386
+#: .\platform_code\assessment\forms.py:389
 msgid "Enter your notes on the evaluation element here."
 msgstr "Entrer vos notes sur l'élément d'évaluation ici."
 
-#: .\platform_code\assessment\forms.py:531
-#: .\platform_code\assessment\forms.py:558
+#: .\platform_code\assessment\forms.py:423
+#: .\platform_code\assessment\forms.py:429
+#: .\platform_code\assessment\forms.py:671
+#: .\platform_code\assessment\forms.py:683
+#: .\platform_code\assessment\templates\assessment\results.html:210
+msgid "Answer justification"
+msgstr "Justification"
+
+#: .\platform_code\assessment\forms.py:554
+#: .\platform_code\assessment\forms.py:581
 msgid "Your feedback"
 msgstr "Votre avis"
 
-#: .\platform_code\assessment\forms.py:538
-#: .\platform_code\assessment\forms.py:565
+#: .\platform_code\assessment\forms.py:561
+#: .\platform_code\assessment\forms.py:588
 msgid "My feedback"
 msgstr "Mon avis"
 
-#: .\platform_code\assessment\forms.py:624
+#: .\platform_code\assessment\forms.py:649
+#: .\platform_code\assessment\views\resultsPDF.py:578
 msgid "My notes:"
 msgstr "Mes notes :"
 
-#: .\platform_code\assessment\forms.py:660
+#: .\platform_code\assessment\forms.py:716
 msgid "My section notes:"
 msgstr "Mes notes de section :"
 
@@ -250,7 +258,7 @@ msgstr ""
 "de l'organisation à ce sujet."
 
 #: .\platform_code\assessment\templates\assessment\content-section.html:166
-#: .\platform_code\assessment\views\resultsPDF.py:303
+#: .\platform_code\assessment\views\resultsPDF.py:305
 msgid ""
 "Please select all the answers which best match to your organisation "
 "situation. Be careful, some combinations are not coherent."
@@ -854,12 +862,12 @@ msgid "Your score"
 msgstr "Votre score"
 
 #: .\platform_code\assessment\templates\assessment\results.html:53
-#: .\platform_code\assessment\views\resultsPDF.py:153
+#: .\platform_code\assessment\views\resultsPDF.py:155
 msgid "Score per section"
 msgstr "Score par section"
 
 #: .\platform_code\assessment\templates\assessment\results.html:61
-#: .\platform_code\assessment\views\resultsPDF.py:176
+#: .\platform_code\assessment\views\resultsPDF.py:178
 msgid "Exposition score"
 msgstr "Score d'exposition"
 
@@ -873,7 +881,7 @@ msgstr ""
 "identifiés dans l'évaluation."
 
 #: .\platform_code\assessment\templates\assessment\results.html:71
-#: .\platform_code\assessment\views\resultsPDF.py:596
+#: .\platform_code\assessment\views\resultsPDF.py:881
 msgid "Risk domain"
 msgstr "Domaine des risques"
 
@@ -883,12 +891,12 @@ msgstr "Exposition aux risques"
 
 #: .\platform_code\assessment\templates\assessment\results.html:91
 #: .\platform_code\assessment\templates\assessment\results.html:104
-#: .\platform_code\assessment\views\resultsPDF.py:601
+#: .\platform_code\assessment\views\resultsPDF.py:886
 msgid "Exposed"
 msgstr "Exposé"
 
 #: .\platform_code\assessment\templates\assessment\results.html:93
-#: .\platform_code\assessment\views\resultsPDF.py:604
+#: .\platform_code\assessment\views\resultsPDF.py:889
 msgid "Not exposed"
 msgstr "Pas exposé"
 
@@ -913,12 +921,12 @@ msgid "An error occured during the calculation of the exposition score..."
 msgstr "Un problème est survenu avec le calcul du score d'exposition..."
 
 #: .\platform_code\assessment\templates\assessment\results.html:113
-#: .\platform_code\assessment\views\resultsPDF.py:205
+#: .\platform_code\assessment\views\resultsPDF.py:207
 msgid "Explanation"
 msgstr "Explications"
 
 #: .\platform_code\assessment\templates\assessment\results.html:115
-#: .\platform_code\assessment\views\resultsPDF.py:211
+#: .\platform_code\assessment\views\resultsPDF.py:213
 msgid ""
 "The synthetic score is on a total of 100 theoretical maximum points for your "
 "full assessment. It provides an indication of the organization maturity "
@@ -952,7 +960,7 @@ msgid "here."
 msgstr "ici."
 
 #: .\platform_code\assessment\templates\assessment\results.html:125
-#: .\platform_code\assessment\views\resultsPDF.py:229
+#: .\platform_code\assessment\views\resultsPDF.py:231
 msgid ""
 "Note: the score is a synthetic indication, not an end in itself. In "
 "particular, we invite you to consult the resources associated with each "
@@ -1000,7 +1008,7 @@ msgid "Your answers"
 msgstr "Vos réponses"
 
 #: .\platform_code\assessment\templates\assessment\results.html:182
-#: .\platform_code\assessment\views\resultsPDF.py:355
+#: .\platform_code\assessment\views\resultsPDF.py:505
 msgid "You are not concerned by this evaluation element"
 msgstr "Vous n'êtes pas concerné par cet élément d'évaluation"
 
@@ -1028,7 +1036,7 @@ msgstr ""
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes"
 
-#: .\platform_code\assessment\templates\assessment\results.html:218
+#: .\platform_code\assessment\templates\assessment\results.html:227
 msgid "Top of the page"
 msgstr "Retour haut de page"
 
@@ -1079,7 +1087,7 @@ msgstr ""
 #: .\platform_code\assessment\views\organisation.py:181
 #: .\platform_code\assessment\views\organisation.py:199
 #: .\platform_code\assessment\views\organisation.py:200
-#: .\platform_code\assessment\views\section.py:188
+#: .\platform_code\assessment\views\section.py:189
 msgid "You don't have the right to do this action."
 msgstr "Vous n'avez pas le droit de faire cette action."
 
@@ -1196,23 +1204,23 @@ msgid ": "
 msgstr " : "
 
 #: .\platform_code\assessment\views\results.py:88
-#: .\platform_code\assessment\views\resultsPDF.py:591
+#: .\platform_code\assessment\views\resultsPDF.py:876
 msgid "You cannot do this action!"
 msgstr "Vous ne pouvez pas faire cette action !"
 
-#: .\platform_code\assessment\views\resultsPDF.py:140
+#: .\platform_code\assessment\views\resultsPDF.py:142
 msgid "Synthetic evaluation score"
 msgstr "Score synthétique de l'évaluation"
 
-#: .\platform_code\assessment\views\resultsPDF.py:184
+#: .\platform_code\assessment\views\resultsPDF.py:186
 msgid "You are exposed to "
 msgstr "Vous êtes exposé à "
 
-#: .\platform_code\assessment\views\resultsPDF.py:185
+#: .\platform_code\assessment\views\resultsPDF.py:187
 msgid "of the risks identified in the assessment."
 msgstr "des risques identifiés dans l'évaluation."
 
-#: .\platform_code\assessment\views\resultsPDF.py:221
+#: .\platform_code\assessment\views\resultsPDF.py:223
 msgid ""
 "The mechanism for calculating the score is described in the FAQ that you can "
 "consult on assessment.substra.ai"
@@ -1220,7 +1228,7 @@ msgstr ""
 "Le mécanisme de calcul du score est décrit dans la FAQ que vous pouvez "
 "consulter sur assessment.substra.ai"
 
-#: .\platform_code\assessment\views\resultsPDF.py:247
+#: .\platform_code\assessment\views\resultsPDF.py:249
 #, python-brace-format
 msgid ""
 "PDF generated on {today_date} at {current_time} UTC by the assessment."
@@ -1229,32 +1237,46 @@ msgstr ""
 "PDF généré le {today_date} à {current_time} UTC par l'évaluation.Platforme "
 "substra.ai"
 
-#: .\platform_code\assessment\views\resultsPDF.py:264
+#: .\platform_code\assessment\views\resultsPDF.py:266
 msgid "Evaluation details"
 msgstr "Détails de l'évaluation"
 
-#: .\platform_code\assessment\views\resultsPDF.py:596
+#: .\platform_code\assessment\views\resultsPDF.py:564
+msgid "Your answer justification:"
+msgstr "Votre justification :"
+
+#: .\platform_code\assessment\views\resultsPDF.py:881
 msgid "Exposition to the risk"
 msgstr "Exposition aux risques"
 
-#: .\platform_code\assessment\views\section.py:242
-#: .\platform_code\assessment\views\section.py:264
+#: .\platform_code\assessment\views\section.py:244
+#: .\platform_code\assessment\views\section.py:266
 msgid "Your notes have been saved!"
 msgstr "Vos notes ont été sauvegardées !"
 
-#: .\platform_code\assessment\views\section.py:270
+#: .\platform_code\assessment\views\section.py:272
 msgid "Your notes have not been saved, an error occurred."
 msgstr "Vos notes n'ont pas été sauvegardées, une erreur est survenue."
 
-#: .\platform_code\assessment\views\section.py:284
+#: .\platform_code\assessment\views\section.py:287
+msgid "Your justification have been saved!"
+msgstr "Votre justifcation de réponse a été sauvegardée !"
+
+#: .\platform_code\assessment\views\section.py:292
+msgid "Your justification has not been saved, an error occurred."
+msgstr ""
+"Votre justification de réponse n'a pas été sauvegardée, une erreur est "
+"survenue."
+
+#: .\platform_code\assessment\views\section.py:306
 msgid "Your answers have been reset!"
 msgstr "Votre réponse à été réinitialisée !"
 
-#: .\platform_code\assessment\views\section.py:366
+#: .\platform_code\assessment\views\section.py:388
 msgid "Your answer has been saved!"
 msgstr "Votre réponse a été enregistrée !"
 
-#: .\platform_code\assessment\views\section.py:373
+#: .\platform_code\assessment\views\section.py:395
 msgid ""
 "You can not combine these answers, please select an appropriate combination "
 "of choices."
@@ -1262,11 +1284,11 @@ msgstr ""
 "Vous ne pouvez pas combiner ces choix, veuillez sélectionner une combinaison "
 "possible."
 
-#: .\platform_code\assessment\views\section.py:385
+#: .\platform_code\assessment\views\section.py:407
 msgid "No answer is selected."
 msgstr "Aucune réponse n'est sélectionnée."
 
-#: .\platform_code\assessment\views\section.py:452
+#: .\platform_code\assessment\views\section.py:474
 msgid "You cannot do this action."
 msgstr "Vous ne pouvez pas faire cette action."
 
@@ -1363,28 +1385,28 @@ msgstr ""
 "Veuillez utiliser cette feature avec modération ! Si vous pensez qu'il y a "
 "un problème, contactez le support."
 
-#: .\platform_code\assessment\views\utils\utils.py:113
+#: .\platform_code\assessment\views\utils\utils.py:115
 msgid "An error occurred during the calculation of the exposition score."
 msgstr "Un problème est survenu avec le calcul du score d'exposition."
 
-#: .\platform_code\assessment\views\utils\utils.py:136
+#: .\platform_code\assessment\views\utils\utils.py:138
 msgid "An error occurred with the score calculation."
 msgstr "Un problème est survenu avec le calcul du score d'une évaluation."
 
-#: .\platform_code\assessment\views\utils\utils.py:150
+#: .\platform_code\assessment\views\utils\utils.py:152
 msgid "Your evaluation has been upgraded! You have been redirected to it. "
 msgstr ""
 "Votre évaluation a bien été mise à jour ! Vous avez été redirigé vers celle-"
 "ci."
 
-#: .\platform_code\assessment\views\utils\utils.py:155
-#: .\platform_code\assessment\views\utils\utils.py:175
+#: .\platform_code\assessment\views\utils\utils.py:157
+#: .\platform_code\assessment\views\utils\utils.py:177
 msgid "Your evaluation has been upgraded! You have been redirected to it."
 msgstr ""
 "Votre évaluation a bien été mise à jour ! Vous avez été redirigé vers celle-"
 "ci."
 
-#: .\platform_code\assessment\views\utils\utils.py:162
+#: .\platform_code\assessment\views\utils\utils.py:164
 msgid ""
 "Your evaluation has been upgraded! You have been redirected to it. You have "
 "to complete the new items before the validation."
@@ -1392,46 +1414,46 @@ msgstr ""
 "Votre évaluation a bien été mise à jour ! Vous avez été redirigé vers celle-"
 "ci. Vous devez la terminer avant de pouvoir accéder aux résultats."
 
-#: .\platform_code\assessment\views\utils\utils.py:168
-#: .\platform_code\assessment\views\utils\utils.py:171
+#: .\platform_code\assessment\views\utils\utils.py:170
+#: .\platform_code\assessment\views\utils\utils.py:173
 msgid "Your evaluation has been upgraded!"
 msgstr "Votre évaluation a bien été mise à jour à la dernière version."
 
-#: .\platform_code\assessment\views\utils\utils.py:288
+#: .\platform_code\assessment\views\utils\utils.py:290
 msgid "Your note has been deleted!"
 msgstr "Votre note a bien été supprimée !"
 
-#: .\platform_code\assessment\views\utils\utils.py:296
+#: .\platform_code\assessment\views\utils\utils.py:298
 msgid "You can't delete an empty note!"
 msgstr "Vous ne pouvez pas supprimer une note vide."
 
-#: .\platform_code\assessment\views\utils\utils.py:307
+#: .\platform_code\assessment\views\utils\utils.py:309
 msgid "You can't delete this note!"
 msgstr "Vous ne pouvez pas supprimer cette note !"
 
-#: .\platform_code\assessment\views\utils\utils.py:329
+#: .\platform_code\assessment\views\utils\utils.py:331
 msgid "Your note has been archived!"
 msgstr "Vos notes ont été archivées !"
 
-#: .\platform_code\assessment\views\utils\utils.py:332
+#: .\platform_code\assessment\views\utils\utils.py:334
 msgid "Your note has been un-archived!"
 msgstr "Vos notes ont été dé-archivées !"
 
-#: .\platform_code\assessment\views\utils\utils.py:337
+#: .\platform_code\assessment\views\utils\utils.py:339
 msgid "You can't archive an empty note!"
 msgstr "Vous ne pouvez pas archiver une note vide !"
 
-#: .\platform_code\assessment\views\utils\utils.py:348
+#: .\platform_code\assessment\views\utils\utils.py:350
 msgid "You can't archive this note!"
 msgstr "Vous ne pouvez pas archiver cette note !"
 
-#: .\platform_code\dev_platform\settings.py:128
-#: .\platform_code\dev_platform\settings_prod.py:128
+#: .\platform_code\dev_platform\settings.py:129
+#: .\platform_code\dev_platform\settings_prod.py:129
 msgid "English"
 msgstr "Anglais"
 
-#: .\platform_code\dev_platform\settings.py:129
-#: .\platform_code\dev_platform\settings_prod.py:129
+#: .\platform_code\dev_platform\settings.py:130
+#: .\platform_code\dev_platform\settings_prod.py:130
 msgid "French"
 msgstr "Français"
 
@@ -1590,8 +1612,7 @@ msgid ""
 "out by the Substra Foundation association. This approach is described in this"
 msgstr ""
 "Elle est le fruit d'un travail participatif initié mi-2019 et mené par "
-"l'association Substra Foundation. Cette démarche est décrite dans "
-"cet "
+"l'association Substra Foundation. Cette démarche est décrite dans cet "
 
 #: .\platform_code\home\templates\home\faq.html:20
 msgid "blog article"
@@ -1666,10 +1687,10 @@ msgstr ""
 "Evidemment cette tension ne date pas d’hier, certains risques sont bien "
 "réels, et il nous semble que règne une forme de consensus général sur le "
 "fait qu’il faille faire émerger des cadres structurants et rassurants. Il "
-"suffit de taper <i>IA et éthique</i> ou “<i>IA responsable</i> dans un moteur "
-"de recherche pour voir le foisonnement d’initiatives dans ce domaine, et on "
-"trouve donc beaucoup de choses en la matière. Cependant, beaucoup sont des "
-"listes de principes cardinaux, et n’offrent pas d’accroche concrète, "
+"suffit de taper <i>IA et éthique</i> ou “<i>IA responsable</i> dans un "
+"moteur de recherche pour voir le foisonnement d’initiatives dans ce domaine, "
+"et on trouve donc beaucoup de choses en la matière. Cependant, beaucoup sont "
+"des listes de principes cardinaux, et n’offrent pas d’accroche concrète, "
 "opérationnelle. Comment se positionner ? Comment évaluer son organisation ? "
 "Sur quoi travailler pour se <i>mettre en conformité</i> avec ces principes ?"
 
@@ -1897,8 +1918,8 @@ msgstr ""
 "une bonne pratique de ne pas montrer ces valeurs pendant une évaluation. "
 "Notre objectif est de donner la priorité au contenu et de limiter le risque "
 "de pertubation ou d'influence de l'utilisateur en montrant des éléments "
-"chiffrés qui pourraient le conduire à chercher à <i>optimiser ses "
-"réponses.</i>"
+"chiffrés qui pourraient le conduire à chercher à <i>optimiser ses réponses.</"
+"i>"
 
 #: .\platform_code\home\templates\home\faq.html:200
 msgid "About Substra Foundation"
@@ -2104,7 +2125,6 @@ msgid ""
 msgstr ""
 "Réalisez votre auto-évaluation sur les 6 thèmes du référentiel cadre de la "
 "Data Science Responsable et de Confiance"
-
 
 #: .\platform_code\home\templates\home\homepage.html:101
 msgid "Technical resources"

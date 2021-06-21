@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django_countries',
     'markdownify',
     'modeltranslation',
+    'ckeditor',
 ]
 
 MIDDLEWARE = [
@@ -188,3 +189,35 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_PASSWORD")
 EMAIL_HOST = os.getenv("EMAIL_URL")
 EMAIL_PORT = os.getenv("EMAIL_PORT")
 EMAIL_USE_TLS = True
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        "skin": "moono-lisa",
+        "toolbar_Basic": [["Source", "-", "Bold", "Italic"]],
+        "toolbar_Full": [
+            [
+                "Format",
+                "Bold",
+                "Italic",
+                "Underline",
+                "Strike",
+                "SpellChecker",
+                "Undo",
+                "Redo",
+            ],
+            {
+                'name': 'paragraph',
+                'items': [
+                    'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
+                ]
+            },
+            ["Link", "Unlink"],
+            # ["Table", "HorizontalRule"],
+            ["TextColor", "BGColor"],
+            ["Source"],
+        ],
+        "toolbar": "Full",
+        "height": 90,
+        "width": '',
+    }
+}

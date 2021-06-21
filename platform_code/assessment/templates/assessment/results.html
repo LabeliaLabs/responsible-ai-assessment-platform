@@ -205,8 +205,17 @@
                     {% endif %}
 
                     {% for field in dic_form_results|get_item:element %}
-                    <label class="margin-left-20">{{ field.label }}</label>
-                        {{ field }}
+                        {% if field.name == "justification" %}
+                            {% if element.user_justification %}
+                                <div class="margin-left-20">{% trans 'Answer justification' %}</div>
+                                <div class="textarea-data-results scroll-div-results">
+                                    {{ element.user_justification|safe }}
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <label class="margin-left-20">{{ field.label }}</label>
+                            {{ field }}
+                        {% endif %}
                     {% endfor %}
 
                 </div>

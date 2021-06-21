@@ -12,6 +12,7 @@ and the score.
 import re
 import random
 import itertools
+from ckeditor.fields import RichTextField
 
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
@@ -433,7 +434,7 @@ class Evaluation(models.Model):
                 new_section.save()
             else:
                 # We rely on the upgrade dic to find the matching
-                # Tow cases: 1 if it fetches itself, or "id" (ex "2") if it fetches an other section
+                # Two cases: 1 if it fetches itself, or "id" (ex "2") if it fetches an other section
                 if upgrade_dic["sections"][new_section_number] == 1:
                     older_section_order_id = new_section.master_section.order_id
                 else:
@@ -464,6 +465,7 @@ class Evaluation(models.Model):
                         section__evaluation=self,
                     )
                     new_element.user_notes = older_element.user_notes
+                    new_element.user_justification = older_element.user_justification
                     new_element.save()
 
                 for new_choice in new_element.choice_set.all():
@@ -1113,9 +1115,11 @@ class EvaluationElement(models.Model):
     master_evaluation_element = models.ForeignKey(
         MasterEvaluationElement, on_delete=models.CASCADE, blank=True
     )  # TODO remove blank
+
     section = models.ForeignKey(Section, blank=True, on_delete=models.CASCADE)
     user_notes = models.TextField(blank=True, null=True, max_length=20000)
     user_notes_archived = models.BooleanField(default=False)
+    user_justification = RichTextField(blank=True, null=True, max_length=20000)
     status = models.BooleanField(default=False)
     points = models.FloatField(default=0)
     # Max points of this evaluation elements according to the scoring used

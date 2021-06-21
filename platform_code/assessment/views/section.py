@@ -138,7 +138,8 @@ class SectionView(LoginRequiredMixin, ListView):
             - giving a feedback on a section (externalized)
             - liking/unliking resources (externalized)
             - updating the section notes
-            - updating an evaluation element answer (choices or notes)
+            - updating the justification
+            - updating an evaluation element answer (choices, justification or notes)
             - resetting the evaluation element responses
 
         The evaluation elements may have conditions set on them (conditions inter) or may have conditions
@@ -206,7 +207,7 @@ class SectionView(LoginRequiredMixin, ListView):
                                 else:
                                     self.manage_evaluation_element_not_applicable(request, evaluation_element)
 
-                        # Element choices validation and/or notes
+                        # Element choices validation and/or notes and/or justification
                         else:
                             evaluation_element = get_evaluation_element_with_logs(request=request,
                                                                                   section=section,
@@ -217,6 +218,7 @@ class SectionView(LoginRequiredMixin, ListView):
                                 if evaluation_element.is_applicable():
                                     self.treat_element_notes(request, evaluation_element)
                                     self.treat_element_validation(request, evaluation, evaluation_element)
+                                    self.treat_element_justification(request, evaluation_element)
                                 else:
                                     self.manage_evaluation_element_not_applicable(request, evaluation_element)
 
@@ -269,6 +271,26 @@ class SectionView(LoginRequiredMixin, ListView):
                            f"(id {evaluation_element.id} but the form is invalid")
             self.data_update["message_notes"] = _("Your notes have not been saved, an error occurred.")
             self.data_update["message_notes_type"] = "alert-danger"
+
+    def treat_element_justification(self, request, evaluation_element):
+        """
+        Treat the element justification part ie saving the user_justification field if this latter has changed.
+        """
+        form = ChoiceForm(request.POST, evaluation_element=evaluation_element, prefix=evaluation_element.id)
+        if form.is_valid():
+            element_justification = form.cleaned_data.get("justification")
+            initial_justification = form.fields["justification"].initial \
+                if form.fields["justification"].initial is not None else ''
+            if element_justification != initial_justification:
+                evaluation_element.user_justification = element_justification
+                evaluation_element.save()
+                self.data_update["message_justification"] = _("Your justification have been saved!")
+                self.data_update["message_justification_type"] = "alert-success"
+        else:
+            logger.warning(f"[invalid_form] The user {request.user.email} tries to save justification for an "
+                           f"evaluation element (id {evaluation_element.id} but the form is invalid")
+            self.data_update["message_justification"] = _("Your justification has not been saved, an error occurred.")
+            self.data_update["message_justification_type"] = "alert-danger"
 
     def treat_reset_element(self, request, evaluation, evaluation_element):
         """

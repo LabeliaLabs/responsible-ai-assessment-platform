@@ -23,6 +23,7 @@ nohup.out
 data/certbot/
 nohup.out
 .coverage
+*.pynb
 
 # DB
 *.dump
