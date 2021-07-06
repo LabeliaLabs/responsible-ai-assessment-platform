@@ -1,0 +1,288 @@
+.card {
+    margin: 0 auto; /* Added */
+    float: none; /* Added */
+    margin-bottom: 25px; /* Added */
+    margin-bottom: 25px;
+    position: relative;
+    border-radius: 0.5em;
+
+}
+
+.accordion>.card:first-of-type{
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.accordion>.card:not(:first-of-type):not(:last-of-type) {
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.accordion>.card:last-of-type{
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.resource-card{
+    border-top: 1px solid rgba(0,0,0,.125);
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+
+.resource-card:hover {
+    cursor: pointer;
+}
+
+
+.card_title {
+}
+
+div.evaluation-title: h1 {
+    text-align: center;
+    margin: 0 auto;
+    position:absolute;
+}
+
+div.evaluation-title: h3 {
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 20px;
+}
+
+.question-name{
+    width: 95%;
+    text-align: justify;
+}
+
+.feedback{
+    font-size: 12px;
+    margin-left: 5px;
+    margin-bottom: auto;
+    margin-top: auto;
+    color: #007BFF
+}
+
+.feedback:hover {
+    color: #278BF7;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.choices{
+    margin-top: 20px;
+}
+
+.textarea-empty {
+    width: 100%;
+    font-style: italic;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+}
+
+.wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  height: 20px;
+  width: 100px;
+}
+
+.reset-response:hover{
+    cursor: pointer;
+    color: red;
+
+}
+
+.select-feedback-popin{
+    width: 90%;
+    height: 40px;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    margin-left: 5%;
+    margin-right: 5%;
+    background-color: white;
+}
+
+.feedback-text{
+    width: 90%;
+    color: #4b6073;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.textarea-data {
+    width: 100%;
+    color: #4D566B;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    padding: 10px;
+}
+
+.textarea-data-results {
+    width: 95%;
+    color: #4D566B;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    padding: 10px;
+    margin: 2%;
+}
+
+.textarea{
+    color: #4D566B;
+}
+
+.btn-primary{
+    background-color: #FFBE3C;
+    border-color: #FFBE3C;
+
+}
+
+.collapsible-resource{
+  background-color: #FFFFFF;
+  margin-top: 10px;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 15px;
+}
+.active, .collapsible-resource:hover {
+
+}
+
+.fa-stack-evaluation{
+    margin-left: auto;
+    color: green;
+    font-size:18px;
+}
+
+.fa-stack-2x{
+    font-size: 20px;
+    position: relative;
+}
+
+.div-button:hover h2>button {
+    cursor: pointer;
+    text-decoration: underline;
+    color: #0056b3;
+}
+
+.background-white{
+    background-color: white;
+}
+
+.section-description{
+    margin-bottom: 50px;
+     text-align: justify;
+      margin-top: 50px;
+}
+
+.content-resource {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+}
+
+.accordion-resource .card-header:after {
+
+    font-family: 'FontAwesome';
+    content: "\f068";
+    margin-left: 20px;
+}
+.accordion-resource .card-header.collapsed:after {
+    /* symbol for "collapsed" panels */
+    content: "\f067";
+}
+
+.resource-section-icon {
+    color: #5550FF;
+    margin-right: 20px;
+    float: left;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.resource-section-icon:hover {
+    cursor: pointer;
+}
+
+.sidenav {
+  height: 70%;
+  width: 200px;
+  position: fixed;
+  z-index: 1;
+  top: 25%;
+  left: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+}
+
+.title-sidenav {
+  padding: 6px 6px 6px 32px;
+  text-decoration: none;
+  font-size: 16px;
+  display: block;
+  color: #848482;
+  overflow: hidden;
+  height: 3em;
+  text-overflow: ellipsis;
+  display: -webkit-inline-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.sidenav a:hover {
+  color: #000066;
+}
+
+.collapsible-section{
+  cursor: pointer;
+}
+
+.collapsible-section:after {
+  content: '\1F892';
+  color: white;
+  font-weight: bold;
+  float: right;
+  size: 10px;
+  margin-left: 5px;
+}
+
+.content-sidebar {
+  padding: 0 18px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+
+.main {
+  margin-left: 150px; /* Same as the width of the sidenav */
+}
+
+/* CSS animation */
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity:0;
+        transform: scale(0.6);
+    }
+
+    100% {
+        opacity:100%;
+        transform: scale(1);
+    }
+}
+
+@keyframes fadeIn {
+    0% { opacity:0; }
+    100% { opacity:100%; }
+}

@@ -1107,6 +1107,18 @@ body.navbar-is-fixed-top {
 
 /*********************************************** END CARDS ORGA ********************************************/
 
+/*********************************************** RESULTS ***************************************************/
+
+.scroll-div-results {
+    resize: vertical;
+    overflow-y: scroll;
+    height: 100px;
+    background-color: #f4f4f4;
+}
+
+
+/************************************************ END RESULTS ***********************************************/
+
 
 /*********************************************** HELP TIP **************************************************/
 
@@ -1188,6 +1200,35 @@ body.navbar-is-fixed-top {
 }
 
 /************************************************ END HELP TIP *********************************************/
+
+/************************************************ CKEDITOR *************************************************/
+
+.cke_dialog {
+    width: 500px !important;
+}
+
+.cke_dialog_contents {
+    width: 420px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.django-ckeditor-widget {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.cke_bottom {
+    border-top: none !important;
+    background: #fff !important;
+}
+
+.element-justification-result {
+    padding: 20px;
+}
+
+/*********************************************** END CKEDITOR **********************************************/
+
 
 /************************************************ DIVERS ***************************************************/
 

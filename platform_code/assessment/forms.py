@@ -1,4 +1,5 @@
 from ast import literal_eval
+from ckeditor.widgets import CKEditorWidget
 
 from django import forms
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
@@ -372,6 +373,8 @@ class ChoiceForm(ModelForm):
             )  # see if needed
             self.fields[str(evaluation_element.id)] = question
 
+        self.add_element_justification(evaluation_element)  # Add the justification field
+
         # If the evaluation element has no user_notes set yet, the default value is displayed
         if evaluation_element.user_notes is None or evaluation_element.user_notes == "":
             notes = forms.CharField(
@@ -409,6 +412,26 @@ class ChoiceForm(ModelForm):
             )
 
         self.fields["notes"] = notes  # add the notes (empty or not) in the form
+
+    def add_element_justification(self, evaluation_element):
+        """
+        Used during the initialization of a class instance to add a new field in the form for the
+        user_justification field of the evaluation_element class model.
+        """
+        if evaluation_element.user_justification is None or evaluation_element.user_justification == "":
+            justification = forms.CharField(
+                label=_("Answer justification"),
+                widget=CKEditorWidget(),
+                required=False,
+            )
+        elif evaluation_element.user_justification is not None:
+            justification = forms.CharField(
+                label=_("Answer justification"),
+                widget=CKEditorWidget(),
+                initial=evaluation_element.user_justification,
+                required=False,
+            )
+        self.fields["justification"] = justification
 
 
 class MarkdownifyRadioChoices(widgets.RadioSelect):
@@ -618,6 +641,8 @@ class ResultsForm(ModelForm):
             )  # see if needed
             self.fields[str(evaluation_element.id)] = question
 
+        self.add_element_justification_result(evaluation_element)
+
         # If the user has registered the champ user_notes for this element, it is displayed
         if evaluation_element.user_notes and evaluation_element.user_notes != "":
             notes = forms.CharField(
@@ -634,8 +659,39 @@ class ResultsForm(ModelForm):
                 disabled=True,
                 required=False,
             )
-
             self.fields["notes"] = notes  # add the notes (empty or not) in the form
+
+    def add_element_justification_result(self, evaluation_element):
+        """
+        Used during the initialization of a class instance to add a new field in the form for the
+        user_justification field of the evaluation_element class model.
+        """
+        if evaluation_element.user_justification is None or evaluation_element.user_justification == "":
+            justification = forms.CharField(
+                label=_("Answer justification"),
+                widget=forms.Textarea(
+                    attrs={
+                        "rows": 3,
+                        "size": 100,
+                        "width": "100%",
+                        "class": "textarea textarea-data-results",
+                    }),
+                required=False,
+            )
+        elif evaluation_element.user_justification is not None:
+            justification = forms.CharField(
+                label=_("Answer justification"),
+                widget=forms.Textarea(
+                    attrs={
+                        "rows": 3,
+                        "size": 100,
+                        "width": "100%",
+                        "class": "textarea textarea-data-results",
+                    }),
+                initial=evaluation_element.user_justification,
+                required=False,
+            )
+        self.fields["justification"] = justification
 
 
 class SectionResultsForm(ModelForm):
