@@ -4,10 +4,21 @@
 {% load i18n %}
 
 {% block content %}
+<head>
+    <title>Substra assessment: FAQ</title>
+    <meta name="description"
+          content="{% blocktrans trimmed %}
+           Find the answers to your questions about the substra assessment in this page.
+          {% endblocktrans %}"
+    />
+</head>
 
 <div class="container">
     <h1 class="h1-margin-no-breadcrumbs">{% trans "FAQ" %}</h1>
-    <img alt="image" class="img-fluid d-block mx-auto image-faq" src="{% static 'image/Illustration_10.png' %}">
+    <img alt="{% trans 'Find the answers to your questions about the Substra assessment.' %}"
+         class="img-fluid d-block mx-auto image-faq"
+         src="{% static 'image/Illustration_10.png' %}"
+    />
     <h3 class="about-subtitle">{% trans "The assessment" %}</h3>
     <p><strong>{% trans "How was the evaluation developed?" %}</strong></p>
     <ul>

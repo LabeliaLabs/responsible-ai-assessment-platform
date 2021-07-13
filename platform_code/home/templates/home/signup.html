@@ -3,6 +3,18 @@
 {% load static %}
 
 {% block content %}
+<head>
+    <title>{% trans 'Substra assessment: Signup' %}</title>
+    <meta name="description"
+          content="{% blocktrans trimmed %}
+           The Substra assessment is the result of a participatory work carried out by the Substra Foundation
+           association. Create an account to evaluate your organisation on responsible and trustworthy data science
+           practices.
+          {% endblocktrans %}"
+    />
+</head>
+
+
 <h1 class="margin-left-signup h1-margin-no-breadcrumbs">{% trans "Sign up" %}</h1>
 <div class="grid-container-2-cols-signup">
     <div class="remove-smartphone-screen">
