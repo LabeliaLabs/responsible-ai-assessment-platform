@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'assessment.apps.AssessmentConfig',
     'home.apps.HomeConfig',
     'bootstrap4',
@@ -49,6 +50,8 @@ INSTALLED_APPS = [
     'modeltranslation',
     'ckeditor',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

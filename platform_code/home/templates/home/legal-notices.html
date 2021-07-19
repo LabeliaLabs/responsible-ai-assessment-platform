@@ -4,6 +4,15 @@
 {% load i18n %}
 
 {% block content %}
+<head>
+    <title>{% trans 'Substra assessment: legal notices' %}</title>
+    <meta name="description"
+          content="{% blocktrans trimmed %}
+           Legal information about the site www.assessment.substra.ai
+          {% endblocktrans %}"
+    />
+</head>
+
 <div class="container">
     <h1 class="h1-margin-no-breadcrumbs">Informations légales</h1>
     <h3 class="about-subtitle">1. Présentation du site.</h3>

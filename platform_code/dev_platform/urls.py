@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.sitemaps.views import sitemap
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
@@ -22,8 +23,14 @@ from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import JavaScriptCatalog
 
 from home.admin import admin_dashboard
+from home.sitemaps import StaticViewsSitemap
+
+sitemaps = {
+    'static': StaticViewsSitemap
+}
 
 urlpatterns = i18n_patterns(
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path("", include("home.urls")),
     path('i18n/', include('django.conf.urls.i18n')),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),

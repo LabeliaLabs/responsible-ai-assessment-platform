@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-19 18:23+0200\n"
+"POT-Creation-Date: 2021-07-19 18:40+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -284,7 +284,7 @@ msgstr "Aller à l'élément d'évaluation précédent"
 #: .\platform_code\assessment\templates\assessment\content-section.html:245
 #: .\platform_code\assessment\templates\assessment\content-section.html:254
 #: .\platform_code\home\templates\home\login-modal.html:30
-#: .\platform_code\home\templates\home\login.html:59
+#: .\platform_code\home\templates\home\login.html:68
 msgid "Validate"
 msgstr "Valider"
 
@@ -365,7 +365,7 @@ msgstr "Version du référentiel d'évaluation"
 #: .\platform_code\home\templates\home\creation-evaluation-mutli-orga-modal.html:32
 #: .\platform_code\home\templates\home\logout-page.html:10
 #: .\platform_code\home\templates\home\profile-orga-creation-modal.html:29
-#: .\platform_code\home\templates\home\registration\password_reset_form.html:14
+#: .\platform_code\home\templates\home\registration\password_reset_form.html:24
 #: .\platform_code\home\templates\home\settings-delete.html:15
 #: .\platform_code\home\templates\home\settings-delete.html:42
 msgid "Cancel"
@@ -447,8 +447,8 @@ msgstr "Date de creation"
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:13
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:51
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:18
-#: .\platform_code\home\templates\home\release-notes.html:22
-#: .\platform_code\home\templates\home\release-notes.html:41
+#: .\platform_code\home\templates\home\release-notes.html:24
+#: .\platform_code\home\templates\home\release-notes.html:43
 msgid "Version"
 msgstr "Version"
 
@@ -716,7 +716,7 @@ msgid "Progression"
 msgstr "Progression"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:17
-#: .\platform_code\home\templates\home\faq.html:115
+#: .\platform_code\home\templates\home\faq.html:126
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:23
 msgid "Score"
 msgstr "Score"
@@ -951,7 +951,7 @@ msgstr ""
 "consulter"
 
 #: .\platform_code\assessment\templates\assessment\results.html:125
-#: .\platform_code\home\templates\home\faq.html:9
+#: .\platform_code\home\templates\home\faq.html:17
 #: .\platform_code\templates\footer.html:35
 #: .\platform_code\templates\navbar.html:42
 #: .\platform_code\templates\navbar.html:58
@@ -1450,13 +1450,13 @@ msgstr "Vous ne pouvez pas archiver une note vide !"
 msgid "You can't archive this note!"
 msgstr "Vous ne pouvez pas archiver cette note !"
 
-#: .\platform_code\dev_platform\settings.py:129
-#: .\platform_code\dev_platform\settings_prod.py:129
+#: .\platform_code\dev_platform\settings.py:132
+#: .\platform_code\dev_platform\settings_prod.py:132
 msgid "English"
 msgstr "Anglais"
 
-#: .\platform_code\dev_platform\settings.py:130
-#: .\platform_code\dev_platform\settings_prod.py:130
+#: .\platform_code\dev_platform\settings.py:133
+#: .\platform_code\dev_platform\settings_prod.py:133
 msgid "French"
 msgstr "Français"
 
@@ -1480,7 +1480,7 @@ msgstr "Mot de passe"
 
 #: .\platform_code\home\forms.py:27
 #: .\platform_code\home\templates\home\settings-password.html:8
-#: .\platform_code\home\templates\home\signup.html:25
+#: .\platform_code\home\templates\home\signup.html:37
 msgid ""
 "Your password must contain at least 8 characters, with at least one number "
 "and one letter"
@@ -1754,15 +1754,25 @@ msgstr "Statistiques des organisations "
 msgid "Evaluations stats"
 msgstr "Statistiques des évaluations"
 
-#: .\platform_code\home\templates\home\faq.html:11
+#: .\platform_code\home\templates\home\faq.html:10
+msgid ""
+"Find the answers to your questions about the substra assessment in this page."
+msgstr "Trouvez les réponses à vos questions sur le fonctionnement de la "
+"plateforme d'évaluation de Substra Foundation"
+
+#: .\platform_code\home\templates\home\faq.html:18
+msgid "Find the answers to your questions about the Substra assessment."
+msgstr "Trouvez les réponses à vos questions sur l'évaluation"
+
+#: .\platform_code\home\templates\home\faq.html:22
 msgid "The assessment"
 msgstr "Le référentiel d'évaluation"
 
-#: .\platform_code\home\templates\home\faq.html:12
+#: .\platform_code\home\templates\home\faq.html:23
 msgid "How was the evaluation developed?"
 msgstr "Comment l'évaluation a-t-elle été élaborée ?"
 
-#: .\platform_code\home\templates\home\faq.html:15
+#: .\platform_code\home\templates\home\faq.html:26
 msgid ""
 "It is the result of a participatory work initiated in mid-2019 and carried "
 "out by the Substra Foundation association. This approach is described in this"
@@ -1770,15 +1780,15 @@ msgstr ""
 "Elle est le fruit d'un travail participatif initié mi-2019 et mené par "
 "l'association Substra Foundation. Cette démarche est décrite dans cet "
 
-#: .\platform_code\home\templates\home\faq.html:20
+#: .\platform_code\home\templates\home\faq.html:31
 msgid "blog article"
 msgstr "article de blog"
 
-#: .\platform_code\home\templates\home\faq.html:22
+#: .\platform_code\home\templates\home\faq.html:33
 msgid " that we recommend!"
 msgstr " que nous vous recommendons !"
 
-#: .\platform_code\home\templates\home\faq.html:23
+#: .\platform_code\home\templates\home\faq.html:34
 msgid ""
 "But let's review here some of the contextual elements described in the "
 "article. First of all, we can see that there is growing tension between the "
@@ -1792,34 +1802,34 @@ msgstr ""
 "et de l’autre la difficulté à faire confiance à ces techniques ou à leurs "
 "mises en oeuvres (que ce soit par des acteurs privés comme "
 
-#: .\platform_code\home\templates\home\faq.html:31
+#: .\platform_code\home\templates\home\faq.html:42
 msgid "Apple with the Apple Card"
 msgstr "Apple avec l'Apple Card"
 
-#: .\platform_code\home\templates\home\faq.html:31
+#: .\platform_code\home\templates\home\faq.html:42
 msgid ", Tesla in "
 msgstr ", Tesla dans"
 
-#: .\platform_code\home\templates\home\faq.html:35
+#: .\platform_code\home\templates\home\faq.html:46
 msgid "this astonishing example,"
 msgstr "cet exemple étonnant,"
 
-#: .\platform_code\home\templates\home\faq.html:37
+#: .\platform_code\home\templates\home\faq.html:48
 msgid "or by public actors such as States, cf. "
 msgstr "ou par des acteurs publics comme les Etats, cf. "
 
-#: .\platform_code\home\templates\home\faq.html:42
+#: .\platform_code\home\templates\home\faq.html:53
 msgid ""
 " on parole in the USA, the controversies each year on Parcoursup in France, "
 msgstr ""
 " sur les libérations conditionnelles aux USA, les controverses chaque année "
 "sur Parcoursup en France, les "
 
-#: .\platform_code\home\templates\home\faq.html:46
+#: .\platform_code\home\templates\home\faq.html:57
 msgid "unemployment benefits in the Netherlands,"
 msgstr "allocations chômage aux Pays-Bas,"
 
-#: .\platform_code\home\templates\home\faq.html:48
+#: .\platform_code\home\templates\home\faq.html:59
 msgid ""
 "and many others). In this context, it is becoming increasingly difficult for "
 "an organisation to implement data science approaches in its products and "
@@ -1829,7 +1839,7 @@ msgstr ""
 "pour une organisation de mettre en œuvre des approches de data science dans "
 "ses produits et services et de l’assumer publiquement."
 
-#: .\platform_code\home\templates\home\faq.html:54
+#: .\platform_code\home\templates\home\faq.html:65
 msgid ""
 "Obviously this tension is not new, certain risks are very real, and it seems "
 "to us that there is a general consensus on the fact that it is necessary to "
@@ -1850,7 +1860,7 @@ msgstr ""
 "opérationnelle. Comment se positionner ? Comment évaluer son organisation ? "
 "Sur quoi travailler pour se <i>mettre en conformité</i> avec ces principes ?"
 
-#: .\platform_code\home\templates\home\faq.html:63
+#: .\platform_code\home\templates\home\faq.html:74
 msgid ""
 "It is based on these observations that we wanted to develop a tool that is "
 "intended for practitioners, useful and actionable as soon as possible. Give "
@@ -1860,11 +1870,11 @@ msgstr ""
 "qui soit à destination des praticiens, utile et actionnable dès que "
 "possible. Essayez et dites-nous ce que vous en pensez !"
 
-#: .\platform_code\home\templates\home\faq.html:71
+#: .\platform_code\home\templates\home\faq.html:82
 msgid "Who is this evaluation intended for?"
 msgstr "À qui s'adresse cette évaluation ?"
 
-#: .\platform_code\home\templates\home\faq.html:74
+#: .\platform_code\home\templates\home\faq.html:85
 msgid ""
 "The self-assessment tool has been developed to suit (and hopefully bring "
 "something!) all organisations (companies, university laboratories, start-"
@@ -1883,11 +1893,11 @@ msgstr ""
 "utilisateurs pour une même organisation, pour se répartir les sujets par "
 "exemple."
 
-#: .\platform_code\home\templates\home\faq.html:84
+#: .\platform_code\home\templates\home\faq.html:95
 msgid "How is the evaluation structured?"
 msgstr "Comment est structurée l'évaluation ?"
 
-#: .\platform_code\home\templates\home\faq.html:87
+#: .\platform_code\home\templates\home\faq.html:98
 msgid ""
 "It is composed of 6 thematic sections. We have chosen not to take up here "
 "the 7 themes of the report of the EU high-level expert group and its ALTAI "
@@ -1900,12 +1910,12 @@ msgstr ""
 "plus pragmatique, visant à se rapprocher du cycle de vie d'un projet de data "
 "science. À voir à l'usage !"
 
-#: .\platform_code\home\templates\home\faq.html:96
+#: .\platform_code\home\templates\home\faq.html:107
 msgid "Is the assessment framework 'finished' or will it keep evolving?"
 msgstr ""
 "L'évaluation est-elle figée ou allez-vous la faire évoluer avec le temps ?"
 
-#: .\platform_code\home\templates\home\faq.html:99
+#: .\platform_code\home\templates\home\faq.html:110
 msgid ""
 "Yes, it will continue to evolve. From the very beginning of this project it "
 "was clear that it would be an iterative process, because it seemed "
@@ -1939,7 +1949,7 @@ msgstr ""
 "donnée vers la version plus récente du référentiel d'évaluation : toutes les "
 "réponses à des éléments inchangés seront conservés."
 
-#: .\platform_code\home\templates\home\faq.html:117
+#: .\platform_code\home\templates\home\faq.html:128
 msgid ""
 "The synthetic score is on a total of 100 theoretical maximum points for a "
 "full assessment. It provides an indication of the organization maturity "
@@ -1952,11 +1962,11 @@ msgstr ""
 "de la data science. À fin 2020, le seuil de 50/100 peut être considéré comme "
 "un niveau de maturité très avancé."
 
-#: .\platform_code\home\templates\home\faq.html:123
+#: .\platform_code\home\templates\home\faq.html:134
 msgid "The mechanism for calculating the score is relatively simple:"
 msgstr "Le mécanisme de calcul du score est relativement simple :"
 
-#: .\platform_code\home\templates\home\faq.html:126
+#: .\platform_code\home\templates\home\faq.html:137
 msgid ""
 "with each version of the assessment we define a number of points for each "
 "response item of each evaluation element, as well as a so-called "
@@ -1968,7 +1978,7 @@ msgstr ""
 "pondération dite <i>pondération d'importance</i> calibrée pour assurer que "
 "le total maximal théorique est bien 100 exactement."
 
-#: .\platform_code\home\templates\home\faq.html:133
+#: .\platform_code\home\templates\home\faq.html:144
 msgid ""
 "for single response evaluation elements, the number of points of the "
 "selected item is retained, while for multiple response evaluation elements, "
@@ -1978,7 +1988,7 @@ msgstr ""
 "est retenu, alors que pour les éléments à réponses multiples, les nombres de "
 "points de tous les items sélectionnés sont sommés."
 
-#: .\platform_code\home\templates\home\faq.html:140
+#: .\platform_code\home\templates\home\faq.html:151
 msgid ""
 "the total score obtained is the sum of the number of points for each "
 "evaluation element, weighted by the importance weighting."
@@ -1986,7 +1996,7 @@ msgstr ""
 "le score total obtenu est la somme des nombres de points de chaque élément, "
 "pondérée par la pondération d'importance."
 
-#: .\platform_code\home\templates\home\faq.html:147
+#: .\platform_code\home\templates\home\faq.html:158
 msgid ""
 "There is, however, a subtlety in cases where one is <i>not concerned</i> by "
 "certain evaluation elements and the risk universes corresponding to them. "
@@ -2007,7 +2017,7 @@ msgstr ""
 "élevé dès lors que l'on ne fait en fait pas grand chose. Le mécanisme pour "
 "traiter ce point est le suivant :"
 
-#: .\platform_code\home\templates\home\faq.html:157
+#: .\platform_code\home\templates\home\faq.html:168
 msgid ""
 "If you are <i>not concerned</i> by an evaluation element, you are "
 "automatically awarded half of the maximum number of points for the element. "
@@ -2019,7 +2029,7 @@ msgstr ""
 "l'élément. L'autre moitié vient abonder une variable temporaire, le "
 "<i>nombre de points qui ne peuvent pas être obtenus</i>."
 
-#: .\platform_code\home\templates\home\faq.html:164
+#: .\platform_code\home\templates\home\faq.html:175
 msgid ""
 "Once all the assessment items that do not concern you have been dealt with, "
 "an intermediate score is calculated by summing the points for each item. "
@@ -2032,7 +2042,7 @@ msgstr ""
 "mais sur un maximum intermédiaire = (100 - le nombre de points qui ne "
 "peuvent pas être obtenus)."
 
-#: .\platform_code\home\templates\home\faq.html:172
+#: .\platform_code\home\templates\home\faq.html:183
 msgid ""
 "This intermediate score is then <i>dilated</i> to be brought back to 100; "
 "dilated by a factor (100 / maximum intermediate)."
@@ -2040,7 +2050,7 @@ msgstr ""
 "Ce score intermédiaire est ensuite <i>dilaté</i> pour être ramené sur 100 ; "
 "dilaté d'un facteur (100 / maximum intermédiaire)."
 
-#: .\platform_code\home\templates\home\faq.html:178
+#: .\platform_code\home\templates\home\faq.html:189
 msgid ""
 "This mechanism is a compromise to ensure : (i) that not being affected by "
 "certain risks is taken into account; (ii) that the score of any assessment "
@@ -2050,7 +2060,7 @@ msgstr ""
 "être concerné par certains risques est pris en compte ; (ii) que le score de "
 "n'importe quelle évaluation est toujours sur 100."
 
-#: .\platform_code\home\templates\home\faq.html:186
+#: .\platform_code\home\templates\home\faq.html:197
 msgid ""
 "Finally, here is some additional information in the form of answers to "
 "frequently asked questions:"
@@ -2058,7 +2068,7 @@ msgstr ""
 "Enfin, voici quelques compléments d'information sous forme de réponses à des "
 "questions souvent posées :"
 
-#: .\platform_code\home\templates\home\faq.html:190
+#: .\platform_code\home\templates\home\faq.html:201
 msgid ""
 "Why is the value of each response item not seen during the assessment? In "
 "studying several systems for evaluating professional practices in different "
@@ -2077,16 +2087,16 @@ msgstr ""
 "chiffrés qui pourraient le conduire à chercher à <i>optimiser ses réponses.</"
 "i>"
 
-#: .\platform_code\home\templates\home\faq.html:200
+#: .\platform_code\home\templates\home\faq.html:211
 msgid "About Substra Foundation"
 msgstr "À propos de Substra Foundation"
 
-#: .\platform_code\home\templates\home\faq.html:202
-#: .\platform_code\home\templates\home\faq.html:204
+#: .\platform_code\home\templates\home\faq.html:213
+#: .\platform_code\home\templates\home\faq.html:215
 msgid "https://www.substra.ai/en/about-substra-foundation"
 msgstr "https://www.substra.ai/fr/about-substra-foundation"
 
-#: .\platform_code\home\templates\home\faq.html:205
+#: .\platform_code\home\templates\home\faq.html:216
 msgid ""
 "is a non-profit organisation whose mission is to contribute to the "
 "development of collaborative, responsible and trustworthy data science. It "
@@ -2096,7 +2106,7 @@ msgstr ""
 "développement de la data science collaborative, responsable et de confiance. "
 "Elle se consacre aux 5 projets suivants :"
 
-#: .\platform_code\home\templates\home\faq.html:211
+#: .\platform_code\home\templates\home\faq.html:222
 msgid ""
 "Substra Assessment: a self-assessment and self-training tool on risks and "
 "good practices on the theme of responsible and trustworthy data science."
@@ -2105,15 +2115,15 @@ msgstr ""
 "risques et bonnes pratiques sur le thème de la data science responsable et "
 "de confiance."
 
-#: .\platform_code\home\templates\home\faq.html:216
+#: .\platform_code\home\templates\home\faq.html:227
 msgid "https://doc.substra.ai/"
 msgstr "https://doc.substra.ai/"
 
-#: .\platform_code\home\templates\home\faq.html:218
+#: .\platform_code\home\templates\home\faq.html:229
 msgid "Substra Framework: "
 msgstr "Framework Substra :"
 
-#: .\platform_code\home\templates\home\faq.html:219
+#: .\platform_code\home\templates\home\faq.html:230
 msgid ""
 "the association promotes, animates and contributes to the open source "
 "project Substra, a framework for the secure, traceable and decentralised "
@@ -2129,11 +2139,11 @@ msgstr ""
 "publiée sous licence Apache 2.0 pour favoriser l'émergence de nouveaux cas "
 "d'usage et ouvrir les collaborations open source."
 
-#: .\platform_code\home\templates\home\faq.html:230
+#: .\platform_code\home\templates\home\faq.html:241
 msgid "MLPC: "
 msgstr "MLPC :"
 
-#: .\platform_code\home\templates\home\faq.html:231
+#: .\platform_code\home\templates\home\faq.html:242
 msgid ""
 "mplc (for Multi-Partner Learning and Contributivity) is a Python library for "
 "simulating distributed learning scenarios and benchmarking different "
@@ -2144,7 +2154,7 @@ msgstr ""
 "différentes méthodes d'apprentissage et différentes méthodes d'évaluation de "
 "contributivité des datasets."
 
-#: .\platform_code\home\templates\home\faq.html:238
+#: .\platform_code\home\templates\home\faq.html:249
 msgid ""
 "HealthChain: research consortium on federated learning use cases on clinical "
 "data (see description"
@@ -2152,17 +2162,17 @@ msgstr ""
 "HealthChain : consortium de recherche sur des cas d'usage d'apprentissage "
 "fédéré sur des données cliniques (voir description "
 
-#: .\platform_code\home\templates\home\faq.html:242
-#: .\platform_code\home\templates\home\faq.html:244
+#: .\platform_code\home\templates\home\faq.html:253
+#: .\platform_code\home\templates\home\faq.html:255
 msgid "https://www.substra.ai/en/healthchain-project"
 msgstr "https://www.substra.ai/fr/healthchain-project"
 
-#: .\platform_code\home\templates\home\faq.html:244
-#: .\platform_code\home\templates\home\faq.html:252
+#: .\platform_code\home\templates\home\faq.html:255
+#: .\platform_code\home\templates\home\faq.html:263
 msgid "here"
 msgstr "ici"
 
-#: .\platform_code\home\templates\home\faq.html:246
+#: .\platform_code\home\templates\home\faq.html:257
 msgid ""
 "MELLODDY: research consortium on federated learning use cases on chemical "
 "data (see description"
@@ -2170,8 +2180,8 @@ msgstr ""
 "MELLODDY : consortium de recherche sur des cas d'usage d'apprentissage "
 "fédéré sur des données chimiques (voir description "
 
-#: .\platform_code\home\templates\home\faq.html:250
-#: .\platform_code\home\templates\home\faq.html:252
+#: .\platform_code\home\templates\home\faq.html:261
+#: .\platform_code\home\templates\home\faq.html:263
 msgid "https://www.substra.ai/en/melloddy-project"
 msgstr "https://www.substra.ai/fr/melloddy-project"
 
@@ -2343,17 +2353,25 @@ msgstr "Merci d'avoir souscrit à la newsletter !"
 msgid "You are already subscribed!"
 msgstr "Vous êtes déjà inscrit !"
 
+#: .\platform_code\home\templates\home\legal-notices.html:8
+msgid "Substra assessment: legal notices"
+msgstr "Substra assessment : informations légales"
+
+#: .\platform_code\home\templates\home\legal-notices.html:10
+msgid "Legal information about the site www.assessment.substra.ai"
+msgstr "Informations légales concerant le site www.assessment.substra.ai"
+
 #: .\platform_code\home\templates\home\login-modal.html:5
 msgid "Your username and password didn't match. Please try again."
 msgstr "Votre email et mot de passe ne concordent pas. Réessayez !"
 
 #: .\platform_code\home\templates\home\login-modal.html:13
-#: .\platform_code\home\templates\home\login.html:19
+#: .\platform_code\home\templates\home\login.html:28
 msgid "Please login to see this page."
 msgstr "Veuillez vous connecter pour accéder à cette page."
 
 #: .\platform_code\home\templates\home\login-modal.html:18
-#: .\platform_code\home\templates\home\login.html:26
+#: .\platform_code\home\templates\home\login.html:35
 #: .\platform_code\home\templates\home\registration\password_reset_complete.html:7
 #: .\platform_code\templates\footer.html:31
 #: .\platform_code\templates\navbar.html:69
@@ -2362,16 +2380,29 @@ msgid "Login"
 msgstr "Connexion"
 
 #: .\platform_code\home\templates\home\login-modal.html:35
-#: .\platform_code\home\templates\home\login.html:64
+#: .\platform_code\home\templates\home\login.html:73
 msgid "I haven't an account"
 msgstr "Je n'ai pas de compte"
 
 #: .\platform_code\home\templates\home\login-modal.html:40
-#: .\platform_code\home\templates\home\login.html:72
+#: .\platform_code\home\templates\home\login.html:81
 msgid "Forgotten password?"
 msgstr "Mot de passe oublié ?"
 
-#: .\platform_code\home\templates\home\login.html:11
+#: .\platform_code\home\templates\home\login.html:8
+msgid "Substra assessment: Connection"
+msgstr "Substra assessment : Connexion"
+
+#: .\platform_code\home\templates\home\login.html:10
+msgid ""
+"Connect to your substra account to create new evaluations, browse technical "
+"resources, consult the score of your completed evaluations, and more."
+msgstr ""
+"Connectez-vous à votre compte Substra pour créer de nouvelles évaluations, "
+"parcourir des ressources techniques, consulter le scores de vos évaluations terminées, et "
+"plus encore."
+
+#: .\platform_code\home\templates\home\login.html:20
 msgid "Your email and password didn't match. Please try again."
 msgstr "Votre email et mot de passe ne concordent pas. Réessayez !"
 
@@ -2594,10 +2625,18 @@ msgstr ""
 "l'opération, cliquez sur le lien ci-dessous."
 
 #: .\platform_code\home\templates\home\registration\password_reset_form.html:7
+msgid "Substra assessment: Forgotten password"
+msgstr "Substra assessment : Mot de passe oublié"
+
+#: .\platform_code\home\templates\home\registration\password_reset_form.html:9
+msgid "Reset the password of your substra account."
+msgstr "Réinitialiser le mot de passe de votre compte Substra"
+
+#: .\platform_code\home\templates\home\registration\password_reset_form.html:17
 msgid "Forgotten password"
 msgstr "Mot de passe oublié"
 
-#: .\platform_code\home\templates\home\registration\password_reset_form.html:13
+#: .\platform_code\home\templates\home\registration\password_reset_form.html:23
 msgid "Reset"
 msgstr "Réinitialiser"
 
@@ -2605,7 +2644,7 @@ msgstr "Réinitialiser"
 msgid "Reset password - Substra assessment"
 msgstr "Réinitialiser le mot de passe - Substra"
 
-#: .\platform_code\home\templates\home\release-notes.html:9
+#: .\platform_code\home\templates\home\release-notes.html:11
 #: .\platform_code\templates\footer.html:38
 msgid "Release Notes"
 msgstr "Notes de mise à jour"
@@ -2658,13 +2697,27 @@ msgstr "Télécharger"
 msgid "Change password"
 msgstr "Changer mon mot de passe"
 
-#: .\platform_code\home\templates\home\signup.html:6
-#: .\platform_code\home\templates\home\signup.html:42
+#: .\platform_code\home\templates\home\signup.html:7
+msgid "Substra assessment: Signup"
+msgstr "Substra assessment : Inscription"
+
+#: .\platform_code\home\templates\home\signup.html:9
+msgid ""
+"The Substra assessment is the result of a participatory work carried out by "
+"the Substra Foundation association. Create an account to evaluate your "
+"organisation on responsible and trustworthy data science practices."
+msgstr ""
+"Substra assessment est le fruit d'un travail participatif mené par "
+"l'association Substra Foundation. Créez un compte pour évaluer votre "
+"organisation sur les pratiques de data science responsable et de confiance."
+
+#: .\platform_code\home\templates\home\signup.html:18
+#: .\platform_code\home\templates\home\signup.html:54
 #: .\platform_code\templates\footer.html:30
 msgid "Sign up"
 msgstr "Création du compte"
 
-#: .\platform_code\home\templates\home\signup.html:46
+#: .\platform_code\home\templates\home\signup.html:58
 msgid "already have an account?"
 msgstr "J'ai déjà un compte"
 
@@ -2781,6 +2834,23 @@ msgstr ""
 #: .\platform_code\templates\admin\base_site.html:5
 msgid "Django site admin"
 msgstr ""
+
+#: .\platform_code\templates\base-evaluation.html:13
+msgid ""
+"Substra, assessment, data science, trustworthy, responsible, resources, "
+"evaluation, label, association"
+msgstr "Substra, évaluation, science des données, data science, confiance, "
+"responsable, ressources, label, association"
+
+#: .\platform_code\templates\base-evaluation.html:18
+msgid ""
+"Substra assessment is the result of a participatory work carried out by the "
+"Substra Foundation association to promote responsible and trustworthy data "
+"science practices."
+msgstr ""
+"Substra assessment est le fruit d'un travail participatif mené par "
+"l'association Substra Foundation dans le but de promovoir la data science responsable "
+"et de confiance."
 
 #: .\platform_code\templates\errors.html:34
 msgid "Homepage"

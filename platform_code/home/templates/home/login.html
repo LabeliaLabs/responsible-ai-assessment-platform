@@ -4,6 +4,15 @@
 {% load i18n %}
 
 {% block content %}
+<head>
+    <title>{% trans 'Substra assessment: Connection' %}</title>
+    <meta name="description"
+          content="{% blocktrans trimmed %}
+           Connect to your substra account to create new evaluations, browse technical resources, consult
+           the score of your completed evaluations, and more.
+          {% endblocktrans %}"
+    />
+</head>
 
 <div class="login container form-center">
     <!--    I don't know why it is not working -> TODO but manage by messages-->
