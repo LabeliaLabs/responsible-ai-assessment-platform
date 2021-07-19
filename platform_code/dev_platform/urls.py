@@ -19,12 +19,14 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 from django.conf.urls.i18n import i18n_patterns
+from django.views.i18n import JavaScriptCatalog
 
 from home.admin import admin_dashboard
 
 urlpatterns = i18n_patterns(
     path("", include("home.urls")),
     path('i18n/', include('django.conf.urls.i18n')),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     path("assessment/", include("assessment.urls")),
     path("admin/", admin.site.urls),
     path('admin-monitoring/', admin_dashboard.urls),

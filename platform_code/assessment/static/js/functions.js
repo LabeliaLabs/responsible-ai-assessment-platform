@@ -451,7 +451,7 @@ function upgrade(modal_id, form_id, evaluation_id){
     var upgradeMessage = document.getElementById("upgrade_message"+evaluation_id);
     upgradeMessage.classList.add("alert-warning");
     upgradeMessage.classList.remove("display-none");
-    textMessage.textContent = 'The upgrade is in process, please wait.';
+    textMessage.textContent = gettext('The upgrade is in process, please wait.');
     var buttons = document.getElementsByTagName('button');
     for (var button of buttons) {
         button.disabled = true;
