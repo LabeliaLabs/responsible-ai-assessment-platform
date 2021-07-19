@@ -4,7 +4,7 @@
 <div class="content-modal-remove-pending-member">
     <div class="modal-header">
         <h4 class="modal-title">{% trans "Are you sure you want to delete the invitation?" %} </h4>
-        <button class="close" data-dismiss="modal" type="button">&times;</button>
+        <button class="close" data-dismiss="modal" type="button" id="close-remove-invitation{{pending_member.id}}">&times;</button>
     </div>
     <div class="modal-body-delete">
         <p>{% trans "The user will not automatically join the organisation when his account is created." %}</p>

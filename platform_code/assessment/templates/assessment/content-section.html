@@ -51,7 +51,6 @@
                     </button>
                 {% else %}
                     <button class="btn btn-primary same-size-220" disabled
-                            onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
                             title="{% trans 'You do not have the right to do this action' %}"
                             type="button">{% trans "Save" %}
                     </button>
@@ -93,26 +92,29 @@
                         {% include "assessment/element-feedback.html" %}
                         <div class="margin-auto">
                             <span class="fa-stack-evaluation fa-stack fa-lg"
-                                  name="element_status_temporary{{element.id}}"
+                                  id="element_status_temporary{{element.id}}"
                                   style="display: none;"
                                   title="">
                             </span>
 
                             {% if element.status %}
-                                <span class="fa-stack-evaluation fa-stack fa-lg " name="element_status_done{{element.id}}"
+                                <span class="fa-stack-evaluation fa-stack fa-lg " id="element_status_done{{element.id}}"
+                                      name="permanent-status-element{{element.id}}"
                                       title="{% trans 'You have already answered to this evaluation element' %}">
                                     <i class="fa fa-circle fa-stack-2x"></i>
                                 </span>
 
                             {% elif not element.status %}
                                 {% if element.has_condition_on and element|is_not_applicable %}
-                                <span class="fa-stack-evaluation fa-stack fa-lg answer" name="element_status_invalid{{element.id}}"
+                                <span class="fa-stack-evaluation fa-stack fa-lg answer" id="element_status_invalid{{element.id}}"
+                                      name="permanent-status-element{{element.id}}"
                                       title="{% trans 'You are not concerned by this evaluation element due to your answer to this evaluation element' %} {{depends_on_dic|get_item:element}}">
                                       <i class="fa fa-circle fa-stack-2x"></i>
                                 </span>
 
                                 {% else %}
-                                    <span class="fa-stack-evaluation fa-stack fa-lg answer" name="element_status_not_done{{element.id}}"
+                                    <span class="fa-stack-evaluation fa-stack fa-lg answer" id="element_status_not_done{{element.id}}"
+                                          name="permanent-status-element{{element.id}}"
                                           title="{% trans 'You have not yet answered to this evaluation element' %}">
                                           <i class="fa fa-circle-o fa-stack-2x"></i>
                                     </span>
@@ -236,7 +238,7 @@
                                     {% else %}
                                         <button class="btn btn-primary validation-button adapted-button-size-250"
                                                 id="validate{{element.id}}"
-                                                onclick="submitForm('form{{element.id}}')" type="button">
+                                                onclick="submitForm('form{{element.id}}', {{element.id}})" type="button">
                                             {% if element.status %}
                                                 {% trans "Modify" %}
                                             {% else %}

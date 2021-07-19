@@ -47,11 +47,13 @@
         </form>
 
         <div id="validation evaluation">
-            <a class="btn btn-results float-right-larger-small-screen display-none same-size-250
-                      smaller-tablet-margin-10"
-               href="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
-               id="temp-validation-button"
-            >{% trans 'Validate and see the results' %}</a>
+            <form action="{% url 'assessment:results' organisation.id evaluation.slug evaluation.id %}"
+                  style="display: none" id="temp-validation-button">
+                  <input class="btn btn-results float-right-larger-small-screen same-size-250
+                         smaller-tablet-margin-10"
+                         type="submit"
+                         value="{% trans 'Validate and see the results' %}"/>
+            </form>
 
             {% if evaluation.is_finished %}
             <div>

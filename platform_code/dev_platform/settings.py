@@ -215,5 +215,6 @@ CKEDITOR_CONFIGS = {
         "toolbar": "Full",
         "height": 90,
         "width": '',
+        "removePlugins": "easyimage, cloudservices",
     }
 }

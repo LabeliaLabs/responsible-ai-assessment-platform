@@ -38,6 +38,7 @@ def treat_evaluation_name_edition(request):
             evaluation.save()
             data_update["success"] = True
             data_update["message"] = _("The evaluation's name has been changed.")
+            data_update["name"] = name
             logger.info(f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
                         f"evaluation (id: {evaluation_id})")
     return HttpResponse(json.dumps(data_update), content_type="application/json")

@@ -21,7 +21,8 @@
                   role="form">
                 <div class="modal-header">
                     <h4 class="modal-title">{% trans "Give a feedback on this element" %}</h4>
-                    <button class="close" data-dismiss="modal" type="button">&times;</button>
+                    <button class="close" data-dismiss="modal" type="button"
+                            id="close-modal-element{{element.id}}">&times;</button>
                 </div>
                 <div class="modal-body">
                     {% csrf_token %}
@@ -34,7 +35,7 @@
                 <div class="modal-footer">
                     <button class="btn btn-primary same-size-250 margin-auto"
                             name="button_feedback"
-                            onclick="feedback({{element.id}}, 'element')"
+                            onclick="feedback(this, {{element.id}}, 'element')"
                             type="button">{% trans 'Submit' %}
                     </button>
                 </div>

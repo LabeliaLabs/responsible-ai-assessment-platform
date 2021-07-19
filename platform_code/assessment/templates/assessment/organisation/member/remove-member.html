@@ -6,7 +6,7 @@
         <h4 class="modal-title">{% trans "Are you sure you want to remove the user" %} {{member.user.email}}
             {% trans "from the organisation?" %}
         </h4>
-        <button class="close" data-dismiss="modal" type="button">&times;</button>
+        <button class="close" data-dismiss="modal" type="button" id="close-remove-member{{member.id}}">&times;</button>
     </div>
     <div class="modal-body-delete">
         <p>{% blocktrans trimmed %}
