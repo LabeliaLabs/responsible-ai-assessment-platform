@@ -19,6 +19,8 @@ from .views import (
     ResourcesView,
     LoginPageView,
     ReleaseNotesView,
+    DashboardView,
+
 )
 
 
@@ -34,6 +36,7 @@ urlpatterns = [
     path("legal-notices/", legal_notices_view, name="legal-notices"),
     path("release-notes/", ReleaseNotesView.as_view(), name="release-notes"),
     path("faq/", faq_view, name="faq"),
+    path("dashboard/", DashboardView.as_view(), name="dashboard-view"),
     path("robots.txt", TemplateView.as_view(
         template_name="robots.txt", content_type="text/plain"
     )),

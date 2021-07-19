@@ -198,5 +198,95 @@ class PasswordResetForm_(PasswordResetForm):
             u
             for u in active_users
             if u.has_usable_password()
-            and _unicode_ci_compare(email, getattr(u, email_field_name))
+               and _unicode_ci_compare(email, getattr(u, email_field_name))
         )
+
+
+class DashboardUsersStatsTabFilterForm(forms.Form):
+    """
+    A form to filter users stats and graphs by user inscription date
+    """
+    Inscription_date = forms.DateField(
+        widget=forms.widgets.DateInput(
+            attrs={
+                'class': 'filter-field',
+                'type': 'date',
+                'min': '2020-01-01',
+                'value': '2020-01-01',
+                'id': 'user_date_filter'
+            }
+        ),
+        label=_("Inscription date")
+    )
+
+
+class DashboardOrganisationsStatsTabFilterForm(forms.Form):
+    """
+    A form to filter organisations stats and graphs by organisation creation date
+    """
+    creation_date = forms.DateField(
+        widget=forms.widgets.DateInput(
+            attrs={
+                'class': 'filter-field',
+                'type': 'date',
+                'min': '2020-01-01',
+                'value': '2020-01-01',
+                'id': 'orga_date_filter'
+            },
+        ),
+        label=_("Created from the"),
+    )
+
+
+class DashboardEvaluationsStatsTabFilterForm(forms.Form):
+    """
+    A form to filter evaluations stats and graphs by evaluation creation date
+    """
+    All_sectors = _("all sectors")
+    All_Sizes = _("all sizes")
+    Sectors = Organisation.SECTOR
+    Sizes = Organisation.SIZE
+
+    Sectors_list = [sector for sector in Sectors]
+    Sizes_list = [size for size in Sizes]
+
+    # add filters default value to the list of choices
+    Sectors_list.insert(0, (All_sectors, _("All sectors")))
+    Sizes_list.insert(0, (All_Sizes, _("All sizes")))
+
+    date = forms.DateField(
+        widget=forms.widgets.DateInput(
+            format="%d-%m-%Y",
+            attrs={
+                'class': 'filter-field',
+                'type': 'date',
+                'min': '2020-01-01',
+                'value': '2020-01-01',
+                'id': 'eval_date_filter'
+            }
+        ),
+        label=_("Date"),
+        input_formats='%d/%m/%Y',
+    )
+    sectors = forms.ChoiceField(
+        choices=Sectors_list,
+        initial=Sectors_list[0],
+        widget=forms.Select(
+            attrs={
+                'class': 'filter-field',
+                'id': 'eval_sectors_filter'
+            }
+        ),
+        label=_("Sector")
+    )
+    sizes = forms.ChoiceField(
+        choices=Sizes_list,
+        initial=Sizes_list[0],
+        widget=forms.Select(
+            attrs={
+                'class': 'filter-field',
+                'id': 'eval_sizes_filter'
+            }
+        ),
+        label=_("Size")
+    )

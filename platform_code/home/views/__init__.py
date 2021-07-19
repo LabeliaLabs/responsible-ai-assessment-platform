@@ -7,3 +7,4 @@ from .signup import signup, activate  # noqa
 from .user_settings import ProfileSettingsView  # noqa
 from .export_user_data import export_user_data  # noqa
 from .release_notes import ReleaseNotesView  # noqa
+from .dashboard_view import DashboardView  # noqa

@@ -1,0 +1,120 @@
+{% load static %}
+{% load add_attr %}
+{% load i18n %}
+{% autoescape off %}
+<div class="tab-content" id="nav-tabContent">
+    <div aria-labelledby="nav-organisation-tab" class="tab-pane fade show active" id="nav-organisation" role="tabpanel">
+          <div id="organisations-filter-form-container" class="margin-30 center">
+               <form action="{% url 'home:dashboard-view' %}" class="attribute-form-bis center" method="post" id="organisations-filter-form" role="form">
+                       {% csrf_token %}
+                              <div>
+                                 {{organisations_filters_form}}
+                              </div>
+                   <div class="margin-20"> <input type="button" class="reset-filter-btn hidden" value="{% trans 'Reset Filter' %}" onClick="this.form.reset()" /> </div>
+                  <!--  <div class="margin-20 center-select"><a id="orgas-re-init-btn" href="">{% trans "reset filter"%}</a></div> -->
+                              <div class="margin-20">
+                                <input onclick='filterDashboardGraphs("organisations-filter-form")' value="{% trans 'Filter' %}"
+                                       type="button" name="btn-orgs-form" class="btn btn-primary same-size-250 margin-auto">
+                              </div>
+
+                   </form>
+            </div>
+
+            <div class="container margin-110">
+                           <div class="row">
+                               <p class="center col-auto">{%trans "Number of organisations per sector and per size created after and including  "%}<b id="selected-orgas-filter-date"> {{ creation_date}}</b></p>
+                           </div>
+                           <div class="row margin-10">
+                               <!--
+                                         <div id="nb_orgs" class="col-sm-2 margin-150">
+                                             <div class="margin-70">
+                                                   <div id="nb-orgas-indicator" class="h-big center">
+                                                       {{nb_orgas}}
+                                                   </div>
+                                             </div>
+                                             <p class="h-small margin-20 center" >{% trans "Organisations" %}</p>
+                                         </div>
+                                -->
+
+                                          <div  class="col-sm-6">
+                                               <table class="dash-stats-table" id="orgas-sectors-stats-table">
+                                                   <caption></caption>
+                                                     <thead class="thead-light">
+                                                         <tr>
+                                                          <th scope="col">{%trans "Sector"%}</th>
+                                                          <th scope="col">{%trans "Number of organisations" %}</th>
+                                                         </tr>
+                                                     </thead>
+                                                     <tbody>
+                                                         {% for sector, orgas_count in orgas_count_per_sector %}
+                                                              <tr>
+                                                                <td>{{ sector }}</td>
+                                                                <td>{{ orgas_count }}</td>
+                                                              </tr>
+                                                         {% endfor %}
+                                                     </tbody>
+                                                </table>
+
+                                              <!--
+                                                  <div id="sizes-pie-chart">
+                                                    {{ orgas_sizes_pie_chart}}
+                                                  </div>
+                                              -->
+                                          </div>
+
+                                          <div  class="col-sm-4">
+
+                                               <table class="dash-stats-table" id="orgas-sizes-stats-table">
+                                                      <caption></caption>
+                                                     <thead class="thead-light">
+                                                         <tr>
+                                                          <th scope="col">{%trans "Size"%}</th>
+                                                          <th scope="col">{%trans "Number of organisations" %}</th>
+                                                         </tr>
+                                                     </thead>
+                                                     <tbody>
+                                                         {% for size, orgas_count in orgas_count_per_size %}
+                                                              <tr>
+                                                                <td>{{ size }}</td>
+                                                                <td>{{ orgas_count }}</td>
+                                                              </tr>
+                                                         {% endfor %}
+                                                     </tbody>
+                                                </table>
+
+
+                                                 <!--
+                                                  <div id="sectors-pie-chart">
+                                                    {{ orgas_sectors_pie_chart}}
+                                                  </div>
+                                                  -->
+
+                                          </div>
+
+                           </div>
+                           <div class="row">
+                                <div  class="col-sm-4">
+                                               <table class="dash-stats-table" id="orgas-total-nb">
+                                                   <caption></caption>
+                                                     <thead class="thead-light">
+                                                         <tr>
+                                                          <th scope="col">{%trans "Total number of organisations created after " %}<b id="selected-orgas-filter-date-2"> {{ creation_date}}</b></th>
+                                                         </tr>
+                                                     </thead>
+                                                     <tbody>
+                                                              <tr>
+                                                                <td id="nb-orgas-indicator">{{ nb_orgas }}</td>
+                                                              </tr>
+                                                     </tbody>
+                                                </table>
+                                </div>
+
+                           </div>
+
+
+             </div>
+
+    </div>
+</div>
+
+{% endautoescape %}
