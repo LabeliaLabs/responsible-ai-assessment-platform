@@ -641,6 +641,17 @@ Or use `make translate`.
 
 Do not forget to add and commit both of the files `django.po` and `django.mo`.
 
+If you want to do translation in javascript files, you can use gettext, or other django functions.
+Then, use the command:
+
+```sh
+django-admin makemessages -d djangojs -l fr
+>>> processing locale fr
+```
+
+Check the translations to apply in the file djangojs.po
+You need to compile the messages with the same command that for python files.
+
 Note that you should use `trimmed` inside `{% blocktrans %}`, to avoid line breaks in the translations:
 
 ```sh
