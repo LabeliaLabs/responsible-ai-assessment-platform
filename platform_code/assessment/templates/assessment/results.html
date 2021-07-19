@@ -35,6 +35,7 @@
 
     <!-- Progress bar 1 -->
     <div class="progress progress-results mx-auto"
+         id="progress-results"
          data-value='{{evaluation_score}}'>
           <span class="progress-left progress-left-results">
               <span class="progress-bar progress-bar-results border-primary"></span>
@@ -228,6 +229,30 @@
         </button>
     </div>
 
+<script>
+(function() {
+    var progress = document.getElementById("progress-results");
+    var value = progress.getAttribute('data-value');
+    if (typeof value === "string") {
+        value = parseFloat(value);
+    }
+    var left = progress.children[0].children[0];
+    var right = progress.children[1].children[0];
+
+    if (value >= 0 && value < 50) {
+        right.style.transform = 'rotate(' + percentageToDegrees(value) + 'deg)'
+    }
+    if ( value >= 50 && value <=100) {
+        right.style.transform = 'rotate(180deg)'
+        left.style.transform = 'rotate(' + percentageToDegrees(value - 50) + 'deg)'
+    }
+
+})();
+
+function percentageToDegrees(percentage) {
+    return percentage / 100 * 360
+}
+</script>
 
 
 {% endblock %}

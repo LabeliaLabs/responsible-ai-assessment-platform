@@ -70,7 +70,7 @@ var CKBUILDER_CONFIG = {
 		'elementspath' : 1,
 		'enterkey' : 1,
 		'entities' : 1,
-		'exportpdf' : 1,
+		'exportpdf' : 0,
 		'filebrowser' : 1,
 		'find' : 1,
 		'flash' : 1,
