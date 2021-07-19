@@ -3,7 +3,6 @@ from django.contrib.auth.models import PermissionsMixin
 from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django.db.models import Q
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django.conf import settings
@@ -113,7 +112,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     active = models.BooleanField(default=True)
     staff = models.BooleanField(default=False)  # a admin user; non super-user
     admin = models.BooleanField(default=False)  # a superuser
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     language_preference = models.CharField(default="fr", choices=languages, max_length=15)
     # notice the absence of a "Password field", that is built in.
 
