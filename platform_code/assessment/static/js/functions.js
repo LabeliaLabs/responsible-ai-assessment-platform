@@ -22,7 +22,7 @@ function convertFormToString(form) {
     var formData = new FormData(form);
     var data = "";
     for (var pair of formData.entries()) {
-        data = data + "&" + pair[0].toString() + "=" + pair[1].toString();
+        data = data + "&" + pair[0].toString() + "=" + encodeURIComponent(pair[1].toString());
     }
     return data
 }
@@ -608,34 +608,6 @@ function editRoleMember(form_id, object_id, is_pending){
         }
     }
     manageAjaxRequest(ajax, form, object_edited + "=" + object_id);
-}
-
-
-function convertFormToString(form) {
-// For a form, for all the fields, add them to a string which is returned
-// Used to pass form data into ajax call
-    var formData = new FormData(form);
-    var data = "";
-    for (var pair of formData.entries()) {
-        data = data + "&" + pair[0].toString() + "=" + pair[1].toString();
-    }
-    return data
-}
-
-function manageAjaxRequest(ajax, form, ...args) {
-// Open the ajax object (XMLHttpRequest type)
-// Set headers to ajax object: crsf, action, method, etc
-// Send the request with the form and the args data
-// Args: string, with the format: "key=value"
-    ajax.open("POST", form.getAttribute("action"), true);
-    ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    ajax.setRequestHeader('X-Requested-With', 'XMLHttpRequest');  // allow django to recognize it is ajax
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    ajax.setRequestHeader("X-CSRFToken", csrftoken);
-    let arg = args;  // array
-    var data = arg.map(i => "&" + i);  // add "&" before each pair of key=value
-    var additionalData = data.join();
-    ajax.send(convertFormToString(form) + additionalData);
 }
 
 
