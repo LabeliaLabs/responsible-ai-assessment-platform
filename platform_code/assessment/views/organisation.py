@@ -26,7 +26,7 @@ from assessment.views.utils.utils import (
     manage_evaluation_score,
     treat_evaluation_creation_valid_form,
 )
-from assessment.templatetags.add_attr import get_sector_as_str
+from assessment.templatetags.assessment_tags import get_sector_as_str
 from home.forms import OrganisationEditionForm
 from home.models import Organisation, User, Membership, PendingInvitation
 from home.views.utils import add_last_version_last_assessment_dictionary

@@ -6,7 +6,7 @@ from django.shortcuts import redirect
 
 from django.utils.translation import gettext as _, ngettext
 
-from assessment.templatetags.add_attr import stringify_list
+from assessment.templatetags.assessment_tags import stringify_list
 
 logger = logging.getLogger('monitoring')
 

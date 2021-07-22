@@ -14,7 +14,7 @@ from django.contrib.auth import login, authenticate
 from django.utils.translation import gettext as _, ngettext, get_language
 from django.conf import settings
 
-from assessment.templatetags.add_attr import stringify_list
+from assessment.templatetags.assessment_tags import stringify_list
 from home.forms import SignUpForm
 from home.models import User, UserResources, Membership
 

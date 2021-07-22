@@ -1,4 +1,3 @@
-# todo rename file name "add_attr"
 from django import template
 from django.utils.html import format_html
 
@@ -73,6 +72,11 @@ def turn_into_link(link, name):
     # print("TURN LINK", link, type(link), 'name', name, type(name))
     return format_html('<a target="_blank" href="{0}">{1}</a>', link, str(name),)
 
+
+@register.filter
+def format_resource_link(text):
+    print("TEXTTT", text)
+    return text
 
 @register.filter
 def order_elements_of_section(section):
