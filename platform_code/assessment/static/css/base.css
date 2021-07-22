@@ -1066,6 +1066,11 @@ body.navbar-is-fixed-top {
     color: white;
 }
 
+.fa-meetup{
+     background: red;
+     color: white;
+}
+
 .col-md-3-footer{
     padding: 4px;
     margin: auto;
