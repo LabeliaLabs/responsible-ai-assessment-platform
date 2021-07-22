@@ -256,17 +256,15 @@ class DashboardEvaluationsStatsTabFilterForm(forms.Form):
 
     date = forms.DateField(
         widget=forms.widgets.DateInput(
-            format="%d-%m-%Y",
             attrs={
+                'value': '2020-01-01',
+                'min': '2020-01-01',
                 'class': 'filter-field',
                 'type': 'date',
-                'min': '2020-01-01',
-                'value': '2020-01-01',
                 'id': 'eval_date_filter'
             }
         ),
-        label=_("Date"),
-        input_formats='%d/%m/%Y',
+        label=_("Date")
     )
     sectors = forms.ChoiceField(
         choices=Sectors_list,
