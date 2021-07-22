@@ -110,3 +110,11 @@ On peut deviner avec cet exemple :
 - on initialise de manière vierge toutes les notes et les *answer_items* pour lesquels le champ est à `no_fetch`
 - on initialise avec les valeurs (notes et sélections) de l'évaluation précédente tous les champs où le champ est à `fetch <id>`
 - pour l'affichage, on aura une icone css dans le cas `no_fetch`. Ainsi, pour une section au sein de laquelle on a créé un nouvel élément d'évalaution, on aura une icone css "modified"
+
+## FAQ sur les règles de gestion en place
+
+1. Est-ce que quand un élément est en no_fetch, toutes les réponses du user sont effacées, y compris celles des items de réponse qui n'ont pas changé ?
+   > Au 02.07.2021 : Non, les réponses aux items de réponse inchangés sont conservées. En revanche les notes et les justifications sont effacées et le macaron "New" est affiché à côté de l'élément
+
+1. Est-ce que quand un élément est repris, et seulement un(des) item(s) de réponse sont en no_fetch, si le user avait coché un de ceux-là, ça retire l'élément des % d'avancement ?
+   > Au 02.07.2021 : Dans l'hypothèse où le user se retrouve avec plus aucun item de réponse coché, alors oui, l'élément étant vierge il n'est pas compté comme terminé dans les % d'avancement.
