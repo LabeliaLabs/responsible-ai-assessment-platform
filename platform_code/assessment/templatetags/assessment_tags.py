@@ -1,5 +1,8 @@
+import re
+
 from django import template
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from home.models import Membership, Organisation
 
@@ -75,8 +78,9 @@ def turn_into_link(link, name):
 
 @register.filter
 def format_resource_link(text):
-    print("TEXTTT", text)
-    return text
+    text = re.sub(r'<a href="(.*?)"', r'<a title="\g<1>" target="_blank" href="\g<1>" ', text)
+    return mark_safe(text)
+
 
 @register.filter
 def order_elements_of_section(section):
