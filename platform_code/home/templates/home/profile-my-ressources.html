@@ -1,5 +1,5 @@
 {% load static %}
-{% load add_attr %}
+{% load assessment_tags %}
 {% load markdownify %}
 {% load i18n %}
 
@@ -31,7 +31,7 @@
                 <div class="grid-item">
                     <li class="object-linked list-with-disc margin-10 " id="resource_fav{{resource.id}}">
                         {% if resource.text %}
-                        [{{resource.type}}] - {{resource.text|markdownify}}
+                        [{{resource.type}}] - {{resource.text|markdownify|format_resource_link}}
                         {% endif %}
                     </li>
                 </div>
@@ -92,7 +92,7 @@
                                         <div class="grid-item">
                                             <li class="list-with-disc margin-10">
                                                 {% if resource.text %}
-                                                [{{resource.type}}] - {{resource.text|markdownify}}
+                                                [{{resource.type}}] - {{resource.text|markdownify|format_resource_link}}
                                                 {% endif %}
                                             </li>
                                         </div>

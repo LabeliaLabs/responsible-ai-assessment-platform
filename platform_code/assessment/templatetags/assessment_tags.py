@@ -1,6 +1,8 @@
-# todo rename file name "add_attr"
+import re
+
 from django import template
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from home.models import Membership, Organisation
 
@@ -72,6 +74,12 @@ def is_not_applicable(self):
 def turn_into_link(link, name):
     # print("TURN LINK", link, type(link), 'name', name, type(name))
     return format_html('<a target="_blank" href="{0}">{1}</a>', link, str(name),)
+
+
+@register.filter
+def format_resource_link(text):
+    text = re.sub(r'<a href="(.*?)"', r'<a title="\g<1>" target="_blank" href="\g<1>" ', text)
+    return mark_safe(text)
 
 
 @register.filter
