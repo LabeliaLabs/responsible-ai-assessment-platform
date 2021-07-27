@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+import calendar
 
 from django.views.generic import TemplateView
 from django.http import HttpResponse
@@ -103,7 +104,8 @@ class DashboardView(TemplateView):
             elif "date" in request.POST:
                 self.update_stats_and_graphs(request, which_form=2)
             else:
-                self.dashboard_update["message"] = "Error"
+                self.dashboard_update["success"] = False
+                self.dashboard_update["message"] = _("An error has occurred, please check your input")
 
             return HttpResponse(json.dumps(self.dashboard_update), content_type="application/json")
 
@@ -126,13 +128,16 @@ class DashboardView(TemplateView):
                 users_stats = self.get_users_stats()
 
                 self.dashboard_update["nb_users"] = users_stats["nb_users"]
-                self.dashboard_update["months"] = [month for month, _ in users_stats["one_year_users_count"].items()]
-                self.dashboard_update["users_count"] = [count for _, count in
+                self.dashboard_update["months"] = [month for month, nb_users in
+                                                   users_stats["one_year_users_count"].items()]
+                self.dashboard_update["users_count"] = [nb_users for month, nb_users in
                                                         users_stats["one_year_users_count"].items()]
                 self.dashboard_update["min_date"] = users_stats["min_date"]
+                self.dashboard_update["success"] = True
 
             else:
-                self.dashboard_update["message"] = "Error"
+                self.dashboard_update["success"] = False
+                self.dashboard_update["message"] = _("An error has occurred, please check your input")
 
         # handle organisations filter form
         elif which_form == 1:
@@ -147,19 +152,21 @@ class DashboardView(TemplateView):
                 orgas_stats = self.get_number_organisations()
 
                 self.dashboard_update["nb_orgas"] = orgas_stats["nb_orgas"]
-                self.dashboard_update["sectors_list"] = [str(sector) for sector, _ in
+                self.dashboard_update["sectors_list"] = [str(sector) for sector, nb_orgas in
                                                          orgas_stats["nb_orgas_per_sector"].items()]
-                self.dashboard_update["sizes_list"] = [str(size) for size, _ in
+                self.dashboard_update["sizes_list"] = [str(size) for size, nb_orgas in
                                                        orgas_stats["nb_orgas_per_size"].items()]
-                self.dashboard_update["orgas_count_per_sector"] = [orgas_count for _, orgas_count in
+                self.dashboard_update["orgas_count_per_sector"] = [nb_orgas for sector, nb_orgas in
                                                                    orgas_stats["nb_orgas_per_sector"].items()]
-                self.dashboard_update["orgas_count_per_size"] = [orgas_count for _, orgas_count in
+                self.dashboard_update["orgas_count_per_size"] = [nb_orgas for size, nb_orgas in
                                                                  orgas_stats["nb_orgas_per_size"].items()]
                 self.dashboard_update["creation_date"] = form.cleaned_data.get("creation_date").strftime(
                     "%d-%m-%Y")
+                self.dashboard_update["success"] = True
 
             else:
-                self.dashboard_update["message"] = "Error"
+                self.dashboard_update["success"] = False
+                self.dashboard_update["message"] = _("An error has occurred, please check your input")
 
         # handle evaluations filter form
         elif which_form == 2:
@@ -173,32 +180,31 @@ class DashboardView(TemplateView):
                 self.evaluations_filters["date_raw"] = form.cleaned_data.get("date")
                 self.evaluations_filters["sectors"] = form.cleaned_data.get("sectors")
                 self.evaluations_filters["sizes"] = form.cleaned_data.get("sizes")
-                print("evals form values", self.evaluations_filters["date"], self.evaluations_filters["sectors"],
-                      self.evaluations_filters["sizes"])
 
                 evals_stats = self.get_evaluations_stats()
                 self.dashboard_update["total_nb_evals"] = evals_stats["total_nb_evals"]
-                self.dashboard_update["versions_list"] = [version_number for version_number, _ in
+                self.dashboard_update["versions_list"] = [version_number for version_number, nb_evals in
                                                           evals_stats["versions_stats"].items()]
-                print("list of versions:", self.dashboard_update["versions_list"])
-                self.dashboard_update["nb_evals_per_version"] = [nb_evals for _, nb_evals in
+
+                self.dashboard_update["nb_evals_per_version"] = [nb_evals for version, nb_evals in
                                                                  evals_stats["versions_stats"].items()]
                 self.dashboard_update["nb_completed_evals"] = evals_stats["nb_evaluations_completed"]
                 self.dashboard_update["nb_in_progress_evals"] = evals_stats["nb_evaluations_in_progress"]
                 self.dashboard_update["eval_creation_date"] = evals_stats["eval_creation_date"]
-
+                self.dashboard_update["success"] = True
             else:
-                self.dashboard_update["message"] = _("Error")
+                self.dashboard_update["success"] = False
+                self.dashboard_update["message"] = _("An error has occurred, please check your input")
 
         else:
-            self.dashboard_update["message"] = _("Error")
+            self.dashboard_update["success"] = False
+            self.dashboard_update["message"] = _("An error has occurred, no relevant tabs were selected")
 
     def get_number_organisations(self):
         """
         - Return the number of organisations based on the filters
         """
         orgas_stats = {"nb_orgas_per_sector": {}, "nb_orgas_per_size": {}}
-        # initialize the dictionary with 0s
 
         if not self.organisations_filters:
             # no filters to apply, return the total number of organisations
@@ -242,6 +248,7 @@ class DashboardView(TemplateView):
         Return the number of users based on the filters and call corresponding graph functions
         """
         users_stats = {"one_year_users_count": {}}
+
         if not self.users_filters:
             # no filters to apply, return the total number of users
             users_stats["nb_users"] = User.object.all().count()
@@ -249,7 +256,7 @@ class DashboardView(TemplateView):
             min_date = datetime(2020, 1, 1)
             users_stats["min_date"] = min_date.strftime('%d-%b-%Y')
             for i in range(12):
-                date_to_filter_by = previous_month(min_date, i)
+                date_to_filter_by = take_n_month_steps(min_date, i)
                 users_stats["one_year_users_count"][date_to_filter_by.strftime('%B-%Y')] = (
                     (User.object.filter(created_at__lte=date_to_filter_by).count()))
 
@@ -258,11 +265,15 @@ class DashboardView(TemplateView):
             users_stats["nb_users"] = User.object.filter(
                 created_at__gte=self.users_filters["Inscription_date"]
             ).count()
+
             submitted_date = datetime.strptime(self.users_filters["Inscription_date"], '%Y-%m-%d %H:%M:%S')
             users_stats["min_date"] = submitted_date.strftime('%d-%b-%Y')
+            submitted_date_end_month = datetime(int(submitted_date.year), int(submitted_date.month),
+                                                int(calendar.monthrange(submitted_date.year, submitted_date.month)[1]),
+                                                23, 59, 59)
 
             for i in range(12):
-                date_to_filter_by = previous_month(submitted_date, (i))
+                date_to_filter_by = take_n_month_steps(submitted_date_end_month, i)
                 users_stats["one_year_users_count"][date_to_filter_by.strftime('%B-%Y')] = (
                     (User.object.filter(created_at__lte=date_to_filter_by).count()))
 
@@ -383,8 +394,12 @@ class DashboardView(TemplateView):
         return evals_stats
 
 
-def previous_month(date, delta):
-    m, y = (date.month + delta) % 12, date.year + (date.month + delta - 1) // 12
+def take_n_month_steps(date, nb_steps):
+    """
+    This function takes a "date" as a parameter then adds or subtracts "nb_steps" months from it (depending
+    on the sign of nb_steps), It returns the resulting date
+    """
+    m, y = (date.month + nb_steps) % 12, date.year + (date.month + nb_steps - 1) // 12
     if not m:
         m = 12
     d = min(date.day, [31,

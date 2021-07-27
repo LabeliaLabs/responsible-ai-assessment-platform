@@ -2,94 +2,71 @@
 {% load assessment_tags %}
 {% load i18n %}
 
-{% autoescape off %}
 <div class="tab-content" id="nav-tabContent">
     <div aria-labelledby="nav-user-tab" class="tab-pane fade show active center" id="nav-user" role="tabpanel">
-         <div id="users-filter-form-container" class="margin-30 center">
-               <form action="{% url 'home:dashboard-view' %}" class="attribute-form-bis" method="post" id="users-filter-form" role="form">
-                       {% csrf_token %}
-                          <div>
-                             {{users_filters_form}}
-                          </div>
-                         <div class="margin-20"> <input type="button" class="reset-filter-btn" value="{% trans 'Reset Filter' %}" onClick="this.form.reset()" /> </div>
-                         <!-- <div class="margin-20 center-select"><a id="users-re-init-btn" onclick="this.form.reset()">{% trans "reset filter"%}</a></div> -->
-                          <div class="margin-20">
-                            <input onclick='filterDashboardGraphs("users-filter-form")' value="{% trans 'Filter' %}"
-                                   type="button" name="btn-users-form" class="btn btn-primary same-size-250 ">
-
-                          </div>
-               </form>
-         </div>
-             <div class="container margin-110">
-
-                     <div class="row margin-20">
-
-                         <!--
-                         <div class="center col-sm-4 margin-150">
-
-
-                                       <div id="nb_users_indicator" class="h-big margin-70">
-                                           <p>{{nb_users}}</p>
-                                       </div>
-                                       <p class="h-small margin-20">{% trans "Users" %}</p>
-
-                         </div>
-                         -->
-                         <div id="users-graph-container" class="col-sm-8">
-                             <table class="dash-stats-table" id="users-stats-table">
-                                  <caption></caption>
-                                 <thead class="thead-light">
-                                     <tr>
-                                      <th scope="col">{%trans "Month"%}</th>
-                                      <th scope="col">{%trans "Number of users " %}</th>
-                                     </tr>
-                                 </thead>
-                                 <tbody>
-                                     {% for month, user_count in users_count_per_month %}
-                                          <tr>
-                                            <td>{{ month }}</td>
-                                            <td>{{ user_count }}</td>
-                                          </tr>
-                                     {% endfor %}
-
-                                 </tbody>
-                             </table>
-
-                                <!--
-                                 <div id="users-histogram">
-                                     {% if users_histogram %}
-                                     <div>
-                                     {{ users_histogram|safe }}
-                                     </div>
-                                     {% endif %}
-                                 </div>
-                                 -->
-                         </div>
-                     </div>
-                     <div class="row">
-                         <p class="center col-auto">{%trans "Number of users per month over a year starting from "%} <b id="min-date-indicator">{{min_date}}</b>{%trans ", including non-active users" %}</p>
-                         <p class="center col-auto">{%trans "Each line shows the total number of users up to the end of that month" %}</p>
-                     </div>
-                     <div class="row">
-                         <div class="margin-20">
-                            <table class="dash-stats-table" id="users-total-nb-table">
-                                <caption>{%trans "Number of users, active or inactive, who registered after "%} <b id="min-date-indicator-2">{{min_date}}</b></caption>
-                                 <thead class="thead-light">
-                                     <tr>
-                                      <th scope="col">{%trans "Total number of users"%}</th>
-                                     </tr>
-                                 </thead>
-                                 <tbody>
-                                          <tr>
-                                            <td id="nb-users-indicator">{{ nb_users }}</td>
-                                          </tr>
-
-                                 </tbody>
-                            </table>
-                         </div>
-                     </div>
-
-             </div>
+        <div id="users-filter-form-container" class="margin-30 center">
+            <form action="{% url 'home:dashboard-view' %}" class="attribute-form-bis"
+                  method="post" id="users-filter-form" role="form">
+                {% csrf_token %}
+                    <div>
+                        {{users_filters_form}}
+                    </div>
+                    <div class="margin-20">
+                        <input type="button" class="reset-filter-btn" value="{% trans 'Reset Filter' %}"
+                               onClick="this.form.reset()" />
+                    </div>
+                    <div class="margin-20">
+                        <input onclick='filterDashboardGraphs("users-filter-form")' value="{% trans 'Filter' %}"
+                        type="button" name="btn-users-form" class="btn btn-primary same-size-250 ">
+                    </div>
+            </form>
+        </div>
+        <div class="container margin-110">
+            <div class="row margin-20">
+                <div id="users-graph-container" class="col-sm-8">
+                    <table class="dash-stats-table" id="users-stats-table">
+                        <thead class="thead-light">
+                            <tr>
+                                <th scope="col">{% trans "Month" %}</th>
+                                <th scope="col">{% trans "Number of users " %}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for month, user_count in users_count_per_month %}
+                                <tr>
+                                    <td>{{month}}</td>
+                                    <td>{{user_count}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="row margin-20">
+                <p class="center col-auto">{% trans "Number of users per month over a year starting from " %}
+                    <b id="min-date-indicator">{{min_date}}</b>
+                    {% trans ", including non-active users" %}</p>
+                <p class="center col-auto">
+                    {% trans "Each line shows the total number of users up to the end of that month" %}</p>
+            </div>
+            <div class="row">
+            <div class="margin-20">
+                <table class="dash-stats-table" id="users-total-nb-table">
+                    <caption>{% trans "Number of users, active or inactive, who registered after " %}
+                        <b id="min-date-indicator-2">{{min_date}}</b></caption>
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">{% trans "Total number of users" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="nb-users-indicator">{{nb_users}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
     </div>
 </div>
-{% endautoescape %}

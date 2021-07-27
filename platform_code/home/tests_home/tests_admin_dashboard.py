@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from django.urls import reverse
 from home.models import User, Organisation
 from assessment.tests.object_creation import create_assessment_body, create_evaluation, create_scoring
 from assessment.models import Assessment
@@ -37,16 +38,18 @@ class DashAccessTestCase(TestCase):
         create_scoring(assessment=self.assessment)
 
         # Organisations
-        self.organisation_1 = Organisation.create_organisation(name="orga_1",
-                                                               size=Organisation.SIZE[0][0],
-                                                               country="FR",
-                                                               sector=Organisation.SECTOR[0][0],
-                                                               created_by=self.user_admin)
         self.organisation_2 = Organisation.create_organisation(name="orga_2",
                                                                size=Organisation.SIZE[0][0],
                                                                country="FR",
                                                                sector=Organisation.SECTOR[0][0],
                                                                created_by=self.user)
+
+        self.organisation_1 = Organisation.create_organisation(name="orga_1",
+                                                               size=Organisation.SIZE[0][0],
+                                                               country="FR",
+                                                               sector=Organisation.SECTOR[0][0],
+                                                               created_by=self.user_admin)
+
         # Evaluations
         self.evaluation_1 = create_evaluation(
             assessment=self.assessment,
@@ -60,6 +63,7 @@ class DashAccessTestCase(TestCase):
             created_by=self.user,
             organisation=self.organisation_2
         )
+
     # TODO
     # def test_dashboard_access(self):
     #     url = reverse("home:dashboard-view")
@@ -84,9 +88,12 @@ class DashAccessTestCase(TestCase):
     #     # self.assertTemplateNotUsed(response, "home/dashboard/dashboard-admin.html")
     #     self.assertEqual(response3.status_code, 302)
 
-    # def test_context_content(self):
-    #     url = reverse('home:dashboard-view')
-    #     response = self.client_1.get('/fr/dashboard/', follow=True)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(len(response.context), 11)
-    #     self.assertEqual(response.context["nb_orgas"], 2)
+    def test_context_content(self):
+        url = reverse('home:dashboard-view')
+        response = self.client_1.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context), 11)
+        self.assertEqual(response.context["nb_orgas"], 2)
+        self.assertEqual(response.context["nb_evals"], 2)
+        self.assertEqual(response.context["nb_in_progress_evals"], 2)
+        self.assertEqual(response.context["nb_users"], 3)

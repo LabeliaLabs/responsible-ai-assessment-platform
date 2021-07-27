@@ -6,7 +6,8 @@
 {% block content %}
 
 <h1 class="center margin-30 margin-bot-30">{%trans "Dashboard"%}</h1>
-<div class="">
+<div id="admin-dashboard-error" class="center margin-20">
+</div>
     <nav>
         <div class="nav nav-tabs justify-content-center nav-fill" id="nav-tab" role="tablist">
             <a aria-controls="nav-user"
@@ -42,22 +43,16 @@
             </a>
         </div>
     </nav>
-</div>
-
-<div id="admin-dashboard-error">
-</div>
 
 <div id="users-dashboard-tab"
      name="dashboard-tab">
     {% include "home/dashboard/dashboard-admin-users-tab.html" %}
 </div>
-
 <div id="evaluations-dashboard-tab"
      name="dashboard-tab"
      class="display-none">
     {% include "home/dashboard/dashboard-admin-evaluations-tab.html" %}
 </div>
-
 <div id="organisations-dashboard-tab"
      name="dashboard-tab"
      class="display-none">

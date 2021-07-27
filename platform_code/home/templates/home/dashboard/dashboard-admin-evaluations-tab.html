@@ -2,135 +2,90 @@
 {% load assessment_tags %}
 {% load i18n %}
 
-{% autoescape off %}
 <div class="tab-content" id="nav-tabContent">
     <div aria-labelledby="nav-evaluation-tab" class="tab-pane fade show active" id="nav-evaluation" role="tabpanel">
-               <div id="evaluations-filter-form-container" class="margin-30 center">
-                   <form action="{% url 'home:dashboard-view' %}" class="attribute-form-bis center" method="post" id="evaluations-filter-form" role="form">
-                           {% csrf_token %}
-                              <div>
-                                 {{evaluations_filters_form}}
-                              </div>
-                        <div class="margin-20"><input type="button" class="reset-filter-btn " value="{% trans 'Reset Filter' %}" onClick="this.form.reset()" /></div>
-                        <!-- <div class="margin-20 center-select"><p id="evals-re-init-btn" >{% trans "reset filters"%}</p></div> -->
-                              <div class="margin-20">
-                                <input onclick='filterDashboardGraphs("evaluations-filter-form")' value="{% trans 'Filter' %}"
-                                       type="button" name="btn-evals-form" class="btn btn-primary same-size-250">
-                              </div>
-
-                   </form>
-                </div>
-
-
-          <div class="container margin-110">
-
-               <div class="row margin-20">
-                  <p class="col-auto">
-                      {%trans "Number of evaluations, per version and per status, created after " %}
-                      <b id="eval-creation-date-indicator-1">{{ eval_creation_date }}</b>
-                      {% trans " for organisations with the specified size and sector "%}
-                  </p>
-               </div>
-
-              <div class="row center margin-20">
-                    <!--
-                                     <div id="nb_evaluations" class="col-auto margin-70">
-                                                     <div id="nb-evals-indicator" class="h-big margin-150">
-                                                       {{nb_evals}}
-                                                     </div>
-                                                     <p class="h-small margin-20">{% trans "Evaluations" %}</p>
-                                     </div>
-                                     -->
-
-
-                                      <div class="col-sm-6">
-                                          <table class="dash-stats-table" id="evals-versions-stats-table">
-                                              <caption></caption>
-                                             <thead class="thead-light">
-                                                     <tr>
-                                                      <th scope="col">{%trans "Version" %}</th>
-                                                      <th scope="col">{%trans "Number of Evaluations" %}</th>
-                                                     </tr>
-                                             </thead>
-                                             <tbody>
-                                                 {% for version_number, evals_count in evals_count_per_version %}
-                                                      <tr>
-                                                        <td>V{{ version_number }}</td>
-                                                        <td>{{ evals_count }}</td>
-                                                      </tr>
-                                                 {% endfor %}
-                                             </tbody>
-                                         </table>
-
-                                          <!--
-                                           {% if evals_status_pie_chart %}
-                                              <div>
-                                                {{ evals_status_pie_chart|safe }}
-                                              </div>
-                                           {% endif %}
-                                           -->
-                                      </div>
-
-                                      <div class="col-sm-6">
-                                           <table class="dash-stats-table" id="evals-status-stats-table">
-
-                                             <thead class="thead-light">
-                                                     <tr>
-                                                      <th scope="col">{%trans "Status" %}</th>
-                                                      <th scope="col">{%trans "Number of Evaluations" %}</th>
-                                                     </tr>
-                                             </thead>
-                                             <tbody>
-
-                                                      <tr>
-                                                        <td>{% trans "Completed"%}</td>
-                                                        <td id="nb-completed-evals">{{ nb_completed_evals }}</td>
-                                                      </tr>
-                                                      <tr>
-                                                        <td>{% trans "In progress"%}</td>
-                                                        <td id="nb-in-progress-evals">{{ nb_in_progress_evals }}</td>
-                                                      </tr>
-
-                                             </tbody>
-                                         </table>
-
-                                          <!--
-                                          {% if evals_versions_pie_chart %}
-                                              <div>
-                                                {{ evals_versions_pie_chart|safe }}
-                                              </div>
-                                           {% endif %}
-                                           -->
-                                      </div>
-              </div>
-
-
-
-              <div class="row">
-
-                                       <div class="col-sm-4">
-                                               <table class="dash-stats-table" id="evals-nb-total-table">
-                                                     <thead class="thead-light">
-                                                             <tr>
-                                                              <th scope="col">{%trans "Total number of Evaluations created after " %}<b id="eval-creation-date-indicator-2">{{eval_creation_date}}</b></th>
-                                                             </tr>
-                                                     </thead>
-                                                     <tbody>
-                                                              <tr>
-                                                                <td id="nb-total-evals">{{ nb_evals }}</td>
-                                                              </tr>
-
-                                                     </tbody>
-                                               </table>
-                                      </div>
-              </div>
-
-
+        <div id="evaluations-filter-form-container" class="margin-30 center">
+            <form action="{% url 'home:dashboard-view' %}" class="attribute-form-bis center" method="post"
+                  id="evaluations-filter-form" role="form">
+                {% csrf_token %}
+                    <div>
+                        {{evaluations_filters_form}}
+                    </div>
+                    <div class="margin-20">
+                        <input type="button" class="reset-filter-btn " value="{% trans 'Reset Filter' %}"
+                               onClick="this.form.reset()" />
+                    </div>
+                    <div class="margin-20">
+                        <input onclick='filterDashboardGraphs("evaluations-filter-form")' value="{% trans 'Filter' %}"
+                               type="button" name="btn-evals-form" class="btn btn-primary same-size-250">
+                    </div>
+            </form>
+        </div>
+        <div class="container margin-110">
+            <div class="row margin-20">
+                <p class="col-auto">
+                    {% trans "Number of evaluations, per version and per status, created after " %}
+                        <b id="eval-creation-date-indicator-1">{{eval_creation_date}}</b>
+                    {% trans " for organisations with the specified size and sector " %}
+                </p>
             </div>
-
-
-
-
+            <div class="row center margin-20">
+            <div class="col-sm-6">
+                <table class="dash-stats-table" id="evals-versions-stats-table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">{% trans "Version" %}</th>
+                            <th scope="col">{% trans "Number of Evaluations" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for version_number, evals_count in evals_count_per_version %}
+                            <tr>
+                                <td>V{{version_number}}</td>
+                                <td>{{evals_count}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-sm-6">
+                <table class="dash-stats-table" id="evals-status-stats-table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">{% trans "Status" %}</th>
+                            <th scope="col">{% trans "Number of Evaluations" %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{% trans "Completed" %}</td>
+                            <td id="nb-completed-evals">{{nb_completed_evals}}</td>
+                        </tr>
+                        <tr>
+                            <td>{% trans "In progress" %}</td>
+                            <td id="nb-in-progress-evals">{{nb_in_progress_evals}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+            <div class="row">
+            <div class="col-sm-4">
+                <table class="dash-stats-table" id="evals-nb-total-table">
+                    <thead class="thead-light">
+                        <tr>
+                            <th scope="col">{% trans "Total number of Evaluations created after " %}
+                                <b id="eval-creation-date-indicator-2">{{eval_creation_date}}</b></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td id="nb-total-evals">{{nb_evals}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
     </div>
 </div>
-{% endautoescape %}

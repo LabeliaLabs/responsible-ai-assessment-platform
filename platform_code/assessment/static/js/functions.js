@@ -618,68 +618,71 @@ function filterDashboardGraphs(formId){
     ajax.onreadystatechange = function() {
         if (ajax.readyState == 4 && ajax.status == 200) {
             var response = JSON.parse(ajax.response);
-            var tab_to_update = response["which_tab"];
-            switch (tab_to_update) {
+            if(response["success"]){
+                    var tab_to_update = response["which_tab"];
+                    switch (tab_to_update) {
+                    // update users stats and graphs
+                    case 0:
 
-            // update users stats and graphs
-            case 0:
+                        document.getElementById("nb-users-indicator").innerHTML = response["nb_users"];
+                        document.getElementById("min-date-indicator").innerHTML = response["min_date"];
+                        document.getElementById("min-date-indicator-2").innerHTML = response["min_date"];
+                        var users_stats_table = document.getElementById("users-stats-table");
+                        var months = response["months"];
+                        var users_count = response["users_count"];
 
-                document.getElementById("nb-users-indicator").innerHTML = response["nb_users"];
-                document.getElementById("min-date-indicator").innerHTML = response["min_date"];
-                document.getElementById("min-date-indicator-2").innerHTML = response["min_date"];
-                var users_stats_table = document.getElementById("users-stats-table");
-                var months = response["months"];
-                var users_count = response["users_count"];
+                        for (var i = 1, row; row = users_stats_table.rows[i]; i++) {
+                               row.cells[0].innerText = months[i-1];
+                               row.cells[1].innerText = users_count[i-1];
+                          }
+                        break;
 
-                for (var i = 1, row; row = users_stats_table.rows[i]; i++) {
-                       row.cells[0].innerText = months[i-1];
-                       row.cells[1].innerText = users_count[i-1];
-                  }
-                break;
+                    // update organisations stats and graphs
+                    case 1:
+                        document.getElementById("nb-orgas-indicator").innerHTML = response["nb_orgas"];
+                        document.getElementById("selected-orgas-filter-date").innerHTML = response["creation_date"];
+                        document.getElementById("selected-orgas-filter-date-2").innerHTML = response["creation_date"];
 
-            // update organisations stats and graphs
-            case 1:
-                document.getElementById("nb-orgas-indicator").innerHTML = response["nb_orgas"];
-                document.getElementById("selected-orgas-filter-date").innerHTML = response["creation_date"];
-                document.getElementById("selected-orgas-filter-date-2").innerHTML = response["creation_date"];
-                
-                // update number of organisations per sector table
-                 var organisationSectorsTableStats = document.getElementById("orgas-sectors-stats-table");
-                 for (var i = 1, row; row = organisationSectorsTableStats.rows[i]; i++) {
-                       row.cells[0].innerText = response["sectors_list"][i-1];
-                       row.cells[1].innerText = response["orgas_count_per_sector"][i-1];
-                 }
-                  
-                // update number of organisations per size table
-                organisationSizesTableStats = document.getElementById("orgas-sizes-stats-table")
-                 for (var i = 1, row; row = organisationSizesTableStats.rows[i]; i++) {
-                       row.cells[0].innerText = response["sizes_list"][i-1];
-                       row.cells[1].innerText = response["orgas_count_per_size"][i-1];
-                  }
-                  break;
+                        // update number of organisations per sector table
+                         var organisationSectorsTableStats = document.getElementById("orgas-sectors-stats-table");
+                         for (var i = 1, row; row = organisationSectorsTableStats.rows[i]; i++) {
+                               row.cells[0].innerText = response["sectors_list"][i-1];
+                               row.cells[1].innerText = response["orgas_count_per_sector"][i-1];
+                         }
 
-            // update evaluations stats and graphs
-            case 2:
-                document.getElementById("nb-total-evals").innerHTML = response["total_nb_evals"];
-                document.getElementById("nb-completed-evals").innerHTML = response["nb_completed_evals"];
-                document.getElementById("nb-in-progress-evals").innerHTML = response["nb_in_progress_evals"];
-                document.getElementById("eval-creation-date-indicator-2").innerHTML = response["eval_creation_date"];
-                document.getElementById("eval-creation-date-indicator-1").innerHTML = response["eval_creation_date"];
-                var versions = response["versions_list"];
-                var evalVersionsStatsTable = document.getElementById("evals-versions-stats-table")
-                for (var i = 1, row; row = evalVersionsStatsTable.rows[i]; i++) {
-                   row.cells[0].innerHTML = "V"+versions[i-1];
-                   row.cells[1].innerHTML = response["nb_evals_per_version"][i-1];
-                }
-                break;
+                        // update number of organisations per size table
+                        organisationSizesTableStats = document.getElementById("orgas-sizes-stats-table")
+                         for (var i = 1, row; row = organisationSizesTableStats.rows[i]; i++) {
+                               row.cells[0].innerText = response["sizes_list"][i-1];
+                               row.cells[1].innerText = response["orgas_count_per_size"][i-1];
+                          }
+                          break;
 
-            default:
+                    // update evaluations stats and graphs
+                    case 2:
+                        document.getElementById("nb-total-evals").innerHTML = response["total_nb_evals"];
+                        document.getElementById("nb-completed-evals").innerHTML = response["nb_completed_evals"];
+                        document.getElementById("nb-in-progress-evals").innerHTML = response["nb_in_progress_evals"];
+                        document.getElementById("eval-creation-date-indicator-2").innerHTML = response["eval_creation_date"];
+                        document.getElementById("eval-creation-date-indicator-1").innerHTML = response["eval_creation_date"];
+                        var versions = response["versions_list"];
+                        var evalVersionsStatsTable = document.getElementById("evals-versions-stats-table")
+                        for (var i = 1, row; row = evalVersionsStatsTable.rows[i]; i++) {
+                           row.cells[0].innerHTML = "V"+versions[i-1];
+                           row.cells[1].innerHTML = response["nb_evals_per_version"][i-1];
+                        }
+                        break;
+                    }
+            } else {
                 var parentMessage = document.getElementById("admin-dashboard-error");
                 parentMessage.textContent = '';
-                // TODO manage the different error messages -> create a case number for the errors if default is
-                // not always linked with errors?
-                addMessage(parentMessage, "Une erreur est survenue" ,"error");
+                addMessage(parentMessage, response["message"] ,"alert-warning");
+                timerMessageSlow(parentMessage, "hidden-div", 5000, true);
             }
+
+
+
+
         }
     }
     manageAjaxRequest(ajax, form);
