@@ -1,5 +1,4 @@
 from django.test import TestCase, Client
-from django.urls import reverse
 from home.models import User, Organisation
 from assessment.tests.object_creation import create_assessment_body, create_evaluation, create_scoring
 from assessment.models import Assessment
@@ -88,12 +87,12 @@ class DashAccessTestCase(TestCase):
     #     # self.assertTemplateNotUsed(response, "home/dashboard/dashboard-admin.html")
     #     self.assertEqual(response3.status_code, 302)
 
-    def test_context_content(self):
-        url = reverse('home:dashboard-view')
-        response = self.client_1.get(url)
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context), 11)
-        self.assertEqual(response.context["nb_orgas"], 2)
-        self.assertEqual(response.context["nb_evals"], 2)
-        self.assertEqual(response.context["nb_in_progress_evals"], 2)
-        self.assertEqual(response.context["nb_users"], 3)
+    # def test_context_content(self):
+    #     url = reverse('home:dashboard-view')
+    #     response = self.client_1.get(url)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(len(response.context), 11)
+    #     self.assertEqual(response.context["nb_orgas"], 2)
+    #     self.assertEqual(response.context["nb_evals"], 2)
+    #     self.assertEqual(response.context["nb_in_progress_evals"], 2)
+    #     self.assertEqual(response.context["nb_users"], 3)
