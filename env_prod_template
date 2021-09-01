@@ -1,0 +1,29 @@
+# Rename this file to .env.prod
+
+# Django configuration
+SECRET_KEY=<CHANGE_ME>
+DJANGO_ALLOWED_HOSTS=<CHANGE_ME>  # localhost 127.0.0.1 [::1] preprodassessment.substra.ai assessment.substra.ai
+DJANGO_SETTINGS_MODULE=dev_platform.settings_prod
+
+# Database configuration
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=platform_db_prod
+SQL_USER=postgres
+SQL_PASSWORD=<CHANGE_ME>
+SQL_HOST=db
+SQL_PORT=5432
+
+DATABASE=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=<CHANGE_ME>  # Same password that SQL_PASSWORD
+POSTGRES_DB=platform_db_prod
+
+# Gitlab issue tracker / Feedback (scope: api)
+PRIVATE_TOKEN=<CHANGE_ME> # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/settings/access_tokens
+PROJECT_ID=65925 # https://framagit.org/substra-foundation/pre-prod-assessment/-/issues
+
+# Email
+EMAIL_USER=<CHANGE_ME>
+EMAIL_PASSWORD=<CHANGE_ME>
+EMAIL_URL=<CHANGE_ME>
+EMAIL_PORT=<CHANGE_ME> #587
