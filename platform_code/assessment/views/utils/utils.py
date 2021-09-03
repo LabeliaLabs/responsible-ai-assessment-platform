@@ -115,7 +115,16 @@ def manage_evaluation_exposition_score(request, evaluation):
         messages.warning(request, _("An error occurred during the calculation of the exposition score."))
 
     exposition_dic = unpack_exposition_dic(exposition_dic)  # If a key is not a risk domain, exposition dic is just {}
+    exposition_dic = order_exposition_dic(exposition_dic)
     return nb_risk_exposed, len(exposition_dic), exposition_dic
+
+
+def order_exposition_dic(dic):
+    """
+    This function orders the exposition dic -
+    """
+
+    return dict(sorted(dic.items(), key=lambda e: e[0].get_numbering()))
 
 
 def manage_evaluation_max_points(request, evaluation_list):

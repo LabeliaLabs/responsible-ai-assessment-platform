@@ -1,9 +1,10 @@
 import re
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 
 
 class RawJSONField(JSONField):
     """
+    NOT USED
     Used for the exposition score, to keep the order of the json
     """
 

@@ -6,7 +6,7 @@ from django.contrib.admin.utils import flatten_fieldsets, unquote
 from django.core.exceptions import ValidationError, PermissionDenied, ObjectDoesNotExist, MultipleObjectsReturned
 from django.forms import all_valid
 from django.shortcuts import redirect
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from django.utils.translation import gettext as _
 
 from .utils import PrettyJSONWidget
