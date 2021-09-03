@@ -1,5 +1,5 @@
 from django.contrib import admin, messages
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from django.shortcuts import redirect
 
 from .utils import PrettyJSONWidget

@@ -15,13 +15,12 @@ import itertools
 from ckeditor.fields import RichTextField
 
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.db.models import JSONField
 from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
 
-from assessment.utils import RawJSONField
 from home.models import Organisation
 
 
@@ -628,7 +627,7 @@ class EvaluationScore(models.Model):
     dilatation_factor = models.FloatField(default=0, blank=True, null=True)
 
     # Json field with evaluation elements as keys and user exposition as value (boolean, True if concerned)
-    exposition_dic = RawJSONField(default=dict)
+    exposition_dic = JSONField(default=dict)
 
     score = models.FloatField(default=0, blank=True, null=True)
 

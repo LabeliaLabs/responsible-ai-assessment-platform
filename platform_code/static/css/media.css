@@ -316,6 +316,12 @@ Inside each section, first you have, if it exists:
     .newsletter-form-container{
         margin-bottom: 0;
     }
+    .cke_dialog {
+        width: 95vw !important;
+    }
+    .cke_dialog_contents {
+        width: 95vw !important;
+    }
 }
 
 /* LARGER THAN 481px */

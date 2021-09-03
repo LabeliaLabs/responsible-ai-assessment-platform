@@ -134,6 +134,20 @@ div.evaluation-title: h3 {
     margin: 2%;
 }
 
+.textarea-data-results > ol > li,
+.textarea-data-results > ul > li {
+    list-style-type: inherit;
+}
+
+.textarea-data-results > h1 {
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: .5rem;;
+    color: inherit;
+    position: inherit;
+    font-size: 2.5rem;;
+}
+
 .textarea{
     color: #4D566B;
 }

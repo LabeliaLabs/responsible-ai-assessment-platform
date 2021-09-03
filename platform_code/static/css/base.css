@@ -82,6 +82,26 @@ h1 {
     font-size: 2rem;
 }
 
+.h-big{
+    text-align: center;
+    margin: 0 auto;
+    color: #5550FF;
+    position:relative;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+.h-small{
+    text-align: center;
+    margin: 0 auto;
+    color: #5550FF;
+    position:relative;
+    font-size: 1rem;
+}
+
+
+
 .center-select{
     text-align-last: center;
 }
@@ -104,6 +124,16 @@ a:hover {
     color: #8985FF;
     text-decoration: underline;
 }
+
+.a-re-init-btn {
+color: #4D566B;
+}
+
+.a-re-init-btn:hover {
+ color: #8985FF;
+ text-decoration: underline;
+}
+
 
 .hidden-div{
     visibility: hidden;
@@ -207,6 +237,10 @@ a:hover {
     transition-duration: 1s;
 }
 
+.circle {
+    border-radius: 50%;
+}
+
 /******************************************* END GLOBAL PROPERTIES *******************************************/
 
 /************************************************** MARGIN ***************************************************/
@@ -241,6 +275,7 @@ a:hover {
 .margin-150 { /* media smartphone 480px on it */
     margin-top: 150px;
 }
+
 
 .margin-bottom-0 {
     margin-bottom: 0px;
@@ -295,6 +330,9 @@ a:hover {
 
 /********************************************** WIDTH ********************************************************/
 
+.same-size-100{
+   width: 100px;
+}
 
 .same-size-220{
     width: 220px;
@@ -1028,6 +1066,11 @@ body.navbar-is-fixed-top {
     color: white;
 }
 
+.fa-meetup{
+     background: red;
+     color: white;
+}
+
 .col-md-3-footer{
     padding: 4px;
     margin: auto;
@@ -1107,6 +1150,71 @@ body.navbar-is-fixed-top {
 
 /*********************************************** END CARDS ORGA ********************************************/
 
+/*********************************************** RESULTS ***************************************************/
+
+.scroll-div-results {
+    resize: vertical;
+    overflow-y: scroll;
+    height: 100px;
+    background-color: #f4f4f4;
+}
+
+
+/************************************************ END RESULTS ***********************************************/
+
+/******************************************* ADMIN DASHBOARD *****************************************/
+
+.reset-filter-btn {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: #FFBE3C;
+    cursor: pointer;
+}
+
+.reset-filter-btn:hover {
+    text-decoration: underline;
+}
+
+.dash-stats-table {
+  border-collapse: collapse;
+}
+
+.dash-stats-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.dash-stats-table tr:hover {
+    background-color: #ddd;
+}
+
+.dash-stats-table td, .dash-stats-table th {
+  border: 2px solid #5550FF;
+  padding: 8px;
+  width: 50%;
+}
+
+.dash-stats-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #5550FF;
+  color: white;
+  text-align: center;
+}
+
+.filter-field {
+    margin : 10px;
+}
+
+.indicator{
+    text-align: center;
+    margin: 0 auto;
+    color: #5550FF;
+    position:relative;
+    font-size: 1rem;
+}
+
+/******************************************** END DASHBOARD ******************************************/
 
 /*********************************************** HELP TIP **************************************************/
 
@@ -1188,6 +1296,35 @@ body.navbar-is-fixed-top {
 }
 
 /************************************************ END HELP TIP *********************************************/
+
+/************************************************ CKEDITOR *************************************************/
+
+.cke_dialog {
+    width: 500px !important;
+}
+
+.cke_dialog_contents {
+    width: 420px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.django-ckeditor-widget {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.cke_bottom {
+    border-top: none !important;
+    background: #fff !important;
+}
+
+.element-justification-result {
+    padding: 20px;
+}
+
+/*********************************************** END CKEDITOR **********************************************/
+
 
 /************************************************ DIVERS ***************************************************/
 

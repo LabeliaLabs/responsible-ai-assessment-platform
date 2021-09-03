@@ -22,7 +22,7 @@ function convertFormToString(form) {
     var formData = new FormData(form);
     var data = "";
     for (var pair of formData.entries()) {
-        data = data + "&" + pair[0].toString() + "=" + pair[1].toString();
+        data = data + "&" + pair[0].toString() + "=" + encodeURIComponent(pair[1].toString());
     }
     return data
 }
@@ -56,10 +56,11 @@ function timerMessageSlow(parentMessage, classCSS, timer, slow) {
 
 function like(element_id, resource_id) {
     var form = document.getElementById("like_resources"+element_id);
-    $.ajax({ data: $(form).serialize() + "&resource_id=" + resource_id,
-        type: "POST",
-        url: $(form).attr('action'),
-        success: function(response) {
+    var ajax = new XMLHttpRequest();
+
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
             if(response['success']) {
                 var textNoResource = document.getElementById("no-resources-message");
                 var textNoResourceTemp = document.getElementById("no-resources-message-temp");
@@ -95,10 +96,11 @@ function like(element_id, resource_id) {
                 } else {
                     // call the function unlikeResource
                     unlikeResource(textNoResource, textNoResourceTemp, resource_id, response);
-                    }
-                 }
-             }
-    });
+                }
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form, "resource_id=" + resource_id)
 }
 
 function unlikeResource(textNoResource, textNoResourceTemp, resource_id, response) {
@@ -124,49 +126,51 @@ function unlikeResource(textNoResource, textNoResourceTemp, resource_id, respons
 
 function removeResource(resource_id){
     var form = document.getElementById(resource_id);
-    $.ajax({ data: $(form).serialize() + "&resource_id=" + resource_id,
-             type: "POST",
-             url: $(form).attr('action'),
-             success: function(response) {
-                 if(response['success']) {
-                    // The resource is unliked, so it is removed from the favorite
-                    var textNoResource = document.getElementById("no-resources-message");
-                    var textNoResourceTemp = document.getElementById("no-resources-message-temp");
-                    unlikeResource(textNoResource, textNoResourceTemp, resource_id, response);
-                 }
-             }
-    });
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200) {
+            var response = JSON.parse(ajax.response);
+            if (response['success']) {
+                // The resource is unliked, so it is removed from the favorite
+                var textNoResource = document.getElementById("no-resources-message");
+                var textNoResourceTemp = document.getElementById("no-resources-message-temp");
+                unlikeResource(textNoResource, textNoResourceTemp, resource_id, response);
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form, "resource_id=" + resource_id);
 }
 
 // Content of the evaluation part (submit send feedback, reset answer, submit answer)
 
-function feedback(id, feedback_object){
-    var form = document.getElementById("feedback_user_"+feedback_object+id);
-    var button = document.getElementsByName("button_feedback");
-    $(button).attr("disabled","true");
-    $.ajax({ data: $(form).serialize() + "&"+feedback_object+"_id=" + id,
-             type: $(form).attr('method'),
-             url: $(form).attr('action'),
-             success: function(response) {
-                 if(response['success']) {
+function feedback(button, id, feedbackObject) {
+// this: the button to sent the feedback
+// id: number (either the id of the evaluation element or the section)
+// feedbackObject: string (either 'element' or 'section')
+// Used to submit the feedback of a section or a element, through a modal
+    var form = document.getElementById("feedback_user_"+feedbackObject+id);
+    var ajax = new XMLHttpRequest();
+    button.disabled = true;
 
-                     $("#confirmation_feedback_"+feedback_object+id).html("<div class='alert alert-success'>"+response['message']+"</div>");
-                     $(".alert-success").delay(4000).slideUp(200, function() {
-                        $(this).remove();
-                        $(form)[0].reset();
-                        $(button).removeAttr("disabled");
-                        $('#modal-feedback-'+feedback_object+id +" .close").click();
-                      });
-                 } else {
-                 $("#confirmation_feedback_"+feedback_object+id).html("<div class='alert alert-danger'>"+response['message']+"</div>");
-                 $(".alert-danger").delay(5000).slideUp(200, function() {
-                        $(this).remove();
-                        $(button).removeAttr("disabled");
-                        $('#modal-feedback-'+feedback_object+id+" .close").click();
-                      });
-                 }
-             }
-    });
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            var feedbackMessage = document.getElementById("confirmation_feedback_"+feedbackObject+id);
+            if (response['success']) {
+                addMessage(feedbackMessage, response['message'], "alert-success");
+            } else {
+                addMessage(feedbackMessage, response['message'], "alert-danger");
+            }
+            timerMessageSlow(feedbackMessage, "display-none", 4000, true);
+            setTimeout(function() {
+                form.reset();
+                button.disabled = false;
+                var closeButton = document.getElementById("close-modal-"+feedbackObject+id);
+                closeButton.click();
+            }, 5000);
+        }
+    }
+    manageAjaxRequest(ajax, form, feedbackObject + "_id=" + id);
 }
 
 function untickAllChoices(element_id) {
@@ -180,54 +184,40 @@ function untickAllChoices(element_id) {
 }
 
 
-function resetChoice(id_form){
+function resetChoice(id_form) {
     var element_id = id_form;
     untickAllChoices(element_id);
     var form = document.getElementById("form"+element_id);
-    var name = $(form).attr("element");
-    $.ajax({ data: $(form).serialize() + "&reset_element_id=" + element_id,
-             type: $(form).attr('method'),
-             url: $(form).attr('action'),
-             success: function(response) {
-                 // First thing we do is to inform the user whether the action succeeded or not
-                 var parentMessage = document.getElementById("confirmationform"+element_id);
-                 parentMessage.textContent = '';
-                 addMessage(parentMessage, response['message'], response["message_type"]);
-                 if (response['message_notes']) {
-                        addMessage(parentMessage, response['message_notes'], response["message_notes_type"]);
-                    }
-                 parentMessage.classList.remove("hidden-div");
-                 setTimeout(function() {
-                       parentMessage.classList.add("hidden-div");
-                       parentMessage.textContent = '';
-                     }, 4000);
+    var ajax = new XMLHttpRequest();
 
-                 if(response['success']) {
-                     setSectionProgressBar(response);
-                     setSectionProgressionSidebar(response);
-                     // There is not necessarily a need to change the status if it was already not done!
-                     if (response["element_status_changed"]){
-                        setElementEvaluationStatusNotDone(element_id);
-                     }
-                     if(response['no_more_condition_inter']) {
-                         location.reload();
-                     }
-                    // If the evaluation is no more finished
-                    if (!response["evaluation_finished"]){
-                        var temp_button = document.getElementById("temp-validation-button");
-                        var permanent_button = document.getElementsByName("validation-button");
-                        // If it is the permanent button displayed, we disable it
-                        if($(temp_button).hasClass("display-none")){
-                            $(permanent_button).attr("disabled", "true");
-                        } else {
-                            $(temp_button).addClass("display-none");
-                            $(permanent_button).attr("disabled", "true");
-                            $(permanent_button).removeClass("display-none");
-                        }
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+                // First thing we do is to inform the user whether the action succeeded or not
+                var parentMessage = document.getElementById("confirmationform"+element_id);
+                parentMessage.textContent = '';
+                addMessage(parentMessage, response['message'], response["message_type"]);
+                if (response['message_notes']) {
+                    addMessage(parentMessage, response['message_notes'], response["message_notes_type"]);
+                }
+                timerMessageSlow(parentMessage, "hidden-div", 4000, true);
+
+                if(response['success']) {
+                    setSectionProgressBar(response);
+                    setSectionProgressionSidebar(response);
+                    // There is not necessarily a need to change the status if it was already not done!
+                    if (response["element_status_changed"]) {
+                       setElementEvaluationStatusNotDone(element_id);
                     }
+                    if(response['no_more_condition_inter']) {
+                        location.reload();
+                    }
+                    // If the evaluation is no more finished
+                    manageEvaluationValidation(response);
                  }
              }
-     });
+     }
+     manageAjaxRequest(ajax, form, "reset_element_id=" + element_id);
 }
 
 function addMessage(parentElement, message, alertType) {
@@ -239,106 +229,118 @@ function addMessage(parentElement, message, alertType) {
     parentElement.append(messageCreated);
 }
 
+function timerMessageSlow(parentMessage, classCSS, timer, slow) {
+// parentMessage: element of the DOM
+// classCSS: string ('display-none' or 'hidden-div')
+// timer: number (thousands, ex 5000 for 5 seconds)
+// slow: boolean
+// This function sets a timer to display the div "parentMessage". First it removes the css class (either 'hidden-div'
+// or 'display-none', depending on the fact the height of the div is used or not). So the div is displayed as well
+// as the children containing the messages and after a timer (number, ex 5000), the css class is added again to mask the
+// div and the content of the div is destroyed.
+    parentMessage.classList.remove(classCSS);
+    // First timeout to create a slow remove effect
+    if (slow) {
+        setTimeout(function() {
+            parentMessage.classList.add("transition");
+        }, timer);
+    }
+    // After the css effect (1s) or not (slow=false), we clean the div
+    var delaySlow = slow ? 1000 : 0;
+    setTimeout(function() {
+        parentMessage.textContent = '';
+        parentMessage.classList.add(classCSS);
+        parentMessage.classList.remove("transition");
+    }, timer + delaySlow);
+}
+
 
 // Validation of an evaluation element
 
-function submitForm(id_form){
+function submitForm(id_form, element_id) {
 
     var form = document.getElementById(id_form);
-    var name = $(form).attr("element");
-    var element_id = $(form).attr("name");
+    var ajax = new XMLHttpRequest();
     for (var instance in CKEDITOR.instances)
           CKEDITOR.instances[instance].updateElement();
-    $.ajax({ data: $(form).serialize() + "&element_id=" + element_id,
-             type: $(form).attr('method'),
-             url: $(form).attr('action'),
-             success: function(response) {
-                 // First thing we do is to inform the user whether the action succeeded or not
-                 var parentMessage = document.getElementById("confirmation"+id_form);
-                 parentMessage.textContent = '';
-                 addMessage(parentMessage, response['message'], response["message_type"]);
-                 if (response['message_notes']) {
-                        addMessage(parentMessage, response['message_notes'], response["message_notes_type"]);
-                    }
-                 parentMessage.classList.remove("hidden-div");
-                 setTimeout(function() {
-                       parentMessage.classList.add("hidden-div");
-                       parentMessage.textContent = '';
-                     }, 4000);
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            // First thing we do is to inform the user whether the action succeeded or not
+            var parentMessage = document.getElementById("confirmation"+id_form);
+            parentMessage.textContent = '';
+            addMessage(parentMessage, response['message'], response["message_type"]);
+            if (response['message_notes']) {
+                addMessage(parentMessage, response['message_notes'], response["message_notes_type"]);
+            }
+            timerMessageSlow(parentMessage, "hidden-div", 4000, true);
 
-                 if(response['success']) {
-                     setSectionProgressBar(response);
-                     setSectionProgressionSidebar(response);
-                     if (response["element_status_changed"]){
-                        setElementEvaluationStatusDone(element_id);
-                     }
-                     if (response["no_more_condition_inter"]){
-                        location.reload();
-                        // todo do not reload and modify the elements
-                     }
+            if (response['success']) {
 
-                     // If this evaluation element is the last one of the evaluation, we enable the validation button
-                     var temp_button = document.getElementById("temp-validation-button");
-                     var permanent_button = document.getElementsByName("validation-button");
-                     if (response["evaluation_finished"]){
-                        $(permanent_button).addClass("display-none");
-                        $(temp_button).removeClass("display-none");
-                     } else {
-                         if($(temp_button).hasClass("display-none")){
-                            $(permanent_button).attr("disabled", "true");
-                         } else {
-                             $(temp_button).addClass("display-none");
-                             $(permanent_button).attr("disabled", "true");
-                             $(permanent_button).removeClass("display-none");
-                         }
-                     }
-                 }
-                 if(response['conditional_elements_list'].length > 0) {
-                    for (var i=0; i < response['conditional_elements_list'].length; i++) {
-                        var id_evaluation_element = response['conditional_elements_list'][i];
-                        setElementEvaluationStatusDone(id_evaluation_element);
-                        untickAllChoices(id_evaluation_element); // reset the choices
-                        $("#temp_warning"+id_evaluation_element).attr("style", "display: block;");
-                        $("#disable_element"+id_evaluation_element).attr("disabled","true");
-                        $("#validate"+id_evaluation_element).attr("disabled", "true");
-                        $("#reset"+id_evaluation_element).attr("onclick", "");
-                    }
-                 }
+                setSectionProgressBar(response);
+                setSectionProgressionSidebar(response);
+                if (response["element_status_changed"]) {
+                    setElementEvaluationStatusDone(element_id);
+                }
+                if (response["no_more_condition_inter"]) {
+                    location.reload();
+                // todo do not reload and modify the elements
+                }
+                // Manage the validation button
+                manageEvaluationValidation(response);
              }
-    });
+            if (response['conditional_elements_list'] && response['conditional_elements_list'].length > 0) {
+                for (var i=0; i < response['conditional_elements_list'].length; i++) {
+                    var id_evaluation_element = response['conditional_elements_list'][i];
+                    setElementEvaluationStatusDone(id_evaluation_element);
+                    untickAllChoices(id_evaluation_element); // reset the choices
+                    document.getElementById("temp_warning"+id_evaluation_element).style.display = "block";
+                    document.getElementById("disable_element"+id_evaluation_element).disabled = true;
+                    document.getElementById("validate"+id_evaluation_element).disabled = true;
+                    document.getElementById("reset"+id_evaluation_element).onclick = "";
+                }
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form, "element_id=" + element_id);
+}
+
+function manageEvaluationValidation(response) {
+// If this evaluation element is the last one of the evaluation, the permanent buttons are removed
+// and the temp one is displayed, disbaled or not depending on the evaluation status
+    var tempButton = document.getElementById("temp-validation-button");
+    removePermanentObjectByName("validation-button");
+    if (!response["evaluation_finished"]) {
+        tempButton.children[0].disabled = true;
+    }
+    tempButton.style.display = "block";
 }
 
 function submitUserSettingsDataForm(id_form){
     var form = document.getElementById(id_form);
-    $.ajax({ data: $(form).serialize(),
-        type: $(form).attr('method'),
-        url: $(form).attr('action'),
-        success: function(response) {
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
             var divMessage = document.getElementById("message");
-            divMessage.classList.remove("display-none");
-            divMessage.textContent = "";
             if (response['success']) {
                 addMessage(divMessage, response['message'], "alert-success");
             } else {
                 addMessage(divMessage, response['message'], "alert-danger");
             }
-            setTimeout( function() {
-                divMessage.classList.add("display-none")
-                divMessage.textContent = "";
-                }, 4000);
+            timerMessageSlow(divMessage, "display-none", 4000, true);
         }
-    });
+    }
+    manageAjaxRequest(ajax, form);
 }
 
 function submitUserSettingsPasswordForm(id_form){
     var form = document.getElementById(id_form);
-    $.ajax({ data: $(form).serialize(),
-        type: $(form).attr('method'),
-        url: $(form).attr('action'),
-        success: function(response) {
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
             var divMessage = document.getElementById("messagePassword");
-            divMessage.classList.remove("display-none");
-            divMessage.textContent = "";
             if (response['success']) {
                 form.reset();
                 addMessage(divMessage, response['message'], "alert-success");
@@ -348,16 +350,14 @@ function submitUserSettingsPasswordForm(id_form){
                     addMessage(divMessage, message, "alert-danger");
                 }
             }
-            setTimeout( function() {
-                divMessage.classList.add("display-none")
-                divMessage.textContent = "";
-                }, 6000);
+            timerMessageSlow(divMessage, "display-none", 6000, true);
         }
-    });
+    }
+    manageAjaxRequest(ajax, form);
 }
 
 
-function setSectionProgressBar(response){
+function setSectionProgressBar(response) {
     var progress_bar = document.getElementById("section-progress-bar");
     var progress_bar_content = document.getElementById("section-progress-bar-content");
     progress_bar.setAttribute("title", "Progression de "+response['section_progression']+"%");
@@ -376,155 +376,155 @@ function setSectionProgressionSidebar(response) {
     }
 }
 
-function setElementEvaluationStatusDone(element_id){
-    var element_status_to_disable = document.getElementsByName("element_status_not_done"+element_id);
-    var new_element_status = document.getElementsByName("element_status_temporary"+element_id);
-    if (document.getElementsByName("element_status_not_done"+element_id).length ===0){
-        $(new_element_status).html('<i class="fa fa-circle fa-stack-2x"></i></span>');
-        $(new_element_status).attr("title", "You have answered this evaluation element"); // todo translation
-    } else {
-        element_status_to_disable[0].setAttribute("style", "display: none;");
-        $(new_element_status).attr("style", "display: block;");
-        $(new_element_status).attr("title", "You have answered this evaluation element"); // todo translation
-        $(new_element_status).html('<i class="fa fa-circle fa-stack-2x"></i></span>');
-    }
-
-}
-
-function setElementEvaluationStatusNotDone(element_id){
-    var element_status_to_disable = document.getElementsByName("element_status_done"+element_id);
-    var new_element_status = document.getElementsByName("element_status_temporary"+element_id);
-//    case the element has been validated then reset without page refresh, so it is temporary div
-    if (document.getElementsByName("element_status_done"+element_id).length ===0){
-        $(new_element_status).html('<i class="fa fa-circle-o fa-stack-2x"></i></span>');
-        $(new_element_status).attr("title", "You have not answered this evaluation element yet"); // todo translation
-    } else {
-        element_status_to_disable[0].setAttribute("style", "display: none;");
-        $(new_element_status).attr("style", "display: block;");
-        $(new_element_status).html('<i class="fa fa-circle-o fa-stack-2x"></i></span>');
-        $(new_element_status).attr("title", "You have not answered this evaluation element yet"); // todo translation
+function removePermanentObjectByName(name) {
+// For an evaluation element, remove all the permanent status icon
+    var permanentObjectList = document.getElementsByName(name);
+    for (element of permanentObjectList) {
+        element.style.display = "none";
     }
 }
-// not used
-function setElementEvaluationStatusNotDoneAfterInvalid(element_id){
-    var element_status_to_disable = document.getElementsByName("element_status_invalid"+element_id);
-    var new_element_status = document.getElementsByName("element_status_temporary"+element_id);
-//    case the element has been validated then reset without page refresh, so it is temporary div
-    if (document.getElementsByName("element_status_invalid"+element_id).length ===0){
-        $(new_element_status).html('<i class="fa fa-circle-o fa-stack-2x"></i></span>');
-    } else {
-        element_status_to_disable[0].setAttribute("style", "display: none;");
-        $(new_element_status).attr("style", "display: block;");
-        $(new_element_status).html('<i class="fa fa-circle-o fa-stack-2x"></i></span>');
-    }
+
+function setElementEvaluationStatusDone(element_id) {
+// This function removes the current element status to set the temporary one to done
+    var newElementStatus = document.getElementById("element_status_temporary"+element_id);
+    removePermanentObjectByName("permanent-status-element"+element_id);
+    newElementStatus.setAttribute("style", "display: block;");
+    newElementStatus.setAttribute("title", "You have answered this evaluation element");
+    newElementStatus.innerHTML ='<i class="fa fa-circle fa-stack-2x"></i></span>';
+}
+
+function setElementEvaluationStatusNotDone(element_id) {
+// This function the current status to set a temporary one to "not done"
+    var newElementStatus = document.getElementById("element_status_temporary"+element_id);
+    removePermanentObjectByName("permanent-status-element"+element_id);
+    newElementStatus.setAttribute("style", "display: block;");
+    newElementStatus.setAttribute("title", "You have not answered this evaluation element yet");
+    newElementStatus.innerHTML ='<i class="fa fa-circle-o fa-stack-2x"></i></span>';
 }
 
 // used in the profile view to adapt the breadcrumbs
-function displayTextLink(text_to_display, link_id){
+function displayTextLink(text_to_display, link_id) {
     var link_object = document.getElementById(link_id);
-    link_object.innerHTML=text_to_display;
+    link_object.innerHTML = text_to_display;
 }
 
-function changeNameEvaluation(form_id, evaluation_id){
+function changeNameEvaluation(form_id, evaluation_id) {
     var form = document.getElementById(form_id);
-    $.ajax({ data: $(form).serialize()+ "&evaluation_id=" + evaluation_id,
-             type: $(form).attr('method'),
-             url: $(form).attr('action'),
-             success: function(response) {
-                 if(response['success']) {
-                     $("#confirmation"+form_id).html("<div class='alert alert-success margin-10'>"+response['message']+"</div>");
-                     $(".alert").delay(3000).slideUp(200, function() {
-                        $(this).remove();
-                        location.reload();  // to update the array and the page
-                        });
-                 } else {
-                    $("#confirmation"+form_id).html("<div class='alert alert-danger margin-10'>"+response['message']+"</div>");
-                    $(".alert").delay(5000).slideUp(200, function() {
-                        $(this).remove();
-                        });
-                 }
-             }
-    });
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            var parentMessage = document.getElementById("confirmation"+form_id);
+
+            if (response['success']) {
+                addMessage(parentMessage, response['message'], 'alert-success');
+                timerMessageSlow(parentMessage, "display-none", 3000, true);
+                var evalName = document.getElementById("evaluation-name");
+                if (evalName) {
+                    evalName.textContent = response["name"];
+                } else {
+                    location.reload();
+                }
+
+                setTimeout(function() {
+                    var closeButton = document.getElementById("close-modal-edit-name");
+                    closeButton.click();
+                }, 4500);
+            } else {
+                addMessage(parentMessage, response['message'], 'alert-danger');
+                timerMessageSlow(parentMessage, "display-none", 3000, true);
+                setTimeout(function() {
+                    var closeButton = document.getElementById("close-modal-edit-name");
+                    closeButton.click();
+                }, 4500);
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form, "evaluation_id=" + evaluation_id);
 }
 
 // upgrade function used to upgrade an evaluation and block the popin from closing
 function upgrade(modal_id, form_id, evaluation_id){
     var upgrade_modal = document.getElementById(modal_id);
     var form = document.getElementById(form_id);
-    var text_message = document.getElementById("upgrade_message_text"+evaluation_id);
-    var upgrade_message = document.getElementById("upgrade_message"+evaluation_id);
-    $(upgrade_message).addClass("alert-warning");
-    $(upgrade_message).removeClass("display-none");
-    text_message.textContent = 'The upgrade is in process, please wait.';
+    var textMessage = document.getElementById("upgrade_message_text"+evaluation_id);
+    var upgradeMessage = document.getElementById("upgrade_message"+evaluation_id);
+    upgradeMessage.classList.add("alert-warning");
+    upgradeMessage.classList.remove("display-none");
+    textMessage.textContent = gettext('The upgrade is in process, please wait.');
     var buttons = document.getElementsByTagName('button');
     for (var button of buttons) {
-        $(button).attr("disabled", "true");
-        $(button).addClass("waiting-cursor");
+        button.disabled = true;
+        button.classList.add("waiting-cursor");
     }
     document.body.style.cursor='wait'; // transform the cursor to a loading cursor
-    $.ajax({
-        type: $(form).attr('method'),
-        url: $(form).attr('action'),
-        success: function(response) {
-             if(response['success']) {
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            if (response['success']) {
                 document.body.style.cursor='default';
-                $(upgrade_message).removeClass("alert-warning");
-                $(upgrade_message).addClass("alert-success");
-                text_message.textContent = response["message"];
-                $(".alert").delay(5000).slideUp(200, function() {
-                    $(this).remove();
-                });
+                upgradeMessage.classList.remove("alert-warning");
+                addMessage(upgradeMessage, response["message"], 'alert-success');
+                timerMessageSlow(upgradeMessage, "display-none", 3000, true);
                 document.location.href=response["redirection"];
-             } else {
+            } else {
                 document.body.style.cursor='default';
                 for (var button of buttons) {
-                    $(button).removeAttr("disabled");
-                    $(button).removeClass("waiting-cursor");
+                    button.disabled = false;
+                    button.classList.remove("waiting-cursor");
                 }
-                $(upgrade_message).removeClass("alert-warning");
-                $(upgrade_message).addClass("alert-danger");
-                text_message.textContent = response["message"];
+                upgradeMessage.classList.remove("alert-warning");
+                addMessage(upgradeMessage, response["message"], 'alert-danger');
                 setTimeout(location.reload.bind(location), 3000);
-             }
+            }
         }
-    });
+    }
+    manageAjaxRequest(ajax, form);
 }
 
-function send_invitation(form_id){
-    $("#sendInvitationButton").attr("disabled", "true");
+function sendInvitation(form_id) {
+// Function to add a member to the organisation, the action triggered either invites the user if it exists
+// or sends an email to signup
+    var sendInvitationButton = document.getElementById("sendInvitationButton");
+    sendInvitationButton.disabled = true;
     var form = document.getElementById(form_id);
-    $.ajax({
-        data: $(form).serialize(),
-        type: $(form).attr('method'),
-        url: $(form).attr('action'),
-        success: function(response) {
-             if(response['success']) {
-                 var tabMembers = document.getElementById("arrayMembers");
-                 var newRow = tabMembers.insertRow();
-                 for (var i = 0; i < tabMembers.rows[0].cells.length; i++){
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            var messageInvitation = document.getElementById("confirmationInvitation");
+
+            if (response['success']) {
+                var tabMembers = document.getElementById("arrayMembers");
+                var newRow = tabMembers.insertRow();
+                for (var i = 0; i < tabMembers.rows[0].cells.length; i++) {
                     var newCell  = newRow.insertCell(i);
-                    $(newCell).addClass("case-array");
+                    newCell.classList.add("case-array");
                     var newText  = document.createTextNode(response["data_user"][i]);
                     newCell.appendChild(newText);
-                 }
-                 $("#confirmationInvitation").html("<div class='alert alert-success'>"+response['message']+"</div>");
-                 $(".alert-success").delay(4000).slideUp(200, function() {
-                    $(this).remove();
-                    $(form)[0].reset();
-                    $("#sendInvitationButton").removeAttr("disabled");
-                    $("#modal-add-member .close").click();
-                  });
-             } else {
-             $("#confirmationInvitation").html("<div class='alert alert-danger'>"+response['message']+"</div>");
-             $(".alert-danger").delay(5000).slideUp(200, function() {
-                    $(this).remove();
-                    $("#sendInvitationButton").removeAttr("disabled");
-                    $("#modal-add-member .close").click();
-                  });
-             }
-        }
-    });
+                }
+                messageInvitation.textContent = '';
+                addMessage(messageInvitation, response['message'], 'alert-success');
+                timerMessageSlow(messageInvitation, "hidden-div", 4500, true);
+                setTimeout(function() {
+                    sendInvitationButton.disabled = false;
+                    form.reset();
+                    document.getElementById('close-button-invitation').click();
+                }, 6000);
 
+            } else {
+                addMessage(messageInvitation, response['message'], 'alert-danger');
+                setTimeout(function() {
+                    messageInvitation.textContent = '';
+                    sendInvitationButton.disabled = false;
+                    document.getElementById('close-button-invitation').click();
+                }, 4000);
+
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form);
 }
 
 function removeMember(form_id, object_id, is_pending){
@@ -532,40 +532,41 @@ function removeMember(form_id, object_id, is_pending){
 // It is called in assessment/organisation/member in remove-member.html and remove-pending-member.html
 // It creates an ajax request managed by SummaryView
     var form = document.getElementById(form_id);
-    if(is_pending) {
+    if (is_pending) {
         var object_removed = "delete_invitation_id";
     } else {
         var object_removed = "remove_member_id";
     }
-    $.ajax({
-        data: $(form).serialize() +"&"+object_removed+"=" + object_id,
-        type: $(form).attr('method'),
-        url: $(form).attr('action'),
-        success: function(response) {
-             if(response['success']) {
-                 var tabMembers = document.getElementById("arrayMembers");
-                 if(is_pending) {
-                       var row = document.getElementById("rowPendingMember"+ object_id);
-                 } else {
-                        var row = document.getElementById("rowMember"+ object_id);
-                 }
-                 var indexRemoved = row.rowIndex;
-                 indexRemoved = indexRemoved - 1;
-                 $(tabMembers.deleteRow(indexRemoved));
-                 $("#messagesMember").html("<div class='alert alert-success'>"+response['message']+"</div>");
-                 $(".modal").delay(1000).slideUp(200, function() {
-                     $("#modal-remove-member"+object_id+" .close").click();
-                     $("#modal-remove-member-pending"+object_id+" .close").click();
-                  });
-             } else {
-                 $("#messagesMember").html("<div class='alert alert-danger'>"+response['message']+"</div>");
-                 $(".modal").delay(1000).slideUp(200, function() {
-                    $("#modal-remove-member"+object_id+" .close").click();
-                    $("#modal-remove-member-pending"+object_id+" .close").click();
-             });
-             }
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            var messageMember = document.getElementById("messagesMember");
+            if (response['success']) {
+                var tabMembers = document.getElementById("arrayMembers");
+                if (is_pending) {
+                    var row = document.getElementById("rowPendingMember"+ object_id);
+                } else {
+                    var row = document.getElementById("rowMember"+ object_id);
+                }
+                tabMembers.removeChild(row);
+                // Fix a bug we cannot scroll the document
+                document.getElementsByTagName("body")[0].style.overflow = "auto";
+                addMessage(messageMember, response['message'], "alert-success");
+                timerMessageSlow(messageMember, "hidden-div", 6000, true);
+
+            } else {
+                addMessage(messageMember, response['message'], 'alert-danger');
+                timerMessageSlow(messageMember, "hidden-div", 6000, true);
+                if (is_pending) {
+                    document.getElementById("close-remove-invitation"+ object_id).click();
+                } else {
+                    document.getElementById("close-remove-member"+ object_id).click();
+                }
+            }
         }
-    });
+    }
+    manageAjaxRequest(ajax, form, object_removed+"=" + object_id);
 }
 
 function editRoleMember(form_id, object_id, is_pending){
@@ -573,40 +574,120 @@ function editRoleMember(form_id, object_id, is_pending){
 // It creates an ajax request managed by SummaryView
 // It is called in assessment/organisation/member in edit-role-member.html and edit_role-pending-member.html
     var form = document.getElementById(form_id);
-    if(is_pending) {
+    if (is_pending) {
         var object_edited = "edit_invitation_id";
     } else {
         var object_edited = "edit_member_id";
     }
-    $.ajax({
-        data: $(form).serialize() +"&"+object_edited+"=" + object_id,
-        type: $(form).attr('method'),
-        url: $(form).attr('action'),
-        success: function(response) {
-             if(response['success']) {
-                 var tabMembers = document.getElementById("arrayMembers");
-                 if(is_pending) {
-                       var row = document.getElementById("rowPendingMember"+ object_id);
-                 } else {
-                        var row = document.getElementById("rowMember"+ object_id);
-                 }
-                 var cell = row.cells[2]
-                 cell.textContent = response["new_role"]
-                 $("#messagesMember").html("<div class='alert alert-success'>"+response['message']+"</div>");
-                 $(".modal").delay(1000).slideUp(200, function() {
-                     $("#modal-edit-role"+object_id+" .close").click();
-                     $("#modal-edit-role-pending"+object_id+" .close").click();
-                  });
-             } else {
-                 $("#messagesMember").html("<div class='alert alert-danger'>"+response['message']+"</div>");
-                 $(".modal").delay(1000).slideUp(200, function() {
-                    $("#modal-edit-role"+object_id+" .close").click();
-                    $("#modal-edit-role-pending"+object_id+" .close").click();
-             });
-             }
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            var messageMember = document.getElementById("messagesMember");
+            messageMember.textContent = "";
+            if (response['success']) {
+                var tabMembers = document.getElementById("arrayMembers");
+                if (is_pending) {
+                    var row = document.getElementById("rowPendingMember"+ object_id);
+                } else {
+                    var row = document.getElementById("rowMember"+ object_id);
+                }
+                var cell = row.cells[2]
+                cell.textContent = response["new_role"]
+                addMessage(messageMember, response["message"], "alert-success");
+            } else {
+                addMessage(messageMember, response["message"], "alert-danger");
+            }
+            setTimeout(function() {
+                if (is_pending) {
+                    document.getElementById("close-edit-invitation"+ object_id).click();
+                } else {
+                    document.getElementById("close-edit-member"+ object_id).click();
+                }
+            }, 1000)
         }
-    });
+    }
+    manageAjaxRequest(ajax, form, object_edited + "=" + object_id);
 }
+
+
+function filterDashboardGraphs(formId){
+    var form = document.getElementById(formId);
+    var ajax = new XMLHttpRequest();
+
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200) {
+            var response = JSON.parse(ajax.response);
+            if(response["success"]){
+                    var tab_to_update = response["which_tab"];
+                    switch (tab_to_update) {
+                    // update users stats and graphs
+                    case 0:
+
+                        document.getElementById("nb-users-indicator").innerHTML = response["nb_users"];
+                        document.getElementById("min-date-indicator").innerHTML = response["min_date"];
+                        document.getElementById("min-date-indicator-2").innerHTML = response["min_date"];
+                        var users_stats_table = document.getElementById("users-stats-table");
+                        var months = response["months"];
+                        var users_count = response["users_count"];
+
+                        for (var i = 1, row; row = users_stats_table.rows[i]; i++) {
+                               row.cells[0].innerText = months[i-1];
+                               row.cells[1].innerText = users_count[i-1];
+                          }
+                        break;
+
+                    // update organisations stats and graphs
+                    case 1:
+                        document.getElementById("nb-orgas-indicator").innerHTML = response["nb_orgas"];
+                        document.getElementById("selected-orgas-filter-date").innerHTML = response["creation_date"];
+                        document.getElementById("selected-orgas-filter-date-2").innerHTML = response["creation_date"];
+
+                        // update number of organisations per sector table
+                         var organisationSectorsTableStats = document.getElementById("orgas-sectors-stats-table");
+                         for (var i = 1, row; row = organisationSectorsTableStats.rows[i]; i++) {
+                               row.cells[0].innerText = response["sectors_list"][i-1];
+                               row.cells[1].innerText = response["orgas_count_per_sector"][i-1];
+                         }
+
+                        // update number of organisations per size table
+                        organisationSizesTableStats = document.getElementById("orgas-sizes-stats-table")
+                         for (var i = 1, row; row = organisationSizesTableStats.rows[i]; i++) {
+                               row.cells[0].innerText = response["sizes_list"][i-1];
+                               row.cells[1].innerText = response["orgas_count_per_size"][i-1];
+                          }
+                          break;
+
+                    // update evaluations stats and graphs
+                    case 2:
+                        document.getElementById("nb-total-evals").innerHTML = response["total_nb_evals"];
+                        document.getElementById("nb-completed-evals").innerHTML = response["nb_completed_evals"];
+                        document.getElementById("nb-in-progress-evals").innerHTML = response["nb_in_progress_evals"];
+                        document.getElementById("eval-creation-date-indicator-2").innerHTML = response["eval_creation_date"];
+                        document.getElementById("eval-creation-date-indicator-1").innerHTML = response["eval_creation_date"];
+                        var versions = response["versions_list"];
+                        var evalVersionsStatsTable = document.getElementById("evals-versions-stats-table")
+                        for (var i = 1, row; row = evalVersionsStatsTable.rows[i]; i++) {
+                           row.cells[0].innerHTML = "V"+versions[i-1];
+                           row.cells[1].innerHTML = response["nb_evals_per_version"][i-1];
+                        }
+                        break;
+                    }
+            } else {
+                var parentMessage = document.getElementById("admin-dashboard-error");
+                parentMessage.textContent = '';
+                addMessage(parentMessage, response["message"] ,"alert-warning");
+                timerMessageSlow(parentMessage, "hidden-div", 5000, true);
+            }
+
+
+
+
+        }
+    }
+    manageAjaxRequest(ajax, form);
+}
+
 
 function submitOrganisationForm(formId, organisation_id) {
     var form = document.getElementById(formId);
@@ -653,62 +734,37 @@ function submitSectionNotes(form_id, section_id){
 // the call is made in content-section.html
 // the ajax request is managed in SectionView
    var form = document.getElementById(form_id);
-    $.ajax({ data: $(form).serialize()+ "&notes_section_id=" + section_id,  // the id is not used but "notes_section_id" to know the context of the ajax
-             type: $(form).attr('method'),
-             url: $(form).attr('action'),
-             success: function(response) {
-                 if(response['success']) {
-                     $("#messageSectionNotes"+section_id).removeClass("display-none")
-                     $("#messageSectionNotes"+section_id).html("<div class='alert alert-success margin-10'>"+response['message']+"</div>");
-                     $(".alert").delay(3000).slideUp(200, function() {
-                        $(this).addClass("display-none");
-                        });
-                 } else {
-                    $("#messageSectionNotes"+section_id).removeClass("display-none")
-                    $("#messageSectionNotes"+section_id).html("<div class='alert alert-danger margin-10'>"+response['message']+"</div>");
-                    $(".alert").delay(3000).slideUp(200, function() {
-                        $(this).addClass("display-none");
-                        });
-                 }
+   var ajax = new XMLHttpRequest();
+
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response) ;
+            var messageSectionNotes = document.getElementById("messageSectionNotes"+section_id);
+            messageSectionNotes.textContent = "";
+             if (response['success']) {
+                addMessage(messageSectionNotes, response["message"], "alert-success");
+                timerMessageSlow(messageSectionNotes, "display-none", 4000, true);
+             } else {
+                addMessage(messageSectionNotes, response["message"], "alert-danger");
+                timerMessageSlow(messageSectionNotes, "display-none", 4000, true);
              }
-    });
+        }
+    }
+    // Ajax post with headers, data of the form plus notes_section_id
+    manageAjaxRequest(ajax, form, "notes_section_id=" + section_id);
 }
 
 function changeIconResource(divHeader) {
     var children = divHeader.children;
-    if(children) {
+    if (children) {
         var divIcon = children[0];
-        if(divIcon.classList.contains("fa-plus")){
+        if (divIcon.classList.contains("fa-plus")) {
             divIcon.classList.replace("fa-plus", "fa-minus");
         } else {
             divIcon.classList.replace("fa-minus", "fa-plus");
         }
     }
 }
-
-$(function() {
-  $(".progress").each(function() {
-    var value = $(this).attr('data-value');
-    if (typeof value === "string"){
-        value = parseFloat(value);
-    }
-    var left = $(this).find('.progress-left .progress-bar');
-    var right = $(this).find('.progress-right .progress-bar');
-
-    if (value >= 0 && value < 50) {
-        right.css('transform', 'rotate(' + percentageToDegrees(value) + 'deg)')
-    }
-    if ( value >= 50 && value <=100) {
-        right.css('transform', 'rotate(180deg)')
-        left.css('transform', 'rotate(' + percentageToDegrees(value - 50) + 'deg)')
-      }
-
-  })
-
-  function percentageToDegrees(percentage) {
-    return percentage / 100 * 360
-  }
-});
 
 function topFunction() {
   document.body.scrollTop = 0; // For Safari
@@ -778,75 +834,6 @@ if (window.screen.width < 1025) {
     }
 }
 
-//script used to send newsletter subscription to MailChimp and display succes/error messages
-function registerNewsletter(event) {
-    //disable normal form submit behavior
-    event.preventDefault();
-    var $form = $('#mc-embedded-subscribe-form');
-    //replace some url's parts to get a json response to our request
-    //this is not done in the <form> to allow user without js to register
-    var formatedUrl = $form.attr('action').replace('post', 'post-json') + "&c=?"
-    $(function () {
-        //hide errors messages if present
-        $('#divErrorsNewsletter').children("p").each(function (child) {
-            $(this).hide();
-        });
-        $.ajax({
-            type: "GET",
-            url: formatedUrl,
-            data: $form.serialize(),
-            cache: false,
-            dataType: 'json',
-            contentType: "application/json; charset=utf-8",
-            error: function (err) {
-                $('#errorServerUnavailable').show();
-            },
-            success: function (data) {
-                //if mailChimp does not return "succes" -> display an error message
-                //else: hide form and display a confirmation message
-                let errorNum;
-                if (data.result != "success") {
-                    //regroup mailChimp errors into 4 differents errors
-
-                    //if the '0' is not present it means that the mail adress is already subscribed
-                    if (data.msg[0] != '0') {
-                        errorNum = "alreadySub";
-                    } else {
-                        let errorsReceivedRedirect = {
-                            "0 - Please enter a value": "empty",
-                            "0 - An email address must contain a single @": "format",
-                            "0 - The domain portion of the email address is invalid (the portion after the @: )": "format",
-                            "0 - The username portion of the email address is empty": "format",
-                            "0 - This email address looks fake or invalid. Please enter a real email address.": "invalid",
-                        }
-                        errorNum = errorsReceivedRedirect[data.msg];
-                    }
-
-                    let displayError = {
-                        'empty': function () {
-                            $('#errorMailEmpty').show();
-                        },
-                        'format': function () {
-                            $('#errorMailFormat').show();
-                        },
-                        'invalid': function () {
-                            $('#errorInvalidMail').show();
-                        },
-                        'alreadySub': function () {
-                            $('#mc_embed_signup').children('form').remove();
-                            $('#errorAlreadySubscribed').show();
-                        }
-                    }
-                    displayError[errorNum]();
-                } else {
-                    $('#mc_embed_signup').children('form').remove();
-                    $('#confirmSubscribe').show();
-                }
-
-            }
-        })
-    });
-}
 
 //script used to archive and remove notes.
 //it creates the ajax request with params, executes it, notify the result to the user and executes func()
