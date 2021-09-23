@@ -41,6 +41,10 @@ class Assessment(models.Model):
 
     name = models.CharField(max_length=100)
     version = models.CharField(max_length=200, default="mvp", unique=True)
+    previous_assessment = models.ForeignKey('self',
+                                            on_delete=models.SET_NULL,
+                                            null=True,
+                                            default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -72,7 +76,7 @@ class Assessment(models.Model):
         """
         list_risks = [
             [master_element.risk_domain_fr for master_element in master_section.masterevaluationelement_set.all()
-                if master_element.risk_domain]
+             if master_element.risk_domain]
             for master_section in self.mastersection_set.all()
         ]
         flatten_list = list(itertools.chain.from_iterable(list_risks))
@@ -218,7 +222,14 @@ class Evaluation(models.Model):
     An evaluation is a dynamic object
     """
 
-    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name="current_assessment")
+    upgraded_from = models.ForeignKey(
+        Assessment,
+        on_delete=models.SET_NULL,
+        null=True,
+        default=None,
+        related_name="assessment_upgraded_from"
+    )
     name = models.CharField(
         max_length=200,
         default="Evaluation",
@@ -251,24 +262,37 @@ class Evaluation(models.Model):
         super(Evaluation, self).save(*args, **kwargs)
 
     @classmethod
-    def create_evaluation(cls, name, assessment, user, organisation):
+    def create_evaluation(cls, name, assessment, user, organisation, upgraded_from=None):
         """
         To create an evaluation, we need to link it to an assessment (with a defined version)
         and also to an user who does the action and an organisation where the user belongs to
         Note there is no content to the evaluation yet
+        If the evaluation is upgraded from an old assessment then upgraded_from contains the reference to it
+        otherwise it's null
         :param name: string
         :param assessment: assessment object
         :param user: user
         :param organisation: organisation
+        :param upgraded_from: assessment object
         :return:
         """
+        if upgraded_from is None:
+            evaluation = cls(
+                name=name,
+                assessment=assessment,
+                created_by=user,
+                organisation=organisation,
+                upgraded_from=assessment.previous_assessment,
+            )
+        else:
+            evaluation = cls(
+                name=name,
+                assessment=assessment,
+                created_by=user,
+                organisation=organisation,
+                upgraded_from=upgraded_from,
+            )
 
-        evaluation = cls(
-            name=name,
-            assessment=assessment,
-            created_by=user,
-            organisation=organisation,
-        )
         evaluation.save()
         return evaluation
 
@@ -383,7 +407,7 @@ class Evaluation(models.Model):
 
                 for element in section.evaluationelement_set.all():
                     element_number = element.master_evaluation_element.get_numbering()
-                    if upgrade_dic["elements"][element_number] == "no_fetch":
+                    if upgrade_dic["elements"][element_number]["upgrade_status"] == "no_fetch":
                         element.fetch = False
                         element.save()
 
@@ -423,6 +447,7 @@ class Evaluation(models.Model):
             assessment=final_assessment,
             organisation=self.organisation,
             user=user_eval,
+            upgraded_from=origin_assessment,
         )
         new_eval.create_evaluation_body()
 
@@ -447,14 +472,15 @@ class Evaluation(models.Model):
                 new_element_number = (
                     new_element.master_evaluation_element.get_numbering()
                 )
-                if upgrade_dic["elements"][new_element_number] == "no_fetch":
+                if upgrade_dic["elements"][new_element_number]["upgrade_status"] == "no_fetch":
                     new_element.fetch = False
                     new_element.save()
                 else:
                     # Two cases: "1" if it fetches itself, or "id" (ex "1.1") if it fetches an other EE
-                    if upgrade_dic["elements"][new_element_number] != 1:
-                        older_element_order_id = upgrade_dic["elements"][new_element_number][-1]
-                        older_element_section_order_id = upgrade_dic["elements"][new_element_number][-3]
+                    if upgrade_dic["elements"][new_element_number]["upgrade_status"] != 1:
+                        older_element_order_id = upgrade_dic["elements"][new_element_number]["upgrade_status"][-1]
+                        older_element_section_order_id = upgrade_dic["elements"][new_element_number]["upgrade_status"][
+                            -3]
                     else:
                         older_element_order_id = new_element.master_evaluation_element.order_id
                         older_element_section_order_id = new_element.master_evaluation_element.master_section.order_id
@@ -1589,9 +1615,68 @@ class EvaluationElement(models.Model):
         return (
                 sum_points_not_concerned
                 * master_evaluation_element_weight.get_master_element_weight(
-                    self.master_evaluation_element
-                )
+                 self.master_evaluation_element)
         )
+
+    def get_element_change_log(self):
+        """
+        Returns the change log object using the associated evaluation element numbering, current assessment and previous
+        assessment version.
+        there are two cases we need to consider:
+         - if this is a new evaluation then we should use the previous_assessment from the Assessment class
+         and not upgraded_from of the class Evaluation because it will be null
+         - if this is an upgraded evaluation then we will use the upgraded_from object
+        """
+        if self.section.evaluation.upgraded_from:
+            try:
+                change_log = ElementChangeLog.objects.get(
+                    eval_element_numbering=self.master_evaluation_element.get_numbering(),
+                    previous_assessment=self.section.evaluation.upgraded_from,
+                    assessment=self.section.evaluation.assessment
+                )
+            except ElementChangeLog.DoesNotExist:
+                change_log = None
+        else:
+            try:
+                change_log = ElementChangeLog.objects.get(
+                    eval_element_numbering=self.master_evaluation_element.get_numbering(),
+                    previous_assessment=self.section.evaluation.assessment.previous_assessment,
+                    assessment=self.section.evaluation.assessment
+                )
+            except ElementChangeLog.DoesNotExist:
+                change_log = None
+
+        return change_log
+
+    def get_change_log_pastille(self):
+        """
+        Returns the pastille of the change log related to this evaluation element
+        """
+        return self.get_element_change_log().pastille
+
+    def get_change_log_edito(self):
+        """
+        Returns the edito of the change log related to this evaluation element
+        """
+        return self.get_element_change_log().edito
+
+    def hide_change_log(self):
+        """
+        Set the visibility attribute of the change log to False so the pastille and the edito won't be displayed
+        """
+        self.get_element_change_log().hide()
+
+    def display_change_log(self):
+        """
+        Set the visibility attribute of the change log to True so the pastille and the edito will be displayed
+        """
+        self.get_element_change_log().display()
+
+    def is_change_log_visible(self):
+        """
+        Check if the change log is visible, returns true or false
+        """
+        return self.get_element_change_log().visibility
 
 
 class MasterChoice(models.Model):
@@ -1926,6 +2011,50 @@ class ExternalLink(models.Model):
             return f"{self.text} ({self.type})"
         else:
             return f"Resource (id {str(self.pk)})"
+
+
+class ElementChangeLog(models.Model):
+    """
+    This class is used to manage the change logs for evaluation elements, where edito are used to store
+    information about evaluation elements of a specific version with regards to a previous one
+    """
+
+    edito = models.TextField(null=True, blank=True)
+    pastille = models.CharField(max_length=200, null=False)
+    eval_element_numbering = models.CharField(max_length=200, null=False)
+
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name="new_assessment")
+    previous_assessment = models.ForeignKey(
+        Assessment,
+        on_delete=models.CASCADE,
+        related_name="old_assessment",
+        null=True
+    )
+    visibility = models.BooleanField(default=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def hide(self):
+        self.visibility = False
+        self.save()
+
+    def display(self):
+        self.visibility = True
+        self.save()
+
+    @classmethod
+    def create_element_change_log(cls, edito_en, edito_fr, pastille_en, pastille_fr, eval_element_numbering,
+                                  previous_assessment, new_assessment):
+        change_log = cls(edito_en=edito_en,
+                         edito_fr=edito_fr,
+                         pastille_en=pastille_en,
+                         pastille_fr=pastille_fr,
+                         eval_element_numbering=eval_element_numbering,
+                         previous_assessment=previous_assessment,
+                         assessment=new_assessment)
+
+        change_log.save()
 
 
 def replace_special_characters(sentence):

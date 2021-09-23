@@ -38,8 +38,17 @@ class ImportAssessmentTestCase(TestCase):
             self.assessment_data = json.load(json_file)
         json_file.close()
 
+        # import and save a second assessment to test the previous version attribute
+        with open(
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file_2:
+            self.assessment_data_2 = json.load(json_file_2)
+        json_file_2.close()
+        ImportAssessment(self.assessment_data_2)
+
     def tearDown(self):
         del self.assessment_data
+        del self.assessment_data_2
         for assessment in Assessment.objects.all():
             assessment.delete()
 
@@ -56,16 +65,16 @@ class ImportAssessmentTestCase(TestCase):
 
     def test_import_assessment(self):
         self.assertTrue(ImportAssessment(self.assessment_data).success)
-        self.assertEqual(len(list(Assessment.objects.all())), 1)
-        self.assertEqual(len(list(MasterSection.objects.all())), 2)
-        self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 3)
-        self.assertEqual(len(list(MasterChoice.objects.all())), 6)
+        self.assertEqual(len(list(Assessment.objects.all())), 2)
+        self.assertEqual(len(list(MasterSection.objects.all())), 4)
+        self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 6)
+        self.assertEqual(len(list(MasterChoice.objects.all())), 12)
         self.assertEqual(len(list(ExternalLink.objects.all())), 1)
 
     def test_import_assessment_conditions_elements(self):
         self.assertTrue(ImportAssessment(self.assessment_data).success)
-        self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 3)
-        self.assertEqual(len(list(MasterChoice.objects.all())), 6)
+        self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 6)
+        self.assertEqual(len(list(MasterChoice.objects.all())), 12)
         master_evaluation_element1 = MasterEvaluationElement.objects.get(
             name="Element 1 fr", master_section__name="section 1 fr"
         )
@@ -79,8 +88,8 @@ class ImportAssessmentTestCase(TestCase):
 
     def test_import_assessment_conditions_choices(self):
         self.assertTrue(ImportAssessment(self.assessment_data).success)
-        self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 3)
-        self.assertEqual(len(list(MasterChoice.objects.all())), 6)
+        self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 6)
+        self.assertEqual(len(list(MasterChoice.objects.all())), 12)
         master_evaluation_element2 = MasterEvaluationElement.objects.get(
             name="Element 2 fr", master_section__name="section 1 fr"
         )
@@ -95,7 +104,7 @@ class ImportAssessmentTestCase(TestCase):
 
     def test_import_assessment_element_resources(self):
         self.assertTrue(ImportAssessment(self.assessment_data).success)
-        self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 3)
+        self.assertEqual(len(list(MasterEvaluationElement.objects.all())), 6)
         self.assertEqual(len(list(ExternalLink.objects.all())), 1)
         master_evaluation_element1 = MasterEvaluationElement.objects.get(
             name="Element 1 fr", master_section__name="section 1 fr"
@@ -105,7 +114,7 @@ class ImportAssessmentTestCase(TestCase):
 
     # Test the assessment keys
     def test_import_assessment_missing_assessment_key(self):
-        keys_list = ["name_fr", "name_en", "sections", "version"]
+        keys_list = ["name_fr", "name_en", "sections", "version", "previous_assessment_version"]
         for key in keys_list:
             del self.assessment_data[key]
             self.assertFalse(ImportAssessment(self.assessment_data).success)
@@ -117,11 +126,12 @@ class ImportAssessmentTestCase(TestCase):
                 Assessment.objects.get(version="1.0")
 
     def test_import_assessment_prod_version(self):
-        self.assessment_data["version"] = "0.63"
+        self.assessment_data["version"] = "0.93"
         self.assertTrue(ImportAssessment(self.assessment_data).success)
         self.assertTrue(Assessment.objects.all())  # There is an assessment in the BD
-        assessment = Assessment.objects.first()
-        self.assertEqual(assessment.version, "0.63")
+        assessment_queryset = Assessment.objects.filter(version="0.93")
+        self.assertIsNotNone(assessment_queryset)
+        self.assertEqual(list(assessment_queryset)[0].version, "0.93")
 
     def test_import_assessment_negative_version(self):
         self.assessment_data["version"] = "-5"
@@ -136,6 +146,33 @@ class ImportAssessmentTestCase(TestCase):
         self.assertFalse(ImportAssessment(self.assessment_data).success)
         self.assertIn(
             "The version must not contain letters. It should be convertible into a float ('0.5', '1.0', etc).",
+            ImportAssessment(self.assessment_data).message,
+        )
+
+    def test_import_assessment_not_floatable_previous_version(self):
+        self.assessment_data["previous_assessment_version"] = "1.0-pre-alpha"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
+        self.assertIn(
+            "The previous version must not contain letters. It should be convertible",
+            ImportAssessment(self.assessment_data).message,
+        )
+
+    def test_import_assessment_negative_previous_version(self):
+        self.assessment_data["previous_assessment_version"] = "-4"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
+        self.assertIn(
+            "The previous version must be convertible into a positive number",
+            ImportAssessment(self.assessment_data).message,
+        )
+
+    def test_import_assessment_refers_missing_previous_assessment(self):
+        """
+        Test that the previous version refers to an existing assessment
+        """
+        self.assessment_data["previous_assessment_version"] = "0.8"
+        self.assertFalse(ImportAssessment(self.assessment_data).success)
+        self.assertIn(
+            "The previous version refers to a non-existing assessment.",
             ImportAssessment(self.assessment_data).message,
         )
 
@@ -348,11 +385,20 @@ class ResourceTestCase(TestCase):
         )
 
     def test_add_resource(self):
+        # first import the first version
+        with open(
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file_2:
+            self.assessment_data_2 = json.load(json_file_2)
+        json_file_2.close()
+        ImportAssessment(self.assessment_data_2)
+
         with open(
                 "assessment/tests/import_test_files/assessment_test_v1.json"
         ) as json_file:
             assessment_data = json.load(json_file)
         ImportAssessment(assessment_data)
+
         master_element = MasterEvaluationElement.objects.first()
         master_element_data = {
             'resources': {
@@ -379,6 +425,14 @@ class ResourceTestCase(TestCase):
         Then import again with text_en not empty so it should catch the existing resource and add English field
         instead of creating new one.
         """
+
+        with open(
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file_2:
+            self.assessment_data_2 = json.load(json_file_2)
+        json_file_2.close()
+        ImportAssessment(self.assessment_data_2)
+
         with open(
                 "assessment/tests/import_test_files/assessment_test_v1.json"
         ) as json_file:
@@ -437,6 +491,13 @@ class ResourceTestCase(TestCase):
         instead of creating new one.
         """
         with open(
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file_2:
+            self.assessment_data_2 = json.load(json_file_2)
+        json_file_2.close()
+        ImportAssessment(self.assessment_data_2)
+
+        with open(
                 "assessment/tests/import_test_files/assessment_test_v1.json"
         ) as json_file:
             assessment_data = json.load(json_file)
@@ -486,6 +547,13 @@ class ResourceTestCase(TestCase):
         Test add resource empty French text and then import new resource (french text modified)
         so new resource created
         """
+        with open(
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file_2:
+            self.assessment_data_2 = json.load(json_file_2)
+        json_file_2.close()
+        ImportAssessment(self.assessment_data_2)
+
         with open(
                 "assessment/tests/import_test_files/assessment_test_v1.json"
         ) as json_file:
@@ -537,6 +605,13 @@ class ScoringImportTestCase(TestCase):
     """
 
     def setUp(self):
+        with open(
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file_2:
+            self.assessment_data_2 = json.load(json_file_2)
+        json_file_2.close()
+        ImportAssessment(self.assessment_data_2)
+
         with open(
                 "assessment/tests/import_test_files/assessment_test_v1.json"
         ) as json_file:
@@ -694,7 +769,7 @@ class TestJsonUpload(TestCase):
 
     def test_upload_json_post(self):
         scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json')
-        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1.json')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_first_version.json')
         post_data = {
             "assessment_json_file": assessment_file,  # just the field need to not be empty
             "scoring_json_file": scoring_file

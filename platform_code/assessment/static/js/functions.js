@@ -754,6 +754,36 @@ function submitSectionNotes(form_id, section_id){
     manageAjaxRequest(ajax, form, "notes_section_id=" + section_id);
 }
 
+function displayElementCard(cardHeaderButtonId, cardContentId) {
+// Function which open the element card by simulating a click on the card headers
+// when the user hover the pastille tooltip
+    cardContent = document.getElementById(cardContentId);
+    cardHeaderButton = document.getElementById(cardHeaderButtonId)
+
+    if (!cardContent.classList.contains('show')) {
+        cardHeaderButton.setAttribute("data-opened-with-pastille", "yes")
+        cardHeaderButton.click();
+    }
+}
+
+function hideElementCard(cardHeaderButtonId, cardContentId) {
+// Function which closes the element card by simulating a click on the card headers
+// when the user moves the cursor away from the pastille (onmouseleave)
+
+  cardContent = document.getElementById(cardContentId);
+  cardHeaderButton = document.getElementById(cardHeaderButtonId)
+  opened_with_pastille = cardHeaderButton.getAttribute("data-opened-with-pastille")
+  if (opened_with_pastille == "yes"){
+      if (cardContent.classList.contains('show')) {
+            cardHeaderButton.click();
+            cardHeaderButton.setAttribute("data-opened-with-pastille", "no")
+
+        }
+
+  }
+
+}
+
 function changeIconResource(divHeader) {
     var children = divHeader.children;
     if (children) {

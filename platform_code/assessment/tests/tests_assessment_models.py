@@ -2,6 +2,7 @@ import json
 
 from django.test import TestCase
 from django.template.defaultfilters import slugify
+from django.utils.translation import activate
 
 from assessment.models import (
     Assessment,
@@ -14,12 +15,15 @@ from assessment.models import (
     MasterChoice,
     Choice,
     get_last_assessment_created,
+    ElementChangeLog,
 )
 
 from home.models import (
     User,
     Organisation,
 )
+
+from home.views.utils import get_all_change_logs
 
 from .object_creation import (
     create_evaluation,
@@ -29,6 +33,7 @@ from .object_creation import (
     create_master_section,
     create_assessment_body,
     create_scoring,
+    create_element_change_log,
 )
 
 # Create your tests here.
@@ -51,7 +56,8 @@ class AssessmentTestCase(TestCase):
 
     def setUp(self):
         create_assessment(name="assessment1", version="1.0")
-        create_assessment(name="assessment2", version="2.0")
+        create_assessment(name="assessment2", version="2.0",
+                          previous_assessment=Assessment.objects.get(name="assessment1"))
 
     def test_version_assessment(self):
         """
@@ -62,12 +68,24 @@ class AssessmentTestCase(TestCase):
         assessment2 = Assessment.objects.get(name="assessment2")
         self.assertEqual(assessment1.version, "1.0")
         self.assertEqual(assessment2.version, "2.0")
+        self.assertEqual(assessment1.previous_assessment, None)
+        self.assertEqual(assessment2.previous_assessment.version, "1.0")
         self.assertTrue(type(assessment1.version) == str)
+        self.assertEqual(assessment1.version, assessment2.previous_assessment.version)
         self.assertTrue(float(assessment1.version) < float(assessment2.version))
+        self.assertTrue(float(assessment2.version) > float(assessment2.previous_assessment.version))
 
     def test_get_last_assessment_created(self):
         assessment2 = Assessment.objects.get(name="assessment2")
         self.assertEqual(get_last_assessment_created(), assessment2)
+
+    """
+    def test_previous_assessment_null_after_deletion(self):
+        assessment1 = Assessment.objects.get(name="assessment1")
+        assessment2 = Assessment.objects.get(name="assessment2")
+        assessment1.delete()
+        self.assertIsNone(assessment2.previous_assessment)
+    """
 
 
 class MasterSectionTestCase(TestCase):
@@ -239,6 +257,12 @@ class EvaluationTestCase(TestCase):
         self.evaluation = create_evaluation(
             assessment=self.assessment, name="evaluation"
         )
+        # Create the evaluation object with a previous assessment
+        create_assessment_body(version="2.0", previous_assessment=self.assessment)
+        self.assessment_2 = Assessment.objects.get(version="2.0")
+        self.evaluation_2 = create_evaluation(
+            assessment=self.assessment_2, name="evaluation_2"
+        )
 
     def test_evaluation_creation(self):
         # Create an evaluation without body
@@ -248,6 +272,12 @@ class EvaluationTestCase(TestCase):
         self.assertEqual(self.evaluation.name, evaluation_model.name)
         self.assertEqual(
             self.evaluation.assessment.version, evaluation_model.assessment.version
+        )
+        evaluation_model_2 = Evaluation.create_evaluation(
+            name="evaluation_2", assessment=self.assessment_2, user=None, organisation=None)
+        self.assertEqual(self.evaluation_2.name, evaluation_model_2.name)
+        self.assertEqual(
+            self.evaluation_2.assessment.version, evaluation_model_2.assessment.version
         )
 
     def test_evaluation_create_body(self):
@@ -393,17 +423,22 @@ class SectionTestCase(TestCase):
 class EvaluationElementTestCase(TestCase):
     """
     Test all the logic for EvaluationElement class: creation, suppression, conditions intra between choices and
-    conditions inter elements
+    conditions inter elements, fetching the change log
     """
 
     def setUp(self):
-        create_assessment_body(version="1.0")
+        create_assessment_body(version="0.9")
+        self.assessment_2 = Assessment.objects.get(version="0.9")
+
+        create_assessment_body(version="1.0", previous_assessment=self.assessment_2)
         self.assessment = Assessment.objects.get(version="1.0")
+
         create_scoring(assessment=self.assessment)
         # Create the evaluation object linked to the assessment but without body yet
         self.evaluation = create_evaluation(
             assessment=self.assessment, name="evaluation"
         )
+
         self.evaluation.create_evaluation_body()
         self.evaluation_element1 = EvaluationElement.objects.get(
             master_evaluation_element__order_id="1",
@@ -436,6 +471,103 @@ class EvaluationElementTestCase(TestCase):
         self.choice5 = Choice.objects.get(
             master_choice__order_id="a",
             evaluation_element__master_evaluation_element__name="master_element3",
+        )
+
+        self.change_log_1 = create_element_change_log(
+            "new edito",
+            "nouvel édito",
+            "New",
+            "Nouveau",
+            self.evaluation_element1.master_evaluation_element.get_numbering(),
+            self.assessment_2,
+            self.assessment,
+        )
+        self.change_log_2 = create_element_change_log(
+            "updated edito",
+            "edito mis à jour",
+            "Updated",
+            "Mis à jour",
+            self.evaluation_element2.master_evaluation_element.get_numbering(),
+            self.assessment_2,
+            self.assessment,
+        )
+        self.change_log_3 = create_element_change_log(
+            "",
+            "",
+            "Unchanged",
+            "Inchangé",
+            self.evaluation_element3.master_evaluation_element.get_numbering(),
+            self.assessment_2,
+            self.assessment,
+        )
+
+    def create_element_change_logs(self):
+        create_scoring(assessment=self.assessment)
+        # Create the evaluation object linked to the assessment but without body yet
+        self.evaluation = create_evaluation(
+            assessment=self.assessment, name="evaluation"
+        )
+
+        self.evaluation.create_evaluation_body()
+        self.evaluation_element1 = EvaluationElement.objects.get(
+            master_evaluation_element__order_id="1",
+            section__master_section__order_id="1",
+        )
+        self.evaluation_element2 = EvaluationElement.objects.get(
+            master_evaluation_element__order_id="2",
+            section__master_section__order_id="1",
+        )
+        self.evaluation_element3 = EvaluationElement.objects.get(
+            master_evaluation_element__order_id="1",
+            section__master_section__order_id="2",
+        )
+        self.choice1 = Choice.objects.get(
+            master_choice__order_id="a",
+            evaluation_element__master_evaluation_element__name="master_element1",
+        )
+        self.choice2 = Choice.objects.get(
+            master_choice__order_id="b",
+            evaluation_element__master_evaluation_element__name="master_element1",
+        )
+        self.choice3 = Choice.objects.get(
+            master_choice__order_id="a",
+            evaluation_element__master_evaluation_element__name="master_element2",
+        )
+        self.choice4 = Choice.objects.get(
+            master_choice__order_id="b",
+            evaluation_element__master_evaluation_element__name="master_element2",
+        )
+        self.choice5 = Choice.objects.get(
+            master_choice__order_id="a",
+            evaluation_element__master_evaluation_element__name="master_element3",
+        )
+
+        self.change_log_1 = create_element_change_log(
+            "new edito",
+            "nouvel édito",
+            "New",
+            "Nouveau",
+            self.evaluation_element1.master_evaluation_element.get_numbering(),
+            self.assessment_2,
+            self.assessment,
+        )
+        self.change_log_2 = create_element_change_log(
+            "updated edito",
+            "edito mis à jour",
+            "Updated",
+            "Mis à jour",
+            self.evaluation_element2.master_evaluation_element.get_numbering(),
+            self.assessment_2,
+            self.assessment,
+        )
+        self.change_log_3 = create_element_change_log(
+            "",
+            "",
+            "Unchanged",
+            "Inchangé",
+            self.evaluation_element3.master_evaluation_element.get_numbering(),
+            self.assessment_2,
+            self.assessment,
         )
 
     def test_evaluation_element_name(self):
@@ -530,7 +662,7 @@ class EvaluationElementTestCase(TestCase):
         self.assertEqual(self.evaluation_element3.get_list_choices_with_condition(), [])
 
     def test_evaluation_element_suppression(self):
-        master_element1 = MasterEvaluationElement.objects.get(name="master_element1")
+        master_element1 = MasterEvaluationElement.objects.filter(name="master_element1")
         master_element1.delete()
         with self.assertRaises(Exception):
             EvaluationElement.objects.get(
@@ -654,6 +786,147 @@ class EvaluationElementTestCase(TestCase):
         # As only one choice not setting condition for element 2, it must be ticked
         self.assertEqual(self.evaluation_element3.get_list_choices_ticked(), [self.choice5])
 
+    def test_element_change_log(self):
+        """
+        Test that the three change logs are in the DB, that we're able to retrieve each one
+        with the correct translation, and that their visibility is set to True by default
+        """
+
+        self.assertEqual(len(ElementChangeLog.objects.all()), 3)
+        self.assertTrue(self.evaluation_element1.is_change_log_visible())
+        self.assertTrue(self.evaluation_element2.is_change_log_visible())
+        self.assertTrue(self.evaluation_element3.is_change_log_visible())
+        activate("en")
+        self.assertEqual(self.evaluation_element1.get_change_log_pastille(), "New")
+        self.assertEqual(self.evaluation_element1.get_change_log_pastille(),
+                         self.evaluation_element1.get_element_change_log().pastille_en)
+        self.assertEqual(self.evaluation_element2.get_change_log_pastille(), "Updated")
+        self.assertEqual(self.evaluation_element2.get_change_log_pastille(),
+                         self.evaluation_element2.get_element_change_log().pastille_en)
+        self.assertEqual(self.evaluation_element3.get_change_log_pastille(), "Unchanged")
+        self.assertEqual(self.evaluation_element3.get_change_log_pastille(),
+                         self.evaluation_element3.get_element_change_log().pastille_en)
+
+        self.assertEqual(self.evaluation_element1.get_change_log_edito(), "new edito")
+        self.assertEqual(self.evaluation_element1.get_change_log_edito(),
+                         self.evaluation_element1.get_element_change_log().edito_en)
+        self.assertEqual(self.evaluation_element2.get_change_log_edito(), "updated edito")
+        self.assertEqual(self.evaluation_element2.get_change_log_edito(),
+                         self.evaluation_element2.get_element_change_log().edito_en)
+        self.assertEqual(self.evaluation_element3.get_change_log_edito(), "")
+        self.assertEqual(self.evaluation_element3.get_change_log_edito(),
+                         self.evaluation_element3.get_element_change_log().edito_en)
+
+        activate("fr")
+        self.assertEqual(self.evaluation_element1.get_change_log_pastille(), "Nouveau")
+        self.assertEqual(self.evaluation_element1.get_change_log_pastille(),
+                         self.evaluation_element1.get_element_change_log().pastille_fr)
+        self.assertEqual(self.evaluation_element2.get_change_log_pastille(), "Mis à jour")
+        self.assertEqual(self.evaluation_element2.get_change_log_pastille(),
+                         self.evaluation_element2.get_element_change_log().pastille_fr)
+        self.assertEqual(self.evaluation_element3.get_change_log_pastille(), "Inchangé")
+        self.assertEqual(self.evaluation_element3.get_change_log_pastille(),
+                         self.evaluation_element3.get_element_change_log().pastille_fr)
+
+        self.assertEqual(self.evaluation_element1.get_change_log_edito(), "nouvel édito")
+        self.assertEqual(self.evaluation_element1.get_change_log_edito(),
+                         self.evaluation_element1.get_element_change_log().edito_fr)
+        self.assertEqual(self.evaluation_element2.get_change_log_edito(), "edito mis à jour")
+        self.assertEqual(self.evaluation_element2.get_change_log_edito(),
+                         self.evaluation_element2.get_element_change_log().edito_fr)
+        self.assertEqual(self.evaluation_element3.get_change_log_edito(), "")
+        self.assertEqual(self.evaluation_element3.get_change_log_edito(),
+                         self.evaluation_element3.get_element_change_log().edito_fr)
+
+    def test_element_change_logs_visibility(self):
+        """
+        Test that the hide and display methods works as intended for evaluation elements
+        """
+        self.evaluation_element2.hide_change_log()
+        self.assertFalse(self.evaluation_element2.is_change_log_visible())
+        self.evaluation_element2.display_change_log()
+        self.assertTrue(self.evaluation_element2.is_change_log_visible())
+
+    def test_get_all_change_logs_function(self):
+        """
+        Test the get_all_change_logs function which is used to retrieve all change logs stored in the DB to be displayed
+        on the profile page
+        """
+        change_logs_dict = get_all_change_logs()
+
+        self.assertEqual(len(list(change_logs_dict.keys())), 1)
+        self.assertEqual(list(change_logs_dict.keys()), [self.assessment])
+
+        # master_section2 shouldn't exist in the dictionary because it only contains pastilles of type "Unchanged"
+        # so the number of keys in the assessment dictionary should be 1
+        self.assertEqual(len(list(change_logs_dict[self.assessment].keys())), 1)
+
+        # test that this is indeed the master_section1 that's inside
+        self.assertEqual(list(change_logs_dict[self.assessment].keys())[0],
+                         self.evaluation_element1.master_evaluation_element.master_section)
+
+        # test that master_section1 dictionary contain the two master evaluation elements
+        master_section1_dict = change_logs_dict[self.assessment][
+            self.evaluation_element1.master_evaluation_element.master_section]
+
+        self.assertEqual(len(list(master_section1_dict.keys())), 2)
+        self.assertEqual(len(list(change_logs_dict[self.assessment][
+                                      self.evaluation_element1.master_evaluation_element.master_section])), 2)
+
+        master_evaluation_element1_change_log = master_section1_dict[
+            self.evaluation_element1.master_evaluation_element]
+        master_evaluation_element2_change_log = master_section1_dict[
+            self.evaluation_element2.master_evaluation_element]
+
+        # test that both master_evaluation_element1 and master_evaluation_element2 has one change log each
+        self.assertEqual(master_evaluation_element1_change_log,
+                         ElementChangeLog.objects.get(
+                             eval_element_numbering=self.evaluation_element1.master_evaluation_element.get_numbering()))
+        self.assertEqual(master_evaluation_element2_change_log,
+                         ElementChangeLog.objects.get(
+                             eval_element_numbering=self.evaluation_element2.master_evaluation_element.get_numbering()))
+
+        # test the function after deleting one of the change logs
+        ElementChangeLog.objects.get(
+            eval_element_numbering=self.evaluation_element1.master_evaluation_element.get_numbering()).delete()
+        change_logs_dict = get_all_change_logs()
+
+        # test that master_section1 dictionary contain one master evaluation elements
+        master_section1_dict = change_logs_dict[self.assessment][
+            self.evaluation_element2.master_evaluation_element.master_section]
+
+        self.assertEqual(len(list(master_section1_dict.keys())), 1)
+        self.assertEqual(len(list(change_logs_dict[self.assessment][
+                                      self.evaluation_element1.master_evaluation_element.master_section])), 1)
+
+        # test that the evaluation element has its change log
+        master_evaluation_element2_change_log = master_section1_dict[
+            self.evaluation_element2.master_evaluation_element]
+
+        self.assertEqual(master_evaluation_element2_change_log,
+                         ElementChangeLog.objects.get(
+                             eval_element_numbering=self.evaluation_element2.master_evaluation_element.get_numbering()))
+
+        # test the function when there are no change logs, it should return an empty dictionary
+        ElementChangeLog.objects.get(
+            eval_element_numbering=self.evaluation_element2.master_evaluation_element.get_numbering()).delete()
+        change_logs_dict = get_all_change_logs()
+        self.assertFalse(any(change_logs_dict[self.assessment]))
+
+    def test_element_change_logs_deletion(self):
+        """
+         We test that if we delete at least one of the two assessment related to change logs objects
+         they also get deleted as a consequence
+        """
+        self.assessment.delete()
+        self.assertEqual(len(ElementChangeLog.objects.all()), 0)
+
+        create_assessment_body(version="1.0", previous_assessment=self.assessment_2)
+        self.assessment = Assessment.objects.get(version="1.0")
+        self.create_element_change_logs()
+        self.assessment_2.delete()
+        self.assertEqual(len(ElementChangeLog.objects.all()), 0)
+
 
 class ChoiceTestCase(TestCase):
     """
@@ -739,10 +1012,11 @@ class ModelsAfterImportTestCase(TestCase):
     Test some methods of the assessment models (Assessment, Master classes, Evaluation, etc)
     after the import process
     """
+
     def setUp(self):
         # Import the v2 file
         with open(
-                "assessment/tests/import_test_files/assessment_test_v2.json"
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
         ) as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
@@ -750,5 +1024,5 @@ class ModelsAfterImportTestCase(TestCase):
         self.assessment = import_assessment.assessment
 
     def test_assessment_count_risk_elements(self):
-        self.assertEqual(self.assessment.version, "1.3")
+        self.assertEqual(self.assessment.version, "0.9")
         self.assertEqual(self.assessment.count_master_elements_with_risks(), 2)

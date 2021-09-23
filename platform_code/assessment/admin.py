@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from assessment.admin_utils.assessment_import import JsonUploadAssessmentAdmin
 from assessment.admin_utils.evaluation_admin import EvaluationElementWeightAdmin, EvaluationAdmin
+from assessment.admin_utils.element_change_log_admin import ElementChangeLogAdmin
 from assessment.admin_utils.scoring_import import ScoringAdmin
 
 from assessment.models import (
@@ -18,6 +19,7 @@ from assessment.models import (
     EvaluationElementWeight,
     Upgrade,
     EvaluationScore,
+    ElementChangeLog,
 )
 
 admin.site.register(MasterSection)
@@ -30,6 +32,7 @@ admin.site.register(Section)
 admin.site.register(EvaluationElement)
 admin.site.register(Choice)
 admin.site.register(Upgrade)
+admin.site.register(ElementChangeLog, ElementChangeLogAdmin)
 admin.site.register(EvaluationScore)
 admin.site.register(Assessment, JsonUploadAssessmentAdmin)
 admin.site.register(ScoringSystem, ScoringAdmin)

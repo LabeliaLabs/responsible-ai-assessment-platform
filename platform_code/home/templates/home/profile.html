@@ -54,6 +54,10 @@
                     <a class="nav-link profile-column" href="{% url 'home:user-profile-settings'%}"
                        name="column-button">{% trans "User settings" %}</a>
                 </li>
+                 <li class="nav-item column-button">
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-change-logs"
+                       id="tab-change-logs" name="column-button">{% trans "Change logs" %}</a>
+                </li>
             </ul>
         </div>
         <div class="data-nav-pills">
@@ -69,6 +73,9 @@
                 </div>
                 <div class="container-profile tab-pane fade" id="content-user-notes"><br>
                     {% include "home/profile-user-notes.html" %}
+                </div>
+                <div class="container-profile tab-pane fade" id="content-change-logs">
+                    {% include "home/profile-change-logs.html" %}
                 </div>
 
             </div>

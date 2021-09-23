@@ -47,7 +47,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
             form = JsonUploadForm(request.POST, request.FILES)
             # There are the assessment and scoring files
             if form.is_valid():
-                if request.FILES["assessment_json_file"].name.endswith("json") and\
+                if request.FILES["assessment_json_file"].name.endswith("json") and \
                         request.FILES["scoring_json_file"].name.endswith("json"):
                     decoded_assessment_file = self.decode_file(
                         request, "assessment_json_file"
@@ -72,6 +72,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                                     level=messages.ERROR,
                                 )
                                 return redirect("admin:index")
+
                             # Process all the saving of the items (in import_assessment.py)
                             # If it fails, there is a message and a redirection to admin
                             import_assessment = ImportAssessment(dict_data)
@@ -95,9 +96,14 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             # Verify the validity of the upgrade json and if it s ok, save it in Upgrade
                             upgrade_success, upgrade_message = check_upgrade(dict_upgrade_data)
                             if not upgrade_success:
+                                upgrade_message = upgrade_message + \
+                                    " \n Due to this failure, the assessment and the scoring have been deleted. "
                                 self.message_user(
                                     request, upgrade_message, level=messages.ERROR,
                                 )
+                                # if the upgade table is not valid then delete the assessment
+                                # and the scoring from the DB
+                                assessment.delete()
                                 return redirect("admin:index")
                             upgrade_save_success, upgrade_save_message = save_upgrade(
                                 dict_upgrade_data

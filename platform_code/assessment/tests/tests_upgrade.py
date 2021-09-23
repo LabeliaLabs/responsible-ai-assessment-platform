@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.messages import get_messages
 from django.test import TestCase, Client
 
@@ -9,9 +11,16 @@ from assessment.models import (
     Section,
     Choice,
     ScoringSystem,
-    get_last_assessment_created, EvaluationElement,
+    get_last_assessment_created,
+    EvaluationElement,
+    ElementChangeLog,
 )
 from home.models import User
+from assessment.import_assessment import (
+    check_upgrade,
+    save_upgrade,
+    check_upgrade_status_content,
+)
 
 
 class TestJsonUploadUpgradeCase(TestCase):
@@ -26,7 +35,7 @@ class TestJsonUploadUpgradeCase(TestCase):
         self.client = Client()
         self.client.login(email=self.email, password=self.password)
         scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json')
-        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1.json')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json')
         post_data = {
             "assessment_json_file": assessment_file,  # just the field need to not be empty
             "scoring_json_file": scoring_file
@@ -38,7 +47,7 @@ class TestJsonUploadUpgradeCase(TestCase):
     def test_import_new_assessment(self):
         scoring_v2_file = open('assessment/tests/import_test_files/scoring_test_v2.json')
         assessment_v2_file = open('assessment/tests/import_test_files/assessment_test_v2.json')
-        upgrade_table = open('assessment/tests/import_test_files/upgrade_table.json')
+        upgrade_table = open('assessment/tests/import_test_files/upgrade_table_2.json')
         post_data = {
             "assessment_json_file": assessment_v2_file,  # just the field need to not be empty
             "scoring_json_file": scoring_v2_file,
@@ -75,8 +84,9 @@ class TestEvaluationFetch(TestCase):
         self.user = User.object.create_superuser(email=self.email, password=self.password)
         self.client = Client()
         self.client.login(email=self.email, password=self.password)
+
         scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json')
-        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1.json')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json')
         post_data = {
             "assessment_json_file": assessment_file,  # just the field need to not be empty
             "scoring_json_file": scoring_file
@@ -89,7 +99,7 @@ class TestEvaluationFetch(TestCase):
     def import_new_assessment(self):
         scoring_v2_file = open('assessment/tests/import_test_files/scoring_test_v2.json')
         assessment_v2_file = open('assessment/tests/import_test_files/assessment_test_v2.json')
-        upgrade_table = open('assessment/tests/import_test_files/upgrade_table.json')
+        upgrade_table = open('assessment/tests/import_test_files/upgrade_table_2.json')
         post_data = {
             "assessment_json_file": assessment_v2_file,  # just the field need to not be empty
             "scoring_json_file": scoring_v2_file,
@@ -171,7 +181,7 @@ class TestEvaluationUpgrade(TestEvaluationFetch):
         self.client = Client()
         self.client.login(email=self.email, password=self.password)
         scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json')
-        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1.json')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json')
         post_data = {
             "assessment_json_file": assessment_file,  # just the field need to not be empty
             "scoring_json_file": scoring_file
@@ -185,7 +195,7 @@ class TestEvaluationUpgrade(TestEvaluationFetch):
         self.evaluation.create_evaluation_body()
         scoring_v2_file = open('assessment/tests/import_test_files/scoring_test_v2.json')
         assessment_v2_file = open('assessment/tests/import_test_files/assessment_test_v2.json')
-        upgrade_table = open('assessment/tests/import_test_files/upgrade_table.json')
+        upgrade_table = open('assessment/tests/import_test_files/upgrade_table_2.json')
         post_data = {
             "assessment_json_file": assessment_v2_file,  # just the field need to not be empty
             "scoring_json_file": scoring_v2_file,
@@ -250,6 +260,8 @@ class TestEvaluationUpgrade(TestEvaluationFetch):
         # Assert a new evaluation has been created
         self.assertEqual(len(Evaluation.objects.all()), 2)
         self.assertEqual(len(Evaluation.objects.filter(assessment=self.assessment_v2)), 1)  # one object
+        # Assert the upgraded_from attribute has the old assessment
+        self.assertEqual(len(Evaluation.objects.filter(upgraded_from=self.assessment_v1)), 1)  # one object
 
     def test_upgrade_evaluation_objects(self):
         self.assertTrue(self.evaluation.is_upgradable())
@@ -326,3 +338,146 @@ class TestEvaluationUpgrade(TestEvaluationFetch):
         self.assertEqual(section1.points, 1.5)
         self.assertEqual(section2.max_points, 2)
         self.assertEqual(section2.points, 0)
+
+
+class TestUpgradeTableStructure(TestCase):
+    """
+    Test the upgrade table structure and import as well as change logs creation and deletion
+    """
+    def setUp(self):
+        # Import the assessment v1
+        self.email = "admin@hotmail.com"
+        self.password = "admin_password"
+        self.user = User.object.create_superuser(email=self.email, password=self.password)
+        self.client = Client()
+        self.client.login(email=self.email, password=self.password)
+        scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json')
+        post_data = {
+            "assessment_json_file": assessment_file,  # just the field need to not be empty
+            "scoring_json_file": scoring_file
+        }
+        self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
+        self.assessment_v1 = Assessment.objects.get(version="1.0")
+
+    def import_new_assessment(self):
+        scoring_v2_file = open('assessment/tests/import_test_files/scoring_test_v2.json')
+        assessment_v2_file = open('assessment/tests/import_test_files/assessment_test_v2.json')
+        upgrade_table = open('assessment/tests/import_test_files/upgrade_table_2.json')
+        post_data = {
+            "assessment_json_file": assessment_v2_file,  # just the field need to not be empty
+            "scoring_json_file": scoring_v2_file,
+            "upgrade_json_file": upgrade_table
+        }
+        self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
+        self.assessment_v2 = Assessment.objects.get(version="1.3")
+
+    def test_check_upgrade_status_content_function(self):
+        """
+        Test the check_upgrade_status_content function which checks the numbering value in upgrade_status
+        """
+        self.assertFalse(check_upgrade_status_content("4,4"))
+        self.assertFalse(check_upgrade_status_content("Numbering"))
+        self.assertFalse(check_upgrade_status_content("2.4n"))
+        self.assertFalse(check_upgrade_status_content("3.2.1"))
+        self.assertFalse(check_upgrade_status_content(".4"))
+        self.assertTrue(check_upgrade_status_content("1.3"))
+        self.assertTrue(check_upgrade_status_content("12.12"))
+
+    def test_check_upgrade_function(self):
+        """
+        Test the check_upgrade and check_change_logs functions, since check_change_logs is called
+        by check_upgrade anyway
+        """
+        with open(
+                "assessment/tests/import_test_files/change_logs.json"
+        ) as json_file:
+            change_logs = json.load(json_file)
+        json_file.close()
+        success, message = check_upgrade(change_logs)
+        self.assertTrue(success)
+        self.assertIn(
+            "The upgrade json check is ok",
+            message,
+        )
+        change_logs["diff_per_version"]["2.0"]["elements"]["2.2"]["pastille_fr"] = "Unchanged"
+        success, message = check_upgrade(change_logs)
+        self.assertFalse(success)
+        self.assertIn(
+            "Possible values for pastille_fr are",
+            message,
+        )
+        change_logs["diff_per_version"]["2.0"]["elements"]["2.2"]["pastille_en"] = "Inchangé"
+        success, message = check_upgrade(change_logs)
+        self.assertFalse(success)
+        self.assertIn(
+            "Possible values for pastille_en are",
+            message,
+        )
+        change_logs["diff_per_version"]["2.0"]["elements"]["2.2"]["upgrade_status"] = 0
+        success, message = check_upgrade(change_logs)
+        self.assertFalse(success)
+        self.assertIn(
+            "Possible values for upgrade_status are",
+            message,
+        )
+        change_logs["diff_per_version"]["2.0"]["elements"]["2.2"]["upgrade_status"] = "2.4b"
+        success, message = check_upgrade(change_logs)
+        self.assertFalse(success)
+        self.assertIn(
+            "Possible values for upgrade_status are",
+            message,
+        )
+        del change_logs["diff_per_version"]["3.0"]["elements"]["2.2"]["edito_fr"]
+        success, message = check_upgrade(change_logs)
+        self.assertFalse(success)
+        self.assertIn(
+            "that's missing at least on of the required",
+            message,
+        )
+
+    def test_save_upgrade_function(self):
+        with open(
+                "assessment/tests/import_test_files/upgrade_table_2.json"
+        ) as json_file:
+            upgrade_table = json.load(json_file)
+
+        json_file.close()
+        success, message = save_upgrade(upgrade_table)
+        self.assertFalse(success)
+        self.assertIn(
+            "in the upgrade json is not an assessment version",
+            message,
+        )
+
+    def test_change_logs_exist_after_import(self):
+        """
+        Test that the change logs are properly created and stored after a new assessment import
+        """
+        self.import_new_assessment()
+        self.assertEqual(len(ElementChangeLog.objects.all()), 4)
+
+    def test_change_logs_removal(self):
+        """
+        Test that the change logs are deleted after the associated assessment is deleted
+        """
+        Assessment.objects.filter(version="1.3").delete()
+        self.assertEqual(len(ElementChangeLog.objects.all()), 0)
+
+    def test_import_failure_upgrade_not_valid(self):
+        """
+        Test that if the upgrade_table failed to be imported than the other two imports should fail
+        as well, for this purpose we used a non-valid upgrade table to generate an error
+        """
+        scoring_v2_file = open('assessment/tests/import_test_files/scoring_test_v2.json')
+        assessment_v2_file = open('assessment/tests/import_test_files/assessment_test_v2.json')
+        upgrade_table = open('assessment/tests/import_test_files/upgrade_table.json')
+        post_data = {
+            "assessment_json_file": assessment_v2_file,  # just the field need to not be empty
+            "scoring_json_file": scoring_v2_file,
+            "upgrade_json_file": upgrade_table
+        }
+        response = self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
+        messages = list(get_messages(response.wsgi_request))
+        self.assertIn("Due to this failure, the assessment and the scoring have been deleted. ",
+                      str(messages[3]))

@@ -103,6 +103,7 @@ class SectionView(LoginRequiredMixin, ListView):
         self.context["organisation"] = organisation
         # List of the resources liked by the user
         self.context["resources_liked"] = request.user.userresources.resources.all()
+
         return self.render_to_response(self.context)
 
     def get_queryset(self, *args, **kwargs):

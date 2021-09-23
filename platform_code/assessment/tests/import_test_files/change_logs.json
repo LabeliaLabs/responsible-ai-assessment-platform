@@ -1,0 +1,145 @@
+{
+  "diff_per_version": {
+    "3.0": {
+      "sections": {
+        "1": 1,
+        "2": 1
+      },
+      "elements": {
+        "1.1": {
+          "upgrade_status": 1,
+          "pastille_en": "New",
+          "pastille_fr": "Nouveau",
+          "edito_en": "This is a new element",
+          "edito_fr": "C'est un nouvel élément"
+        },
+        "1.2": {
+          "upgrade_status": 1,
+          "pastille_en": "New",
+          "pastille_fr": "Nouveau",
+          "edito_en": "This is a new element",
+          "edito_fr": "C'est un nouvel élément"
+        },
+        "2.1": {
+          "upgrade_status": "no_fetch",
+          "pastille_en": "Unchanged",
+          "pastille_fr": "Inchangé",
+          "edito_en": "",
+          "edito_fr": ""
+        },
+        "2.2": {
+          "upgrade_status": "2.1",
+          "pastille_en": "Updated",
+          "pastille_fr": "Mis à jour",
+          "edito_en": "This element has been updated",
+          "edito_fr": "cet élément a été mis à jour"
+        }
+      },
+      "answer_items": {
+        "1.1.a": 1,
+        "1.1.b": 1,
+        "1.1.c": "no_fetch",
+        "1.2.a": 1,
+        "1.2.b": 1,
+        "2.1.a": "no_fetch",
+        "2.1.b": "no_fetch",
+        "2.2.a": "2.1.a",
+        "2.2.b": "2.1.b"
+      }
+    },
+    "2.0": {
+      "sections": {
+        "1": 1,
+        "2": 1
+      },
+      "elements": {
+        "1.1": {
+          "upgrade_status": 1,
+          "pastille_en": "New",
+          "pastille_fr": "Nouveau",
+          "edito_en": "This is a new element",
+          "edito_fr": "C'est un nouvel élément"
+        },
+        "1.2": {
+          "upgrade_status": 1,
+          "pastille_en": "New",
+          "pastille_fr": "Nouveau",
+          "edito_en": "This is a new element",
+          "edito_fr": "C'est un nouvel élément"
+        },
+        "2.1": {
+          "upgrade_status": "no_fetch",
+          "pastille_en": "Unchanged",
+          "pastille_fr": "Inchangé",
+          "edito_en": "",
+          "edito_fr": ""
+        },
+        "2.2": {
+          "upgrade_status": "2.1",
+          "pastille_en": "Updated",
+          "pastille_fr": "Mis à jour",
+          "edito_en": "This element has been updated",
+          "edito_fr": "cet élément a été mis à jour"
+        }
+      },
+      "answer_items": {
+        "1.1.a": 1,
+        "1.1.b": 1,
+        "1.1.c": "no_fetch",
+        "1.2.a": 1,
+        "1.2.b": 1,
+        "2.1.a": "no_fetch",
+        "2.1.b": "no_fetch",
+        "2.2.a": "2.1.a",
+        "2.2.b": "2.1.b"
+      }
+    },
+    "1.0": {
+      "sections": {
+        "1": 1,
+        "2": 1
+      },
+      "elements": {
+        "1.1": {
+          "upgrade_status": 1,
+          "pastille_en": "New",
+          "pastille_fr": "Nouveau",
+          "edito_en": "This is a new element",
+          "edito_fr": "C'est un nouvel élément"
+        },
+        "1.2": {
+          "upgrade_status": 1,
+          "pastille_en": "New",
+          "pastille_fr": "Nouveau",
+          "edito_en": "This is a new element",
+          "edito_fr": "C'est un nouvel élément"
+        },
+        "2.1": {
+          "upgrade_status": "no_fetch",
+          "pastille_en": "Unchanged",
+          "pastille_fr": "Inchangé",
+          "edito_en": "",
+          "edito_fr": ""
+        },
+        "2.2": {
+          "upgrade_status": "2.1",
+          "pastille_en": "Updated",
+          "pastille_fr": "Mis à jour",
+          "edito_en": "This element has been updated",
+          "edito_fr": "cet élément a été mis à jour"
+        }
+      },
+      "answer_items": {
+        "1.1.a": 1,
+        "1.1.b": 1,
+        "1.1.c": "no_fetch",
+        "1.2.a": 1,
+        "1.2.b": 1,
+        "2.1.a": "no_fetch",
+        "2.1.b": "no_fetch",
+        "2.2.a": "2.1.a",
+        "2.2.b": "2.1.b"
+      }
+    }
+  }
+}
