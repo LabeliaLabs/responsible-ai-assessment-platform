@@ -294,8 +294,8 @@ class DashboardView(TemplateView):
 
             # number of evaluations per version
             for version in versions:
-                evals_stats["versions_stats"][version["version"]] = Assessment.objects.get(
-                    version=version["version"]).evaluation_set.all().count()
+                evals_stats["versions_stats"][version["version"]] = \
+                    Evaluation.objects.filter(assessment=Assessment.objects.get(version=version["version"])).count()
             evals_stats["eval_creation_date"] = "01-01-2020"
 
         else:

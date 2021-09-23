@@ -12,6 +12,7 @@ from .models import (
     EvaluationElementWeight,
     Upgrade,
     get_last_assessment_created,
+    ElementChangeLog,
 )
 
 
@@ -85,18 +86,20 @@ class ImportAssessment:
         A success (boolean) is returned, init to false, and a message
         :return: tuple (boolean and string)
         """
-        keys_list = ["name_fr", "name_en", "sections", "version"]
+        keys_list = ["name_fr", "name_en", "sections", "version", "previous_assessment_version"]
         if not test_keys_in_dic(dic=self.data_dic, keys_list=keys_list):
             self.message = f"You have missing keys for the assessment data, please provide {keys_list}"
             raise Exception(self.message)
 
         version = get_version(self.data_dic["version"])
+        previous_version = get_version(self.data_dic["previous_assessment_version"])
 
         # If there already is an assessment with the same version, raise error and ask for change if it is the same
         # language
         if list(Assessment.objects.filter(version=version)):
             self.message = "There already is an assessment with this version for this language. Please change it."
             raise Exception(self.message)
+
         # The version must be convertible into float value (example '0.5', '1.0', etc)
         try:
             float(version)
@@ -108,6 +111,28 @@ class ImportAssessment:
         if float(version) <= 0:
             self.message = "The version must be convertible into a positive number"
             raise Exception(self.message)
+
+        # Check if the assessment has a previous version before proceeding
+        if previous_version:
+            # Similarly, the previous version must be convertible into a positive float value
+            try:
+                float(previous_version)
+            except ValueError as e:
+                self.message = f"Error {e}. The previous version must not contain letters. It should be convertible" \
+                               f" into a float ('0.5', '1.0', etc). The previous version you provided was " \
+                               f"'{previous_version}'",
+                raise Exception(self.message)
+
+            if float(previous_version) <= 0:
+                self.message = "The previous version must be convertible into a positive number"
+                raise Exception(self.message)
+
+            # If the previous version refers to a non-existing assessment raise an error
+            if not list(Assessment.objects.filter(version=previous_version)):
+                self.message = "The previous version refers to a non-existing assessment. Please change it or upload" \
+                               "the corresponding assessment"
+                raise Exception(self.message)
+
         if get_last_assessment_created():
             if float(version) < float(get_last_assessment_created().version):
                 self.message = f"The assessment version must not be smaller than the" \
@@ -251,12 +276,23 @@ class ImportAssessment:
             self.assessment.delete()
 
     def create_assessment(self):
-        assessment = Assessment(
-            version=get_version(self.data_dic['version']),
-            name_fr=self.data_dic["name_fr"],
-            name_en=self.data_dic["name_en"]
-        )
-        assessment.save()
+        if get_version(self.data_dic["previous_assessment_version"]):
+            assessment = Assessment(
+                version=get_version(self.data_dic['version']),
+                previous_assessment=list(Assessment.objects.filter(
+                    version=get_version(self.data_dic["previous_assessment_version"])))[0],
+                name_fr=self.data_dic["name_fr"],
+                name_en=self.data_dic["name_en"]
+            )
+            assessment.save()
+        else:
+            assessment = Assessment(
+                version=get_version(self.data_dic['version']),
+                name_fr=self.data_dic["name_fr"],
+                name_en=self.data_dic["name_en"]
+            )
+            assessment.save()
+
         return assessment
 
     def manage_scoring_system(self, dic_choices):
@@ -301,7 +337,6 @@ def create_section(section_data, assessment):
 
 
 def create_element(element_data, section, depends_on):
-
     element = MasterEvaluationElement(
         master_section=section,
         name_fr=element_data.get("name_fr"),
@@ -372,9 +407,9 @@ def add_resources(element_data, element):
 
                 # we check if we need to create the external links (doesnt exist either in French or English)
                 if not resource and not external_link_already_exist(
-                    resource_data.get("resource_text_fr"),
-                    resource_data.get("resource_text_en"),
-                    resource_data.get("resource_type")
+                        resource_data.get("resource_text_fr"),
+                        resource_data.get("resource_text_en"),
+                        resource_data.get("resource_type")
                 ):
                     # Note that there is no condition on the resource type or resource text as
                     # it is only markdownify (no need to respect a format with a template tags)
@@ -472,7 +507,7 @@ def external_link_already_exist_lang(text, resource_type, lang):
         return list(ExternalLink.objects.filter(text_en=text, type=resource_type)) != []
 
 
-def external_link_already_exist(text_fr, text_en, resource_type,):
+def external_link_already_exist(text_fr, text_en, resource_type, ):
     """
     Check if there is already a resource in the table ExternalLinks. Return boolean (True if it exists).
     """
@@ -501,10 +536,11 @@ def check_upgrade(dict_upgrade_data):
     :param dict_upgrade_data:
     :return:
     """
-    success = False
-    message = ""
     # dic differences like {'1.0': {'sections': {'1': '1', '2': '1', '3': '1', '4': 'no_fetch', '5': 'no_fetch',
-    # '6': '5', '7': '1'}, 'elements': {'1.1': '1'}, 'answer_items': {'1.1.a': '1', '1.1.b': 'no_fetch'}}}
+    # '6': '5', '7': '1'}, 'elements': {'1.1': {"upgrade_status":"no_fetch"}, '1.2':{"upgrade_status":1,},
+    # 'answer_items': {'1.1.a': '1',
+    # '1.1.b': 'no_fetch'}}}
+
     list_dic_differences = [
         {key: val} for key, val in dict_upgrade_data["diff_per_version"].items()
     ]
@@ -534,6 +570,11 @@ def check_upgrade(dict_upgrade_data):
                     )
                     if not success:
                         return success, message
+
+    success, message = check_element_change_logs(list_dic_differences)
+    if not success:
+        return success, message
+
     return success, "The upgrade json check is ok"
 
 
@@ -556,6 +597,81 @@ def check_object_within(object_type, object_assessment, dic_diff):
             f" the assessment is not in the dictionary of differences for"
             f" the version {dic_diff.keys()}, the {object_type} present are : {dic_diff[object_type].keys()}"
         )
+    return success, message
+
+
+def check_element_change_logs(list_dic_diff):
+    """
+    We check the following for each version dictionary :
+      - All the keys are there : upgrade_status, pastille, edito
+      - The value for the key upgrade_status is either 1, 'no_fetch' or order_id (order_id not yet verified)
+      - The value for the key pastille is either 'New', 'Màj' or 'Unchanged'
+         Each element dictionary has the following structure:
+
+           "elements": {
+            "1.1": { "upgrade_status": 1,
+                     "pastille_en": "New",
+                     "pastille_fr": "Nouveau",
+                     "edito_en": "This is a new element",
+                     "edito_fr": "This is a new element"
+                     },
+            "1.2": { "upgrade_status": "no_fetch",
+                     "pastille_en": "Unchanged",
+                     "pastille_fr": "Inchangé",
+                     "edito_en": "",
+                     "edito_fr": ""
+            },
+            "1.3": { "upgrade_status": "2.3",
+                     "pastille_en": "Updated",
+                     "pastille_fr" "Mis à jour",
+                     "edito_en": "This is an update",
+                     "edito_fr": "C'est une mise à jour"
+            },
+            ...
+        }
+        ...
+    """
+    success = True
+    message = ""
+    key_list = ["upgrade_status", "pastille_en", "pastille_fr", "edito_en", "edito_fr"]
+    english_pastilles = ["New", "Updated", "Unchanged"]
+    french_pastilles = ["Nouveau", "Mis à jour", "Inchangé"]
+
+    upgrade_status_values = [1, "no_fetch"]
+    for dic_diff in list_dic_diff:
+        # here i get the key name of the assessment version dict
+        dic_diff = dic_diff[list(dic_diff.keys())[0]]
+        for element_dic in dic_diff["elements"]:
+            # check all keys are there
+            if not test_keys_in_dic(dic_diff["elements"][element_dic], key_list) or \
+                    len(dic_diff["elements"][element_dic].keys()) != 5:
+                success = False
+                message = f"You have this element {element_dic} that's missing at least on of the required " \
+                          f"keys {key_list}"
+                return success, message
+
+            # check the value of the upgrade_status
+            if list(dic_diff["elements"][element_dic].values())[0] not in upgrade_status_values and \
+                    not check_upgrade_status_content(list(dic_diff["elements"][element_dic].values())[0]):
+                success = False
+                message = f"Possible values for upgrade_status are {upgrade_status_values} or of the format int.int " \
+                          f"instead {list(dic_diff['elements'][element_dic].values())[0]} was found"
+                return success, message
+
+            # check the value of the pastille
+            # english pastilles
+            if dic_diff["elements"][element_dic]["pastille_en"] not in english_pastilles:
+                success = False
+                message = f"Possible values for pastille_en are {english_pastilles}, " \
+                          f"instead {list(dic_diff['elements'][element_dic]['pastille_en'])} was found"
+                return success, message
+            # french pastilles
+            if dic_diff["elements"][element_dic]["pastille_fr"] not in french_pastilles:
+                success = False
+                message = f"Possible values for pastille_fr are {french_pastilles}, " \
+                          f"instead {list(dic_diff['elements'][element_dic]['pastille_fr'])} was found"
+                return success, message
+
     return success, message
 
 
@@ -588,6 +704,24 @@ def save_upgrade(dict_upgrade_data):
                 upgrade_json=list(dic_differences.values())[0],
             )
             upgrade.save()
+
+            # create evaluation elements change logs and store them
+            for elements_dic in dic_differences:
+                for key, value in dic_differences[elements_dic]["elements"].items():
+                    create_element_change_log(
+                        value["edito_en"],
+                        value["edito_fr"],
+                        value["pastille_en"],
+                        value["pastille_fr"],
+                        MasterEvaluationElement.objects.get(order_id=int(key[-1]),
+                                                            master_section=MasterSection.objects.get(
+                                                                order_id=int(key[-3]),
+                                                                assessment=final_assessment),
+                                                            ).get_numbering(),
+                        origin_assessment,
+                        final_assessment
+                    )
+
         except ObjectDoesNotExist as e:
             success = False
             message = (
@@ -595,3 +729,31 @@ def save_upgrade(dict_upgrade_data):
                 f"Error {e}"
             )
     return success, message
+
+
+def create_element_change_log(edito_en, edito_fr, pastille_en, pastille_fr, eval_element_numbering,
+                              previous_assessment, new_assessment):
+    change_log = ElementChangeLog(edito_en=edito_en,
+                                  edito_fr=edito_fr,
+                                  pastille_en=pastille_en,
+                                  pastille_fr=pastille_fr,
+                                  eval_element_numbering=eval_element_numbering,
+                                  previous_assessment=previous_assessment,
+                                  assessment=new_assessment)
+
+    change_log.save()
+
+
+def check_upgrade_status_content(numbering):
+    valid = False
+    if isinstance(numbering, str):
+        numbering_parts = numbering.split(".")
+        if(len(numbering_parts)) == 2:
+            try:
+                int(numbering_parts[0])
+                int(numbering_parts[1])
+            except ValueError:
+                pass
+            else:
+                valid = True
+    return valid

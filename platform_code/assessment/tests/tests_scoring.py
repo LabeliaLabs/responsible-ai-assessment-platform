@@ -34,7 +34,7 @@ class TestEvaluationScoreStatic(TestCase):
     """
 
     def setUp(self):
-        with open("assessment/tests/import_test_files/assessment_test_v1.json") as json_file:
+        with open("assessment/tests/import_test_files/assessment_test_first_version.json") as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
         self.set_test_objects()
@@ -170,7 +170,7 @@ class TestEvaluationScoreStatic(TestCase):
 
 class TestScoreValues(TestCase):
     def setUp(self):
-        with open("assessment/tests/import_test_files/assessment_test_v1.json") as json_file:
+        with open("assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json") as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
         self.set_test_objects()
@@ -576,7 +576,7 @@ class TestEvaluationCompletion(TestCase):
         self.client = Client()
         self.client.login(email=self.email, password=self.password)
         scoring_file = open('assessment/tests/import_test_files/scoring_test_v2.json')
-        assessment_file = open('assessment/tests/import_test_files/assessment_test_v2.json')
+        assessment_file = open('assessment/tests/import_test_files/assessment_test_v2_no_previous_version.json')
         post_data = {
             "assessment_json_file": assessment_file,  # just the field need to not be empty
             "scoring_json_file": scoring_file

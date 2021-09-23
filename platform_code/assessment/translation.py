@@ -6,6 +6,7 @@ from assessment.models import (
     MasterEvaluationElement,
     MasterChoice,
     ExternalLink,
+    ElementChangeLog,
 )
 from home.models import ReleaseNote
 
@@ -39,3 +40,8 @@ class ExternalLinkTranslationOptions(TranslationOptions):
 class ReleaseNoteTranslationOptions(TranslationOptions):
     fields = ('text',)
     required_languages = {'default': ('text',)}
+
+
+@register(ElementChangeLog)
+class ElementChangeLogTranslationOptions(TranslationOptions):
+    fields = ('edito', 'pastille',)

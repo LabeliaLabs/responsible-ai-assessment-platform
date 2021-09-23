@@ -120,7 +120,7 @@ Inside each section, first you have, if it exists:
         width: 80%;
     }
     .grid-container-3-cols{
-        grid-template-columns: 72% 15% 8%;
+       grid-template-columns: 50% 25% 15%;
     }
     ul{
         padding-inline-start: 5px;
@@ -158,6 +158,36 @@ Inside each section, first you have, if it exists:
     .margin-top-export-pdf{
         margin-top: 20px;
     }
+
+    .help-tip-edito p {
+        width: 280px;
+    }
+    /* manage pastilles in the card header */
+    /* only display the interrogation mark */
+    .new-pastille {
+        font-size: 0px;
+        text-align: center;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        padding: 0px 20px 0px 0px;
+        background-color: transparent;
+    }
+
+    .updated-pastille {
+        font-size: 0px;
+        text-align: center;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        padding: 0px 20px 0px 0px;
+        background-color: transparent;
+
+    }
+    .unchanged-pastille {
+        font-size: 0px;
+        border-color: transparent;
+        background-color: transparent;
+    }
+
 }
 
 @media (max-width: 380px) {
@@ -168,6 +198,10 @@ Inside each section, first you have, if it exists:
     }
     .remove-smaller-380{
         display: none;
+    }
+
+     .help-tip-edito p {
+        width: 180px;
     }
 }
 
@@ -183,8 +217,6 @@ Inside each section, first you have, if it exists:
         grid-template-columns: repeat(1, 1fr);
     }
 }
-
-
 
 /*********************************** END MOBILE DEVICES 320 - 480 ***********************************/
 
@@ -236,6 +268,9 @@ Inside each section, first you have, if it exists:
     /* results */
     .margin-top-export-pdf{
         margin-top: 10px;
+    }
+      .help-tip-edito p {
+        width: 310px;
     }
 }
 
@@ -322,6 +357,7 @@ Inside each section, first you have, if it exists:
     .cke_dialog_contents {
         width: 95vw !important;
     }
+
 }
 
 /* LARGER THAN 481px */
@@ -434,6 +470,11 @@ Inside each section, first you have, if it exists:
     /* results */
     .margin-top-export-pdf{
         margin-top: 10px;
+    }
+
+    /* width of the edito tooltip*/
+      .help-tip-edito p {
+        width: 350px;
     }
 }
 
@@ -580,6 +621,7 @@ Inside each section, first you have, if it exists:
     .signup-field-tablet-min-screen {
         grid-template-columns: 60% 40%;
     }
+
 }
 
 @media (min-width: 381px) and (max-width: 900px) {
@@ -628,6 +670,10 @@ Inside each section, first you have, if it exists:
     }
     .margin-btn-orga-members {
         margin-top: 10px;
+    }
+     /* width of the edito tooltip*/
+      .help-tip-edito p {
+        width: 380px;
     }
 }
 
@@ -745,6 +791,10 @@ Inside each section, first you have, if it exists:
     .organisation-settings {
         width: 700px;
         max-width: 80%;
+    }
+     /* width of the edito tooltip*/
+      .help-tip-edito p {
+        width: 700px;
     }
 }
 

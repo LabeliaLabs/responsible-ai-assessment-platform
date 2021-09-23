@@ -54,19 +54,19 @@ body{
     color: red;
 }
 
-.white-color{
+.white-color {
     color: white;
 }
 
-.grey-color{
+.grey-color {
     color: grey;
 }
 
-.display-none{
+.display-none {
     display: none;
 }
 
-.italic{
+.italic {
     font-style: italic;
 }
 
@@ -135,24 +135,24 @@ color: #4D566B;
 }
 
 
-.hidden-div{
+.hidden-div {
     visibility: hidden;
     margin: 0;
 }
 
-.center{
+.center {
     text-align: center;
 }
 
-.absolute-position{
+.absolute-position {
     position: absolute;
 }
 
-.flex{
+.flex {
     display: flex;
 }
 
-.inline-grid{
+.inline-grid {
     display: inline-grid;
 }
 
@@ -417,7 +417,9 @@ li {
 
 .grid-container-3-cols{
     display: grid;
-    grid-template-columns: 75% 15% 8%;;
+    grid-template-columns: auto 120px 120px;
+    grid-column-gap: 15px;
+    align-items: center;
 }
 
 .grid-container-feedback-section {
@@ -761,6 +763,153 @@ h1 img {
 
 
 /**************************************** END EXPOSITION RISKS ***********************************************/
+
+
+/**************************************** ELEMENT CHANGE LOG **************************************************/
+
+/*** change logs pastilles ***/
+
+.new-pastille {
+    font-size: 11px;
+    text-align: center;
+    border: 1px solid #F1B705;
+    border-radius: 5px;
+    padding: 8px 5px 8px 15px;
+    background-color: #FAEECA;
+}
+
+.updated-pastille {
+    font-size: 11px;
+    text-align: center;
+    border: 1px solid #68AD6A;
+    border-radius: 5px;
+    padding: 8px 5px 8px 15px;
+    background-color: #CCE4CC;
+}
+
+.unchanged-pastille {
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #D0D1D0;
+    border-radius: 5px;
+    padding: 8px 8px 8px 8px;
+    background-color: #F1F6F3;
+}
+
+.pastille-tip {  /* Grid for the pastille and tooltip */
+    position: relative;
+    display: grid;
+    grid-template-columns: 65% 35%;
+    align-items: center;
+}
+
+/*** Part edito tooltip ***/
+
+.help-tip-edito {
+    right: 18px;
+    text-align: center;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 25px;
+    cursor: pointer;
+    font-size: 18px;
+    right: 10px;
+}
+
+.new-edito-color {
+    background-color: #F1B705;
+}
+
+.updated-edito-color {
+    background-color: #6DB590;
+}
+
+
+.help-tip-edito:before {
+    content:'?';
+    font-weight: bold;
+    color:#fff;
+    margin-left: 1px;
+}
+
+.help-tip-edito:hover p {
+    display: block;
+    transform-origin: 100% 0%;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.help-tip-edito p {    /* The tooltip */
+    display: none;
+    text-align: justify;
+    background-color: #eaeef0;
+    padding: 20px;
+    width: 700px;
+    margin-top: 10px;
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    right: -4px;
+    color: #23272a;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+
+.help-tip-edito p:before { /* The pointer of the tooltip */
+    position: absolute;
+    content: '';
+    width:0;
+    height: 0;
+    border:6px solid transparent;
+    border-bottom-color:#eaeef0;
+    right:10px;
+    top:-12px;
+}
+
+.help-tip-edito p:after { /* Prevents the tooltip from being hidden */
+    width:100%;
+    height:40px;
+    content:'';
+    position: absolute;
+    top:5%;
+    left:0;
+}
+
+/**** user dashboard - change_log ****/
+
+.element-pastille-grid {
+    display: grid;
+    grid-template-columns: 85% 15%;
+    align-items: center;
+}
+
+.element-title-change-log {
+    font-style : italic;
+}
+
+.element-pastille-change-log-updated {
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #68AD6A;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    background-color: #CCE4CC;
+
+}
+
+.element-pastille-change-log-new {
+    font-size: 12px;
+    text-align: center;
+    border: 1px solid #F1B705;
+    border-radius: 6px;
+    padding: 5px 5px 5px 5px;
+    background-color: #FAEECA;
+}
+
+
+/******************************************** END EDITO ***********************************************/
 
 
 /****************************************** NEWSLETTER *******************************************************/
@@ -1240,10 +1389,8 @@ body.navbar-is-fixed-top {
 .help-tip:hover p{
     display:block;
     transform-origin: 100% 0%;
-
     -webkit-animation: fadeIn 0.3s ease-in-out;
     animation: fadeIn 0.3s ease-in-out;
-
 }
 
 .help-tip-explanation p{    /* The tooltip */

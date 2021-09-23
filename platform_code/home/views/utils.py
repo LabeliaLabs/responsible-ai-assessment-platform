@@ -3,7 +3,13 @@ import logging
 from django.utils.translation import gettext as _
 
 from home.models import Organisation, UserResources
-from assessment.models import get_last_assessment_created
+from assessment.models import (
+    get_last_assessment_created,
+    Assessment,
+    MasterSection,
+    MasterEvaluationElement,
+    ElementChangeLog,
+)
 
 logger = logging.getLogger('monitoring')
 
@@ -128,3 +134,57 @@ def add_resources_dictionary(dictionary, user, user_resources):
         dictionary["resources"] = query_resources_dict
         dictionary["resources_liked"] = user.userresources.resources.all()
     return dictionary
+
+
+def get_all_change_logs():
+    """
+    Return a dictionary of the following structure:
+    {
+    "assessment_name.assessment_version":{
+         "master section name": {
+             "master evaluation element name": {
+                  {
+                    "edito":"bla bla",
+                    "pastille":"New",
+                  }
+                  ...
+             }
+             ...
+         }
+         ...
+      }
+    ....
+    }
+    These change logs will be displayed on ProfileView
+    """
+    assessments = Assessment.objects.all()
+    change_logs_dict = {}
+    if assessments:
+        for assessment in assessments:
+            # check if there are any change logs for this version
+            change_logs = ElementChangeLog.objects.filter(assessment=assessment)
+            if change_logs:
+                change_logs_dict[assessment] = {}
+                master_sections = MasterSection.objects.filter(assessment=assessment)
+                for master_section in master_sections:
+                    change_logs_dict[assessment][master_section] = {}
+                    master_evaluation_elements = MasterEvaluationElement.objects.filter(master_section=master_section)
+                    for master_evaluation_element in master_evaluation_elements:
+                        try:
+                            change_log = ElementChangeLog.objects.get(
+                                assessment=assessment,
+                                eval_element_numbering=master_evaluation_element.
+                                get_numbering()
+                            )
+                        except ElementChangeLog.DoesNotExist:
+                            change_log = None
+
+                        if change_log is not None:
+                            if change_log.pastille != "Unchanged" and change_log.pastille != "Inchangé":
+                                change_logs_dict[assessment][master_section][master_evaluation_element] = {}
+                                change_logs_dict[assessment][master_section][master_evaluation_element] = change_log
+                    if not change_logs_dict[assessment][master_section]:
+                        # delete sections that contain unchanged elements only
+                        del change_logs_dict[assessment][master_section]
+
+    return change_logs_dict

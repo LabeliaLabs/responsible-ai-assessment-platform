@@ -17,6 +17,7 @@ On peut envisager l'approche suivante lorsqu'une nouvelle version du référenti
 Conséquences à retenir :
 
 - les référentiels d'évaluation existent en plusieurs versions qui coexistent en base de données
+- chaque version du référentiel, à l'exception de la première, est liée à sa version précédente, à l'aide d'un attribut qui s'appelle *previous_assessment_version* 
 - une "évaluation" est donc l'instanciation d'un certain référentiel d'évaluation (une certaine version)
 - la coexistence de plusieurs référentiels d'évaluation est une notion distincte de la coexistence de plusieurs grilles de notation (*scoring models*) des évaluations. Il peut y avoir plusieurs versions successives de grilles de notation pour une même version du référentiel d'évaluation
 - les évaluations ont un statut d'avancement, dont une valeur est "terminé"
@@ -29,8 +30,10 @@ Conséquences à retenir :
 - ajouter un champ lors import de l'assessment (dajngo admin) qui, lorsqu'il y a déjà un assessment en base de données, demande un fichier `.json` (voir structure ci-dessous)
 - lors de la validation de l'import de ce json, il faut vérifier :
     - qu'on a bien importé un assessment avec (dans l'autre champ de l'import) et que celui-ci a bien un numéro de version supérieur
+    - que l'attribut de version précédente de cette version fait référence à un assessment existant dans la base de données au moment de l'import
     - que pour chaque assessment en base de données, dans le fichier json, il y a bien un dictionnaire qui liste les différences
     - que le `.json` respecte le format (cf. structure ci-dessous)
+- si le `.json` ne respecte pas le format, l'assessment et le scoring seront supprimées de la base de données même s'ils sont correctement importés
     
 ### Format du `.json` de versioning
 
@@ -41,8 +44,27 @@ Conséquences à retenir :
 - pour chaque type d'objet, on a un dictionnaire structurés en 3 sous-dictionnaires *sections*, *elements*, *answer_items*, avec :
    - comme clé les id des objets
    - comme valeur :
-      - `no_fetch` s'il ne faut pas récupérer les notes ou sélections de la version précédente
-      - `<id>` (sous-entendu `fetch <id>`) s'il faut récupérer la note ou la sélection de la version précédente pour cet objet
+     - pour les *sections* et *answer_items* :
+          - `no_fetch` s'il ne faut pas récupérer les notes ou sélections de la version précédente
+          - `<id>` (sous-entendu `fetch <id>`) s'il faut récupérer la note ou la sélection de la version précédente pour cet objet
+     - pour elements
+       - un autre dictionnaire qui a comme clé :
+            - `pastille_fr`: c'est le marqueur ou *la pastille* qui sera affiché sur l'en-tête des éléments d'évaluation, en français
+              - qui a comme valeur :
+                 - `Inchangé`, `Nouveau` ou `Mise à jour` 
+                
+            - `pastille_en`: c'est le marqueur ou *la pastille*
+              - qui a comme valeur la même valeur que `pastille_fr` mais en anglais : 
+                 - `Unchanged`, `New` ou `Updated`
+                
+            - `edito_fr` :
+                 - qui a comme valeur le texte qui explique le changement introduit par cette nouvelle version de l'assessment, en français
+         
+            - `edito_en`:
+                 - qui a comme valeur la même valeur que `edito_fr`, mais en anglais
+         
+            - `upgrade_status` 
+                   - qui a comme valeur `no_fetch` , `<id>` ou `1` 
 - notes :
    - on ne peut pas indiquer de statut "deleted" car les clés sont celles de la nouvelle version, les éléments supprimés n'apparaissent donc pas. Mais ça n'est pas un problème, car on n'en a pas besoin : pour les migrations on commence par instancier une nouvelle évaluation en nouvelle version, on n'aura donc pas les éléments supprimés depuis.
    - on n'a pas besoin de la distinction entre "nouveau" et "modifié", car la conséquence est la même : on ne récupérera pas la note ou la section de la version précédente pour cet objet
@@ -63,8 +85,36 @@ Conséquences à retenir :
                     "7": "7"
                 },
                 "elements" : {
-                    "1.1": "1.1",
-                    ...
+                   "1.1": {
+                        "upgrade_status": 1,
+                        "pastille_fr": "Nouveau",
+                        "pastille_en": "New",
+                        "edito_fr": "C'est un nouvel élément",
+                        "edito_en": "This is a new element"
+                    },
+                    "1.2": {
+                        "upgrade_status": 1,
+                        "pastille_fr": "Nouveau",
+                        "pastille_en": "New",
+                        "edito_fr": "C'est un nouvel élément",
+                        "edito_en": "This is a new element"
+                        
+                    },
+                    "2.1": {
+                        "upgrade_status": "no_fetch",
+                        "pastille_fr": "Inchangé",
+                        "pastille_en": "Unchanged",
+                        "edito_fr": "",
+                        "edito_en": ""
+                    },
+                    "2.2": {
+                        "upgrade_status": "2.1",
+                        "pastille_fr": "Mis à jour",
+                        "pastille_en": "Updated",
+                        "edito_fr": "cet élément a été mis à jour",
+                        "edito_en": "This element has been updated"
+                    },
+                  ...
                 },
                 "answer_items" : {
                     "1.1.a": "1.1.a",
@@ -102,6 +152,26 @@ On peut deviner avec cet exemple :
 - au passage de la `2.0` à la `3.0` les sections sont restées identiques
 
 *TO DO : compléter l'exemple avec plus de cas pour les _elements_ et les _answer_items_*.
+
+## Les change-logs
+
+Les *change-logs* sont des objets stockés dans la base de données, ils représentent les modifications apportées
+aux éléments d'évaluation entre deux versions différentes de l'assessment. Par conséquent:
+- Chaque version d'assessment est livrée avec ses propres *change-logs* par rapport à toutes les versions précédentes
+- La première version de l'assessment ( ou
+toute version de l'assessment qui n'a pas de version précédente) n'a pas donc de change-logs
+- Chaque change-log est identifié par 3 choses:
+  - `assessment`: l'objet d'assessment auquel ce change-log est lié
+  - `previous_assessment`: l'object d'assessment précédent auquel nous comparons l'assessment  
+  - `eval_element_numbering`: le *numbering* de l'élément d'évaluation auquel ce *change-log* est lié
+- les *change-logs* sont créés à partir de la *table des upgrades* après son importation
+- les *change-logs* sont affichés sous forme de *pastille* sur l'en-tête des éléments d'évaluation, 
+ils sont visibles par défaut mais ils peuvent être masqués dans la page d'admin
+- chaque *change-log* est lié à deux assessments différents comme nous l'avons indiqué précédemment,
+si l'une d'entre eux est supprimé alors tous les *change-logs* qui se réfèrent à au moins l'un d'entre eux sont supprimés
+
+![](img/change_logs_management_schema.jpg)
+
 
 ## Modification du modèle et affichage utilisateur
 

@@ -23,6 +23,13 @@ class ImportAssessmentLanguageTestCase(TestCase):
             self.assessment_data = json.load(json_file)
         json_file.close()
 
+        with open(
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file_2:
+            self.assessment_data_2 = json.load(json_file_2)
+        json_file_2.close()
+        ImportAssessment(self.assessment_data_2)
+
     def tearDown(self):
         del self.assessment_data
         for assessment in Assessment.objects.all():
@@ -46,11 +53,11 @@ class ImportAssessmentLanguageTestCase(TestCase):
         self.assertEqual("assessment fr", assessment.name)
         # Check also on the master section
         master_section1 = MasterSection.objects.first()
-        self.assertEqual(master_section1.name, "section 1 fr")
+        self.assertEqual(master_section1.name, "section 1_ fr")
         self.assertEqual(master_section1.keyword, "Protection des données")
         activate('en')
         self.assertEqual("assessment en", assessment.name)
-        self.assertEqual(master_section1.name, "section 1 en")
+        self.assertEqual(master_section1.name, "section 1_ en")
         self.assertEqual(master_section1.keyword, "Data protection")
 
     def test_import_assessment_translated_fields(self):
@@ -97,6 +104,14 @@ class AssessmentLanguageTestCase(TestCase):
         ) as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
+
+        with open(
+                "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file_2:
+            self.assessment_data_2 = json.load(json_file_2)
+        json_file_2.close()
+
+        ImportAssessment(self.assessment_data_2)
         import_assessment = ImportAssessment(self.assessment_data)
         self.assessment = import_assessment.assessment
 

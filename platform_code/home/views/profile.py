@@ -6,8 +6,13 @@ from django.db.models import Q
 from django.shortcuts import redirect
 from django.views import generic
 
+from home.views.utils import get_all_change_logs
 from assessment.forms import EvaluationMutliOrgaForm, EvaluationForm
-from assessment.models import Evaluation, EvaluationElement
+from assessment.models import (
+    Evaluation,
+    EvaluationElement,
+)
+
 from assessment.views.utils.edit_evaluation_name import treat_evaluation_name_edition
 from assessment.views.utils.error_handler import (
     error_500_view_handler,
@@ -82,8 +87,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         self.context["new_evaluation_form"] = EvaluationMutliOrgaForm(
             user=user, prefix="evaluation-creation"
         )
-
         self.context = add_last_version_last_assessment_dictionary(self.context)
+        self.context["change_logs"] = get_all_change_logs()
         return self.render_to_response(self.context)
 
     def post(self, request, *args, **kwargs):
@@ -119,12 +124,12 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
                 # If the user belongs to multiple organisation, it is a form with a field organisation
                 if (
-                    len(user.get_list_organisations_where_user_as_role(role="admin"))
-                    >= 1
-                    or len(
-                        user.get_list_organisations_where_user_as_role(role="editor")
-                    )
-                    >= 1
+                        len(user.get_list_organisations_where_user_as_role(role="admin"))
+                        >= 1
+                        or len(
+                         user.get_list_organisations_where_user_as_role(role="editor")
+                             )
+                        >= 1
                 ):
                     form = EvaluationMutliOrgaForm(
                         request.POST, user=user, prefix="evaluation-creation"
@@ -151,7 +156,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
             # If the user edits the name of the evaluation
             elif (
-                "name" in request.POST.dict() and "evaluation_id" in request.POST.dict()
+                    "name" in request.POST.dict() and "evaluation_id" in request.POST.dict()
             ):
                 return treat_evaluation_name_edition(request)
 
@@ -215,8 +220,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         These notes will be displayed on profileView
         """
         elements = (
-            EvaluationElement.objects.exclude(user_notes__isnull=True)
-            .filter(
+            EvaluationElement.objects.exclude(user_notes__isnull=True).filter(
                 Q(
                     section__evaluation__organisation__membership__user=user,
                     section__evaluation__organisation__membership__role="admin",
@@ -225,8 +229,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                     section__evaluation__organisation__membership__user=user,
                     section__evaluation__organisation__membership__role="editor",
                 )
-            )
-            .order_by("id")
+            ).order_by("id")
         )
         user_notes_dict = {}
         for element in elements:
