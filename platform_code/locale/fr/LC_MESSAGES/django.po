@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-23 10:06+0200\n"
+"POT-Creation-Date: 2021-09-30 11:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1179,7 +1179,7 @@ msgid "An error occurred, please verify the data you entered."
 msgstr "Un problème est survenu. Vérifiez les données que vous avez saisies."
 
 #: assessment/views/results.py:75 assessment/views/results.py:77
-#: home/templates/home/profile-change-logs.html:54
+#: home/templates/home/profile-change-logs.html:57
 msgid ": "
 msgstr " : "
 
@@ -2364,19 +2364,21 @@ msgstr "Cliquez ici pour vous reconnecter."
 msgid " : "
 msgstr " : "
 
-#: home/templates/home/profile-change-logs.html:23
-msgid "Change logs for version "
-msgstr ""
+#: home/templates/home/profile-change-logs.html:24
+msgid "Change logs for "
+msgstr "Journal des changements pour "
 
-#: home/templates/home/profile-change-logs.html:23
-#, fuzzy
-#| msgid "version"
+#: home/templates/home/profile-change-logs.html:24
+msgid "version"
+msgstr "la version"
+
+#: home/templates/home/profile-change-logs.html:25
 msgid "version "
-msgstr "Version"
+msgstr "version "
 
-#: home/templates/home/profile-change-logs.html:84
+#: home/templates/home/profile-change-logs.html:87
 msgid "There are no change logs available"
-msgstr "Il n'y actuellement pas de change logs"
+msgstr "Il n'y actuellement pas un journal des changements"
 
 #: home/templates/home/profile-my-ressources.html:13
 msgid "My favorite resources"
@@ -2526,10 +2528,8 @@ msgid "My resources"
 msgstr "Mes ressources"
 
 #: home/templates/home/profile.html:59
-#, fuzzy
-#| msgid "Change %s"
 msgid "Change logs"
-msgstr "Changer %s"
+msgstr "Journal des changements"
 
 #: home/templates/home/registration/password_reset_complete.html:6
 msgid "The password has been changed!"
