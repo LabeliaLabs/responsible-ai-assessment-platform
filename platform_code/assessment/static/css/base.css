@@ -854,6 +854,7 @@ h1 img {
     color: #23272a;
     font-size: 14px;
     line-height: 1.5;
+    z-index: 100;
 }
 
 

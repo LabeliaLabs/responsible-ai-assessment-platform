@@ -19,8 +19,11 @@
 
                         </div>
                         <div class="">
-                            <span class="fake-link">{{assessment.name}} - version{% trans " : " %}{{assessment.version}}</span>
-                            <div class="change-logs-version">{% trans "Change logs for version " %}{{assessment.version}} VS {% trans "version " %}{{assessment.previous_assessment.version}} </div>
+                            <span class="fake-link">{{assessment.name}} - version{% trans " : " %}
+                                {{assessment.version}}</span>
+                            <div class="change-logs-version">{% trans "Change logs for "%} {% trans "version" %}
+                                {{assessment.version}} VS {% trans "version " %}
+                                {{assessment.previous_assessment.version}} </div>
                         </div>
 
                     </div>
