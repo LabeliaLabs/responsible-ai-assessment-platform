@@ -126,7 +126,7 @@ Comme le suggère le [tutoriel ci-dessus](https://testdriven.io/blog/dockerizing
 ### Deploy
 
 - Git flow: `develop` > `preprod` > `prod`
-- Url preprod: <http://preprod.assessment.substra.ai/>
+- Url preprod: <http://preprod.assessment.labelia.org/>
 
 See the [dedicated document](./README_DEPLOY.md).
 
@@ -134,7 +134,7 @@ See the [dedicated document](./README_DEPLOY.md).
 
 - use readonly gitlab token: <https://docs.gitlab.com/ee/user/project/deploy_tokens/>
 - Add auto renew & manual procedure (`cronjob`)!
-- Url prod: **www**.assessment.substra.ai (Note: attention wildcard DNS)
+- Url prod: **www**.assessment.labelia.org (Note: attention wildcard DNS)
 - Unit tests!
 - flake8
 - test html & yaml lint

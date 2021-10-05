@@ -2,7 +2,7 @@
 
 # Django configuration
 SECRET_KEY=<CHANGE_ME>
-DJANGO_ALLOWED_HOSTS=<CHANGE_ME>  # localhost 127.0.0.1 [::1] preprodassessment.substra.ai assessment.substra.ai
+DJANGO_ALLOWED_HOSTS=<CHANGE_ME>  # localhost 127.0.0.1 [::1] preprodassessment.labelia.org assessment.labelia.org
 DJANGO_SETTINGS_MODULE=dev_platform.settings_prod
 
 # Database configuration

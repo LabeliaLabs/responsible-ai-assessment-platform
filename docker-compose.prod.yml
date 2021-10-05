@@ -41,9 +41,9 @@ services:
       - main
     volumes:
       - static_volume:/home/app/web/static
-      - ./nginx/assessment.substra.ai.conf:/etc/nginx/conf.d/custom.conf
-      - ../ssl/substra.ai.crt:/etc/ssl/assessment.substra.ai.crt
-      - ../ssl/myserver.key:/etc/ssl/assessment.substra.ai.key
+      - ./nginx/assessment.labelia.org.conf:/etc/nginx/conf.d/custom.conf
+      - ../ssl/labelia.org.crt:/etc/ssl/assessment.labelia.org.crt
+      - ../ssl/labeliadotorg.key:/etc/ssl/assessment.labeliadotorg.key
     depends_on:
       - web
 volumes:
