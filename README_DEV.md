@@ -190,11 +190,11 @@ sudo apt install nginx
 sudo unlink /etc/nginx/sites-enabled/default
 
 # Edit your config with the one located in data/nginx/nginx.conf
-sudo vi /etc/nginx/sites-available/preprod.assessment.substra.ai
+sudo vi /etc/nginx/sites-available/preprod.assessment.labelia.org
 # [temp] use this path for statics: "/home/ubuntu/pf-assessment-dsrc/platform_code/assessment/static/;"
 
 # Link it to the enabled websites
-sudo ln -s /etc/nginx/sites-available/preprod.assessment.substra.ai /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/preprod.assessment.labelia.org /etc/nginx/sites-enabled
 
 # Test config & reload nginx: will provide feedbacks in case of errors
 sudo nginx -t && sudo nginx -s reload
