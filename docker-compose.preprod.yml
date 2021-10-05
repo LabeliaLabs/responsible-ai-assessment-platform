@@ -44,7 +44,6 @@ services:
       - ./nginx/preprodassessment.labelia.org.conf:/etc/nginx/conf.d/custom.conf
       - ../ssl/labelia.org.crt:/etc/ssl/preprodassessment.labelia.org.crt
       - ../ssl/labeliadotorg.key:/etc/ssl/preprodassessment.labeliadotorg.key
-      - ../ssl/GandiStandardSSLCA2.pem:/etc/ssl/preprodassessment.GandiStandardSSLCA2.pem
     depends_on:
       - web
 
