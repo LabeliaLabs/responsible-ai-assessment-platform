@@ -595,7 +595,7 @@ class TestEvaluationCompletion(TestCase):
         evaluation_score = EvaluationScore.objects.get(evaluation=self.evaluation)
         self.assertIsNotNone(evaluation_score.score)
         self.assertTrue(evaluation_score.score > 0)
-        self.assertTrue(evaluation_score.score < 100)
+        self.assertTrue(evaluation_score.score <= 100)
 
     def test_complete_evaluation_min(self):
         self.assertFalse(self.evaluation.is_finished)

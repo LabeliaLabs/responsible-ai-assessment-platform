@@ -65,7 +65,7 @@ class DashAccessTestCase(TestCase):
 
     # TODO
     # def test_dashboard_access(self):
-    #     url = reverse("home:dashboard-view")
+    #     url = reverse("home:admin-dashboard")
     #
     #     # test admin access
     #     print("URL ", url)
@@ -88,7 +88,7 @@ class DashAccessTestCase(TestCase):
     #     self.assertEqual(response3.status_code, 302)
 
     # def test_context_content(self):
-    #     url = reverse('home:dashboard-view')
+    #     url = reverse('home:admin-dashboard')
     #     response = self.client_1.get(url)
     #     self.assertEqual(response.status_code, 200)
     #     self.assertEqual(len(response.context), 11)

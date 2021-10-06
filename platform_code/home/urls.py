@@ -36,7 +36,8 @@ urlpatterns = [
     path("legal-notices/", legal_notices_view, name="legal-notices"),
     path("release-notes/", ReleaseNotesView.as_view(), name="release-notes"),
     path("faq/", faq_view, name="faq"),
-    path("dashboard/", DashboardView.as_view(), name="dashboard-view"),
+    path("admin-dashboard/", DashboardView.as_view(), name="admin-dashboard"),
+    re_path(r"admin-dashboard/(?P<tab>[a-z]{1,15})", DashboardView.as_view(), name="admin-dashboard"),
     path("robots.txt", TemplateView.as_view(
         template_name="robots.txt", content_type="text/plain"
     )),
@@ -44,7 +45,8 @@ urlpatterns = [
         "accounts/",
         include(
             [
-                path("profile/", ProfileView.as_view(), name="user-profile"),
+                path(r"profile/", ProfileView.as_view(), name="user-profile"),
+                re_path(r"profile/(?P<tab>[a-z]{1,15})", ProfileView.as_view(), name="user-profile"),
                 path(
                     "profile-settings/",
                     ProfileSettingsView.as_view(),

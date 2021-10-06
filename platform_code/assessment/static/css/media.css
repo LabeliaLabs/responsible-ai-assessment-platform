@@ -309,9 +309,13 @@ Inside each section, first you have, if it exists:
     .question-name {
         text-align: left;
     }
+    .resource-wrapper {
+        width: 90vw;
+    }
     .breadcrumbs{
         margin-top: -50px;
         margin-bottom: 20px;
+        margin-left: 0;
     }
     .column-right{
         margin-top: -80px;
@@ -420,18 +424,6 @@ Inside each section, first you have, if it exists:
     }
 }
 
-/* container width */
-@media (min-width: 576px) and (max-width: 650px) {
-    .container {
-        max-width: 540px;
-     }
-}
-@media (min-width: 651px) and (max-width: 769px) {
-    .container {
-        max-width: 620px;
-     }
-}
-
 @media (max-width: 650px) {
     .margin-10-new-eval-button {
         margin-top: 10px;
@@ -456,6 +448,10 @@ Inside each section, first you have, if it exists:
 @media (min-width: 769px) and (max-width: 1024px) {
     tbody {
         grid-template-columns: repeat(3, 1fr);
+    }
+    .content-section {
+        margin-left: 170px;
+        margin-right: 30px;
     }
     .organisation-settings{
         width: 400px;
@@ -580,10 +576,14 @@ Inside each section, first you have, if it exists:
     .navbar-collapse {
         margin-top: -15px;
     }
-    .adapted-width-button{
+    /* END NAVBAR */
+    .profile-settings-pills {
+        max-width: 250px
+    }
+    .adapted-width-button {
         width: 220px;
     }
-    .adapted-width-button-250{
+    .adapted-width-button-250 {
         width: 250px;
     }
     .larger-small-screen-absolute-position{
@@ -608,8 +608,8 @@ Inside each section, first you have, if it exists:
         margin-top: 50px;
         margin-bottom: 50px;
     }
-    .larger-small-screen-margin-left-150{
-        margin-left: 150px;
+    .larger-small-screen-margin-left-18vw{
+        margin-left: 18vw;
     }
     .upgrade-banner-section-evaluation{
         margin-top: 3em;
@@ -631,18 +631,6 @@ Inside each section, first you have, if it exists:
     }
 }
 
-/* container width */
-@media (min-width: 992px) {
-    .container {
-        max-width: 960px;
-    }
-}
-@media (min-width: 769px) {
-    .container {
-        max-width: 720px;
-    }
-}
-
 
 /*********************************** END SMALL SCREENS 769 - 1024 ************************************/
 
@@ -657,6 +645,10 @@ Inside each section, first you have, if it exists:
     .organisation-settings{
         width: 400px;
     }
+    .content-section {
+        margin-left: 170px;
+        margin-right: 30px;
+    }
     .margin-left-large-screen {
         margin-left: -50px;
     }
@@ -666,7 +658,7 @@ Inside each section, first you have, if it exists:
     }
     /* results */
     .margin-top-export-pdf{
-        margin-top: 10px;
+        margin-top: 0px;
     }
     .margin-btn-orga-members {
         margin-top: 10px;
@@ -680,10 +672,6 @@ Inside each section, first you have, if it exists:
 /* SMALLER */
 
 @media (max-width: 1200px) {
-    .column-right {
-        margin-left: auto;
-        margin-right: auto;
-    }
     .height-title {
         height: 5em;
     }
@@ -723,11 +711,11 @@ Inside each section, first you have, if it exists:
 /* LARGER */
 
 @media (min-width: 1025px) {
-    .hidden-delete-button{
+    .hidden-delete-button {
         margin-top: 10px;
     }
     .div-hidden-icons{
-        background-color: white;
+        vertical-align: middle;
     }
     .larger-large-screen-30-top{
         margin-top: 30px;
@@ -754,16 +742,53 @@ Inside each section, first you have, if it exists:
 }
 
 @media (max-width: 1130px) {
+    .margin-auto-max-1130 {
+        margin: auto;
+    }
     .data-nav-pills {
         margin: auto;
+        max-width: 80vw;
+    }
+    .column-right {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .row-pills-table {
+        display: block;
+    }
+    .center-max-1130 {
+        text-align: center;
+    }
+    #content-user-notes {
+        margin: auto;
+    }
+    .flex-center-small-screen {
+        justify-content: center;
+    }
+    .form-center-small-screen {
+        text-align: center;
+        text-align: -webkit-center;
+        columns: 1;
+        margin: auto;
+        width: fit-content;
     }
 }
 
-@media (max-width: 1030px) {
-    .container-platform {
-        max-width:1000px;
+@media (min-width: 1025px) and (max-width: 1130px) {
+    .margin-left-medium-screen {
+        /*margin-left: 60px;*/
     }
 }
+
+@media (min-width: 1130px) {
+    .column-right {
+        margin-left: 30px;
+    }
+    #content-members {
+        width: 60vw;
+    }
+}
+
 
 /*********************************** END LARGE SCREEN 1025 - 1200 ************************************/
 
@@ -772,19 +797,10 @@ Inside each section, first you have, if it exists:
 
 /*********************************** EXTRA LARGE SCREEN 1201++  **************************************/
 
-/* container max-width */
-@media (min-width: 1700px) {
-    .container {
-        max-width: 1500px;
-    }
-}
 
 /* LARGER 1200 */
 
 @media (min-width: 1201px) {
-    .container {
-        max-width: 1140px;
-    }
     .height-title {
         height: 3em;
     }
@@ -792,18 +808,16 @@ Inside each section, first you have, if it exists:
         width: 700px;
         max-width: 80%;
     }
+    .content-section {
+        margin-left: 18vw;
+        margin-right: 10vw;
+    }
      /* width of the edito tooltip*/
       .help-tip-edito p {
         width: 700px;
     }
 }
 
-@media (min-width: 1201px) and (max-width: 1300px){
-    /* used also for the breadcrumbs to follow the alignment */
-    .column-right-margin-left {
-       margin-left: -50px;
-    }
-}
 
 @media (max-width: 1300px) {
     .extra-large-screen {
@@ -815,9 +829,6 @@ Inside each section, first you have, if it exists:
 }
 
 @media (min-width: 1301px){
-    .column-right-margin-left {
-       margin-left: -80px;
-    }
     .sidenav {
         width: 230px;
     }
@@ -826,6 +837,22 @@ Inside each section, first you have, if it exists:
     }
     .smaller-1300 {
         display: none;
+    }
+}
+
+@media (min-width: 1350px) {
+    .table thead th {
+        font-size: 18px;
+        padding: 0.75em;
+    }
+    .container-profile {
+        width: 88%;
+    }
+}
+
+@media (min-width: 1400px) {
+    .column-right {
+        width: max-content
     }
 }
 

@@ -624,7 +624,7 @@ Inside each section, first you have, if it exists:
     }
     /* results */
     .margin-top-export-pdf{
-        margin-top: 10px;
+        margin-top: 0px;
     }
     .margin-btn-orga-members {
         margin-top: 10px;

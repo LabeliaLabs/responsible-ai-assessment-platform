@@ -5,7 +5,7 @@
 {% load i18n %}
 {% block content %}
 
-<div class="breadcrumbs column-right-margin-left">
+<div class="breadcrumbs">
     <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
     <span> ></span>
     <a class="active-breadcrumb" href="#">{% trans 'Organisation' %}</a>
@@ -22,9 +22,9 @@
     {% endfor %}
 </ul>
 {% endif %}
-<div class="container">
-<div class="row ">
-    <div class="col-ms-3 container-platform column-right column-right-margin-left">
+<div class="">
+<div class="row-pills-table">
+    <div class="col-ms-3 container-platform column-right">
         <ul class="nav nav-pills nav-stacked flex-column table-column-profile" id="PillProfile" role="tablist">
             <li class="nav-item column-button">
                 <a aria-controls="content-eval" aria-selected="true" class="nav-link profile-column active"
@@ -43,10 +43,11 @@
             </li>
         </ul>
     </div>
-    <div class="data-nav-pills margin-auto">
+    <div class="data-nav-pills">
         <div class="tab-content" id="PillProfileContent">
 
-            <div aria-labelledby="tab-eval" class="tab-pane active large-array-large-screen margin-left-large-screen"
+            <div aria-labelledby="tab-eval"
+                 class="tab-pane active small-screen-max-center margin-left-medium-screen"
                  id="content-eval" role="tabpanel">
                 {% include "assessment/organisation/orga-evaluation.html" %}
 

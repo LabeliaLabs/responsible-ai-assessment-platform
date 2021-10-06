@@ -1,0 +1,31 @@
+{% load static %}
+{% load i18n %}
+
+
+<div class="modal-header">
+    <h4 class="modal-title larger-tablet-absolute-position">{% trans 'Initiate the labelling process' %}</h4>
+    <button class="close" data-dismiss="modal" type="button">&times;</button>
+</div>
+
+<div class="modal-body">
+    <p>{% blocktrans trimmed %}
+        Do you confirm that you have read the
+        <a href="https://www.labelia.org/en/eligibilite-et-conditions" target="_blank">general conditions of use,
+            the pricing conditions and that you have the mandate</a> to initiate a labeling request?
+       {% endblocktrans %}
+    </p>
+</div>
+
+<div class="modal-footer self-center">
+        <form action="{% url 'assessment:labelling' evaluation.organisation.id evaluation.slug evaluation.id %}"
+              id="labelling_form{{evaluation.id}}" method="get" class="margin-auto">
+            <button class="btn btn-primary upgrade-button-width margin-auto"
+                    type="submit"
+            >{% trans 'Confirm' %}
+            </button>
+        </form>
+        <button class="btn btn-danger upgrade-button-width margin-auto" data-dismiss="modal"
+                type="button">{% trans 'Cancel' %}
+        </button>
+</div>
+

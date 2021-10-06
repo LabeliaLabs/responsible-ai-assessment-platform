@@ -16,66 +16,76 @@
         <ul class="navbar-nav ml-auto">
             {% if user.is_authenticated %}
                 {% if user.is_staff %}
-                <li class="nav-item navbar-item">
-                    <a class="nav-link" href="{% url 'admin:index' %}">
-                        {% trans "Admin" %}
-                    </a>
-                </li>
-                <li class="nav-item navbar-item">
-                    <a class="nav-link" href="{% url 'home:dashboard-view' %}">
-                        {% trans "Admin Dashboard" %}
-                    </a>
-                </li>
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'admin:index' %}">
+                            {% trans "Admin" %}
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'home:admin-dashboard' %}">
+                            {% trans "Admin Dashboard" %}
+                        </a>
+                    </li>
                 {% endif %}
-            <li class="nav-item navbar-item">
-                <a class="nav-link" href="{% url 'home:user-profile' %}">
-                    {% trans "My dashboard" %}
-                </a>
-            </li>
-            <li class="nav-item navbar-item">
-                <a class="nav-link" href="{% url 'home:resources' %}">
-                    {% trans "Resources" %}
-                </a>
-            </li>
-            <li class="nav-item navbar-item">
-                <a class="nav-link" href="{% url 'home:faq' %}">
+                <li class="nav-item navbar-item">
+                    <a class="nav-link" href="{% url 'home:user-profile' %}">
+                        {% trans "My dashboard" %}
+                    </a>
+                </li>
+                <li class="nav-item navbar-item">
+                    <a class="nav-link" href="{% url 'home:resources' %}">
+                        {% trans "Resources" %}
+                    </a>
+                </li>
+                <li class="nav-item navbar-item">
+                    <a class="nav-link" href="{% url 'home:faq' %}">
+                        {% trans "FAQ" %}
+                    </a>
+                </li>
+                {% if platform_management.activate_multi_languages %}
+                    <li class="nav-item navbar-item">
+                        {% include "navbar-language-select.html" %}
+                    </li>
+                {% endif %}
+                <li class="nav-item navbar-item margin-left-nav-icons">
+                    <a class="nav-link navbar-icon-settings" href="{% url 'home:user-profile-settings' %}"
+                        title="{% trans 'User settings' %}"
+                    >
+                        <i class="fas fa-user-cog"></i>
+                    </a>
+                </li>
+                <li class="nav-item navbar-item">
+                    <a class="nav-link navbar-icon-logout" href="{% url 'home:logout' %}"
+                        title="{% trans 'Logout' %}"
+                    >
+                        <i class="fa fa-sign-out"></i>
+                    </a>
+                </li>
+            <!-- User not connected -->
+            {% else %}
+                <li class="nav-item navbar-item">
+                    <a class="nav-link" href="{% url 'home:faq' %}">
                     {% trans "FAQ" %}
-                </a>
-            </li>
-            {% if platform_management.activate_multi_languages %}
-                <li class="nav-item navbar-item">
-                    {% include "navbar-language-select.html" %}
+                    </a>
                 </li>
-            {% endif %}
-            <li class="nav-item navbar-item">
-                <a class="nav-link" href="{% url 'home:logout' %}">
-                    {% trans "Logout" %}
-                </a>
-            </li>
-            {% else %}
-            <li class="nav-item navbar-item">
-                <a class="nav-link" href="{% url 'home:faq' %}">
-                {% trans "FAQ" %}
-                </a>
-            </li>
-            {% if platform_management.activate_multi_languages %}
-                <li class="nav-item navbar-item">
-                    {% include "navbar-language-select.html" %}
-                </li>
-            {% endif %}
-            {% if request.get_full_path|need_login_page %}
-            <li class="nav-item navbar-item">
-                <a class="nav-link" href="{% url 'home:login' %}">
-                {% trans "Login" %}
-                </a>
-            </li>
-            {% else %}
-            <li class="nav-item navbar-item">
-                <a class="nav-link" data-target="#modal-login-user" data-toggle="modal"
-                    href="{% url 'home:homepage' %}">{% trans "Login" %}
-                </a>
-            </li>
-            {% endif %}
+                {% if platform_management.activate_multi_languages %}
+                    <li class="nav-item navbar-item">
+                        {% include "navbar-language-select.html" %}
+                    </li>
+                {% endif %}
+                {% if request.get_full_path|need_login_page %}
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'home:login' %}">
+                        {% trans "Login" %}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" data-target="#modal-login-user" data-toggle="modal"
+                            href="{% url 'home:homepage' %}">{% trans "Login" %}
+                        </a>
+                    </li>
+                {% endif %}
             {% endif %}
         </ul>
     </div>

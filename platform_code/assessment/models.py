@@ -20,6 +20,7 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from home.models import Organisation
 
@@ -44,6 +45,7 @@ class Assessment(models.Model):
     previous_assessment = models.ForeignKey('self',
                                             on_delete=models.SET_NULL,
                                             null=True,
+                                            blank=True,
                                             default=None)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -244,6 +246,8 @@ class Evaluation(models.Model):
     )  # NEED TO DELETE NULL AND BLANK LATER
     # There are only 2 status choices for an evaluation: done or not done, by default the evaluation is not done
     is_finished = models.BooleanField(default=False)
+    is_editable = models.BooleanField(default=True)
+    is_deleteable = models.BooleanField(default=True)
     # No score by default, the object will be created when the evaluation is validated by the user
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -315,6 +319,15 @@ class Evaluation(models.Model):
         else:
             return False
 
+    def freeze_evaluation(self):
+        """
+        Set the is_editable and is_deleteable fields to false
+        Used in the labelling process to block the edition and deletion of labelling evaluation
+        """
+        self.is_deleteable = False
+        self.is_editable = False
+        self.save()
+
     def get_list_all_elements(self):
         """
         Returns the list of all the evaluation elements
@@ -326,6 +339,30 @@ class Evaluation(models.Model):
             ):
                 list_all_elements.append(element)
         return list_all_elements
+
+    def has_labelling(self):
+        """
+        True if the evaluation has a labelling object associated, else Flase
+        """
+        # TODO tests
+        return hasattr(self, 'labelling')
+
+    def get_labelling(self):
+        # TODO tests
+        if self.has_labelling():
+            return self.labelling
+        else:
+            return None
+
+    def need_justification(self):
+        """
+        If the evaluation has a labelling object associated and it has the status 'justification'
+        so the function returns True, else False
+        Used in the templates
+        """
+        # TODO tests
+        if self.has_labelling():
+            return self.get_labelling().status == 'justification'
 
     def get_dict_sections_elements_choices(self):
         dict_sections_elements = {}
@@ -568,6 +605,58 @@ class Evaluation(models.Model):
         else:
             return 0
 
+    def duplicate_evaluation(self):
+        """
+        Create the duplicate evaluation (same user, organisation, assessment)
+        and complete it with the same answers, notes, justifications than the original one.
+        Returns the duplicated evaluation
+        """
+        new_evaluation = Evaluation.create_evaluation(
+            name=f"{self.name}-duplication",
+            assessment=self.assessment,
+            user=self.created_by,
+            organisation=self.organisation
+        )
+        new_evaluation.create_evaluation_body()
+        # Cover all the objects of the original evaluation
+        for section in self.section_set.all():
+            new_section = Section.objects.get(
+                evaluation=new_evaluation,
+                master_section__order_id=section.master_section.order_id
+            )
+            new_section.user_notes = section.user_notes
+            new_section.save()
+            for evaluation_element in section.evaluationelement_set.all():
+                new_element = EvaluationElement.objects.get(
+                    section__evaluation=new_evaluation,
+                    master_evaluation_element__order_id=evaluation_element.master_evaluation_element.order_id,
+                    section__master_section__order_id=section.master_section.order_id
+                )
+                new_element.user_notes = evaluation_element.user_notes
+                new_element.user_justification = evaluation_element.user_justification
+                new_element.user_notes_archived = evaluation_element.user_notes_archived
+                new_element.save()
+                for choice in evaluation_element.choice_set.all():
+                    if choice.is_ticked:
+                        new_choice = Choice.objects.get(
+                            evaluation_element__section__evaluation=new_evaluation,
+                            master_choice__order_id=choice.master_choice.order_id,
+                            evaluation_element__master_evaluation_element__order_id=  # noqa
+                            evaluation_element.master_evaluation_element.order_id,
+                            evaluation_element__section__master_section__order_id=section.master_section.order_id
+                        )
+                        new_choice.set_choice_ticked()
+                new_element.set_status()
+                new_element.set_points()
+            new_section.set_progression()
+            new_section.set_points()
+        new_evaluation.set_finished()  # If not finished, set to False
+        evaluation_score = EvaluationScore.objects.get(evaluation=new_evaluation)
+        evaluation_score.need_to_calculate = True
+        evaluation_score.save()
+        evaluation_score.process_score_calculation()
+        return new_evaluation
+
     def complete_evaluation(self, **kwargs):
         """
         Accepted kwargs key: characteristic
@@ -636,7 +725,7 @@ class EvaluationScore(models.Model):
     be calculated again.
 
     """
-    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE)
+    evaluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE)  # TODO set OneToOne field
     # Boolean field to know if all the fields need to be calculated
     # if there are modifications after the 1st validation for example, the field switch from False to true
     need_to_set_max_points = models.BooleanField(default=False)
@@ -888,9 +977,82 @@ class EvaluationScore(models.Model):
         self.save()
 
 
+class Labelling(models.Model):
+    """
+    This class defines the labelling objects which ae used to label an evaluation and
+    therefore the organisation.
+    A labelling object is bound to one evaluation and one evaluation can be linked
+    to different labelling objects.
+    A labelling object is defined by a status, which describes the status of the labelling process
+    for the evaluation by Substra Foundation.
+    Last update field is used to store the date of the last
+    """
+    evaluation = models.OneToOneField(Evaluation, on_delete=models.CASCADE)
+    PROGRESS = "progress"
+    JUSTIFICATION = "justification"
+    LABELLED = "labelled"
+    REFUSED = "refused"
+
+    STATUS = (
+        (PROGRESS, _("progress")),
+        (JUSTIFICATION, _("justification")),
+        (LABELLED, _("labelled")),
+        (REFUSED, _("refused"))
+    )
+    status = models.CharField(max_length=200, choices=STATUS, default=PROGRESS)
+    counter = models.IntegerField(default=1)
+    start_date = models.DateTimeField(auto_now_add=True)
+    last_update = models.DateTimeField(blank=True, null=True)
+    justification_request_date = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Label of the evaluation id={self.evaluation.id}"
+
+    @classmethod
+    def create_labelling(cls, evaluation):
+        if evaluation.is_finished:
+            labelling = cls(evaluation=evaluation, last_update=timezone.now())
+            labelling.save()
+            evaluation.freeze_evaluation()
+            return labelling
+
+    def set_justification_required(self):
+        """
+        Sets the status as 'justification' and thus the evaluation is editable again
+        """
+        self.status = Labelling.JUSTIFICATION
+        self.justification_request_date = timezone.now()
+        self.save()
+        self.evaluation.is_editable = True
+        self.evaluation.save()
+
+    def submit_again(self):
+        """
+        Increments the counter - used when user submit again the labelling process
+        and set the status to "progress"
+        """
+        self.counter += 1
+        self.status = Labelling.PROGRESS
+        self.evaluation.freeze_evaluation()
+        self.last_update = timezone.now()
+        self.save()
+
+    def set_final_status(self, status):
+        """
+        This method is used to reject/validate a labelling process ie set the status to "refused"/"labelled"
+        The evaluation cannot be modified anymore nor deleted.
+        """
+        if status == "rejection":
+            self.status = Labelling.REFUSED
+        elif status == "validation":
+            self.status = Labelling.LABELLED
+        self.evaluation.freeze_evaluation()
+        self.save()
+
+
 class MasterSection(models.Model):
     """
-    This class will store static data concerning the sections of the assessment
+    This class stores static data concerning the sections of the assessment
     """
 
     name = models.CharField(max_length=200)
