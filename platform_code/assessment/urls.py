@@ -9,7 +9,12 @@ from .views import (
     leave_organisation,
     upgradeView,
     SectionView,
-    ResultsPDFView
+    ResultsPDFView,
+    labellingView,
+    labellingAgainView,
+    labellingJustification,
+    labellingEnd,
+    duplicateView
 )
 
 
@@ -38,6 +43,11 @@ urlpatterns = [
                                 name="delete-evaluation",
                             ),
                             path("upgrade/", upgradeView, name="upgrade"),
+                            path("duplicate/", duplicateView, name="duplicate"),
+                            path("labelling/", labellingView, name="labelling"),
+                            path("labelling-again/", labellingAgainView, name="submit-labelling-again"),
+                            path("labelling/justification", labellingJustification, name="labelling-justification"),
+                            re_path(r"labelling/(?P<status>[a-z]{1,15})", labellingEnd, name="end-labelling"),
                             re_path(
                                 r"^section/(?P<id>[0-9]{1,})/(?P<name>[-\w\W]+)/(?P<page>\d+)$",
                                 SectionView.as_view(),

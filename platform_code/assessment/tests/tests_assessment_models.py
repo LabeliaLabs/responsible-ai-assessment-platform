@@ -313,6 +313,13 @@ class EvaluationTestCase(TestCase):
             list_evaluation_elements, self.evaluation.get_list_all_elements()
         )
 
+    def test_freeze_evaluation(self):
+        self.assertTrue(self.evaluation.is_editable)
+        self.assertTrue(self.evaluation.is_deleteable)
+        self.evaluation.freeze_evaluation()
+        self.assertFalse(self.evaluation.is_editable)
+        self.assertFalse(self.evaluation.is_deleteable)
+
     def test_evaluation_get_absolute_url(self):
         user = User.object.create(email="test@email.com", password="test123456")
         organisation = Organisation.objects.create(

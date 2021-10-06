@@ -12,7 +12,12 @@ def add_my_login_form(request):
 
 
 def add_platform_management(request):
-    platform_management = PlatformManagement.get_or_create()
+    if PlatformManagement.objects.all().count() > 1:
+        while PlatformManagement.objects.all().count() > 1:
+            PlatformManagement.objects.last().delete()
+        platform_management = PlatformManagement.objects.first()
+    else:
+        platform_management = PlatformManagement.get_or_create()
     # If the languages are not activated (English), the site is in French
     if not platform_management.activate_multi_languages:
         activate("fr")

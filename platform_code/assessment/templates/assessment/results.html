@@ -30,7 +30,7 @@
 
 <h1 class="h1-margin-breadcrumbs">{{evaluation.name}}</h1>
 
-<div class="bg-white rounded-lg p-5 shadow">
+<div class="bg-white rounded-lg p-5 shadow margin-x-10-vw">
     <h2 class="h6 font-weight-bold text-center mb-4">{% trans "Your score" %}</h2>
 
     <!-- Progress bar 1 -->
@@ -155,7 +155,7 @@
         </form>
     </div>
 </div>
-    <div class="response margin-70" id="responses">
+    <div class="response margin-70 margin-x-10-vw" id="responses">
         <h2>{% trans "Your answers" %}</h2>
         <!--    Need to create a new form, initiate with database, disable other choices-->
         {% for element in evaluation_element_list %}

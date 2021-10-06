@@ -427,14 +427,14 @@ function changeNameEvaluation(form_id, evaluation_id) {
                 }
 
                 setTimeout(function() {
-                    var closeButton = document.getElementById("close-modal-edit-name");
+                    var closeButton = document.getElementById("close-modal-edit-name"+evaluation_id);
                     closeButton.click();
                 }, 4500);
             } else {
                 addMessage(parentMessage, response['message'], 'alert-danger');
                 timerMessageSlow(parentMessage, "display-none", 3000, true);
                 setTimeout(function() {
-                    var closeButton = document.getElementById("close-modal-edit-name");
+                    var closeButton = document.getElementById("close-modal-edit-name"+evaluation_id);
                     closeButton.click();
                 }, 4500);
             }
@@ -476,6 +476,39 @@ function upgrade(modal_id, form_id, evaluation_id){
                 }
                 upgradeMessage.classList.remove("alert-warning");
                 addMessage(upgradeMessage, response["message"], 'alert-danger');
+                setTimeout(location.reload.bind(location), 3000);
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form);
+}
+
+function duplicate(event, evaluationId, formId) {
+    event.preventDefault();
+    var form = document.getElementById(formId);
+    document.body.style.cursor='wait';
+    var message = document.getElementById("duplicate-message"+evaluationId);
+    message.classList.remove("display-none");
+    var buttons = document.getElementsByTagName('button');
+    for (var button of buttons) {
+        button.disabled = true;
+        button.classList.add("waiting-cursor");
+    }
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            document.body.style.cursor='default';
+            if (response['success']) {
+                // reload to user-profile/evaluation page
+                document.location.href = "evaluations"
+            } else {
+                for (var button of buttons) {
+                    button.disabled = false;
+                    button.classList.remove("waiting-cursor");
+                }
+                message.classList.replace("alert-warning", "alter-danger");
+                message.textContent = response["message"]
                 setTimeout(location.reload.bind(location), 3000);
             }
         }

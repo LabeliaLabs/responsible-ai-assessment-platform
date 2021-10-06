@@ -7,13 +7,20 @@ from django.http import HttpResponse
 from django.utils.translation import gettext as _
 from django.shortcuts import redirect
 
-from home.models import Organisation, User
-from assessment.models import Evaluation, Assessment
-from home.forms import (DashboardUsersStatsTabFilterForm, DashboardOrganisationsStatsTabFilterForm,
-                        DashboardEvaluationsStatsTabFilterForm)
+from home.models import Organisation, User, PlatformManagement
+from assessment.models import Evaluation, Assessment, Labelling
+from home.forms import (
+    DashboardUsersStatsTabFilterForm,
+    DashboardOrganisationsStatsTabFilterForm,
+    DashboardEvaluationsStatsTabFilterForm
+)
 
 
 class DashboardView(TemplateView):
+    """
+    This class defines the admin dashboard page which is composed of several subpages (stats, labelling).
+    It is accessible only for admin users.
+    """
     template_name = "home/dashboard/dashboard-admin.html"
 
     users_form = DashboardUsersStatsTabFilterForm
@@ -34,6 +41,9 @@ class DashboardView(TemplateView):
         """
         if not request.user.is_staff:
             return redirect("home:homepage")
+
+        self.context["tab"] = kwargs.get("tab", "stats")
+
         # initialize the forms and pass them as context
         self.context["users_filters_form"] = self.users_form
         self.context["organisations_filters_form"] = self.organisations_form
@@ -80,6 +90,10 @@ class DashboardView(TemplateView):
         self.context["nb_in_progress_evals"] = evals_stats["nb_evaluations_in_progress"]
         self.context["evals_count_per_version"] = zip(versions_list, evals_count_per_version)
         self.context["eval_creation_date"] = evals_stats["eval_creation_date"]
+
+        # Manage the labellings
+        self.context["labellings"] = [labelling for labelling in Labelling.objects.all()]
+        self.context["labelling_threshold"] = PlatformManagement.get_labelling_threshold()
 
         return self.render_to_response(self.context)
 

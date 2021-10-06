@@ -9,7 +9,7 @@
          {% csrf_token %}
         <div class="modal-header">
             <h4 class="modal-title">{% trans "Do you want to change the name of your evaluation?" %} </h4>
-            <button class="close" data-dismiss="modal" type="button" id="close-modal-edit-name">&times;</button>
+            <button class="close" data-dismiss="modal" type="button" id="close-modal-edit-name{{evaluation.id}}">&times;</button>
         </div>
         <div class="modal-body create-form width-50">
             <div class="column">

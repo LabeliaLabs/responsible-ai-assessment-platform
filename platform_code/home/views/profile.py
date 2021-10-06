@@ -12,7 +12,6 @@ from assessment.models import (
     Evaluation,
     EvaluationElement,
 )
-
 from assessment.views.utils.edit_evaluation_name import treat_evaluation_name_edition
 from assessment.views.utils.error_handler import (
     error_500_view_handler,
@@ -28,7 +27,7 @@ from assessment.views.utils.utils import (
     treat_archive_note,
 )
 from home.forms import OrganisationCreationForm
-from home.models import User, Membership
+from home.models import User, Membership, PlatformManagement
 from .utils import (
     organisation_creation,
     manage_user_resource,
@@ -56,6 +55,9 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         user_resources = manage_user_resource(request)
         if not user_resources:
             error_500_view_handler(request, exception=MultipleObjectsReturned())
+
+        # Manage the tab of the profile page which is displayed, called in the url, default "evaluations"
+        self.context['tab'] = kwargs.get("tab", "evaluations")
 
         # Add resources to context
         self.context = add_resources_dictionary(self.context, user, user_resources)
@@ -87,6 +89,11 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         self.context["new_evaluation_form"] = EvaluationMutliOrgaForm(
             user=user, prefix="evaluation-creation"
         )
+
+        # Get the labelable evaluations
+        self.add_labelable_evaluation()
+        self.context["labelling_threshold"] = PlatformManagement.get_labelling_threshold()
+
         self.context = add_last_version_last_assessment_dictionary(self.context)
         self.context["change_logs"] = get_all_change_logs()
         return self.render_to_response(self.context)
@@ -126,9 +133,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                 if (
                         len(user.get_list_organisations_where_user_as_role(role="admin"))
                         >= 1
-                        or len(
-                         user.get_list_organisations_where_user_as_role(role="editor")
-                             )
+                        or len(user.get_list_organisations_where_user_as_role(role="editor"))
                         >= 1
                 ):
                     form = EvaluationMutliOrgaForm(
@@ -212,6 +217,20 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             self.context["evaluation_form_dic"][str(evaluation.id)] = EvaluationForm(
                 name=evaluation.name, auto_id=False
             )
+
+    def add_labelable_evaluation(self):
+        """
+        List the user's evaluations - so in the context as 'evaluations' - which are
+        completed and have a score above the platform_management labelling_threshold.
+        """
+
+        self.context["labelable_evaluations"] = [
+            evaluation for evaluation in self.context["evaluations"]
+            if (evaluation.is_finished and
+                (self.context["evaluation_score_dic"][evaluation.id] >=
+                 PlatformManagement.get_labelling_threshold() or evaluation.has_labelling()))
+            or evaluation.has_labelling()
+        ]
 
     def add_notes_context(self, user):
         """

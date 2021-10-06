@@ -38,6 +38,7 @@ class PlatformManagement(models.Model):
     activate_multi_languages = models.BooleanField(default=False, help_text="This should not be activated if an "
                                                                             "assessment does not exist both in French "
                                                                             "and English")
+    labelling_threshold = models.FloatField(default=45)
 
     def __str__(self):
         return "Platform management"
@@ -53,6 +54,21 @@ class PlatformManagement(models.Model):
             created_obj = cls()
             created_obj.save()
             return created_obj
+
+    @classmethod
+    def get_labelling_threshold(cls):
+        """
+        Get the labelling threshold of the platform management object
+        """
+        return cls.get_or_create().labelling_threshold
+
+    def set_labelling_threshold(self, value):
+        """
+        Set the labelling_threshold field if value is a float
+        """
+        if value and (isinstance(value, float) or isinstance(value, int)):
+            self.labelling_threshold = value
+            self.save()
 
 
 class UserManager(BaseUserManager):

@@ -28,10 +28,7 @@ body{
 
 .container-platform{
     max-width: max-content;
-    margin-right: 10px;
-    margin-left: 10px;
-    padding-right: 15px;
-    padding-left: 15px;
+    margin-right: 20px;
 }
 
 .container {
@@ -306,6 +303,16 @@ color: #4D566B;
     margin: auto;
 }
 
+.margin-x-auto {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.margin-x-10-vw {
+    margin-left: 10vw;
+    margin-right: 10vw;
+}
+
 .margin-left-em{
     margin-left: 0.2em;
 }
@@ -330,19 +337,19 @@ color: #4D566B;
 
 /********************************************** WIDTH ********************************************************/
 
-.same-size-100{
+.same-size-100 {
    width: 100px;
 }
 
-.same-size-220{
+.same-size-220 {
     width: 220px;
 }
 
-.same-size-250{
+.same-size-250 {
     width: 250px;
 }
 
-.same-size-280{
+.same-size-280 {
     width: 280px;
 }
 
@@ -352,6 +359,10 @@ color: #4D566B;
 
 .width-35{    /* edited with media */
     width: 35%;
+}
+
+.width-150px {
+    width: 150px;
 }
 
 .middle-width {  /* media smartphone on it */
@@ -594,6 +605,14 @@ a[name="column-button"]:hover{
     width: 95px;
 }
 
+.large-button {
+    width: 120px;
+}
+
+.btn-labelling {
+    padding: 0.2em 0.5em;
+}
+
 .small-btn{
     width: 40px;
     height: 35px;
@@ -630,7 +649,7 @@ h1 img {
     height: 11em;
 }
 
-.centered-image{
+.centered-image {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -691,6 +710,7 @@ h1 img {
     text-align: -webkit-center;
     columns: 1;
     margin: auto;
+    width: fit-content;
 }
 
 .change-password-form{
@@ -1109,6 +1129,15 @@ h1 img {
     font-size: 16px;
 }
 
+a.navbar-icon-settings {
+    font-size: 18px;
+}
+
+a.navbar-icon-logout {
+    font-size: 20px;
+    margin-top: 1px;
+}
+
 body.navbar-is-fixed-top {
     padding-top: 0 !important;
 }
@@ -1124,6 +1153,10 @@ body.navbar-is-fixed-top {
 
 .navbar-nav .nav-link{
     float: right;
+}
+
+.margin-left-nav-icons {
+    margin-left: 50px;
 }
 
 .icon-navbar{
@@ -1150,7 +1183,7 @@ body.navbar-is-fixed-top {
 }
 
 .expand-navbar {
-    margin-top: 338px;
+    margin-top: 368px;
     -webkit-transition: margin-top 0.3s ease-out;
 }
 
@@ -1275,6 +1308,7 @@ body.navbar-is-fixed-top {
 
 .breadcrumbs{
     font-size: 16px;
+    margin-left: 30px;  /* margin of the column at the left (nav-pills) */
 }
 
 .active-breadcrumb{
@@ -1313,6 +1347,22 @@ body.navbar-is-fixed-top {
 /************************************************ END RESULTS ***********************************************/
 
 /******************************************* ADMIN DASHBOARD *****************************************/
+
+.menu-buttons {
+    width: fit-content;
+    border-bottom: solid lightgrey;
+    padding: 10px;
+}
+
+a[name="menu-button"].nav-link.active {
+    background-color: #5550ff;
+    color: white;
+}
+
+#table-label-admin > table,
+#table-label-admin > table > thead > tr > th{
+    font-size: 16px;
+}
 
 .reset-filter-btn {
     background: none!important;
@@ -1362,6 +1412,12 @@ body.navbar-is-fixed-top {
     color: #5550FF;
     position:relative;
     font-size: 1rem;
+}
+
+.labelling-threshold {
+    position: absolute;
+    right: 35px;
+    top: 130px;
 }
 
 /******************************************** END DASHBOARD ******************************************/
@@ -1476,6 +1532,23 @@ body.navbar-is-fixed-top {
 
 /************************************************ DIVERS ***************************************************/
 
+.container {
+    max-width: calc(100% - 35px);
+}
+
+.row-pills-table {
+    display: flex;
+}
+
+.resource-wrapper {
+    width: 70vw;
+    margin: auto;
+}
+
+.static-wrapper {
+    width: 80vw;
+    margin: auto
+}
 
 .evaluation-title {
     text-align: center;
@@ -1484,8 +1557,14 @@ body.navbar-is-fixed-top {
 }
 
 .data-nav-pills{
-    max-width: 45em;
+    /* max-width: 45em; */
     margin-top: 50px;
+    margin-left: 30px;
+    max-width: 70vw;
+}
+
+.column-right {
+    width: min-content;
 }
 
 .about-subtitle{
@@ -1618,6 +1697,10 @@ tr.spaceUnder>td {
 
 #content-wrap {
   padding-bottom: 10rem;    /* Footer height */  /* check if used */
+}
+
+#content-user-notes {
+    width: 60vw;
 }
 
 

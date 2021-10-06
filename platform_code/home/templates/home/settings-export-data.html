@@ -2,18 +2,16 @@
 {% load assessment_tags %}
 {% load i18n %}
 
-<div>
-    <h3 class="settings-subtitle">{% trans "Personnal data export" %}</h3>
 
-    <div class="margin-50 center-smartphone">
-        <p>{% trans "Do you want to download your personnal data stored in the platform?" %}</p>
-    </div>
-    <div class="center-smartphone">
-    <form action="{% url 'home:export-user-data' %}">
-        <input class="btn btn-primary float-left-larger-tablet"
-               type="submit"
-               value="{% trans 'Download' %}"/>
-    </form>
-    </div>
+<h3 class="settings-subtitle">{% trans "Personnal data export" %}</h3>
 
+<div class="margin-50 center-smartphone">
+    <p>{% trans "Do you want to download your personnal data stored in the platform?" %}</p>
+</div>
+<div class="center-smartphone">
+<form action="{% url 'home:export-user-data' %}">
+    <input class="btn btn-primary float-left-larger-tablet"
+           type="submit"
+           value="{% trans 'Download' %}"/>
+</form>
 </div>

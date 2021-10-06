@@ -5,7 +5,7 @@
 
 {% block content %}
 
-<div class="breadcrumbs column-right-margin-left">
+<div class="breadcrumbs">
     <a class="active-breadcrumb" href="#">{% trans 'Dashboard' %}</a>
     <span> ></span>
     <a class="active-breadcrumb" href="#" id="active-profile"><span>{% trans "My evaluations" %}</span></a>
@@ -22,37 +22,44 @@
 </ul>
 {% endif %}
 
-<div class="container">
-    <div class="row ">
-        <div class="col-ms-3 container-platform column-right column-right-margin-left">
+<div class="">
+    <div class="row-pills-table">
+        <div class="col-ms-3 container-platform column-right">
             <ul class="nav nav-pills nav-stacked flex-column table-column-profile" role="tablist">
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column active" data-toggle="pill" href="#content-eval"
+                    <a class="nav-link profile-column {% if tab == 'evaluations' %} active {% endif %}"
+                       data-toggle="pill" href="#content-eval"
                        id="tab-eval" name="column-button"
                        onclick="displayTextLink('{% trans 'My evaluations' %}', 'active-profile')"
                     >{% trans "My evaluations" %}</a>
                 </li>
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column" data-toggle="pill" href="#content-orga"
+                    <a class="nav-link profile-column {% if tab == 'organisations' %} active {% endif %}"
+                       data-toggle="pill" href="#content-orga"
                        id="tab-orga" name="column-button"
                        onclick="displayTextLink('{% trans 'My organisations' %}', 'active-profile')">
                         {% trans "Organisation" %}</a>
                 </li>
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column" data-toggle="pill" href="#content-ressource"
+                    <a class="nav-link profile-column {% if tab == 'labelling' %} active {% endif %}"
+                       data-toggle="pill" href="#content-labelling"
+                       id="tab-labelling" name="column-button"
+                       onclick="displayTextLink('{% trans 'Labelling' %}', 'active-profile')"
+                    >{% trans "Labelling" %}</a>
+                </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column {% if tab == 'resources' %} active {% endif %}"
+                       data-toggle="pill" href="#content-ressource"
                        id="tab-resource" name="column-button"
                        onclick="displayTextLink('{% trans 'My resources' %}', 'active-profile')"
                     >{% trans "My resources" %}</a>
                 </li>
                 <li class="nav-item column-button">
-                    <a class="nav-link profile-column" data-toggle="pill" href="#content-user-notes"
+                    <a class="nav-link profile-column {% if tab == 'notes' %} active {% endif %}"
+                       data-toggle="pill" href="#content-user-notes"
                        id="tab-user-notes" name="column-button"
                        onclick="displayTextLink('{% trans 'My notes' %}', 'active-profile')"
                     >{% trans "My notes" %}</a>
-                </li>
-                <li class="nav-item column-button">
-                    <a class="nav-link profile-column" href="{% url 'home:user-profile-settings'%}"
-                       name="column-button">{% trans "User settings" %}</a>
                 </li>
                  <li class="nav-item column-button">
                     <a class="nav-link profile-column" data-toggle="pill" href="#content-change-logs"
@@ -62,16 +69,24 @@
         </div>
         <div class="data-nav-pills">
             <div class="tab-content">
-                <div class="container-profile tab-pane active small-screen-max-center" id="content-eval"><br>
+                <div class="container-profile tab-pane small-screen-max-center margin-left-medium-screen {% if tab == 'evaluations' %} active {% else %} fade {% endif %}"
+                     id="content-eval">
                     {% include "home/profile-user-evaluations.html" %}
                 </div>
-                <div class="container-profile tab-pane fade small-screen-max-center" id="content-orga">
+                <div class="container-profile tab-pane small-screen-max-center {% if tab == 'organisations' %} active {% else %} fade {% endif %}"
+                     id="content-orga">
                     {% include "home/profile-orga-cards.html" %}
                 </div>
-                <div class="container-profile tab-pane fade" id="content-ressource"><br>
+                <div class="container-profile tab-pane small-screen-max-center {% if tab == 'labelling' %} active {% else %} fade {% endif %}"
+                     id="content-labelling">
+                    {% include "home/profile-labelling.html" %}
+                </div>
+                <div class="container-profile tab-pane {% if tab == 'resources' %} active {% else %} fade {% endif %}"
+                     id="content-ressource"><br>
                     {% include "home/profile-my-ressources.html" %}
                 </div>
-                <div class="container-profile tab-pane fade" id="content-user-notes"><br>
+                <div class="container-profile tab-pane {% if tab == 'notes' %} active {% else %} fade {% endif %}"
+                     id="content-user-notes"><br>
                     {% include "home/profile-user-notes.html" %}
                 </div>
                 <div class="container-profile tab-pane fade" id="content-change-logs">

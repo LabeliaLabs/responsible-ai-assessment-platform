@@ -94,7 +94,10 @@ def order_elements_of_section(section):
 
 @register.filter
 def format_date_calendar(string_date):
-    return string_date.strftime("%d/%m/%Y")
+    if string_date:
+        return string_date.strftime("%d/%m/%Y")
+    else:
+        return '-'
 
 
 @register.filter
@@ -120,6 +123,17 @@ def evaluation_created_by(member, evaluation_list):
     if len(string_to_display) > 0:
         string_to_display = string_to_display[:-2]
     return string_to_display
+
+
+@register.filter
+def user_can_edit_evaluation(evaluation, user):
+    """
+    Check if the user can edit the evaluation (member as editor or admin) and
+    that the evaluation is editable.
+    Used to blocked the buttons
+    """
+    user_can_edit = evaluation.organisation.check_user_is_member_and_can_edit_evaluations(user)
+    return user_can_edit and evaluation.is_editable
 
 
 @register.filter

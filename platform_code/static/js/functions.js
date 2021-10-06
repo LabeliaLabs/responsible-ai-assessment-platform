@@ -427,14 +427,14 @@ function changeNameEvaluation(form_id, evaluation_id) {
                 }
 
                 setTimeout(function() {
-                    var closeButton = document.getElementById("close-modal-edit-name");
+                    var closeButton = document.getElementById("close-modal-edit-name"+evaluation_id);
                     closeButton.click();
                 }, 4500);
             } else {
                 addMessage(parentMessage, response['message'], 'alert-danger');
                 timerMessageSlow(parentMessage, "display-none", 3000, true);
                 setTimeout(function() {
-                    var closeButton = document.getElementById("close-modal-edit-name");
+                    var closeButton = document.getElementById("close-modal-edit-name"+evaluation_id);
                     closeButton.click();
                 }, 4500);
             }

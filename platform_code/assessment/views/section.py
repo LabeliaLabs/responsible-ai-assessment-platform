@@ -188,7 +188,9 @@ class SectionView(LoginRequiredMixin, ListView):
                 else:
                     if not can_edit_security_check(request, organisation=organisation):
                         self.data_update["message"] = _("You don't have the right to do this action.")
-                    # User has the right to do an action
+                    elif not evaluation.is_editable:
+                        self.data_update["message"] = _("The evaluation is not editable.")
+                    # User has the right to do an action and evaluation is editable
                     else:
                         # If the user writes notes for the section
                         if "notes_section_id" in request.POST:

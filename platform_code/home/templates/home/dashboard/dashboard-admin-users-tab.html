@@ -5,7 +5,7 @@
 <div class="tab-content" id="nav-tabContent">
     <div aria-labelledby="nav-user-tab" class="tab-pane fade show active center" id="nav-user" role="tabpanel">
         <div id="users-filter-form-container" class="margin-30 center">
-            <form action="{% url 'home:dashboard-view' %}" class="attribute-form-bis"
+            <form action="{% url 'home:admin-dashboard' %}" class="attribute-form-bis"
                   method="post" id="users-filter-form" role="form">
                 {% csrf_token %}
                     <div>

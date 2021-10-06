@@ -7,7 +7,7 @@ from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404
 
 from assessment.models import Evaluation, get_last_assessment_created
-from assessment.views.utils.security_checks import membership_security_check
+from assessment.views.utils.security_checks import can_edit_security_check
 from assessment.views.utils.utils import manage_upgrade_next_url, manage_missing_language
 from home.models import Organisation
 
@@ -27,7 +27,7 @@ def upgradeView(request, *args, **kwargs):
         Organisation, id=organisation_id
     )  # Get 404 if orga_id doesn't exist
     # Check if the user is member of the organisation (caught in the url), if not, return HttpResponseForbidden
-    if not membership_security_check(request, organisation=organisation):
+    if not can_edit_security_check(request, organisation=organisation):
         return redirect("home:homepage")
 
     evaluation_id = kwargs.get("pk")

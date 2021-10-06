@@ -6,16 +6,14 @@
 {% block content %}
 
 <div class="breadcrumbs">
-    <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
-    <span> ></span>
     <a class="active-breadcrumb" href="#">{% trans 'User settings' %}</a>
     <span> ></span>
     <a class="active-breadcrumb" href="#" id="active-profile-settings"><span>{% trans "My information" %}</span></a>
 </div>
 
 <h1 class="h1-margin-breadcrumbs">{% trans "My account" %}</h1>
-<div class="container">
-    <div class="row ">
+<div class="">
+    <div class="row-pills-table">
         <div class="col-md-3 column-right profile-settings-pills">
             <ul class="nav nav-pills nav-stacked flex-column table-column-profile"
                 role="tablist">
@@ -49,18 +47,22 @@
                 </li>
             </ul>
         </div>
-        <div class="col-md-9">
+        <div class="data-nav-pills">
             <div class="tab-content">
-                <div class="container tab-pane active" id="content-username"><br>
+                <div class="tab-pane active small-screen-max-center"
+                     id="content-username">
                     {% include "home/settings-data.html" %}
                 </div>
-                <div class="container tab-pane fade" id="content-password"><br>
+                <div class="tab-pane fade small-screen-max-center"
+                     id="content-password"><br>
                     {% include "home/settings-password.html" %}
                 </div>
-                <div class="container tab-pane fade" id="content-export"><br>
+                <div class="tab-pane fade small-screen-max-center"
+                     id="content-export"><br>
                     {% include "home/settings-export-data.html" %}
                 </div>
-                <div class="container tab-pane fade" id="content-delete"><br>
+                <div class="container-profile tab-pane fade small-screen-max-center"
+                     id="content-delete"><br>
                     {% include "home/settings-delete.html" %}
                 </div>
             </div>
@@ -68,11 +70,11 @@
     </div>
 </div>
 
-<form action="{% url 'home:user-profile' %}"
-      class="center-smartphone">
-    <input class="btn btn-primary bottom-page-button float-right-larger-tablet same-size-280 " type="submit"
-           value="{% trans 'Go back to my dashboard' %}"/>
-</form>
+<!--<form action="{% url 'home:user-profile' %}"-->
+<!--      class="center-smartphone">-->
+<!--    <input class="btn btn-primary bottom-page-button float-right-larger-tablet same-size-280 " type="submit"-->
+<!--           value="{% trans 'Go back to my dashboard' %}"/>-->
+<!--</form>-->
 
 
 {% endblock %}
