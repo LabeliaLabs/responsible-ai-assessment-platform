@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-06 18:25+0200\n"
+"POT-Creation-Date: 2021-10-08 10:38+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,7 +105,7 @@ msgstr "Titre de l'évaluation"
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:11
 #: .\platform_code\assessment\templates\assessment\section.html:11
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:26
-#: .\platform_code\home\templates\home\profile-labelling.html:23
+#: .\platform_code\home\templates\home\profile-labelling.html:22
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:19
 #: .\platform_code\home\templates\home\profile.html:41
 msgid "Organisation"
@@ -135,7 +135,7 @@ msgstr "Entrer vos notes sur l'élément d'évaluation ici."
 #: .\platform_code\assessment\forms.py:429
 #: .\platform_code\assessment\forms.py:671
 #: .\platform_code\assessment\forms.py:683
-#: .\platform_code\assessment\templates\assessment\results.html:211
+#: .\platform_code\assessment\templates\assessment\results.html:229
 msgid "Answer justification"
 msgstr "Justification"
 
@@ -177,12 +177,10 @@ msgid "justification"
 msgstr "justification"
 
 #: .\platform_code\assessment\models.py:999
-#: .\platform_code\home\templates\home\profile-labelling.html:55
 msgid "labelled"
 msgstr "labellisée"
 
 #: .\platform_code\assessment\models.py:1000
-#: .\platform_code\home\templates\home\profile-labelling.html:53
 msgid "refused"
 msgstr "refusée"
 
@@ -309,8 +307,9 @@ msgstr "Valider"
 #: .\platform_code\assessment\templates\assessment\content-section.html:190
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:73
 #: .\platform_code\assessment\templates\assessment\organisation\orga-settings.html:48
-#: .\platform_code\assessment\templates\assessment\results.html:150
-#: .\platform_code\home\templates\home\profile-labelling.html:75
+#: .\platform_code\assessment\templates\assessment\results.html:151
+#: .\platform_code\assessment\templates\assessment\results.html:155
+#: .\platform_code\home\templates\home\profile-labelling.html:74
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:77
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:102
 #: .\platform_code\home\templates\home\settings-data.html:22
@@ -503,7 +502,7 @@ msgstr "Date de creation"
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:13
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:37
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:25
-#: .\platform_code\home\templates\home\profile-labelling.html:22
+#: .\platform_code\home\templates\home\profile-labelling.html:21
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:18
 #: .\platform_code\home\templates\home\release-notes.html:24
 #: .\platform_code\home\templates\home\release-notes.html:43
@@ -535,15 +534,13 @@ msgstr "Initier le processus de labellisation"
 
 #: .\platform_code\assessment\templates\assessment\labelling\create-labelling-modal.html:11
 msgid ""
-"Do you confirm that you have read the <a href=\"https://www.labelia.org/en/"
-"eligibilite-et-conditions\" target=\"_blank\">general conditions of use, the "
-"pricing conditions and that you have the mandate</a> to initiate a labeling "
-"request?"
+"Do you confirm that you are aware of <a href=\"https://www.labelia.org/fr/"
+"eligibilite-et-conditions\" target=\"_blank\">how to become certified and "
+"the pricing conditions</a>?"
 msgstr ""
-"Confirmez-vous avoir pris connaissance des <a href=\"https://www.labelia.org/"
-"fr/eligibilite-et-conditions\" target=\"_blank\"> conditions générales "
-"d'utilisation, les conditions de tarifications et que vous avez le mandat</"
-"a> pour initier une demande de labellisation ?"
+"Confirmez-vous avoir pris connaissance de <a href=\"https://www.labelia.org/"
+"fr/eligibilite-et-conditions\" target=\"_blank\"> comment être "
+"labellisé et des conditions de tarifications</a> ?"
 
 #: .\platform_code\assessment\templates\assessment\labelling\create-labelling-modal.html:24
 msgid "Confirm"
@@ -828,7 +825,7 @@ msgid "Evaluation's name"
 msgstr "Nom de l'évaluation"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:14
-#: .\platform_code\home\templates\home\profile-labelling.html:24
+#: .\platform_code\home\templates\home\profile-labelling.html:23
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:20
 msgid "Creation date"
 msgstr "Créée le"
@@ -846,14 +843,14 @@ msgstr "Progression"
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:17
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:28
 #: .\platform_code\home\templates\home\faq.html:126
-#: .\platform_code\home\templates\home\profile-labelling.html:25
+#: .\platform_code\home\templates\home\profile-labelling.html:24
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:23
 msgid "Score"
 msgstr "Score"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:18
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:34
-#: .\platform_code\home\templates\home\profile-labelling.html:28
+#: .\platform_code\home\templates\home\profile-labelling.html:27
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:25
 msgid "Action"
 msgstr "Action"
@@ -1134,20 +1131,35 @@ msgstr ""
 msgid "Back to organisation"
 msgstr "Retour à l'organisation"
 
-#: .\platform_code\assessment\templates\assessment\results.html:154
+#: .\platform_code\assessment\templates\assessment\results.html:155
+msgid "You cannot edit an evaluation with a labelling process"
+msgstr ""
+"Vous ne pouvez pas éditer une évaluation avec un processus de labellisation "
+"en cours"
+
+#: .\platform_code\assessment\templates\assessment\results.html:162
+#: .\platform_code\home\templates\home\profile-labelling.html:97
+msgid "Initiate labelling"
+msgstr "Initier une labellisation"
+
+#: .\platform_code\assessment\templates\assessment\results.html:166
+msgid "See labelling"
+msgstr "Voir les labellisations"
+
+#: .\platform_code\assessment\templates\assessment\results.html:172
 msgid "Export PDF"
 msgstr "Export PDF"
 
-#: .\platform_code\assessment\templates\assessment\results.html:159
+#: .\platform_code\assessment\templates\assessment\results.html:177
 msgid "Your answers"
 msgstr "Vos réponses"
 
-#: .\platform_code\assessment\templates\assessment\results.html:183
+#: .\platform_code\assessment\templates\assessment\results.html:201
 #: .\platform_code\assessment\views\resultsPDF.py:505
 msgid "You are not concerned by this evaluation element"
 msgstr "Vous n'êtes pas concerné par cet élément d'évaluation"
 
-#: .\platform_code\assessment\templates\assessment\results.html:188
+#: .\platform_code\assessment\templates\assessment\results.html:206
 #: .\platform_code\assessment\templates\assessment\sidebar.html:8
 #: .\platform_code\assessment\templates\assessment\sidebar.html:9
 #: .\platform_code\assessment\templates\assessment\sidebar.html:13
@@ -1155,14 +1167,14 @@ msgstr "Vous n'êtes pas concerné par cet élément d'évaluation"
 msgid ":"
 msgstr " :"
 
-#: .\platform_code\assessment\templates\assessment\results.html:194
+#: .\platform_code\assessment\templates\assessment\results.html:212
 msgid ""
 ": Please select one answer which best matches to your organisation situation"
 msgstr ""
 " : Veuillez sélectionner une seule réponse correspondant le mieux à la "
 "maturité de l'organisation à ce sujet"
 
-#: .\platform_code\assessment\templates\assessment\results.html:200
+#: .\platform_code\assessment\templates\assessment\results.html:218
 msgid ""
 ": Please select all the answers which best match to your organisation "
 "situation. Be careful, some combinations are not coherent."
@@ -1171,7 +1183,7 @@ msgstr ""
 "pratiques de votre organisation. Attention, certaines combinaisons ne "
 "seraient pas cohérentes"
 
-#: .\platform_code\assessment\templates\assessment\results.html:228
+#: .\platform_code\assessment\templates\assessment\results.html:246
 msgid "Top of the page"
 msgstr "Retour haut de page"
 
@@ -1237,7 +1249,8 @@ msgstr ""
 msgid ""
 "Your evaluation has been duplicated. The duplicate is {str(new_evaluation)}"
 msgstr ""
-"Votre évaluation a bien été dupliquée. La nouvelle évaluation dupliquée s'appelle {str(new_evaluation)}"
+"Votre évaluation a bien été dupliquée. La nouvelle évaluation dupliquée "
+"s'appelle {str(new_evaluation)}"
 
 #: .\platform_code\assessment\views\duplicate.py:61
 #: .\platform_code\assessment\views\duplicate.py:62
@@ -1295,9 +1308,13 @@ msgid ""
 "support."
 msgstr "Il y a un problème technique. Veuillez contacter le support technique."
 
-#: .\platform_code\assessment\views\labelling.py:146
-msgid "The labelling has well been "
-msgstr "La labellisation a bien été "
+#: .\platform_code\assessment\views\labelling.py:148
+msgid ""
+"The labelling has well been {'rejected' if status == 'rejection' else "
+"'validated'}."
+msgstr ""
+"Le processus de labellisation a bien été {'rejeté' if status == 'rejection' "
+"else 'validé'}"
 
 #: .\platform_code\assessment\views\organisation.py:58
 msgid "An issue occurred."
@@ -1401,13 +1418,13 @@ msgstr "Les informations sur l'organisation ont été mises à jour !"
 msgid "An error occurred, please verify the data you entered."
 msgstr "Un problème est survenu. Vérifiez les données que vous avez saisies."
 
-#: .\platform_code\assessment\views\results.py:75
-#: .\platform_code\assessment\views\results.py:77
+#: .\platform_code\assessment\views\results.py:76
+#: .\platform_code\assessment\views\results.py:78
 #: .\platform_code\home\templates\home\profile-change-logs.html:57
 msgid ": "
 msgstr " : "
 
-#: .\platform_code\assessment\views\results.py:88
+#: .\platform_code\assessment\views\results.py:89
 #: .\platform_code\assessment\views\resultsPDF.py:878
 msgid "You cannot do this action!"
 msgstr "Vous ne pouvez pas faire cette action !"
@@ -1873,7 +1890,7 @@ msgstr "Nombre d'évaluations : "
 
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:55
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:32
-#: .\platform_code\home\templates\home\profile-labelling.html:26
+#: .\platform_code\home\templates\home\profile-labelling.html:25
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:24
 msgid "Status"
 msgstr "Statut"
@@ -1946,14 +1963,14 @@ msgstr "Stats"
 #: .\platform_code\home\templates\home\profile.html:47
 #: .\platform_code\home\templates\home\profile.html:48
 msgid "Labelling"
-msgstr "Labellisations"
+msgstr "Labellisation"
 
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:6
 msgid "Current labelling threshold:"
 msgstr "Seuil actuel de labellisation"
 
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:24
-#: .\platform_code\home\templates\home\profile-labelling.html:21
+#: .\platform_code\home\templates\home\profile-labelling.html:20
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:17
 msgid "Evaluation name"
 msgstr "Nom de l'évaluation"
@@ -1967,7 +1984,7 @@ msgid "Submission date"
 msgstr "Date de soumission"
 
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:30
-#: .\platform_code\home\templates\home\profile-labelling.html:27
+#: .\platform_code\home\templates\home\profile-labelling.html:26
 msgid "Number of submissions"
 msgstr "Nombre de soumissions"
 
@@ -1985,7 +2002,7 @@ msgstr "Justifications"
 
 #: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:76
 msgid "Reject"
-msgstr "Rejeté"
+msgstr "Rejeter"
 
 #: .\platform_code\home\templates\home\dashboard\dashboard-stats.html:5
 msgid "Statistics"
@@ -2342,98 +2359,60 @@ msgid "About Substra Foundation"
 msgstr "À propos de Substra Foundation"
 
 #: .\platform_code\home\templates\home\faq.html:213
-#: .\platform_code\home\templates\home\faq.html:215
-msgid "https://www.substra.ai/en/about-substra-foundation"
-msgstr "https://www.substra.ai/fr/about-substra-foundation"
-
-#: .\platform_code\home\templates\home\faq.html:216
 msgid ""
-"is a non-profit organisation whose mission is to contribute to the "
-"development of collaborative, responsible and trustworthy data science. It "
-"is dedicated to the following 5 projects:"
-msgstr ""
-"est une association loi 1901 qui s'est donné pour mission de contribuer au "
-"développement de la data science collaborative, responsable et de confiance. "
-"Elle se consacre aux 5 projets suivants :"
+"Since 2019, Labelia Labs has been bringing together Data Science "
+"practitioners through a <a href=\"https://www.meetup.com/fr-FR/data-science-"
+"responsable-et-de-confiance/\" traget=\"_blank\">Meetup</a> with over 300 "
+"members to concretely and operationally explore best practices, resources, "
+"and tools to bring about a positive practice of Artificial Intelligence, "
+"limiting risks and negative externalities."
+msgstr "Depuis 2019, Labelia Labs réunit les praticiens de la Data Science "
+"à travers un <a href=\"https://www.meetup.com/fr-FR/data-science-"
+"responsable-et-de-confiance/\" traget=\"_blank\">Meetup</a> qui compte "
+"plus de 300 membres afin d’explorer concrètement et opérationnellement "
+"les bonnes pratiques, les ressources, les outils permettant de faire "
+"émerger une pratique de l’Intelligence Artificielle positive, "
+"limitant les risques et externalités négatives."
 
-#: .\platform_code\home\templates\home\faq.html:222
+#: .\platform_code\home\templates\home\faq.html:221
 msgid ""
-"Substra Assessment: a self-assessment and self-training tool on risks and "
-"good practices on the theme of responsible and trustworthy data science."
+"Thanks to this community, a digital commons has been created: <a href="
+"\"https://github.com/SubstraFoundation/referentiel-evaluation-dsrc/blob/"
+"master/referentiel_evaluation.md\" target=\"_blank\">the Responsible and "
+"Trustworthy Data Science Assessment </a>. Evolving biannually and overseen "
+"by an independent committee, this commons identifies assessment points, best "
+"practices, resources and technical tools for responsible AI."
 msgstr ""
-"Substra Assessment : un outil d'auto-évaluation et d'auto-formation aux "
-"risques et bonnes pratiques sur le thème de la data science responsable et "
-"de confiance."
-
-#: .\platform_code\home\templates\home\faq.html:227
-msgid "https://doc.substra.ai/"
-msgstr "https://doc.substra.ai/"
-
-#: .\platform_code\home\templates\home\faq.html:229
-msgid "Substra Framework: "
-msgstr "Framework Substra :"
+"Grâce à cette communauté, un commun numérique a été créé : "
+"<a href=\"https://github.com/SubstraFoundation/referentiel-evaluation-dsrc/blob/"
+"master/referentiel_evaluation.md\" target=\"_blank\">le Référentiel d’évaluation de la "
+"Data Science Responsable et de Confiance</a>. Évoluant semestriellement et supervisé "
+"par un comité indépendant, ce commun recense les points d'évaluation, "
+"les bonnes pratiques, les ressources et outils techniques pour une IA responsable."
 
 #: .\platform_code\home\templates\home\faq.html:230
 msgid ""
-"the association promotes, animates and contributes to the open source "
-"project Substra, a framework for the secure, traceable and decentralised "
-"orchestration of ML tasks. It is based on Hyperledger Fabric, the reference "
-"DLT framework hosted by the Linux Foundation. Substra is developed by Owkin "
-"and published under the Apache 2.0 license to foster the emergence of new "
-"use cases and open up open source collaborations."
+"In order to help practitioners in a concrete way, Labelia Labs has set up <a "
+"href=\"https://assessment.labelia.org/en/\" target=\"_blank\">evaluation and "
+"rating platform </a> allowing any organization to evaluate its level of "
+"maturity regarding its practices."
 msgstr ""
-"l'association promeut, anime et contribue au projet open source Substra, un "
-"framework pour l’orchestration sécurisée, traçable et décentralisée de "
-"tâches de ML. Il est basé sur Hyperledger Fabric, le framework DLT de "
-"référence hébergé par la Fondation Linux. Substra est développé par Owkin et "
-"publiée sous licence Apache 2.0 pour favoriser l'émergence de nouveaux cas "
-"d'usage et ouvrir les collaborations open source."
+"Toujours dans un souci d’aider concrètement les praticiens, Labelia Labs "
+"a mis en place une <a href=\"https://assessment.labelia.org/fr/\" target=\"_blank\">"
+"plateforme d’évaluation et de rating</a> permettant à n’importe quelle organisation "
+"d’évaluer son niveau de maturité quant à ses pratiques."
 
-#: .\platform_code\home\templates\home\faq.html:241
-msgid "MLPC: "
-msgstr "MLPC :"
-
-#: .\platform_code\home\templates\home\faq.html:242
+#: .\platform_code\home\templates\home\faq.html:236
 msgid ""
-"mplc (for Multi-Partner Learning and Contributivity) is a Python library for "
-"simulating distributed learning scenarios and benchmarking different "
-"learning methods and different methods of dataset contributivity assessment."
+"Since October 2021, Labelia Labs offers the most mature organizations to "
+"become <a href=\"https://www.labelia.org/fr/labelia\" target=\"_blank"
+"\">Labelia</a> and join a community of companies applying high standard in "
+"their data science practices."
 msgstr ""
-"mplc (pour Multi-Partner Learning and Contributivity) est une librairie "
-"Python pour simuler des scenarios d'apprentissage distribué et benchmarker "
-"différentes méthodes d'apprentissage et différentes méthodes d'évaluation de "
-"contributivité des datasets."
-
-#: .\platform_code\home\templates\home\faq.html:249
-msgid ""
-"HealthChain: research consortium on federated learning use cases on clinical "
-"data (see description"
-msgstr ""
-"HealthChain : consortium de recherche sur des cas d'usage d'apprentissage "
-"fédéré sur des données cliniques (voir description "
-
-#: .\platform_code\home\templates\home\faq.html:253
-#: .\platform_code\home\templates\home\faq.html:255
-msgid "https://www.substra.ai/en/healthchain-project"
-msgstr "https://www.substra.ai/fr/healthchain-project"
-
-#: .\platform_code\home\templates\home\faq.html:255
-#: .\platform_code\home\templates\home\faq.html:263
-msgid "here"
-msgstr "ici"
-
-#: .\platform_code\home\templates\home\faq.html:257
-msgid ""
-"MELLODDY: research consortium on federated learning use cases on chemical "
-"data (see description"
-msgstr ""
-"MELLODDY : consortium de recherche sur des cas d'usage d'apprentissage "
-"fédéré sur des données chimiques (voir description "
-
-#: .\platform_code\home\templates\home\faq.html:261
-#: .\platform_code\home\templates\home\faq.html:263
-msgid "https://www.substra.ai/en/melloddy-project"
-msgstr "https://www.substra.ai/fr/melloddy-project"
+"Depuis octobre 2021, Labelia Labs propose aux organisations les plus matures "
+"de devenir <a href=\"https://www.labelia.org/fr/labelia\" target=\"_blank"
+"\">Labelia</a> et de rejoindre une communauté des entreprises appliquant "
+"de hauts standards dans leurs pratiques des Data Sciences."
 
 #: .\platform_code\home\templates\home\homepage.html:19
 msgid ""
@@ -2697,30 +2676,40 @@ msgstr "Il n'y actuellement pas un journal des changements"
 #: .\platform_code\home\templates\home\profile-labelling.html:6
 #, python-format
 msgid ""
-"You may request to label a completed evaluation with a score above "
-"%(labelling_threshold)s. <br> This labelling allows you to obtain the "
-"Substra label on responsible and trustworthy data science."
+"You can initiate a labeling request for completed evaluation with a score "
+"above %(labelling_threshold)s to become a Labelia company. Learn more about "
+"Labelia on <a href=\"https://www.labelia.org/fr/labelia\" target=\"_blank"
+"\">our website.</a>"
 msgstr ""
-"Vous pouvez initier une demande de labellisation pour des évaluations "
-"terminées avec un score supérieur à %(labelling_threshold)s. <br> Cela vous "
-"permet d'obtenir le label Substra sur la data science responsable et de "
-"confiance."
+"Vous pouvez initier une demande de labellisation pour des évaluations terminées "
+"avec un score supérieur à %(labelling_threshold)s afin de devenir une entreprise Labelia. Découvrez "
+"Labelia sur <a href=\"https://www.labelia.org/fr/labelia\" target=\"_blank"
+"\">notre site</a>."
 
-#: .\platform_code\home\templates\home\profile-labelling.html:49
+#: .\platform_code\home\templates\home\profile-labelling.html:48
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:62
 msgid "Justification required"
 msgstr "Justification nécessaire"
 
-#: .\platform_code\home\templates\home\profile-labelling.html:51
+#: .\platform_code\home\templates\home\profile-labelling.html:50
 msgid "Ongoing review"
 msgstr "Revue en cours"
 
-#: .\platform_code\home\templates\home\profile-labelling.html:59
+#: .\platform_code\home\templates\home\profile-labelling.html:52
+msgid "Refused"
+msgstr "Refusée"
+
+#: .\platform_code\home\templates\home\profile-labelling.html:54
+#: .\platform_code\home\templates\home\profile-user-evaluations.html:66
+msgid "Labelled"
+msgstr "Labellisée"
+
+#: .\platform_code\home\templates\home\profile-labelling.html:58
 msgid "No labelling process yet"
 msgstr "Pas encore labellisée"
 
-#: .\platform_code\home\templates\home\profile-labelling.html:80
-#: .\platform_code\home\templates\home\profile-labelling.html:85
+#: .\platform_code\home\templates\home\profile-labelling.html:79
+#: .\platform_code\home\templates\home\profile-labelling.html:84
 msgid "Submit again"
 msgstr "Soumettre de nouveau"
 
@@ -2730,17 +2719,13 @@ msgstr "Soumettre de nouveau"
 # msgstr "Rentrez votre nom d'utilisateur et votre mot de passe pour vous "
 # "connecter.\n"
 # " Si vous n'en avez pas, cliquez sur le bouton 'Je n'ai pas de compte'."
-#: .\platform_code\home\templates\home\profile-labelling.html:84
+#: .\platform_code\home\templates\home\profile-labelling.html:83
 msgid "You need to complete your evaluation before submitting again"
 msgstr ""
 "Vous devez d'abord terminée votre évaluation avant de pouvoir soumettre de "
 "nouveau."
 
-#: .\platform_code\home\templates\home\profile-labelling.html:98
-msgid "Initiate labelling"
-msgstr "Initier une labellisation"
-
-#: .\platform_code\home\templates\home\profile-labelling.html:125
+#: .\platform_code\home\templates\home\profile-labelling.html:124
 #, python-format
 msgid ""
 "You do not have a completed evaluation with a score above "
@@ -2871,10 +2856,6 @@ msgstr "Labellisation en cours"
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:64
 msgid "Completed, labelling refused"
 msgstr "Terminée, labellisation refusée"
-
-#: .\platform_code\home\templates\home\profile-user-evaluations.html:66
-msgid "Labelled"
-msgstr "Labellisée"
 
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:81
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:123
@@ -3226,6 +3207,98 @@ msgstr "Admin"
 #: .\platform_code\templates\navbar.html:26
 msgid "Admin Dashboard"
 msgstr "Dashboard admin"
+
+#~ msgid "https://www.substra.ai/en/about-substra-foundation"
+#~ msgstr "https://www.substra.ai/fr/about-substra-foundation"
+
+#~ msgid ""
+#~ "is a non-profit organisation whose mission is to contribute to the "
+#~ "development of collaborative, responsible and trustworthy data science. "
+#~ "It is dedicated to the following 5 projects:"
+#~ msgstr ""
+#~ "est une association loi 1901 qui s'est donné pour mission de contribuer "
+#~ "au développement de la data science collaborative, responsable et de "
+#~ "confiance. Elle se consacre aux 5 projets suivants :"
+
+#~ msgid ""
+#~ "Substra Assessment: a self-assessment and self-training tool on risks and "
+#~ "good practices on the theme of responsible and trustworthy data science."
+#~ msgstr ""
+#~ "Substra Assessment : un outil d'auto-évaluation et d'auto-formation aux "
+#~ "risques et bonnes pratiques sur le thème de la data science responsable "
+#~ "et de confiance."
+
+#~ msgid "https://doc.substra.ai/"
+#~ msgstr "https://doc.substra.ai/"
+
+#~ msgid "Substra Framework: "
+#~ msgstr "Framework Substra :"
+
+#~ msgid ""
+#~ "the association promotes, animates and contributes to the open source "
+#~ "project Substra, a framework for the secure, traceable and decentralised "
+#~ "orchestration of ML tasks. It is based on Hyperledger Fabric, the "
+#~ "reference DLT framework hosted by the Linux Foundation. Substra is "
+#~ "developed by Owkin and published under the Apache 2.0 license to foster "
+#~ "the emergence of new use cases and open up open source collaborations."
+#~ msgstr ""
+#~ "l'association promeut, anime et contribue au projet open source Substra, "
+#~ "un framework pour l’orchestration sécurisée, traçable et décentralisée de "
+#~ "tâches de ML. Il est basé sur Hyperledger Fabric, le framework DLT de "
+#~ "référence hébergé par la Fondation Linux. Substra est développé par Owkin "
+#~ "et publiée sous licence Apache 2.0 pour favoriser l'émergence de nouveaux "
+#~ "cas d'usage et ouvrir les collaborations open source."
+
+#~ msgid "MLPC: "
+#~ msgstr "MLPC :"
+
+#~ msgid ""
+#~ "mplc (for Multi-Partner Learning and Contributivity) is a Python library "
+#~ "for simulating distributed learning scenarios and benchmarking different "
+#~ "learning methods and different methods of dataset contributivity "
+#~ "assessment."
+#~ msgstr ""
+#~ "mplc (pour Multi-Partner Learning and Contributivity) est une librairie "
+#~ "Python pour simuler des scenarios d'apprentissage distribué et "
+#~ "benchmarker différentes méthodes d'apprentissage et différentes méthodes "
+#~ "d'évaluation de contributivité des datasets."
+
+#~ msgid ""
+#~ "HealthChain: research consortium on federated learning use cases on "
+#~ "clinical data (see description"
+#~ msgstr ""
+#~ "HealthChain : consortium de recherche sur des cas d'usage d'apprentissage "
+#~ "fédéré sur des données cliniques (voir description "
+
+#~ msgid "https://www.substra.ai/en/healthchain-project"
+#~ msgstr "https://www.substra.ai/fr/healthchain-project"
+
+#~ msgid "here"
+#~ msgstr "ici"
+
+#~ msgid ""
+#~ "MELLODDY: research consortium on federated learning use cases on chemical "
+#~ "data (see description"
+#~ msgstr ""
+#~ "MELLODDY : consortium de recherche sur des cas d'usage d'apprentissage "
+#~ "fédéré sur des données chimiques (voir description "
+
+#~ msgid "https://www.substra.ai/en/melloddy-project"
+#~ msgstr "https://www.substra.ai/fr/melloddy-project"
+
+#, python-format
+#~ msgid ""
+#~ "You may request to label a completed evaluation with a score above "
+#~ "%(labelling_threshold)s. <br> This labelling allows you to obtain the "
+#~ "Substra label on responsible and trustworthy data science."
+#~ msgstr ""
+#~ "Vous pouvez initier une demande de labellisation pour des évaluations "
+#~ "terminées avec un score supérieur à %(labelling_threshold)s. <br> Cela "
+#~ "vous permet d'obtenir le label Substra sur la data science responsable et "
+#~ "de confiance."
+
+#~ msgid "The labelling has well been "
+#~ msgstr "La labellisation a bien été "
 
 #~ msgid "Your"
 #~ msgstr "Votre"

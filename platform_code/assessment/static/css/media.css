@@ -154,11 +154,6 @@ Inside each section, first you have, if it exists:
     .select-feedback-popin{
         font-size: 12px;
     }
-    /* results */
-    .margin-top-export-pdf{
-        margin-top: 20px;
-    }
-
     .help-tip-edito p {
         width: 280px;
     }
@@ -265,10 +260,6 @@ Inside each section, first you have, if it exists:
     .profile-settings-pills{
         width: 50%;
     }
-    /* results */
-    .margin-top-export-pdf{
-        margin-top: 10px;
-    }
       .help-tip-edito p {
         width: 310px;
     }
@@ -322,6 +313,10 @@ Inside each section, first you have, if it exists:
     }
     .larger-small-screen-absolute-position{
         position: relative;
+    }
+    .results-buttons-grid {
+        grid-template-columns: auto;
+        grid-row-gap: 30px;
     }
     .title-nav-resources{
         text-align: center;
@@ -463,11 +458,6 @@ Inside each section, first you have, if it exists:
     .btn-submit-newsletter{
         margin-top: 15px;
     }
-    /* results */
-    .margin-top-export-pdf{
-        margin-top: 10px;
-    }
-
     /* width of the edito tooltip*/
       .help-tip-edito p {
         width: 350px;
@@ -655,10 +645,6 @@ Inside each section, first you have, if it exists:
 
     .btn-submit-newsletter{
         margin-top: 15px;
-    }
-    /* results */
-    .margin-top-export-pdf{
-        margin-top: 0px;
     }
     .margin-btn-orga-members {
         margin-top: 10px;

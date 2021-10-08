@@ -143,8 +143,10 @@ def labellingEnd(request, *args, **kwargs):
         )
     else:
         evaluation.labelling.set_final_status(status)
-        messages.success(request, _(f"The labelling has well been "
-                                    f"{'rejected' if status == 'rejection' else 'validated'}."))
+        messages.success(
+            request,
+            _(f"The labelling has well been {'rejected' if status == 'rejection' else 'validated'}.")
+        )
     return redirect('home:admin-dashboard', 'labelling')
 
 
@@ -161,7 +163,7 @@ def send_labelling_email(request, user, organisation, evaluation, mail_subject, 
         'evaluation': evaluation,
         'organisation': organisation,
     })
-    to_email = os.environ.get("EMAIL_USER"),
+    to_email = os.environ.get("EMAIL_USER")
     email = EmailMessage(
         mail_subject, message, to=[to_email]
     )
