@@ -210,60 +210,35 @@
 
     <h3 class="about-subtitle">{% trans "About Substra Foundation" %}</h3>
 
-    <p><a href="{% trans 'https://www.substra.ai/en/about-substra-foundation' %}"
-          target="_blank"
-          title="{% trans 'https://www.substra.ai/en/about-substra-foundation' %}">Substra Foundation</a>
-        {% blocktrans trimmed %}
-        is a non-profit organisation whose mission is to contribute to the development of collaborative,
-        responsible and trustworthy data science. It is dedicated to the following 5 projects:
-        {% endblocktrans %}</p>
-    <ul>
-        <li class="li-with-disc margin-10">
-            {% blocktrans trimmed %}
-            Substra Assessment: a self-assessment and self-training tool on
-            risks and good practices on the theme of responsible and trustworthy data science.
-            {% endblocktrans %}
-        </li>
-        <li class="li-with-disc margin-10"><a href="{% trans 'https://doc.substra.ai/' %}"
-                                              target="_blank"
-                                              title="https://doc.substra.ai/">{% trans "Substra Framework: " %}</a>
-            {% blocktrans trimmed %}
-            the association promotes, animates and contributes to the open source project Substra, a framework
-            for the secure, traceable and decentralised orchestration of ML tasks. It is based on Hyperledger Fabric,
-            the reference DLT framework hosted by the Linux Foundation. Substra is developed by Owkin and published
-            under the Apache 2.0 license to foster the emergence of new use cases and open up open source
-            collaborations.
-            {% endblocktrans %}
-        </li>
-        <li class="li-with-disc margin-10"><a
-                href="https://github.com/SubstraFoundation/distributed-learning-contributivity/"
-                target="_blank"
-                title="https://github.com/SubstraFoundation/distributed-learning-contributivity/">{% trans "MLPC: " %}</a>
-            {% blocktrans trimmed %}
-            mplc (for Multi-Partner Learning and Contributivity) is a Python library for simulating
-            distributed learning scenarios and benchmarking different learning methods and different methods of dataset
-            contributivity assessment.
-            {% endblocktrans %}
-        </li>
-        <li class="li-with-disc margin-10">
-            {% blocktrans trimmed %}
-            HealthChain: research consortium on federated learning use cases on
-            clinical data (see description
-            {% endblocktrans %}
-            <a href="{% trans 'https://www.substra.ai/en/healthchain-project' %}"
-               target="_blank"
-               title="{% trans 'https://www.substra.ai/en/healthchain-project' %}">{% trans "here" %}</a>).
-        </li>
-        <li class="li-with-disc margin-10">{% blocktrans trimmed %}
-            MELLODDY: research consortium on federated learning use cases on
-            chemical data (see description
-            {% endblocktrans %}
-            <a href="{% trans 'https://www.substra.ai/en/melloddy-project' %}"
-               target="_blank"
-               title="{% trans 'https://www.substra.ai/en/melloddy-project' %}">{% trans "here" %}</a>).
-        </li>
-    </ul>
-
+    <p>{% blocktrans trimmed %}
+        Since 2019, Labelia Labs has been bringing together Data Science practitioners through a
+        <a href="https://www.meetup.com/fr-FR/data-science-responsable-et-de-confiance/" traget="_blank">Meetup</a>
+        with over 300 members to concretely and operationally explore
+        best practices, resources, and tools to bring about a positive practice of
+        Artificial Intelligence, limiting risks and negative externalities.
+        {% endblocktrans %}
+    </p>
+    <p>{% blocktrans trimmed %}
+        Thanks to this community, a digital commons has been created:
+        <a href="https://github.com/SubstraFoundation/referentiel-evaluation-dsrc/blob/master/referentiel_evaluation.md"
+           target="_blank">the Responsible and Trustworthy Data Science Assessment
+        </a>.
+        Evolving biannually and overseen by an independent committee, this commons
+        identifies assessment points, best practices, resources and technical tools for responsible AI.
+        {% endblocktrans %}
+    </p>
+    <p>{% blocktrans trimmed %}
+        In order to help practitioners in a concrete way, Labelia Labs has set up
+        <a href="https://assessment.labelia.org/en/" target="_blank">evaluation and rating platform </a>
+        allowing any organization to evaluate its level of maturity regarding its practices.
+        {% endblocktrans %}
+    </p>
+    <p>{% blocktrans trimmed %}
+        Since October 2021, Labelia Labs offers the most mature organizations to become
+        <a href="https://www.labelia.org/fr/labelia" target="_blank">Labelia</a> and join a
+        community of companies applying high standard in their data science practices.
+        {% endblocktrans %}
+    </p>
 </div>
 
 {% endblock %}

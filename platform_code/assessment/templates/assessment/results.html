@@ -140,18 +140,36 @@
             {% endblocktrans %}
         </p>
     </div>
-    <div class="row">
+    <div class="results-buttons-grid">
         <form action="{% url 'assessment:orga-summary' organisation.id %}" class="float-left margin-auto">
-            <input class="btn btn-primary button-190-or-220" type="submit"
+            <input class="btn btn-primary width-200" type="submit"
                    value="{% trans 'Back to organisation' %}"/>
         </form>
 
-        <form action="{{ evaluation.get_absolute_url }}" class="float-right margin-auto smartphone-margin-top">
-            <input class="btn btn-primary button-190-or-220" type="submit" value="{% trans 'Modify' %}"/>
+        {% if evaluation.is_editable %}
+        <form action="{{ evaluation.get_absolute_url }}" class="margin-auto">
+            <input class="btn btn-primary width-200" type="submit" value="{% trans 'Modify' %}"/>
         </form>
+        {% else %}
+        <button class="btn btn-primary margin-auto width-200" disabled
+                title="{% trans 'You cannot edit an evaluation with a labelling process' %}">{% trans "Modify" %}
+        </button>
+        {% endif %}
 
-        <form action="{{ evaluation.get_absolute_url }}results/pdf/" class="margin-auto margin-top-export-pdf">
-            <input class="btn btn-primary button-190-or-220" type="submit" value="{% trans 'Export PDF' %}"/>
+        {% if evaluation_score >= labelling_threshold %}
+            {% if not evaluation.has_labelling %}
+                <form action="{{ evaluation.get_absolute_url }}labelling/" class="float-right margin-auto">
+                    <input class="btn btn-primary width-200" type="submit" value="{% trans 'Initiate labelling' %}"/>
+                </form>
+            {% else %}
+                <form action="{% url 'home:user-profile' 'labelling' %}" class="margin-auto">
+                    <input class="btn btn-primary width-200" type="submit" value="{% trans 'See labelling' %}"/>
+                </form>
+            {% endif %}
+        {% endif %}
+
+        <form action="{{ evaluation.get_absolute_url }}results/pdf/" class="margin-auto">
+            <input class="btn btn-primary width-200" type="submit" value="{% trans 'Export PDF' %}"/>
         </form>
     </div>
 </div>

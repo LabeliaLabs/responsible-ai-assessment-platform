@@ -4,10 +4,9 @@
 
 <div class="margin-50 margin-bot-30">
     {% blocktrans trimmed %}
-    You may request to label a completed evaluation with a score above {{ labelling_threshold }}.
-    <br>
-    This labelling allows you to obtain the Substra label on
-    responsible and trustworthy data science.
+    You can initiate a labeling request for completed evaluation with a score above {{ labelling_threshold }}
+    to become a Labelia company. Learn more about Labelia on
+    <a href="https://www.labelia.org/fr/labelia" target="_blank">our website.</a>
     {% endblocktrans %}
 </div>
 
@@ -50,9 +49,9 @@
                         {% elif evaluation.labelling.status == "progress" %}
                             {% trans "Ongoing review" %}
                         {% elif evaluation.labelling.status == "refused" %}
-                            {% trans "refused" %}
+                            {% trans "Refused" %}
                         {% else %}
-                            {% trans 'labelled' %}
+                            {% trans 'Labelled' %}
                         {% endif %}
                     </td>
                 {% else %}

@@ -17,7 +17,7 @@ from assessment.views.utils.utils import (
     manage_missing_language,
     manage_evaluation_exposition_score,
 )
-from home.models import Organisation
+from home.models import Organisation, PlatformManagement
 
 logger = logging.getLogger('monitoring')
 
@@ -49,6 +49,7 @@ class ResultsView(LoginRequiredMixin, DetailView):
             self.object = self.get_object()
             context = self.get_context_data(object=self.object)
 
+            context["labelling_threshold"] = PlatformManagement.get_labelling_threshold()
             # If the scoring system has changed, it set the max points again for the evaluation, sections, EE
             success_max_points = manage_evaluation_max_points(request=request, evaluation_list=[evaluation])
             if not success_max_points:
