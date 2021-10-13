@@ -313,7 +313,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
         Actions to send an invitation to create an account and add pending invitation to join the organisation
         """
         current_site = get_current_site(request)
-        mail_subject = _("Substra - Invitation to join an organisation")
+        mail_subject = _("Labelia Labs - Invitation to join an organisation")
 
         message = render_to_string('assessment/organisation/member/add-member-email.html', {
             'user': user,

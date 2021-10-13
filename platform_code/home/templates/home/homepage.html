@@ -15,10 +15,10 @@
 
 <div class="row two-columns-adapted">
     <div class="column center-content">
-        <h1 class="center">Substra Assessment</h1>
+        <h1 class="center">Labelia Assessment</h1>
         <p class="margin-50">{% blocktrans trimmed %}
             Are you interested in the notion of responsible and trustworthy data science
-            practices? Substra Assessment is a self-assessment and training tool: assess your organisation's level
+            practices? Labelia Assessment is a self-assessment and training tool: assess your organisation's level
             of maturity now and access numerous technical references to increase your competence.
             {% endblocktrans %}
         </p>
@@ -41,10 +41,10 @@
 </div>
 
 <div class="row two-columns-adapted under-homepage-banner">
-    <div class="column center-content">
-        <img alt="image sign for opposite directions" class="img-fluid d-block mx-auto margin-50 image-max-350"
+    <div class="column center-content ml-50-removed-small-screen">
+        <img alt="image sign for opposite directions" class="img-fluid d-block mx-auto homepage-first-image-left image-max-250"
              src="{% static 'image/Illustration_10.png' %}">
-        <p class="margin-150">
+        <p class="margin-70">
             {% blocktrans trimmed %}
             New technical and organisational solutions are essential to provide a framework
             of trust that is lacking today and to make possible new, promising and secure collaborations between
@@ -52,10 +52,19 @@
             {% endblocktrans %}
         </p>
         <img alt="image nested parts"
-             class="img-fluid d-block mx-auto margin-50 image-max-350"
+             class="img-fluid d-block mx-auto margin-40 image-max-250"
              src="{% static 'image/Illustration_1.png' %}">
+        <p class="margin-70">
+            {% blocktrans trimmed %}
+            Since October 2021, Labelia Labs offers the most mature
+            organisations to become Labelia and join a community of
+            companies applying high standards in their data science practices.
+            Discover <a href="https://www.labelia.org/fr/labelia" target="_blank">Labelia</a>
+            and how to become a label holder!
+            {% endblocktrans %}
+        </p>
     </div>
-    <div class="column center-content">
+    <div class="column center-content mr-50-removed-small-screen">
         <p class="margin-50">
             {% blocktrans trimmed %}
             A new territory is emerging at the crossroads between the AI expansion in
@@ -64,14 +73,14 @@
             together?
             {% endblocktrans %}
         </p>
-        <img alt="image gearing development" class="img-fluid d-block mx-auto margin-150 image-max-350"
+        <img alt="image gearing development" class="img-fluid d-block mx-auto margin-70 image-max-250"
              src="{% static 'image/Illustration_7.png' %}">
-        <p class="margin-150">
+        <p class="margin-70">
             {% blocktrans trimmed %}
             Based on an open and participative approach that we initiated in mid-2019 and
             described in
             {% endblocktrans %}
-            <a href="{% trans 'https://www.substra.ai/en/blog/how-to-solve-the-tension-between-ai-potential-and-associated-concerns' %}"
+            <a href="{% trans 'https://www.labelia.org/en/blog/how-to-solve-the-tension-between-ai-potential-and-associated-concerns' %}"
                target="_blank">
                 {% trans "this article," %}
             </a>
@@ -81,6 +90,8 @@
             tool accompanied by numerous technical resources.
             {% endblocktrans %}
         </p>
+        <img alt="labelia labelling logo" class="img-fluid d-block mx-auto margin-100 image-max-150"
+             src="{% static 'image/Label_Labelia_Avancee_2021_RVB.jpg' %}">
     </div>
 </div>
 
@@ -122,12 +133,12 @@
 </div>
 
 <div id="mc_embed_signup" class="newsletter-form-container margin-auto">
-    <form action="https://substra.us18.list-manage.com/subscribe/post-json?u=385fa3f9736ea94a1fcca969f&id=a80365310d"
+    <form action="https://labelia.us18.list-manage.com/subscribe/post-json?u=385fa3f9736ea94a1fcca969f&id=a80365310d"
           method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form"
           class="validate form-center" target="_blank" novalidate >
         <div id="mc_embed_signup_scroll" class="centered">
             <label for="mce-EMAIL"
-                   class="newsletter-label">{% trans "Sign up to receive Substra Foundation’s newsletter:" %}</label>
+                   class="newsletter-label">{% trans "Sign up to receive Labelia Labs’ newsletter:" %}</label>
             <div id="divErrorsNewsletter" class="field-error">
                 <p id="errorMailEmpty" class="display-none">{% trans "Email Address is required." %}</p>
                 <p id="errorMailFormat"

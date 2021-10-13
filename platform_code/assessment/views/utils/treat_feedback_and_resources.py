@@ -82,7 +82,7 @@ def treat_feedback(request, *args, **kwargs):
         "success": False,
         "message": _(
             "We are sorry but the message has not been sent. "
-            "Try again or contact the Substra team through another channel."
+            "Try again or contact the Labelia team through another channel."
         ),
     }
 

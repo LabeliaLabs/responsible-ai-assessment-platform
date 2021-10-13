@@ -179,6 +179,8 @@ color: #4D566B;
 
 .two-columns-adapted{ /* media on it */
     columns: 2;
+    margin-left: 100px;
+    margin-right: 100px;
 }
 
 .three-columns{
@@ -258,11 +260,19 @@ color: #4D566B;
     margin-top: 30px;
 }
 
+.margin-40 {
+    margin-top: 40px;
+}
+
 .margin-50 {
     margin-top: 50px;
 }
 .margin-70 {
     margin-top: 70px;
+}
+
+.margin-100 {
+    margin-top: 100px;
 }
 
 .margin-110{
@@ -645,8 +655,20 @@ h1 img {
      width: 200px;
 }
 
-.image-max-350{
+.image-max-350 {
     max-height: 350px;
+}
+
+.image-max-250 {
+    max-height: 250px;
+}
+
+.image-max-200 {
+    max-height: 200px;
+}
+
+.image-max-150 {
+    max-height: 150px;
 }
 
 .image-faq {
@@ -1071,8 +1093,8 @@ h1 img {
     position: absolute;
 }
 
-.under-homepage-banner{
-    margin-top: 8em;
+.under-homepage-banner {
+    margin: 7em 50px auto 50px;
 }
 
 .upgrade-banner{
@@ -1125,7 +1147,7 @@ h1 img {
 
 .logo-navbar{
     height: 50px;
-     width: 140px;
+     width: 165px;
 }
 
 .navbar-item a{
@@ -1279,7 +1301,7 @@ body.navbar-is-fixed-top {
     margin-bottom: 0px;
     padding: 2px;
     font-size: 15px;
-    width: 130px;
+    width: 190px;
 }
 
 .button-language-footer:hover {
@@ -1568,7 +1590,7 @@ a[name="menu-button"].nav-link.active {
 
 .data-nav-pills{
     /* max-width: 45em; */
-    margin-top: 50px;
+    margin-top: 0px;
     margin-left: 30px;
     max-width: 70vw;
 }
@@ -1602,7 +1624,7 @@ a[name="menu-button"].nav-link.active {
 }
 
 .table-column-profile{
-    margin-top: 100px;
+    margin-top: 50px;
     margin-bottom: 50px;
 }
 

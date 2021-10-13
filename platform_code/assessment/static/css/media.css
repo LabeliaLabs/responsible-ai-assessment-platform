@@ -303,6 +303,9 @@ Inside each section, first you have, if it exists:
     .resource-wrapper {
         width: 90vw;
     }
+    .under-homepage-banner {
+        margin: 8em 50px auto 50px;
+    }
     .breadcrumbs{
         margin-top: -50px;
         margin-bottom: 20px;
@@ -509,6 +512,10 @@ Inside each section, first you have, if it exists:
 	.table-striped tbody tr:nth-of-type(odd) {
         background-color: white;
     }
+    .two-columns-adapted {
+        margin-left: inherit;
+        margin-right: inherit;
+    }
     #exposition-table>tbody {
         justify-items: center;
         grid-template-columns: repeat(1, 1fr);
@@ -575,6 +582,12 @@ Inside each section, first you have, if it exists:
     }
     .adapted-width-button-250 {
         width: 250px;
+    }
+    .ml-50-removed-small-screen {
+        margin-left: 50px;
+    }
+    .mr-50-removed-small-screen {
+        margin-right: 50px;
     }
     .larger-small-screen-absolute-position{
         position: absolute;

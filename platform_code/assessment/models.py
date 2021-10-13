@@ -984,7 +984,7 @@ class Labelling(models.Model):
     A labelling object is bound to one evaluation and one evaluation can be linked
     to different labelling objects.
     A labelling object is defined by a status, which describes the status of the labelling process
-    for the evaluation by Substra Foundation.
+    for the evaluation by Labelia Labs.
     Last update field is used to store the date of the last
     """
     evaluation = models.OneToOneField(Evaluation, on_delete=models.CASCADE)

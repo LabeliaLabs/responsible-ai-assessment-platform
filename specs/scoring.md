@@ -3,7 +3,7 @@
 Liens rapides :
 
 - La réflexion sur le(s) [modèle(s) de scoring](https://docs.google.com/spreadsheets/d/1QhvOTsPpNhNcLlt7z_-vL3EBCRAxhjrhy_ybYKcDuFM/edit?usp=sharing)
-- [Issue sur le scoring](https://github.com/SubstraFoundation/referentiel-evaluation-dsrc/issues/38) sur le repo public
+- [Issue sur le scoring](https://github.com/LabeliaLabs/referentiel-evaluation-dsrc/issues/38) sur le repo public
 
 ## Positionnement du problème
 
