@@ -91,10 +91,10 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         # METADATA
         self.pdf.setAuthor(context["organisation"].name)
         self.pdf.setTitle(context["evaluation"].name)
-        self.pdf.setProducer("Substra Fondation")
-        self.pdf.setCreator("Substra Fondation")
-        self.pdf.setTitle("Substra Assessment " + date.today().strftime("%Y/%m/%d"))
-        self.pdf.setSubject("Substra Assessment " + date.today().strftime("%Y/%m/%d"))
+        self.pdf.setProducer("Labelia Labs")
+        self.pdf.setCreator("Labelia Labs")
+        self.pdf.setTitle("Labelia Assessment " + date.today().strftime("%Y/%m/%d"))
+        self.pdf.setSubject("Labelia Assessment " + date.today().strftime("%Y/%m/%d"))
 
         # HEADER
         self.print_header(context)
@@ -221,7 +221,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         self.draw_string_on_pdf(
             _(
                 "The mechanism for calculating the score is described in the FAQ "
-                "that you can consult on assessment.substra.ai"
+                "that you can consult on assessment.labelia.org"
             ),
             self.MARGIN_BASE,
         )
@@ -246,9 +246,9 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         current_time = datetime.now().strftime("%H:%M")
         organisation_name = context["organisation"].name
         stamp = _(
-            f"PDF generated on {today_date} at {current_time} UTC by the assessment.substra.ai platform. "
+            f"PDF generated on {today_date} at {current_time} UTC by the assessment.labelia.org platform. "
             f"This is a self-assessment realized by the organisation {organisation_name}. "
-            "It has not been verified or audited by Substra Foundation."
+            "It has not been verified or audited by Labelia Labs."
         )
         self.pdf.setFont("UbuntuBold", 9)
         self.draw_centered_string_on_pdf(stamp, self.STAMP_WIDTH)
@@ -863,7 +863,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
             today_date = date.today().strftime("%Y-%m-%d")
             evaluation_name = evaluation.name.replace(" ", "-")
             organisation_name = organisation.name.replace(" ", "-")
-            filename = f"{today_date}-{evaluation_name}-{organisation_name}-Substra-Foundation.pdf"
+            filename = f"{today_date}-{evaluation_name}-{organisation_name}-Labelia-Labs.pdf"
             filename = filename.replace("_", "-")
             return FileResponse(
                 self.print_pdf(context), as_attachment=True, filename=filename

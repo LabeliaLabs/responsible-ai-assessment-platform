@@ -222,9 +222,9 @@ sudo certbot renew
 
 ### Certificate Renewal
 
-> Note: Use the wildcard domain to catch all sub-domains `*.substra.ai`
+> Note: Use the wildcard domain to catch all sub-domains `*.labelia.org`
 >
-> Validation method email: admin@substra.ai
+> Validation method email: admin@labelia.org
 
 #### Resources
 
@@ -257,7 +257,7 @@ openssl req -nodes -newkey rsa:2048 -sha256 -keyout myserver.key -out server.csr
 
 ```sh
 # Append the key to your certificate
-cat GandiStandardSSLCA2.pem >> substra.ai.crt
+cat GandiStandardSSLCA2.pem >> labelia.org.crt
 ```
 
 Then refer to the `docker-compose` file to load the certificate into the containerized nginx.
@@ -985,9 +985,9 @@ curl 0.0.0.0:8000
 curl --insecure -I -k localhost:443
 
 # From your local machine
-nmap -F preprod.assessment.substra.ai   # Fast
-nmap -A preprod.assessment.substra.ai   # longer
-nmap -sV preprod.assessment.substra.ai  # version
+nmap -F preprod.assessment.labelia.org   # Fast
+nmap -A preprod.assessment.labelia.org   # longer
+nmap -sV preprod.assessment.labelia.org  # version
 
 # Nginx
 # Follow logs from container

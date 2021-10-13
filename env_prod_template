@@ -19,8 +19,8 @@ POSTGRES_PASSWORD=<CHANGE_ME>  # Same password that SQL_PASSWORD
 POSTGRES_DB=platform_db_prod
 
 # Gitlab issue tracker / Feedback (scope: api)
-PRIVATE_TOKEN=<CHANGE_ME> # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/settings/access_tokens
-PROJECT_ID=65925 # https://framagit.org/substra-foundation/pre-prod-assessment/-/issues
+PRIVATE_TOKEN=<CHANGE_ME> # https://framagit.org/labelia-labs/pf-assessment-dsrc/-/settings/access_tokens
+PROJECT_ID=65925 # https://framagit.org/labelia-labs/pre-prod-assessment/-/issues
 
 # Email
 EMAIL_USER=<CHANGE_ME>

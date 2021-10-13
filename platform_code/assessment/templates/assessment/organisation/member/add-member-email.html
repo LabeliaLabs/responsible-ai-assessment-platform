@@ -1,11 +1,11 @@
 {% load i18n %}{% autoescape off %}
 {% trans "Dear Sir/Madam," %}
-{% trans "The user" %} {{user.email}} {% trans "invite you to join his organisation on the Substra platform. To do this, you must create an account with the link below." %}
+{% trans "The user" %} {{user.email}} {% trans "invite you to join his organisation on the Labelia platform. To do this, you must create an account with the link below." %}
 
 {{ protocol }}://{{ domain }}{% url 'home:signup' %}
 
 {% trans "If the link above doesn't work, please copy and paste the URL in a new browser window instead." %}
 
 {% trans "Kind regards," %}
-{% trans "The Substra Foundation Team" %}
+{% trans "The Labelia Labs Team (ex Substra Foundation)" %}
 {% endautoescape %}

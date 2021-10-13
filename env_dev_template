@@ -19,5 +19,5 @@ POSTGRES_PASSWORD=1236
 POSTGRES_DB=platform_db
 
 # Gitlab issue tracker / Feedback
-PRIVATE_TOKEN=<CHANGE_ME> # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/settings/access_tokens
-PROJECT_ID=65925 # https://framagit.org/substra-foundation/pf-assessment-dsrc/-/issues
+PRIVATE_TOKEN=<CHANGE_ME> # https://framagit.org/labelia-labs/pf-assessment-dsrc/-/settings/access_tokens
+PROJECT_ID=65925 # https://framagit.org/labelia-labs/pf-assessment-dsrc/-/issues

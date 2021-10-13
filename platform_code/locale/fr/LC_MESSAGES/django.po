@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-08 10:38+0200\n"
+"POT-Creation-Date: 2021-10-13 10:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -463,10 +463,10 @@ msgid "You have not yet answered to this evaluation element"
 msgstr "Vous n'avez pas encore répondu à cet élément d'évaluation."
 
 #: .\platform_code\assessment\templates\assessment\element-feedback.html:8
-msgid "You can give a feedback on this evaluation element to the Substra team."
+msgid "You can give a feedback on this evaluation element to the Labelia team."
 msgstr ""
 "Vous pouvez donner votre avis sur cet élément d'évaluation à l'équipe "
-"Substra."
+"Labelia."
 
 #: .\platform_code\assessment\templates\assessment\element-feedback.html:9
 #: .\platform_code\assessment\templates\assessment\section-feedback.html:8
@@ -539,8 +539,8 @@ msgid ""
 "the pricing conditions</a>?"
 msgstr ""
 "Confirmez-vous avoir pris connaissance de <a href=\"https://www.labelia.org/"
-"fr/eligibilite-et-conditions\" target=\"_blank\"> comment être "
-"labellisé et des conditions de tarifications</a> ?"
+"fr/eligibilite-et-conditions\" target=\"_blank\"> comment être labellisé et "
+"des conditions de tarifications</a> ?"
 
 #: .\platform_code\assessment\templates\assessment\labelling\create-labelling-modal.html:24
 msgid "Confirm"
@@ -612,11 +612,11 @@ msgstr "L'utilisateur"
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-email.html:3
 msgid ""
-"invite you to join his organisation on the Substra platform. To do this, you "
+"invite you to join his organisation on the Labelia platform. To do this, you "
 "must create an account with the link below."
 msgstr ""
-"vous invite à rejoindre son organisation Substra. Pour cela, vous devez "
-"créer un compte en cliquant sur le lien ci-dessous :"
+"vous invite à rejoindre son organisation sur la plateforme Labelia. Pour "
+"cela, vous devez créer un compte en cliquant sur le lien ci-dessous :"
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-email.html:7
 msgid ""
@@ -633,10 +633,8 @@ msgid "Kind regards,"
 msgstr "Bien à vous,"
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-email.html:10
-#: .\platform_code\home\templates\home\account\acc_activate_email.html:9
-#: .\platform_code\home\templates\home\registration\password_reset_email.html:11
-msgid "The Substra Foundation Team"
-msgstr "L'équipe Substra Foundation"
+msgid "The Labelia Labs Team (ex Substra Foundation)"
+msgstr "L'équipe Labelia Labs (ex Substra Foundation)"
 
 #: .\platform_code\assessment\templates\assessment\organisation\member\add-member-modal.html:12
 msgid "Add a new member to the organisation"
@@ -989,7 +987,7 @@ msgid "My evaluations"
 msgstr "Mes évaluations"
 
 #: .\platform_code\assessment\templates\assessment\results.html:34
-#: .\platform_code\home\templates\home\homepage.html:110
+#: .\platform_code\home\templates\home\homepage.html:121
 msgid "Your score"
 msgstr "Votre score"
 
@@ -1357,8 +1355,8 @@ msgid "The user has been added to the organisation."
 msgstr "L'utilisateur a été ajouté à l'organisation."
 
 #: .\platform_code\assessment\views\organisation.py:316
-msgid "Substra - Invitation to join an organisation"
-msgstr "Substra - Invitation à rejoindre l'organisation"
+msgid "Labelia Labs - Invitation to join an organisation"
+msgstr "Labelia Labs - Invitation à rejoindre l'organisation"
 
 #: .\platform_code\assessment\views\organisation.py:338
 msgid ""
@@ -1444,19 +1442,19 @@ msgstr "des risques identifiés dans l'évaluation."
 #: .\platform_code\assessment\views\resultsPDF.py:223
 msgid ""
 "The mechanism for calculating the score is described in the FAQ that you can "
-"consult on assessment.substra.ai"
+"consult on assessment.labelia.org"
 msgstr ""
 "Le mécanisme de calcul du score est décrit dans la FAQ que vous pouvez "
-"consulter sur assessment.substra.ai"
+"consulter sur assessment.labelia.org"
 
 #: .\platform_code\assessment\views\resultsPDF.py:249
 #, python-brace-format
 msgid ""
 "PDF generated on {today_date} at {current_time} UTC by the assessment."
-"substra.ai platform. "
+"labelia.org platform. "
 msgstr ""
-"PDF généré le {today_date} à {current_time} UTC par l'évaluation.Platforme "
-"substra.ai"
+"PDF généré le {today_date} à {current_time} UTC par la plateforme assessment."
+"labelia.org. "
 
 #: .\platform_code\assessment\views\resultsPDF.py:266
 msgid "Evaluation details"
@@ -1586,7 +1584,7 @@ msgstr "Vous n'avez pas accès à ce contenu."
 #: .\platform_code\assessment\views\utils\treat_feedback_and_resources.py:84
 msgid ""
 "We are sorry but the message has not been sent. Try again or contact the "
-"Substra team through another channel."
+"Labelia team through another channel."
 msgstr ""
 "Nous sommes désolé mais votre message n'a pas été envoyé. Essayez de nouveau "
 "ou contactez nous par un notre moyen !"
@@ -1843,8 +1841,8 @@ msgstr ""
 "votre adresse email et regardez dans vos emails indésirables."
 
 #: .\platform_code\home\templates\home\account\acc_activate_email.html:2
-msgid "Thank you for creating a Substra account!"
-msgstr "Merci d'avoir créé un compte Substra !"
+msgid "Thank you for creating a Labelia account!"
+msgstr "Merci d'avoir créé un compte Labelia !"
 
 #: .\platform_code\home\templates\home\account\acc_activate_email.html:3
 msgid ""
@@ -1862,6 +1860,11 @@ msgid ""
 msgstr ""
 "Si le lien ne fonctionne pas, veuillez le copier et le coller dans l'URL "
 "d'une nouvelle fenêtre."
+
+#: .\platform_code\home\templates\home\account\acc_activate_email.html:9
+#: .\platform_code\home\templates\home\registration\password_reset_email.html:11
+msgid "The Labelia Labs Team"
+msgstr ""
 
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:15
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:15
@@ -2022,13 +2025,13 @@ msgstr "Statistiques des évaluations"
 
 #: .\platform_code\home\templates\home\faq.html:10
 msgid ""
-"Find the answers to your questions about the substra assessment in this page."
+"Find the answers to your questions about the labelia assessment in this page."
 msgstr ""
 "Trouvez les réponses à vos questions sur le fonctionnement de la plateforme "
-"d'évaluation de Substra Foundation"
+"d'évaluation de Labelia Labs."
 
 #: .\platform_code\home\templates\home\faq.html:18
-msgid "Find the answers to your questions about the Substra assessment."
+msgid "Find the answers to your questions about the Labelia assessment."
 msgstr "Trouvez les réponses à vos questions sur l'évaluation"
 
 #: .\platform_code\home\templates\home\faq.html:22
@@ -2042,10 +2045,11 @@ msgstr "Comment l'évaluation a-t-elle été élaborée ?"
 #: .\platform_code\home\templates\home\faq.html:26
 msgid ""
 "It is the result of a participatory work initiated in mid-2019 and carried "
-"out by the Substra Foundation association. This approach is described in this"
+"out by the Labelia Labs association. This approach is described in this"
 msgstr ""
 "Elle est le fruit d'un travail participatif initié mi-2019 et mené par "
-"l'association Substra Foundation. Cette démarche est décrite dans cet "
+"l'association Labelia Labs (ex Substra Foundation). Cette démarche est "
+"décrite dans cet "
 
 #: .\platform_code\home\templates\home\faq.html:31
 msgid "blog article"
@@ -2355,8 +2359,8 @@ msgstr ""
 "i>"
 
 #: .\platform_code\home\templates\home\faq.html:211
-msgid "About Substra Foundation"
-msgstr "À propos de Substra Foundation"
+msgid "About Labelia Labs"
+msgstr ""
 
 #: .\platform_code\home\templates\home\faq.html:213
 msgid ""
@@ -2366,29 +2370,31 @@ msgid ""
 "members to concretely and operationally explore best practices, resources, "
 "and tools to bring about a positive practice of Artificial Intelligence, "
 "limiting risks and negative externalities."
-msgstr "Depuis 2019, Labelia Labs réunit les praticiens de la Data Science "
-"à travers un <a href=\"https://www.meetup.com/fr-FR/data-science-"
-"responsable-et-de-confiance/\" traget=\"_blank\">Meetup</a> qui compte "
-"plus de 300 membres afin d’explorer concrètement et opérationnellement "
-"les bonnes pratiques, les ressources, les outils permettant de faire "
-"émerger une pratique de l’Intelligence Artificielle positive, "
-"limitant les risques et externalités négatives."
+msgstr ""
+"Depuis 2019, Labelia Labs réunit les praticiens de la Data Science à travers "
+"un <a href=\"https://www.meetup.com/fr-FR/data-science-responsable-et-de-"
+"confiance/\" traget=\"_blank\">Meetup</a> qui compte plus de 300 membres "
+"afin d’explorer concrètement et opérationnellement les bonnes pratiques, les "
+"ressources, les outils permettant de faire émerger une pratique de "
+"l’Intelligence Artificielle positive, limitant les risques et externalités "
+"négatives."
 
 #: .\platform_code\home\templates\home\faq.html:221
 msgid ""
 "Thanks to this community, a digital commons has been created: <a href="
-"\"https://github.com/SubstraFoundation/referentiel-evaluation-dsrc/blob/"
-"master/referentiel_evaluation.md\" target=\"_blank\">the Responsible and "
+"\"https://github.com/LabeliaLabs/referentiel-evaluation-dsrc/blob/master/"
+"referentiel_evaluation.md\" target=\"_blank\">the Responsible and "
 "Trustworthy Data Science Assessment </a>. Evolving biannually and overseen "
 "by an independent committee, this commons identifies assessment points, best "
 "practices, resources and technical tools for responsible AI."
 msgstr ""
-"Grâce à cette communauté, un commun numérique a été créé : "
-"<a href=\"https://github.com/SubstraFoundation/referentiel-evaluation-dsrc/blob/"
-"master/referentiel_evaluation.md\" target=\"_blank\">le Référentiel d’évaluation de la "
-"Data Science Responsable et de Confiance</a>. Évoluant semestriellement et supervisé "
-"par un comité indépendant, ce commun recense les points d'évaluation, "
-"les bonnes pratiques, les ressources et outils techniques pour une IA responsable."
+"Grâce à cette communauté, un commun numérique a été créé : <a href=\"https://"
+"github.com/LabeliaLabs/referentiel-evaluation-dsrc/blob/master/"
+"referentiel_evaluation.md\" target=\"_blank\">le Référentiel d’évaluation de "
+"la Data Science Responsable et de Confiance</a>. Évoluant semestriellement "
+"et supervisé par un comité indépendant, ce commun recense les points "
+"d'évaluation, les bonnes pratiques, les ressources et outils techniques pour "
+"une IA responsable."
 
 #: .\platform_code\home\templates\home\faq.html:230
 msgid ""
@@ -2397,10 +2403,10 @@ msgid ""
 "rating platform </a> allowing any organization to evaluate its level of "
 "maturity regarding its practices."
 msgstr ""
-"Toujours dans un souci d’aider concrètement les praticiens, Labelia Labs "
-"a mis en place une <a href=\"https://assessment.labelia.org/fr/\" target=\"_blank\">"
-"plateforme d’évaluation et de rating</a> permettant à n’importe quelle organisation "
-"d’évaluer son niveau de maturité quant à ses pratiques."
+"Toujours dans un souci d’aider concrètement les praticiens, Labelia Labs a "
+"mis en place une <a href=\"https://assessment.labelia.org/fr/\" target="
+"\"_blank\">plateforme d’évaluation et de rating</a> permettant à n’importe "
+"quelle organisation d’évaluer son niveau de maturité quant à ses pratiques."
 
 #: .\platform_code\home\templates\home\faq.html:236
 msgid ""
@@ -2411,31 +2417,31 @@ msgid ""
 msgstr ""
 "Depuis octobre 2021, Labelia Labs propose aux organisations les plus matures "
 "de devenir <a href=\"https://www.labelia.org/fr/labelia\" target=\"_blank"
-"\">Labelia</a> et de rejoindre une communauté des entreprises appliquant "
-"de hauts standards dans leurs pratiques des Data Sciences."
+"\">Labelia</a> et de rejoindre une communauté des entreprises appliquant de "
+"hauts standards dans leurs pratiques des Data Sciences."
 
 #: .\platform_code\home\templates\home\homepage.html:19
 msgid ""
 "Are you interested in the notion of responsible and trustworthy data science "
-"practices? Substra Assessment is a self-assessment and training tool: assess "
+"practices? Labelia Assessment is a self-assessment and training tool: assess "
 "your organisation's level of maturity now and access numerous technical "
 "references to increase your competence."
 msgstr ""
 " Vous êtes sensible aux pratiques de la data science qui soient responsables "
-"et de confiance ? Substra Assessment est un outil d'auto-évaluation et "
+"et de confiance ? Labelia Assessment est un outil d'auto-évaluation et "
 "d'auto-formation : évaluez dès maintenant le niveau de maturité de votre "
 "organisation et accéder à de nombreuses références techniques pour monter en "
 "compétence."
 
 #: .\platform_code\home\templates\home\homepage.html:28
-#: .\platform_code\home\templates\home\homepage.html:118
+#: .\platform_code\home\templates\home\homepage.html:129
 #: .\platform_code\home\templates\home\profile.html:14
 #: .\platform_code\templates\navbar.html:32
 msgid "My dashboard"
 msgstr "Mon tableau de bord"
 
 #: .\platform_code\home\templates\home\homepage.html:30
-#: .\platform_code\home\templates\home\homepage.html:120
+#: .\platform_code\home\templates\home\homepage.html:131
 msgid "Sign up and start an evaluation"
 msgstr "Je m'inscris et je démarre une évaluation"
 
@@ -2459,7 +2465,20 @@ msgstr ""
 "possible des collaborations nouvelles, prometteuses et sûres entre les "
 "entreprises, les institutions publiques et les citoyens."
 
-#: .\platform_code\home\templates\home\homepage.html:60
+#: .\platform_code\home\templates\home\homepage.html:58
+msgid ""
+"Since October 2021, Labelia Labs offers the most mature organisations to "
+"become Labelia and join a community of companies applying high standards in "
+"their data science practices. Discover <a href=\"https://www.labelia.org/fr/"
+"labelia\" target=\"_blank\">Labelia</a> and how to become a label holder!"
+msgstr ""
+"Depuis octobre 2021, Labelia Labs propose aux organisations les plus matures "
+"de devenir Labelia et de rejoindre une communauté des entreprises appliquant "
+"de hauts standards dans leurs pratiques des Data Sciences. Découvrez <a href="
+"\"https://www.labelia.org/fr/labelia\" target=\"_blank\">Labelia</a> et "
+"comment devenir labellisé !"
+
+#: .\platform_code\home\templates\home\homepage.html:69
 msgid ""
 "A new territory is emerging at the crossroads between the AI expansion in "
 "organisations and public concerns about private data, transparency and "
@@ -2472,7 +2491,7 @@ msgstr ""
 "puissantes qui commencent déjà à se percuter. Comment les réconcilier, les "
 "conjuguer ensemble ?"
 
-#: .\platform_code\home\templates\home\homepage.html:70
+#: .\platform_code\home\templates\home\homepage.html:79
 msgid ""
 "Based on an open and participative approach that we initiated in mid-2019 "
 "and described in"
@@ -2480,17 +2499,17 @@ msgstr ""
 "En s'appuyant sur une démarche ouverte et participative que nous avons "
 "initiée mi-2019 et décrite dans"
 
-#: .\platform_code\home\templates\home\homepage.html:74
+#: .\platform_code\home\templates\home\homepage.html:83
 msgid ""
-"https://www.substra.ai/en/blog/how-to-solve-the-tension-between-ai-potential-"
-"and-associated-concerns"
-msgstr "https://www.substra.ai/fr/blog/evaluation-data-science-responsable"
+"https://www.labelia.org/en/blog/how-to-solve-the-tension-between-ai-"
+"potential-and-associated-concerns"
+msgstr "https://www.labelia.org/fr/blog/evaluation-data-science-responsable"
 
-#: .\platform_code\home\templates\home\homepage.html:76
+#: .\platform_code\home\templates\home\homepage.html:85
 msgid "this article,"
 msgstr "cet article,"
 
-#: .\platform_code\home\templates\home\homepage.html:78
+#: .\platform_code\home\templates\home\homepage.html:87
 msgid ""
 "we have developed a reference framework to promote responsible and "
 "trustworthy data science. It has given rise to a self-assessment tool "
@@ -2501,7 +2520,7 @@ msgstr ""
 "naissance à un outil d'auto-évaluation accompagné de nombreuses ressources "
 "techniques."
 
-#: .\platform_code\home\templates\home\homepage.html:88
+#: .\platform_code\home\templates\home\homepage.html:99
 msgid ""
 "Assess the level of maturity of your organisation and select topics for "
 "further study"
@@ -2509,11 +2528,11 @@ msgstr ""
 "Evaluez le niveau de maturité de votre organisation et sélectionnez des "
 "sujets à approfondir"
 
-#: .\platform_code\home\templates\home\homepage.html:94
+#: .\platform_code\home\templates\home\homepage.html:105
 msgid "Evaluate your organisation"
 msgstr "Evaluez votre organisation"
 
-#: .\platform_code\home\templates\home\homepage.html:95
+#: .\platform_code\home\templates\home\homepage.html:106
 msgid ""
 "Carry out your self-assessment on the 6 themes of Responsible Data Science "
 "and Trust"
@@ -2521,11 +2540,11 @@ msgstr ""
 "Réalisez votre auto-évaluation sur les 6 thèmes du référentiel cadre de la "
 "Data Science Responsable et de Confiance"
 
-#: .\platform_code\home\templates\home\homepage.html:101
+#: .\platform_code\home\templates\home\homepage.html:112
 msgid "Technical resources"
 msgstr "Les ressources techniques"
 
-#: .\platform_code\home\templates\home\homepage.html:103
+#: .\platform_code\home\templates\home\homepage.html:114
 msgid ""
 "Discover the resources that will allow you to progress, discover new tools "
 "and learn new techniques."
@@ -2533,40 +2552,40 @@ msgstr ""
 "Découvrez les ressources qui vous permettrons de progresser, de découvrir de "
 "nouveaux outils et d'apprendre de nouvelles techniques"
 
-#: .\platform_code\home\templates\home\homepage.html:111
+#: .\platform_code\home\templates\home\homepage.html:122
 msgid "Analyse your progress over time on the different assessment axes"
 msgstr ""
 "Analysez votre progression au fil du temps sur les différents axes "
 "d'évaluation"
 
-#: .\platform_code\home\templates\home\homepage.html:130
-msgid "Sign up to receive Substra Foundation’s newsletter:"
-msgstr "Inscrivez-vous pour recevoir la newsletter de Substra Foundation :"
+#: .\platform_code\home\templates\home\homepage.html:141
+msgid "Sign up to receive Labelia Labs’ newsletter:"
+msgstr "Inscrivez-vous pour recevoir la newsletter de Labelia Labs :"
 
-#: .\platform_code\home\templates\home\homepage.html:132
+#: .\platform_code\home\templates\home\homepage.html:143
 msgid "Email Address is required."
 msgstr "Une adresse email est nécessaire."
 
-#: .\platform_code\home\templates\home\homepage.html:134
+#: .\platform_code\home\templates\home\homepage.html:145
 msgid "Email addresses should follow the format user@domain.com."
 msgstr "L'adresse email doit respecter le format user@domail.com."
 
-#: .\platform_code\home\templates\home\homepage.html:136
+#: .\platform_code\home\templates\home\homepage.html:147
 msgid ""
 "This email address looks fake or invalid. Please enter a real email address."
 msgstr "Cet email n'est pas valide. Veuillez entrer une adresse email valide."
 
-#: .\platform_code\home\templates\home\homepage.html:137
+#: .\platform_code\home\templates\home\homepage.html:148
 msgid "Could not connect to the registration server, retry later."
 msgstr ""
 "Une erreur est survenue lors de la connection au serveur. Essayez de nouveau "
 "plus tard."
 
-#: .\platform_code\home\templates\home\homepage.html:144
+#: .\platform_code\home\templates\home\homepage.html:155
 msgid "SIGN UP"
 msgstr "Inscription"
 
-#: .\platform_code\home\templates\home\homepage.html:147
+#: .\platform_code\home\templates\home\homepage.html:158
 msgid ""
 "Frequency: maximum 1 email/month. Your email address will not be shared with "
 "anyone."
@@ -2574,21 +2593,21 @@ msgstr ""
 "Fréquence : maximum 1 email / mois. Votre adresse ne sera transmise à "
 "personne."
 
-#: .\platform_code\home\templates\home\homepage.html:151
+#: .\platform_code\home\templates\home\homepage.html:162
 msgid "Thank you for subscribing to the newsletter!"
 msgstr "Merci d'avoir souscrit à la newsletter !"
 
-#: .\platform_code\home\templates\home\homepage.html:152
+#: .\platform_code\home\templates\home\homepage.html:163
 msgid "You are already subscribed!"
 msgstr "Vous êtes déjà inscrit !"
 
 #: .\platform_code\home\templates\home\legal-notices.html:8
-msgid "Substra assessment: legal notices"
-msgstr "Substra assessment : informations légales"
+msgid "Labelia assessment: legal notices"
+msgstr "Labelia assessment : informations légales"
 
 #: .\platform_code\home\templates\home\legal-notices.html:10
-msgid "Legal information about the site www.assessment.substra.ai"
-msgstr "Informations légales concerant le site www.assessment.substra.ai"
+msgid "Legal information about the site www.assessment.labelia.org"
+msgstr "Informations légales concerant le site www.assessment.labelia.org"
 
 #: .\platform_code\home\templates\home\login-modal.html:5
 msgid "Your username and password didn't match. Please try again."
@@ -2619,15 +2638,15 @@ msgid "Forgotten password?"
 msgstr "Mot de passe oublié ?"
 
 #: .\platform_code\home\templates\home\login.html:8
-msgid "Substra assessment: Connection"
-msgstr "Substra assessment : Connexion"
+msgid "Labelia assessment: Connection"
+msgstr "Labelia assessment : Connexion"
 
 #: .\platform_code\home\templates\home\login.html:10
 msgid ""
-"Connect to your substra account to create new evaluations, browse technical "
+"Connect to your labelia account to create new evaluations, browse technical "
 "resources, consult the score of your completed evaluations, and more."
 msgstr ""
-"Connectez-vous à votre compte Substra pour créer de nouvelles évaluations, "
+"Connectez-vous à votre compte labelia pour créer de nouvelles évaluations, "
 "parcourir des ressources techniques, consulter le scores de vos évaluations "
 "terminées, et plus encore."
 
@@ -2681,10 +2700,10 @@ msgid ""
 "Labelia on <a href=\"https://www.labelia.org/fr/labelia\" target=\"_blank"
 "\">our website.</a>"
 msgstr ""
-"Vous pouvez initier une demande de labellisation pour des évaluations terminées "
-"avec un score supérieur à %(labelling_threshold)s afin de devenir une entreprise Labelia. Découvrez "
-"Labelia sur <a href=\"https://www.labelia.org/fr/labelia\" target=\"_blank"
-"\">notre site</a>."
+"Vous pouvez initier une demande de labellisation pour des évaluations "
+"terminées avec un score supérieur à %(labelling_threshold)s afin de devenir "
+"une entreprise Labelia. Découvrez Labelia sur <a href=\"https://www.labelia."
+"org/fr/labelia\" target=\"_blank\">notre site</a>."
 
 #: .\platform_code\home\templates\home\profile-labelling.html:48
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:62
@@ -2941,21 +2960,21 @@ msgstr "Cher"
 
 #: .\platform_code\home\templates\home\registration\password_reset_email.html:4
 msgid ""
-"We received a request to reset the password for your account on Substra "
-"Foundation for this email address. To initiate the password reset process "
-"for your account, click the link below."
+"We received a request to reset the password for your account on Labelia Labs "
+"for this email address. To initiate the password reset process for your "
+"account, click the link below."
 msgstr ""
 "Nous avons reçu une demande de réinitialisation de mot de passe pour le "
-"compte Substra Foundation lié à cette adresse email. Pour intilialiser "
+"compte Labelia Labs lié à cette adresse email. Pour intilialiser "
 "l'opération, cliquez sur le lien ci-dessous."
 
 #: .\platform_code\home\templates\home\registration\password_reset_form.html:7
-msgid "Substra assessment: Forgotten password"
-msgstr "Substra assessment : Mot de passe oublié"
+msgid "Labelia assessment: Forgotten password"
+msgstr "Labelia assessment : Mot de passe oublié"
 
 #: .\platform_code\home\templates\home\registration\password_reset_form.html:9
-msgid "Reset the password of your substra account."
-msgstr "Réinitialiser le mot de passe de votre compte Substra"
+msgid "Reset the password of your labelia account."
+msgstr "Réinitialiser le mot de passe de votre compte labelia"
 
 #: .\platform_code\home\templates\home\registration\password_reset_form.html:17
 msgid "Forgotten password"
@@ -2966,8 +2985,8 @@ msgid "Reset"
 msgstr "Réinitialiser"
 
 #: .\platform_code\home\templates\home\registration\password_reset_subject.html:2
-msgid "Reset password - Substra assessment"
-msgstr "Réinitialiser le mot de passe - Substra"
+msgid "Reset password - Labelia assessment"
+msgstr "Réinitialiser le mot de passe - Labelia assessment"
 
 #: .\platform_code\home\templates\home\release-notes.html:11
 #: .\platform_code\templates\footer.html:38
@@ -3023,18 +3042,19 @@ msgid "Change password"
 msgstr "Changer mon mot de passe"
 
 #: .\platform_code\home\templates\home\signup.html:7
-msgid "Substra assessment: Signup"
-msgstr "Substra assessment : Inscription"
+msgid "Labelia assessment: Signup"
+msgstr "Labelia assessment : Inscription"
 
 #: .\platform_code\home\templates\home\signup.html:9
 msgid ""
-"The Substra assessment is the result of a participatory work carried out by "
-"the Substra Foundation association. Create an account to evaluate your "
+"The Labelia assessment is the result of a participatory work carried out by "
+"the Labelia Labs association. Create an account to evaluate your "
 "organisation on responsible and trustworthy data science practices."
 msgstr ""
-"Substra assessment est le fruit d'un travail participatif mené par "
-"l'association Substra Foundation. Créez un compte pour évaluer votre "
-"organisation sur les pratiques de data science responsable et de confiance."
+"Labelia assessment est le fruit d'un travail participatif mené par "
+"l'association Labelia Labs (ex Substra Foundation). Créez un compte pour "
+"évaluer votre organisation sur les pratiques de data science responsable et "
+"de confiance."
 
 #: .\platform_code\home\templates\home\signup.html:18
 #: .\platform_code\home\templates\home\signup.html:54
@@ -3168,20 +3188,20 @@ msgstr "Site admin"
 
 #: .\platform_code\templates\base-evaluation.html:13
 msgid ""
-"Substra, assessment, data science, trustworthy, responsible, resources, "
+"labelia, assessment, data science, trustworthy, responsible, resources, "
 "evaluation, label, association"
 msgstr ""
-"Substra, évaluation, science des données, data science, confiance, "
+"labelia, évaluation, science des données, data science, confiance, "
 "responsable, ressources, label, association"
 
 #: .\platform_code\templates\base-evaluation.html:18
 msgid ""
-"Substra assessment is the result of a participatory work carried out by the "
-"Substra Foundation association to promote responsible and trustworthy data "
-"science practices."
+"Labelia assessment is the result of a participatory work carried out by the "
+"Labelia Labs association (ex Substra Foundation) to promote responsible and "
+"trustworthy data science practices."
 msgstr ""
-"Substra assessment est le fruit d'un travail participatif mené par "
-"l'association Substra Foundation dans le but de promovoir la data science "
+"Labelia assessment est le fruit d'un travail participatif mené par "
+"l'association Labelia Labs dans le but de promovoir la data science "
 "responsable et de confiance."
 
 #: .\platform_code\templates\errors.html:34
@@ -3194,7 +3214,7 @@ msgstr "Avec le soutien de "
 
 #: .\platform_code\templates\footer.html:52
 msgid "Passer en version française"
-msgstr "Switch in English"
+msgstr "Switch in English version"
 
 #: .\platform_code\templates\footer.html:61
 msgid "Legal notices"
@@ -3207,397 +3227,3 @@ msgstr "Admin"
 #: .\platform_code\templates\navbar.html:26
 msgid "Admin Dashboard"
 msgstr "Dashboard admin"
-
-#~ msgid "https://www.substra.ai/en/about-substra-foundation"
-#~ msgstr "https://www.substra.ai/fr/about-substra-foundation"
-
-#~ msgid ""
-#~ "is a non-profit organisation whose mission is to contribute to the "
-#~ "development of collaborative, responsible and trustworthy data science. "
-#~ "It is dedicated to the following 5 projects:"
-#~ msgstr ""
-#~ "est une association loi 1901 qui s'est donné pour mission de contribuer "
-#~ "au développement de la data science collaborative, responsable et de "
-#~ "confiance. Elle se consacre aux 5 projets suivants :"
-
-#~ msgid ""
-#~ "Substra Assessment: a self-assessment and self-training tool on risks and "
-#~ "good practices on the theme of responsible and trustworthy data science."
-#~ msgstr ""
-#~ "Substra Assessment : un outil d'auto-évaluation et d'auto-formation aux "
-#~ "risques et bonnes pratiques sur le thème de la data science responsable "
-#~ "et de confiance."
-
-#~ msgid "https://doc.substra.ai/"
-#~ msgstr "https://doc.substra.ai/"
-
-#~ msgid "Substra Framework: "
-#~ msgstr "Framework Substra :"
-
-#~ msgid ""
-#~ "the association promotes, animates and contributes to the open source "
-#~ "project Substra, a framework for the secure, traceable and decentralised "
-#~ "orchestration of ML tasks. It is based on Hyperledger Fabric, the "
-#~ "reference DLT framework hosted by the Linux Foundation. Substra is "
-#~ "developed by Owkin and published under the Apache 2.0 license to foster "
-#~ "the emergence of new use cases and open up open source collaborations."
-#~ msgstr ""
-#~ "l'association promeut, anime et contribue au projet open source Substra, "
-#~ "un framework pour l’orchestration sécurisée, traçable et décentralisée de "
-#~ "tâches de ML. Il est basé sur Hyperledger Fabric, le framework DLT de "
-#~ "référence hébergé par la Fondation Linux. Substra est développé par Owkin "
-#~ "et publiée sous licence Apache 2.0 pour favoriser l'émergence de nouveaux "
-#~ "cas d'usage et ouvrir les collaborations open source."
-
-#~ msgid "MLPC: "
-#~ msgstr "MLPC :"
-
-#~ msgid ""
-#~ "mplc (for Multi-Partner Learning and Contributivity) is a Python library "
-#~ "for simulating distributed learning scenarios and benchmarking different "
-#~ "learning methods and different methods of dataset contributivity "
-#~ "assessment."
-#~ msgstr ""
-#~ "mplc (pour Multi-Partner Learning and Contributivity) est une librairie "
-#~ "Python pour simuler des scenarios d'apprentissage distribué et "
-#~ "benchmarker différentes méthodes d'apprentissage et différentes méthodes "
-#~ "d'évaluation de contributivité des datasets."
-
-#~ msgid ""
-#~ "HealthChain: research consortium on federated learning use cases on "
-#~ "clinical data (see description"
-#~ msgstr ""
-#~ "HealthChain : consortium de recherche sur des cas d'usage d'apprentissage "
-#~ "fédéré sur des données cliniques (voir description "
-
-#~ msgid "https://www.substra.ai/en/healthchain-project"
-#~ msgstr "https://www.substra.ai/fr/healthchain-project"
-
-#~ msgid "here"
-#~ msgstr "ici"
-
-#~ msgid ""
-#~ "MELLODDY: research consortium on federated learning use cases on chemical "
-#~ "data (see description"
-#~ msgstr ""
-#~ "MELLODDY : consortium de recherche sur des cas d'usage d'apprentissage "
-#~ "fédéré sur des données chimiques (voir description "
-
-#~ msgid "https://www.substra.ai/en/melloddy-project"
-#~ msgstr "https://www.substra.ai/fr/melloddy-project"
-
-#, python-format
-#~ msgid ""
-#~ "You may request to label a completed evaluation with a score above "
-#~ "%(labelling_threshold)s. <br> This labelling allows you to obtain the "
-#~ "Substra label on responsible and trustworthy data science."
-#~ msgstr ""
-#~ "Vous pouvez initier une demande de labellisation pour des évaluations "
-#~ "terminées avec un score supérieur à %(labelling_threshold)s. <br> Cela "
-#~ "vous permet d'obtenir le label Substra sur la data science responsable et "
-#~ "de confiance."
-
-#~ msgid "The labelling has well been "
-#~ msgstr "La labellisation a bien été "
-
-#~ msgid "Your"
-#~ msgstr "Votre"
-
-#~ msgid "reset filters"
-#~ msgstr "Réinitialiser les filtres"
-
-#~ msgid "reset filter"
-#~ msgstr "Réinitialiser le filtre"
-
-#~ msgid "Organisations"
-#~ msgstr "Organisation"
-
-#~ msgid "Users"
-#~ msgstr "Utilisateurs"
-
-#~ msgid "Error"
-#~ msgstr "Erreur"
-
-#~ msgid "%d-%m-%Y"
-#~ msgstr "%m-%d-%Y"
-
-#~ msgid "%d/%m/%Y"
-#~ msgstr "%m/%d/%Y"
-
-#~ msgid "Sector "
-#~ msgstr "Secteur"
-
-#, fuzzy
-#~| msgid "Size"
-#~ msgid "Size "
-#~ msgstr "Taille"
-
-#~ msgid "Number of evaluations, per "
-#~ msgstr "Nombre d'évaluations, par : "
-
-#~ msgid "and per "
-#~ msgstr "et par "
-
-#~ msgid ""
-#~ "Why don't we get a score per section? We are working on this feature, be "
-#~ "patient!"
-#~ msgstr ""
-#~ "Pourquoi n'obtient-on pas un score par section ? Nous y travaillons ! "
-
-#~ msgid "I register"
-#~ msgstr "Je m'inscris"
-
-#~ msgid "My note"
-#~ msgstr "Ma note"
-
-#~ msgid " (new version)"
-#~ msgstr " (nouvelle version)"
-
-#~ msgid "Your evaluation has not this language"
-#~ msgstr "Votre évaluation n'a pas la langue demandée"
-
-#~ msgid "Platform update ongoing"
-#~ msgstr "Mise à jour de la plateforme en cours"
-
-#~ msgid ""
-#~ "\n"
-#~ "                                        You are not concerned by this "
-#~ "evaluation element due to your answer to this\n"
-#~ "                                        evaluation element\n"
-#~ "                                        "
-#~ msgstr ""
-#~ "\n"
-#~ " Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
-#~ "l'élément d'évaluation"
-
-#~ msgid ""
-#~ "\n"
-#~ "                                                Please select one answer "
-#~ "which best matches to your organisation situation.\n"
-#~ "                                            "
-#~ msgstr ""
-#~ "\n"
-#~ "Veuillez sélectionner une seule réponse correspondant le mieux à la "
-#~ "maturité de l'organisation à ce sujet."
-
-#~ msgid ""
-#~ "\n"
-#~ "                                                Please select all the "
-#~ "answers which best match to your organisation situation.\n"
-#~ "                                                Be careful, some "
-#~ "combinations are not coherent.\n"
-#~ "                                            "
-#~ msgstr ""
-#~ "\n"
-#~ "Veuillez sélectionner tous les éléments de réponse correspondant à des "
-#~ "pratiques de votre organisation. Attention, certaines combinaisons ne "
-#~ "seraient pas cohérentes."
-
-#~ msgid ""
-#~ "\n"
-#~ "                                This evaluation element is not applicable "
-#~ "due to the answer to this evaluation element\n"
-#~ "                                "
-#~ msgstr ""
-#~ "\n"
-#~ "Cet élément d'évaluation n'est pas applicable suite à votre réponse à "
-#~ "l'élément "
-
-#~ msgid ""
-#~ "\n"
-#~ "                    <strong>Admin</strong>: the admin user can create, "
-#~ "modify and delete\n"
-#~ "                    evaluations and members.\n"
-#~ "                    "
-#~ msgstr ""
-#~ "\n"
-#~ "<strong>Administrateur</strong> : un membre administrateur peut créer, "
-#~ "modifier et supprimer des évaluations et ainsi que des membres."
-
-#~ msgid ""
-#~ "\n"
-#~ "                Note that you cannot remove an user with admin rights "
-#~ "from the organisation.\n"
-#~ "                "
-#~ msgstr ""
-#~ "\n"
-#~ "Notez que vous ne pouvez pas retirer un membre avec les droits "
-#~ "'administrateur' de l'organisation."
-
-#~ msgid ""
-#~ "\n"
-#~ "            The synthetic score is on a total of 100 theoretical maximum "
-#~ "points for your full\n"
-#~ "            assessment. It provides an indication of the organization "
-#~ "maturity level concerning a responsible and\n"
-#~ "            trustworthy data science. At the end of 2020, the 50/100 "
-#~ "threshold can be considered a very advanced\n"
-#~ "            maturity level.\n"
-#~ "            "
-#~ msgstr ""
-#~ "\n"
-#~ "Le score synthétique est sur un total de 100 points maximum théoriques "
-#~ "pour l'ensemble de l'évaluation. Il offre une indication sur le niveau de "
-#~ "maturité de l'organisation quant à une approche responsable et de "
-#~ "confiance de la data science. À fin 2020, le seuil de 50/100 peut être "
-#~ "considéré comme un niveau de maturité très avancé."
-
-#~ msgid ""
-#~ "\n"
-#~ "                    The organisations you are the only admin member will "
-#~ "be deleted, as well as their\n"
-#~ "                    evaluations.\n"
-#~ "                    "
-#~ msgstr ""
-#~ "\n"
-#~ "Cela entrainera la suppression des organisations où vous êtes l'unique "
-#~ "administrateur ainsi que les évaluations associées."
-
-#~ msgid ""
-#~ "\n"
-#~ "                            Your password must contain at least 8 "
-#~ "characters, with at least one number and one letter\n"
-#~ "                            "
-#~ msgstr ""
-#~ "\n"
-#~ "Votre mot de passe doit contenir au moins 8 caractères avec au moins une "
-#~ "lettre et un chiffre"
-
-#~ msgid "Hello"
-#~ msgstr "Bonjour"
-
-#~ msgid "Validated"
-#~ msgstr "Soumise"
-
-#~ msgid "email is taken"
-#~ msgstr "l'email est déjà pris"
-
-#~ msgid "Your dashboard"
-#~ msgstr "Votre tableau de bord"
-
-#~ msgid "An error occurred"
-#~ msgstr "Une erreur est survenue."
-
-#~ msgid "You do not have the right to do this action."
-#~ msgstr "Vous n'avez pas le droit de faire cette action."
-
-#~ msgid "An error occurred. Please, do not modify the html!"
-#~ msgstr "Une erreur est survenue. Ne modifiez pas le contenu html !"
-
-#~ msgid ""
-#~ "This assessment is aimed at all organisations wishing to evaluate their "
-#~ "level of maturity on Responsible and Trusted Data Science."
-#~ msgstr ""
-#~ "Cette évaluation s’adresse à toutes les organisations souhaitant évaluer "
-#~ "leur niveau de maturité sur la Data Science Responsable et de Confiance."
-
-#~ msgid ""
-#~ "is an independent, non-profit organisation dedicated to exploring safe, "
-#~ "responsible and protective approaches to data science for sensitive data, "
-#~ "and to the <strong> development of trusted data science ecosystems</"
-#~ "strong>. It works in particular on multi-partner collaborations in data "
-#~ "science. It promotes, contributes and animates the open source project "
-#~ "Substra which allows the decentralised, secure and traceable "
-#~ "orchestration of machine learning tasks in a framework that protects data "
-#~ "confidentiality. Its objective is to :"
-#~ msgstr ""
-#~ "est une organisation à but non lucratif indépendante, dédiée à "
-#~ "l’exploration d’approches de la data science sûres, responsables et "
-#~ "protectrices des données sensibles, et au <strong>développement "
-#~ "d’écosystèmes de data science de confiance</strong>. Elle travaille en "
-#~ "particulier sur les collaborations multi-partenaires en data science. "
-#~ "Elle promeut, contribue et anime le projet open source Substra qui permet "
-#~ "l'orchestration décentralisée, sécurisée, et traçable de tâches de "
-#~ "machine learning dans un cadre protecteur de la confidentialité des "
-#~ "données. Elle se donne pour objectif de :"
-
-#~ msgid "Collecting feedback on the use of Substra"
-#~ msgstr "Collecter des retours sur l’usage de Substra"
-
-#~ msgid ""
-#~ "Synthesise the suggestions for development and propose a common "
-#~ "development roadmap"
-#~ msgstr ""
-#~ "Synthétiser les suggestions d’évolutions et proposer une roadmap commune "
-#~ "de développement"
-
-#~ msgid "Hosting Substra's Github repositories"
-#~ msgstr "Héberger les dépôts Github de Substra"
-
-#~ msgid ""
-#~ "Leading working groups on multi-partner collaborations in data science"
-#~ msgstr ""
-#~ "Animer des groupes de travail sur les collaborations multi-partenaires en "
-#~ "data science"
-
-#~ msgid "The first contributor and key partner of the Substra Foundation is "
-#~ msgstr ""
-#~ "Le premier contributeur et partenaire-clef de Substra Foundation est "
-
-#~ msgid ""
-#~ ",a start-up specialising in machine learning in the medical field, which "
-#~ "is dedicating a technical team to the development of the first version of "
-#~ "Substra Framework."
-#~ msgstr ""
-#~ ", une start-up spécialisée en machine learning dans le domaine médical, "
-#~ "qui dédie une équipe technique au développement de la première version de "
-#~ "Substra Framework."
-
-#~ msgid ""
-#~ "Substra Foundation's main objective is to federate and animate an active "
-#~ "community of contributors and users of the Substra framework."
-#~ msgstr ""
-#~ "Substra Foundation se donne notamment pour objectif de fédérer et animer "
-#~ "une communauté active de contributeurs et d'utilisateurs du framework "
-#~ "Substra."
-
-#~ msgid "Why?"
-#~ msgstr "Pourquoi ?"
-
-#~ msgid ""
-#~ "A new space is emerging at the crossroads between the expansion of AI "
-#~ "algorithms in organisations and public concerns about private data and "
-#~ "the lack of transparency of algorithms. These are two powerful trends, "
-#~ "which will not slow down, and<strong> that are beginning to collide</"
-#~ "strong>."
-#~ msgstr ""
-#~ "Un nouvel espace émerge au croisement entre expansion des algorithmes "
-#~ "d'IA dans les organisations et inquiétudes du public sur les données "
-#~ "privées et le manque de transparence des algorithmes. Ce sont deux "
-#~ "tendances puissantes, qui ne ralentiront pas, et <strong>qui commencent à "
-#~ "se percuter</strong>."
-
-#~ msgid ""
-#~ "This therefore opens up a space for research and innovation on "
-#~ "approaches, methodologies and tools that will make it possible to "
-#~ "<strong> to combine the two</strong>. The aim is to free up more data for "
-#~ "research and to fill the <i>knowledge gap</i> in many disciplines, while "
-#~ "ensuring a high level of protection for personal or sensitive data and "
-#~ "guaranteeing the quality and transparency of data science work. A huge "
-#~ "and exciting challenge!"
-#~ msgstr ""
-#~ "Cela ouvre donc un espace de recherche et d'innovation sur les approches, "
-#~ "les méthodologies et les outils qui permettront de conjuguer les deux. Il "
-#~ "s'agit de libérer plus de données pour la recherche et pour combler le "
-#~ "<i>manque à savoir</i> dans de nombreuses disciplines, tout en assurant "
-#~ "un haut niveau de protection aux données personnelles ou sensibles, et en "
-#~ "garantissant la qualité et la transparence des travaux de data science. "
-#~ "Défi immense et passionnant !"
-
-#~ msgid "About"
-#~ msgstr "A propos"
-
-#~ msgid "%(description)s"
-#~ msgstr "%(description)s"
-
-#~ msgid "Back to the evaluation summary"
-#~ msgstr "Accueil des sections"
-
-#~ msgid "Sincerely,"
-#~ msgstr "Cordialement,"
-
-#~ msgid "The evaluation's name has been changed"
-#~ msgstr "Le nom de votre évaluation a été changé"
-
-#~ msgid "of"
-#~ msgstr "sur"
