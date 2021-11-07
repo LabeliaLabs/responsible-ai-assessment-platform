@@ -24,8 +24,13 @@ class UserAdmin(BaseUserAdmin):
         "organisations_user_is_member",
     )
     readonly_fields = ["created_at", "last_login"]
-    list_filter = ("admin",
-                   "staff")
+    list_filter = (
+        "admin",
+        "staff",
+        "created_at",
+        "active",
+    )
+
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name",)}),
