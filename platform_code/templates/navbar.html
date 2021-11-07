@@ -79,10 +79,20 @@
                         {% trans "Login" %}
                         </a>
                     </li>
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'home:signup' %}">
+                            {% trans "Sign up" %}
+                        </a>
+                    </li>
                 {% else %}
                     <li class="nav-item navbar-item">
                         <a class="nav-link" data-target="#modal-login-user" data-toggle="modal"
                             href="{% url 'home:homepage' %}">{% trans "Login" %}
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'home:signup' %}">
+                            {% trans "Sign up" %}
                         </a>
                     </li>
                 {% endif %}

@@ -83,7 +83,7 @@
     </div>
 
     <!-- Footer -->
-    <footer class="py-2 footer">
+    <footer class="py-2 footer" id="app-footer">
         {% include "footer.html" %}
     </footer>
     <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
@@ -124,5 +124,21 @@ function adaptNavbar() {
 
 adaptNavbar();
 window.addEventListener('resize', adaptNavbar);
+
+function adaptMarginFooter() {
+    const height = window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+    const contentHeight = document.querySelector("[name=page-container]") ?
+        document.querySelector("[name=page-container]").getBoundingClientRect().height : null;
+    if (contentHeight && contentHeight + 150 < height) {
+        // If the body is shorter thant the page height
+        // Set margin to footer to fit the bottom of the page
+        var footer = document.getElementById("app-footer");
+        var footerHeight = footer ? footer.getBoundingClientRect().height : null;
+        var margin = height - contentHeight - footerHeight - 111;  // 111 for the margin top
+        footer ? footer.style.marginTop = margin + "px" : "";
+    }
+}
+
+adaptMarginFooter();
 
 </script>
