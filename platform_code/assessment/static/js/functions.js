@@ -722,6 +722,20 @@ function filterDashboardGraphs(formId){
 }
 
 
+function filterLabellingStatus(formId) {
+    var form = document.getElementById(formId);
+    var statusValue = form.status.value;
+    var labellings = Array.from(document.querySelectorAll("[name=labelling-status]"));
+    labellings.forEach((item) => {
+        var classList = item.closest("tr").classList;
+        var status = item.textContent;
+        statusValue == "All status" || statusValue == status ?
+            classList.remove("display-none") : classList.add("display-none");
+    })
+
+}
+
+
 function submitOrganisationForm(formId, organisation_id) {
     var form = document.getElementById(formId);
     var ajax = new XMLHttpRequest();

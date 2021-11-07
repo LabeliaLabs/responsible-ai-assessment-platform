@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import ReadOnlyPasswordHashField, PasswordResetForm
 
 from .models import User, Organisation
+from assessment.models import Labelling
 
 UserModel = get_user_model()
 
@@ -202,6 +203,9 @@ class PasswordResetForm_(PasswordResetForm):
         )
 
 
+# Admin dashboard part
+
+
 class DashboardUsersStatsTabFilterForm(forms.Form):
     """
     A form to filter users stats and graphs by user inscription date
@@ -287,4 +291,22 @@ class DashboardEvaluationsStatsTabFilterForm(forms.Form):
             }
         ),
         label=_("Size")
+    )
+
+
+class LabellingStatusForm(forms.Form):
+    choices = Labelling.STATUS
+    status_choices = [_ for _ in choices]
+    status_choices.insert(0, ("All status", _("All status")))
+    status = forms.ChoiceField(
+        choices=status_choices,
+        initial=status_choices[0],
+        widget=forms.Select(
+            attrs={
+                'class': 'filter-field',
+                'id': 'labelling_status_filter',
+                'onchange': "filterLabellingStatus('labelling-status-form')"
+            }
+        ),
+        label=_("Status"),
     )

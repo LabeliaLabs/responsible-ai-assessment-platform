@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-07 14:25+0100\n"
+"POT-Creation-Date: 2021-11-07 16:29+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,7 +104,7 @@ msgstr "Titre de l'évaluation"
 #: .\platform_code\assessment\templates\assessment\evaluation.html:12
 #: .\platform_code\assessment\templates\assessment\organisation\organisation.html:11
 #: .\platform_code\assessment\templates\assessment\section.html:11
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:26
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:38
 #: .\platform_code\home\templates\home\profile-labelling.html:22
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:19
 #: .\platform_code\home\templates\home\profile.html:41
@@ -298,7 +298,7 @@ msgstr "Aller à l'élément d'évaluation précédent"
 #: .\platform_code\assessment\templates\assessment\content-section.html:183
 #: .\platform_code\assessment\templates\assessment\content-section.html:192
 #: .\platform_code\assessment\templates\assessment\content-section.html:205
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:70
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:82
 #: .\platform_code\home\templates\home\login-modal.html:30
 #: .\platform_code\home\templates\home\login.html:68
 msgid "Validate"
@@ -501,7 +501,7 @@ msgstr "Date de creation"
 #: .\platform_code\assessment\templates\assessment\evaluation.html:74
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:13
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:37
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:25
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:37
 #: .\platform_code\home\templates\home\profile-labelling.html:21
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:18
 #: .\platform_code\home\templates\home\release-notes.html:24
@@ -839,7 +839,7 @@ msgid "Progression"
 msgstr "Progression"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:17
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:28
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:40
 #: .\platform_code\home\templates\home\faq.html:126
 #: .\platform_code\home\templates\home\profile-labelling.html:24
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:23
@@ -847,7 +847,7 @@ msgid "Score"
 msgstr "Score"
 
 #: .\platform_code\assessment\templates\assessment\organisation\orga-evaluation.html:18
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:34
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:46
 #: .\platform_code\home\templates\home\profile-labelling.html:27
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:25
 msgid "Action"
@@ -1686,21 +1686,21 @@ msgstr "Français"
 msgid "Export the organisation evaluations as CSV file"
 msgstr "Exporter les évaluations des organisation dans un fichier csv"
 
-#: .\platform_code\home\forms.py:17 .\platform_code\home\forms.py:118
+#: .\platform_code\home\forms.py:18 .\platform_code\home\forms.py:119
 msgid "First name"
 msgstr "Prénom"
 
-#: .\platform_code\home\forms.py:20 .\platform_code\home\forms.py:119
+#: .\platform_code\home\forms.py:21 .\platform_code\home\forms.py:120
 msgid "Last name"
 msgstr "Nom"
 
-#: .\platform_code\home\forms.py:23 .\platform_code\home\forms.py:136
+#: .\platform_code\home\forms.py:24 .\platform_code\home\forms.py:137
 #: .\platform_code\home\templates\home\profile-settings.html:30
 #: .\platform_code\home\templates\home\profile-settings.html:31
 msgid "Password"
 msgstr "Mot de passe"
 
-#: .\platform_code\home\forms.py:27
+#: .\platform_code\home\forms.py:28
 #: .\platform_code\home\templates\home\settings-password.html:8
 #: .\platform_code\home\templates\home\signup.html:37
 msgid ""
@@ -1710,71 +1710,83 @@ msgstr ""
 "Votre mot de passe doit contenir au moins 8 caractères avec au moins une "
 "lettre et un chiffre"
 
-#: .\platform_code\home\forms.py:57 .\platform_code\home\forms.py:93
+#: .\platform_code\home\forms.py:58 .\platform_code\home\forms.py:94
 msgid "Name"
 msgstr "Nom"
 
-#: .\platform_code\home\forms.py:58 .\platform_code\home\forms.py:94
-#: .\platform_code\home\forms.py:289
+#: .\platform_code\home\forms.py:59 .\platform_code\home\forms.py:95
+#: .\platform_code\home\forms.py:293
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:53
 msgid "Size"
 msgstr "Taille"
 
-#: .\platform_code\home\forms.py:59 .\platform_code\home\forms.py:95
+#: .\platform_code\home\forms.py:60 .\platform_code\home\forms.py:96
 msgid "Country"
 msgstr "Pays"
 
-#: .\platform_code\home\forms.py:60 .\platform_code\home\forms.py:96
-#: .\platform_code\home\forms.py:278
+#: .\platform_code\home\forms.py:61 .\platform_code\home\forms.py:97
+#: .\platform_code\home\forms.py:282
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:35
 msgid "Sector"
 msgstr "Secteur"
 
-#: .\platform_code\home\forms.py:120
+#: .\platform_code\home\forms.py:121
 msgid "Language preference"
 msgstr "Préférence de langage"
 
-#: .\platform_code\home\forms.py:138
+#: .\platform_code\home\forms.py:139
 msgid "Password confirmation"
 msgstr "Confirmation du mot de passe"
 
-#: .\platform_code\home\forms.py:150
+#: .\platform_code\home\forms.py:151
 msgid "Passwords don't match"
 msgstr "Votre mot de passe est erroné"
 
-#: .\platform_code\home\forms.py:219
+#: .\platform_code\home\forms.py:223
 msgid "Inscription date"
 msgstr "Date d'inscription "
 
-#: .\platform_code\home\forms.py:237
+#: .\platform_code\home\forms.py:241
 msgid "Created from the"
 msgstr "Créées à partir du"
 
-#: .\platform_code\home\forms.py:245
-#: .\platform_code\home\views\dashboard_view.py:318
-#: .\platform_code\home\views\dashboard_view.py:337
-#: .\platform_code\home\views\dashboard_view.py:358
+#: .\platform_code\home\forms.py:249
+#: .\platform_code\home\views\dashboard_view.py:320
+#: .\platform_code\home\views\dashboard_view.py:339
+#: .\platform_code\home\views\dashboard_view.py:360
 msgid "all sectors"
 msgstr "Tous les secteurs"
 
-#: .\platform_code\home\forms.py:246
-#: .\platform_code\home\views\dashboard_view.py:319
-#: .\platform_code\home\views\dashboard_view.py:338
-#: .\platform_code\home\views\dashboard_view.py:359
+#: .\platform_code\home\forms.py:250
+#: .\platform_code\home\views\dashboard_view.py:321
+#: .\platform_code\home\views\dashboard_view.py:340
+#: .\platform_code\home\views\dashboard_view.py:361
 msgid "all sizes"
 msgstr "Toutes les tailles"
 
-#: .\platform_code\home\forms.py:254
+#: .\platform_code\home\forms.py:258
 msgid "All sectors"
 msgstr "Tous les secteurs"
 
-#: .\platform_code\home\forms.py:255
+#: .\platform_code\home\forms.py:259
 msgid "All sizes"
 msgstr "Toutes les tailles"
 
-#: .\platform_code\home\forms.py:267
+#: .\platform_code\home\forms.py:271
 msgid "Date"
 msgstr "Date "
+
+#: .\platform_code\home\forms.py:300
+msgid "All status"
+msgstr "Tous les status"
+
+#: .\platform_code\home\forms.py:311
+#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:55
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:44
+#: .\platform_code\home\templates\home\profile-labelling.html:25
+#: .\platform_code\home\templates\home\profile-user-evaluations.html:24
+msgid "Status"
+msgstr "Statut"
 
 #: .\platform_code\home\models.py:80
 msgid "Users must have an email address"
@@ -1875,6 +1887,7 @@ msgstr "Réinitialiser les filtres"
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:19
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-organisations-tab.html:19
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-users-tab.html:19
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:26
 msgid "Filter"
 msgstr "Filtrer"
 
@@ -1890,13 +1903,6 @@ msgstr " pour les organisations de la taille et du secteur spécifiés "
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:56
 msgid "Number of Evaluations"
 msgstr "Nombre d'évaluations : "
-
-#: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:55
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:32
-#: .\platform_code\home\templates\home\profile-labelling.html:25
-#: .\platform_code\home\templates\home\profile-user-evaluations.html:24
-msgid "Status"
-msgstr "Statut"
 
 #: .\platform_code\home\templates\home\dashboard\dashboard-admin-evaluations-tab.html:61
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:68
@@ -1972,38 +1978,38 @@ msgstr "Labellisation"
 msgid "Current labelling threshold:"
 msgstr "Seuil actuel de labellisation"
 
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:24
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:36
 #: .\platform_code\home\templates\home\profile-labelling.html:20
 #: .\platform_code\home\templates\home\profile-user-evaluations.html:17
 msgid "Evaluation name"
 msgstr "Nom de l'évaluation"
 
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:27
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:39
 msgid "Created by"
 msgstr "Créé par"
 
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:29
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:41
 msgid "Submission date"
 msgstr "Date de soumission"
 
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:30
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:42
 #: .\platform_code\home\templates\home\profile-labelling.html:26
 msgid "Number of submissions"
 msgstr "Nombre de soumissions"
 
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:31
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:43
 msgid "Last modification date"
 msgstr "Dernière date de modifiation"
 
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:33
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:45
 msgid "Justification request date"
 msgstr "Date de justification"
 
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:64
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:76
 msgid "Justifications"
 msgstr "Justifications"
 
-#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:76
+#: .\platform_code\home\templates\home\dashboard\dashboard-labelling.html:88
 msgid "Reject"
 msgstr "Rejeter"
 
@@ -3068,14 +3074,14 @@ msgstr "Inscription"
 msgid "already have an account?"
 msgstr "J'ai déjà un compte"
 
-#: .\platform_code\home\views\dashboard_view.py:122
-#: .\platform_code\home\views\dashboard_view.py:154
-#: .\platform_code\home\views\dashboard_view.py:183
-#: .\platform_code\home\views\dashboard_view.py:211
+#: .\platform_code\home\views\dashboard_view.py:124
+#: .\platform_code\home\views\dashboard_view.py:156
+#: .\platform_code\home\views\dashboard_view.py:185
+#: .\platform_code\home\views\dashboard_view.py:213
 msgid "An error has occurred, please check your input"
 msgstr "Un problème est survenu. Vérifiez les données que vous avez saisies."
 
-#: .\platform_code\home\views\dashboard_view.py:215
+#: .\platform_code\home\views\dashboard_view.py:217
 msgid "An error has occurred, no relevant tabs were selected"
 msgstr "Une erreur est survenue. aucun onglet n'a été sélectionné."
 

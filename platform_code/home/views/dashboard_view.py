@@ -12,7 +12,8 @@ from assessment.models import Evaluation, Assessment, Labelling
 from home.forms import (
     DashboardUsersStatsTabFilterForm,
     DashboardOrganisationsStatsTabFilterForm,
-    DashboardEvaluationsStatsTabFilterForm
+    DashboardEvaluationsStatsTabFilterForm,
+    LabellingStatusForm
 )
 
 
@@ -94,6 +95,7 @@ class DashboardView(TemplateView):
         # Manage the labellings
         self.context["labellings"] = [labelling for labelling in Labelling.objects.all()]
         self.context["labelling_threshold"] = PlatformManagement.get_labelling_threshold()
+        self.context["labelling_status_form"] = LabellingStatusForm()
 
         return self.render_to_response(self.context)
 

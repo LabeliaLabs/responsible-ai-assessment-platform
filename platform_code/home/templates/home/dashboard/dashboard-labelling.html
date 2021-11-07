@@ -17,6 +17,15 @@
 </ul>
 {% endif %}
 
+<form action="#" class="attribute-form-bis center" method="post"
+      id="labelling-status-form" role="form"
+>
+    {% csrf_token %}
+        {{ labelling_status_form }}
+</form>
+
+
+
 <div id="table-label-admin" class=" margin-50">
     <table class="table table-striped">
         <thead>
@@ -54,7 +63,7 @@
                 <td class="case-array">{{ labelling.start_date|format_date_calendar }}</td>
                 <td class="case-array">{{ labelling.counter }}</td>
                 <td class="case-array">{{ labelling.last_update|format_date_calendar }}</td>
-                <td class="case-array">{{ labelling.status }}</td>
+                <td class="case-array" name="labelling-status">{{ labelling.status }}</td>
                 <td class="case-array">{{ labelling.justification_request_date|format_date_calendar }}</td>
                 <td class="case-array">
                     {% if labelling.status == "progress" %}
