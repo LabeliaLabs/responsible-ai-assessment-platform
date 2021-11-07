@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-13 10:50+0200\n"
+"POT-Creation-Date: 2021-11-07 14:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2623,7 +2623,7 @@ msgstr "Veuillez vous connecter pour accéder à cette page."
 #: .\platform_code\home\templates\home\registration\password_reset_complete.html:7
 #: .\platform_code\templates\footer.html:31
 #: .\platform_code\templates\navbar.html:79
-#: .\platform_code\templates\navbar.html:85
+#: .\platform_code\templates\navbar.html:90
 msgid "Login"
 msgstr "Connexion"
 
@@ -3059,8 +3059,10 @@ msgstr ""
 #: .\platform_code\home\templates\home\signup.html:18
 #: .\platform_code\home\templates\home\signup.html:54
 #: .\platform_code\templates\footer.html:30
+#: .\platform_code\templates\navbar.html:84
+#: .\platform_code\templates\navbar.html:95
 msgid "Sign up"
-msgstr "Création du compte"
+msgstr "Inscription"
 
 #: .\platform_code\home\templates\home\signup.html:58
 msgid "already have an account?"
