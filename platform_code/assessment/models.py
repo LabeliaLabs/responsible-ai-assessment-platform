@@ -51,8 +51,8 @@ class Assessment(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        if self.name:
-            return self.name
+        if self.name and self.version:
+            return f'{self.name} - V{str(self.version)}'
         else:
             return f"Assessment {str(self.pk)}"
 
@@ -224,13 +224,13 @@ class Evaluation(models.Model):
     An evaluation is a dynamic object
     """
 
-    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name="current_assessment")
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name="evaluations")
     upgraded_from = models.ForeignKey(
         Assessment,
         on_delete=models.SET_NULL,
         null=True,
         default=None,
-        related_name="assessment_upgraded_from"
+        related_name="evaluations_upgraded_from"
     )
     name = models.CharField(
         max_length=200,

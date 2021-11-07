@@ -25,6 +25,18 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
     """
     change_list_template = "assessment/admin/import-json.html"
 
+    list_display = (
+        "name",
+        "version",
+        "previous_assessment",
+        "created_at",
+        "get_number_evaluations"
+    )
+
+    @admin.display(description="Number of evaluations")
+    def get_number_evaluations(self, obj):
+        return obj.evaluations.all().count()
+
     def get_urls(self):
         urls = super().get_urls()
         additional_urls = [
