@@ -18,8 +18,8 @@ class UserAdmin(BaseUserAdmin):
         "active",
         "first_name",
         "last_name",
-        "get_created_at",
-        "get_last_login",
+        "created_at",
+        "last_login",
         "language_preference",
         "organisations_user_is_member",
     )
@@ -49,18 +49,6 @@ class UserAdmin(BaseUserAdmin):
     )
     ordering = ("email",)
     filter_horizontal = ()
-
-    def get_created_at(self, obj):
-        if obj.created_at:
-            return obj.created_at.strftime("%d/%m/%Y")
-        else:
-            return "No date"
-
-    def get_last_login(self, obj):
-        if obj.last_login:
-            return obj.last_login.strftime("%d/%m/%Y")
-        else:
-            return "Not logged yet"
 
     def organisations_user_is_member(self, obj):
         """
