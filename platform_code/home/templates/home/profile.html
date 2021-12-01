@@ -61,6 +61,13 @@
                        onclick="displayTextLink('{% trans 'My notes' %}', 'active-profile')"
                     >{% trans "My notes" %}</a>
                 </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column {% if tab == 'action_plan' %} active {% endif %}"
+                       data-toggle="pill" href="#content-action-plan"
+                       id="tab-action-plan" name="column-button"
+                       onclick="displayTextLink('{% trans 'My action plans' %}', 'active-profile')"
+                    >{% trans "My action plans" %}</a>
+                </li>
                  <li class="nav-item column-button">
                     <a class="nav-link profile-column" data-toggle="pill" href="#content-change-logs"
                        id="tab-change-logs" name="column-button">{% trans "Change logs" %}</a>
@@ -88,6 +95,10 @@
                 <div class="container-profile tab-pane {% if tab == 'notes' %} active {% else %} fade {% endif %}"
                      id="content-user-notes"><br>
                     {% include "home/profile-user-notes.html" %}
+                </div>
+                <div class="container-profile tab-pane {% if tab == 'action_plan' %} active {% else %} fade {% endif %}"
+                     id="content-action-plan"><br>
+                    {% include "home/profile-action-plan.html" %}
                 </div>
                 <div class="container-profile tab-pane fade" id="content-change-logs">
                     {% include "home/profile-change-logs.html" %}

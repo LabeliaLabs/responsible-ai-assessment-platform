@@ -286,7 +286,7 @@ def treat_delete_note(request):
     element_id = request.POST.dict().get("delete_note_id")
     try:
         # try to get an element that matchs the specified id and that the user can delete it
-        element = get_element_has_notes(element_id, user)
+        element = get_element_user_can_edit(element_id, user)
         # if notes are not empty delete it and return success
         # else return an error
         if element.user_notes is not None and element.user_notes != '':
@@ -325,7 +325,7 @@ def treat_archive_note(request):
     element_id = request.POST.dict().get("archive_note_id")
     try:
         # try to get an element that matchs the specified id and that the user can access
-        element = get_element_has_notes(element_id, user)
+        element = get_element_user_can_edit(element_id, user)
         # if notes are not empty archive it and return success
         # else return an error
         if element.user_notes is not None and element.user_notes != '':
@@ -361,7 +361,43 @@ def treat_archive_note(request):
     return HttpResponse(json.dumps(response), content_type="application/json")
 
 
-def get_element_has_notes(element_id, user):
+def treat_action_plan(request, element_key):
+    user = request.user
+    element_id = request.POST.dict().get(element_key)
+    try:
+        element = get_element_user_can_edit(element_id, user)
+        response = {
+            "success": True,
+            "message_type": "alert-success",
+            "section_id": element.section.id,
+            "evaluation_id": element.section.evaluation.id
+        }
+        if element.is_in_action_plan:
+            element.is_in_action_plan = False
+            element.save()
+            response["message"] = _("The evaluation element has been removed from your action plan.")
+            response["added_action_plan"] = False
+        else:
+            element.is_in_action_plan = True
+            element.save()
+            response["message"] = _("The evaluation element has been added to your action plan.")
+            response["added_action_plan"] = True
+
+    except ObjectDoesNotExist:
+        # if the element is not found returns an error
+        logger.error(
+            f"[user_action_plan_error] The element id {element_id} from the post of "
+            f"the user {request.user.email} is not an element or the user has no right to access"
+        )
+        response = {
+            "success": False,
+            "message_type": "alert-warning",
+            "message": _("You cannot do this action!"),
+        }
+    return HttpResponse(json.dumps(response), content_type="application/json")
+
+
+def get_element_user_can_edit(element_id, user):
     """
     This method takes an element id and a user and returns the element that has this id
     if the user can access it and if this element has notes

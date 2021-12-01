@@ -973,6 +973,7 @@ function archiveNote(note_element_id, notif_div) {
         })
 }
 
+
 //this function is used in the evaluation to remove a note
 function removeNoteEvaluation(note_element_id, notification_div_id) {
     ajaxRequestAndNotify("form-delete-element-", note_element_id, notification_div_id,
@@ -1024,6 +1025,76 @@ function removeNoteProfile(note_element_id, notification_div_id) {
                 }, 4000);
             }
         });
+}
+
+
+function actionPlan(elementId, messageDiv) {
+    var form = document.getElementById("form-action-plan-" + elementId);
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+            var response = JSON.parse(ajax.response);
+            var parentMessage = document.getElementById(messageDiv + elementId);
+            addMessage(parentMessage, response['message'], response["message_type"]);
+            parentMessage.classList.remove("hidden-div");
+            var actionPlanButton = document.getElementById(`action_plan-btn${elementId}`);
+            var icon = actionPlanButton.querySelector("i");
+            if (response["added_action_plan"]) {
+                icon.classList.remove("fa-square-o");
+                icon.classList.add("fa-check-square-o");
+            } else {
+                icon.classList.remove("fa-check-square-o");
+                icon.classList.add("fa-square-o");
+            }
+            //remove the notification after 4 secondes
+            setTimeout(function () {
+                parentMessage.classList.add("hidden-div");
+                parentMessage.textContent = '';
+            }, 4000);
+        }
+    }
+    manageAjaxRequest(ajax, form, "action_plan_element_id=" + elementId);
+}
+
+function removeElementActionPlan(elementId, messageDiv) {
+    var form = document.getElementById("remove-element-action-plan-form" + elementId);
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+            var response = JSON.parse(ajax.response);
+            var parentMessage = document.getElementById(messageDiv + elementId);
+            addMessage(parentMessage, response['message'], response["message_type"]);
+            parentMessage.classList.remove("hidden-div");
+            setTimeout(function () {
+                parentMessage.classList.add("hidden-div");
+                parentMessage.textContent = '';
+            }, 4000);
+
+            if (response['success']) {
+                document.getElementById("element-footer" + elementId).textContent = '';
+                setTimeout(function () {
+                    var elementCard = document.getElementById(`action-plan-element-${elementId}`);
+                    var sectionDiv = elementCard.parentElement;
+                    elementCard.remove();
+                    if (sectionDiv.childElementCount === 0) {
+                        var sectionCard = document.getElementById(`action-plan-section-${response["section_id"]}`);
+                        var evaluationDiv = document.getElementById("evaluation-action-plan-" + response["evaluation_id"]);
+                        sectionCard.remove();
+                        if (evaluationDiv.childElementCount === 0) {
+                            var evaluationCard = document.getElementById("accordion-evaluation-action-plan-" + response["evaluation_id"]);
+                            evaluationCard.remove();
+                            var childCount = document.querySelectorAll("#action-plans-wrapper > div").length;
+                            if (childCount === 0) {
+                                document.getElementById("no-action-plan").removeAttribute("hidden");
+                            }
+                        }
+
+                    }
+                }, 4000);
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form, "action_plan_remove_element_id=" + elementId);
 }
 
 function changeIconRelease(divHeader) {

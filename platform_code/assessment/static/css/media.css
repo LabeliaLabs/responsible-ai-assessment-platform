@@ -182,6 +182,10 @@ Inside each section, first you have, if it exists:
         border-color: transparent;
         background-color: transparent;
     }
+    .grid-two-cols {
+        grid-template-columns: auto;
+        justify-items: center;
+    }
 
 }
 
