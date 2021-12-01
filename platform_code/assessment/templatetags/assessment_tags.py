@@ -11,7 +11,6 @@ register = template.Library()
 
 @register.filter
 def get_key_by_position(dictionary, i):
-    print("get key", dictionary, i)
     if isinstance(dictionary, dict) and type(i) == int and i <= len(dictionary.keys()):
         list_keys = list(dictionary.keys())
         return list_keys[i]

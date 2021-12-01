@@ -136,23 +136,40 @@
                                     {% endif %}
 
                                     {% if evaluation|user_can_edit_evaluation:user %}
-                                    <div class="flex-column mr-3">
-                                        <a class="reset-response row justify-content-end"
-                                           onclick="removeNoteEvaluation({{element.id}}, 'confirmationform')">
-                                            <p class="m-0">{% trans "Delete this note" %}</p>
-                                        </a>
-                                        <div class="row ml-1 justify-content-end">
+                                    <div class="grid-two-cols">
+                                        <div class="row ml-1">
                                             <a class="btn-cursor"
-                                               onclick="archiveNote({{element.id}}, 'confirmationform')">
-                                                {% if element.user_notes_archived %}
+                                               onclick="actionPlan({{element.id}}, 'confirmationform')"
+                                               id="action_plan-btn{{element.id}}"
+                                            >
+                                                {% if element.is_in_action_plan %}
                                                 <i class="fa fa-check-square-o"
-                                                   id="icon-{{element.id}}"></i>
+                                                   id="icon-action-plan{{element.id}}"></i>
                                                 {% else %}
                                                 <i class="fa fa-square-o"
-                                                   id="icon-{{element.id}}"></i>
+                                                   id="icon-no-action-plan{{element.id}}"></i>
                                                 {% endif %}
                                             </a>
-                                            <p class="m-0 ml-1">{% trans 'Archive this note' %}</p>
+                                            <p class="m-0 ml-1">{% trans 'Add to my action plan' %}</p>
+                                        </div>
+                                        <div class="flex-column mr-3">
+                                            <a class="reset-response row justify-content-end"
+                                               onclick="removeNoteEvaluation({{element.id}}, 'confirmationform')">
+                                                <p class="m-0">{% trans "Delete this note" %}</p>
+                                            </a>
+                                            <div class="row ml-1 justify-content-end">
+                                                <a class="btn-cursor"
+                                                   onclick="archiveNote({{element.id}}, 'confirmationform')">
+                                                    {% if element.user_notes_archived %}
+                                                    <i class="fa fa-check-square-o"
+                                                       id="icon-{{element.id}}"></i>
+                                                    {% else %}
+                                                    <i class="fa fa-square-o"
+                                                       id="icon-{{element.id}}"></i>
+                                                    {% endif %}
+                                                </a>
+                                                <p class="m-0 ml-1">{% trans 'Archive this note' %}</p>
+                                            </div>
                                         </div>
                                     </div>
                                     {% endif %}
@@ -252,6 +269,10 @@
                         </form>
                         <form class="m-1" action="{% url 'home:user-profile' %}"
                               id="form-delete-element-{{element.id}}" method="post">
+                            {% csrf_token %}
+                        </form>
+                        <form action="{% url 'home:user-profile' %}"
+                              id="form-action-plan-{{element.id}}" method="post">
                             {% csrf_token %}
                         </form>
 

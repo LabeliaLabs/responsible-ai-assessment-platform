@@ -528,6 +528,7 @@ class Evaluation(models.Model):
                     )
                     new_element.user_notes = older_element.user_notes
                     new_element.user_justification = older_element.user_justification
+                    new_element.is_in_action_plan = older_element.is_in_action_plan
                     new_element.save()
 
                 for new_choice in new_element.choice_set.all():
@@ -635,6 +636,7 @@ class Evaluation(models.Model):
                 new_element.user_notes = evaluation_element.user_notes
                 new_element.user_justification = evaluation_element.user_justification
                 new_element.user_notes_archived = evaluation_element.user_notes_archived
+                new_element.is_in_action_plan = evaluation_element.is_in_action_plan
                 new_element.save()
                 for choice in evaluation_element.choice_set.all():
                     if choice.is_ticked:
@@ -1313,6 +1315,7 @@ class EvaluationElement(models.Model):
     max_points = models.FloatField(default=0, blank=True, null=True)
     # This field "fetch" is used for the versioning of assessments
     fetch = models.BooleanField(default=True)
+    is_in_action_plan = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

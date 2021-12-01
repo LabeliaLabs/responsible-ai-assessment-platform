@@ -4,6 +4,7 @@ from assessment.models import (
     Assessment,
     Evaluation,
     Labelling,
+    EvaluationElement,
 )
 from home.models import User, Organisation, PlatformManagement
 from home.views.profile import ProfileView
@@ -144,6 +145,25 @@ class TestLabellingProcess(TestCase):
         self.duplicated_evaluation_score = self.duplicated_evaluation.evaluationscore_set.all().first()
         self.assertEqual(self.evaluation.is_finished, self.duplicated_evaluation.is_finished)
         self.assertEqual(self.evaluation_score.score, self.duplicated_evaluation_score.score)
+
+    def test_evaluation_duplication_action_plan(self):
+        evaluation_element = EvaluationElement.objects.filter(
+            master_evaluation_element__order_id="1",
+            section__master_section__order_id="1"
+        ).first()
+        evaluation_element.is_in_action_plan = True
+        evaluation_element.save()
+        self.evaluation.complete_evaluation(characteristic="normal")
+        self.evaluation.duplicate_evaluation()
+        duplicated_evaluation = Evaluation.objects.filter(name="evaluation-duplication").first()
+        self.assertIsNotNone(duplicated_evaluation)
+        new_evaluation_element = EvaluationElement.objects.filter(
+            master_evaluation_element__order_id="1",
+            section__master_section__order_id="1",
+            section__evaluation=duplicated_evaluation
+        ).first()
+        self.assertIsNotNone(new_evaluation_element)
+        self.assertTrue(new_evaluation_element.is_in_action_plan)
 
     def test_labelling_view_creation(self):
         """

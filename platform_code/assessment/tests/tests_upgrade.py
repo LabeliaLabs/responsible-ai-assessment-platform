@@ -339,6 +339,18 @@ class TestEvaluationUpgrade(TestEvaluationFetch):
         self.assertEqual(section2.max_points, 2)
         self.assertEqual(section2.points, 0)
 
+    def test_upgrade_action_plan(self):
+        self.evaluation_element1.is_in_action_plan = True
+        self.evaluation_element1.save()
+        self.evaluation.upgrade()
+        new_evaluation = Evaluation.objects.get(assessment=self.assessment_v2)
+        section1 = Section.objects.get(master_section__order_id="1", evaluation=new_evaluation)
+        new_evaluation_element1 = EvaluationElement.objects.get(
+            master_evaluation_element__order_id="1",
+            section=section1
+        )
+        self.assertTrue(new_evaluation_element1.is_in_action_plan)
+
 
 class TestUpgradeTableStructure(TestCase):
     """

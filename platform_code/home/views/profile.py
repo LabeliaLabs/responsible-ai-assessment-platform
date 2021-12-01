@@ -25,6 +25,7 @@ from assessment.views.utils.utils import (
     treat_delete_note,
     manage_missing_language,
     treat_archive_note,
+    treat_action_plan,
 )
 from home.forms import OrganisationCreationForm
 from home.models import User, Membership, PlatformManagement
@@ -72,6 +73,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             manage_missing_language(request, evaluation)
         # Get user notes on evaluations from the organizations to which the user belongs
         self.add_notes_context(user)
+        self.add_action_plans(user)
 
         # If the scoring system has changed, it set the max points again for the evaluation, sections, EE
         success_max_points = manage_evaluation_max_points(
@@ -170,6 +172,13 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
             elif "archive_note_id" in request.POST.dict():
                 return treat_archive_note(request)
+
+            elif "action_plan_element_id" in request.POST.dict():
+                return treat_action_plan(request, "action_plan_element_id")
+
+            elif "action_plan_remove_element_id" in request.POST.dict():
+                return treat_action_plan(request, "action_plan_remove_element_id")
+
             # Case there is a post which is not managed by the function
             else:
                 logger.error(
@@ -262,3 +271,32 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                 element
             ] = element.user_notes
         self.context["user_notes_dict"] = user_notes_dict
+
+    def add_action_plans(self, user):
+        """
+        Create a dictionary for the evaluations which have an action plan
+        """
+        elements = (
+            EvaluationElement.objects.exclude(is_in_action_plan=False).filter(
+                Q(
+                    section__evaluation__organisation__membership__user=user,
+                    section__evaluation__organisation__membership__role="admin",
+                )
+                | Q(
+                    section__evaluation__organisation__membership__user=user,
+                    section__evaluation__organisation__membership__role="editor",
+                )
+            ).order_by("id")
+        )
+        user_action_plans_dic = {}
+        for element in elements:
+            section = element.section
+            evaluation = section.evaluation
+            if evaluation not in user_action_plans_dic:
+                user_action_plans_dic[evaluation] = {}
+            if section not in user_action_plans_dic[evaluation]:
+                user_action_plans_dic[evaluation][section] = {}
+            user_action_plans_dic[evaluation][section][
+                element
+            ] = element
+        self.context["user_action_plans_dic"] = user_action_plans_dic
