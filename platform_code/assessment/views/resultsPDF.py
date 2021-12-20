@@ -157,7 +157,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         self.cursor -= self.LINE_JUMP * 2
         self.pdf.setFont("UbuntuRegular", 12)
         for section in context["dict_sections_elements"]:
-            string = f"{_('Section')} {section.master_section.id}: {section.master_section.name}"
+            string = f"{_('Section')} {section.master_section.order_id}: {section.master_section.name}"
             self.draw_centered_string_on_pdf(string, 500)
             section_points = (section.calculate_score_per_section() / section.max_points) * 100
             self.draw_centered_string_on_pdf(
