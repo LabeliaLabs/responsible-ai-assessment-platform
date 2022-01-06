@@ -28,7 +28,7 @@ from assessment.views.utils.utils import (
     treat_action_plan,
 )
 from home.forms import OrganisationCreationForm
-from home.models import User, Membership, PlatformManagement
+from home.models import User, Membership, PlatformManagement, Organisation
 from .utils import (
     organisation_creation,
     manage_user_resource,
@@ -133,9 +133,9 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
                 # If the user belongs to multiple organisation, it is a form with a field organisation
                 if (
-                        len(user.get_list_organisations_where_user_as_role(role="admin"))
+                        len(Organisation.get_list_organisations_where_user_as_role(user=user, role="admin"))
                         >= 1
-                        or len(user.get_list_organisations_where_user_as_role(role="editor"))
+                        or len(Organisation.get_list_organisations_where_user_as_role(user=user, role="editor"))
                         >= 1
                 ):
                     form = EvaluationMutliOrgaForm(

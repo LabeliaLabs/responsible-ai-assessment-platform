@@ -13,8 +13,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import DetailView
 from django.conf import settings
 
-from assessment.forms import EvaluationForm
-from assessment.forms_.member_forms import AddMemberForm, EditRoleForm
+from assessment.forms import AddMemberForm, EditRoleForm, EvaluationForm
 from assessment.models import Evaluation
 from assessment.views.utils.security_checks import (
     membership_security_check,
@@ -151,7 +150,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
         """
         self.context["add_member_form"] = AddMemberForm(auto_id=False)
         self.context["member_list"] = organisation.get_list_members_to_display()
-        self.context["pending_member_list"] = organisation.get_pending_list()
+        self.context["pending_member_list"] = PendingInvitation.get_organisation_pending_list(organisation)
         # Dictionary of forms to edit the role of members of the organisation
         self.context["edit_member_role_form_dic"] = {}
         for member in self.context["member_list"]:

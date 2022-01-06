@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.utils.translation import gettext as _, ngettext
 
 from assessment.templatetags.assessment_tags import stringify_list
+from home.models import Organisation
 
 logger = logging.getLogger('monitoring')
 
@@ -26,7 +27,7 @@ def delete_user(request):
     """
 
     user = request.user
-    list_orga_user_is_admin = user.get_list_organisations_where_user_as_role(role="admin")
+    list_orga_user_is_admin = Organisation.get_list_organisations_where_user_as_role(user=user, role="admin")
     for orga in list_orga_user_is_admin:
         # If the user is the only admin of the organisation
         if orga.count_admin_members() == 1:

@@ -16,7 +16,7 @@ from django.conf import settings
 
 from assessment.templatetags.assessment_tags import stringify_list
 from home.forms import SignUpForm
-from home.models import User, UserResources, Membership
+from home.models import User, UserResources, Membership, PendingInvitation
 
 
 logger = logging.getLogger('monitoring')
@@ -90,8 +90,8 @@ def activate(request, uidb64, token):
         user.save()
         login(request, user)
         # If the user has pending invitations
-        if user.get_list_pending_invitation():
-            list_pending_invitation = user.get_list_pending_invitation()
+        if PendingInvitation.get_list_pending_invitation(user):
+            list_pending_invitation = PendingInvitation.get_list_pending_invitation(user)
             count = len(list_pending_invitation)
             list_organisations = [x.organisation.name for x in list_pending_invitation]
             name = stringify_list(list_organisations)
