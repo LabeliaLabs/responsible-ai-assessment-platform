@@ -22,7 +22,7 @@ from reportlab.lib.styles import ParagraphStyle
 from reportlab.lib import colors
 
 from assessment.models import Evaluation
-from assessment.models import Organisation
+from home.models import Organisation
 from assessment.utils import (
     get_client_ip,
     remove_markdown_bold,

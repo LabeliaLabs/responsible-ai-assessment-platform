@@ -116,11 +116,17 @@ class OrganisationMembershipTestCAse(TestCase):
     def test_user_membership(self):
         # Test if the user has membership in the organisation
         member_user1 = self.user1.membership_set.get(organisation=self.organisation)
-        self.assertIn(member_user1, self.user1.get_list_all_memberships_user())
-        self.assertFalse(self.user2.get_list_all_memberships_user())
-        self.assertIn(self.organisation, self.user1.get_list_organisations_where_user_as_role(role="admin"))
-        self.assertNotIn(self.organisation, self.user1.get_list_organisations_where_user_as_role(role="read_only"))
-        self.assertFalse(self.user2.get_list_organisations_where_user_as_role(role="admin"))
+        self.assertIn(member_user1, Membership.get_list_all_memberships_user(self.user1))
+        self.assertFalse(Membership.get_list_all_memberships_user(self.user2))
+        self.assertIn(
+            self.organisation,
+            Organisation.get_list_organisations_where_user_as_role(self.user1, role="admin")
+        )
+        self.assertNotIn(
+            self.organisation,
+            Organisation.get_list_organisations_where_user_as_role(self.user1, role="read_only")
+        )
+        self.assertFalse(Organisation.get_list_organisations_where_user_as_role(self.user2, role="admin"))
 
     def test_organisation_membership_rejected(self):
         # Security checks for users not member of the organisation
@@ -135,11 +141,14 @@ class OrganisationMembershipTestCAse(TestCase):
         with self.assertRaises(Exception):
             self.user2.membership_set.get(organisation=self.organisation, user=self.user2)
         self.organisation.add_user_to_organisation(user=self.user2, role="read_only")
-        self.assertIn(self.organisation, self.user2.get_list_organisations_where_user_as_role("read_only"))
+        self.assertIn(
+            self.organisation,
+            Organisation.get_list_organisations_where_user_as_role(self.user2, "read_only")
+        )
         member_user2 = self.user2.membership_set.get(organisation=self.organisation, user=self.user2)
         self.assertEqual(self.organisation.get_list_members_not_staff(), [member_user1, member_user2])
         self.assertEqual(self.organisation.get_list_members_to_display(), [member_user1, member_user2])
-        self.assertIn(member_user2, self.user2.get_list_all_memberships_user())
+        self.assertIn(member_user2, Membership.get_list_all_memberships_user(self.user2))
 
     def test_organisation_two_members(self):
         # Add a user to the organisation and check that the organisation methods respond well
@@ -164,7 +173,10 @@ class OrganisationMembershipTestCAse(TestCase):
     def test_organisation_remove_user(self):
         # Test removing a simple user in an organisation with 2 users
         self.organisation.add_user_to_organisation(user=self.user2, role="read_only")
-        self.assertIn(self.organisation, self.user2.get_list_organisations_where_user_as_role(role="read_only"))
+        self.assertIn(
+            self.organisation,
+            Organisation.get_list_organisations_where_user_as_role(self.user2, role="read_only")
+        )
         self.assertTrue(self.organisation.check_user_is_member(self.user2))
         self.organisation.remove_user_to_organisation(self.user2)
         with self.assertRaises(Exception):
@@ -191,14 +203,17 @@ class OrganisationMembershipTestCAse(TestCase):
         self.organisation.delete()
         with self.assertRaises(Exception):
             Membership.objects.get(user=self.user1)
-        self.assertFalse(self.user1.get_list_all_memberships_user())  # User1 has no longer a membership
+        self.assertFalse(Membership.get_list_all_memberships_user(self.user2))  # User1 has no longer a membership
         # Todo test the view which deletes the organisation (and create it)
 
     def test_admin_user_membership(self):
         # Test that admin/staff user are member of the organisation as read_only
         member_user1 = self.user1.membership_set.get(organisation=self.organisation)
         member_user_admin = Membership.objects.get(organisation=self.organisation, user=self.user_admin)
-        self.assertIn(self.organisation, self.user_admin.get_list_organisations_where_user_as_role("read_only"))
+        self.assertIn(
+            self.organisation,
+            Organisation.get_list_organisations_where_user_as_role(self.user_admin, "read_only")
+        )
         self.assertNotIn(member_user_admin, self.organisation.get_list_members_not_staff())
         self.assertEqual([member_user1], self.organisation.get_list_members_not_staff())
         self.assertEqual(self.organisation.count_displayed_members(), 1)
@@ -281,9 +296,9 @@ class TestPendingInvitation(TestCase):
         self.assertEqual(len(list(PendingInvitation.objects.all())), 1)
         invitation = PendingInvitation.objects.get(email="bonjour@hotmail.com")
         self.assertEqual(invitation.organisation, self.organisation)
-        self.assertEqual(self.organisation.get_pending_list(), [invitation])
+        self.assertEqual(PendingInvitation.get_organisation_pending_list(self.organisation), [invitation])
         user2 = User.object.create_user(email="bonjour@hotmail.com", password="test12345")
-        self.assertEqual(user2.get_list_pending_invitation(), [invitation])
+        self.assertEqual(PendingInvitation.get_list_pending_invitation(user2), [invitation])
 
     def test_pending_evaluation_wrong_cases(self):
         """
@@ -299,16 +314,9 @@ class TestPendingInvitation(TestCase):
         with self.assertRaises(Exception):
             PendingInvitation.objects.get(email="bonjour@hotmail.com")
 
-        PendingInvitation.create_pending_invitation(email="bonjour@hotmail.com",
-                                                    organisation="organisation",
-                                                    role=Membership.ROLES[0][0]
-                                                    )
-        with self.assertRaises(Exception):
-            PendingInvitation.objects.get(email="bonjour@hotmail.com")
-
-        self.assertFalse(self.organisation.get_pending_list())
+        self.assertFalse(PendingInvitation.get_organisation_pending_list(self.organisation))
         user2 = User.object.create_user(email="bonjour@hotmail.com", password="test12345")
-        self.assertFalse(user2.get_list_pending_invitation())
+        self.assertFalse(PendingInvitation.get_list_pending_invitation(user2))
 
         # todo test membership creation
 

@@ -6,9 +6,29 @@ from django.utils.translation import activate
 from assessment.models import (
     Assessment,
     MasterSection,
-    is_language_activation_allowed, ManageAssessmentTranslation,
+    is_language_activation_allowed,
+    MasterChoice,
+    MasterEvaluationElement,
+    ExternalLink,
 )
 from assessment.import_assessment import ImportAssessment
+
+
+def create_translated_fields():
+    dic_translated_fields = {}
+    classes_with_translated_fields = [
+        (Assessment, "assessment"),
+        (MasterSection, "master_section"),
+        (MasterEvaluationElement, "master_evaluation_element"),
+        (MasterChoice, "master_choice"),
+        (ExternalLink, "external_link"),
+    ]
+    for tuple_class in classes_with_translated_fields:
+        class_name = tuple_class[0]
+        dic_translated_fields[tuple_class[1]] = \
+            [field.name[:-3] for field in class_name._meta.get_fields()
+             if field.name[-3:] == "_en" and field.name[:4] != "risk"]
+    return dic_translated_fields
 
 
 class ImportAssessmentLanguageTestCase(TestCase):
@@ -29,6 +49,7 @@ class ImportAssessmentLanguageTestCase(TestCase):
             self.assessment_data_2 = json.load(json_file_2)
         json_file_2.close()
         ImportAssessment(self.assessment_data_2)
+        self.dic_translated_fields = create_translated_fields()
 
     def tearDown(self):
         del self.assessment_data
@@ -69,27 +90,26 @@ class ImportAssessmentLanguageTestCase(TestCase):
         import_assessment = ImportAssessment(self.assessment_data)
         self.assertTrue(import_assessment.success)
         assessment = import_assessment.assessment
-        dic_translated_fields = ManageAssessmentTranslation().dic_translated_fields
         # For all the fields which have a translation in the Assessment class, check if they are not None
-        for fields in dic_translated_fields["assessment"]:
+        for fields in self.dic_translated_fields["assessment"]:
             self.assertTrue(getattr(assessment, fields + "_fr"))
             self.assertTrue(getattr(assessment, fields + "_en"))
         # Check that all the fields of MasterSection which are registered to have a translation,
         # are not None for the language
         for master_section in assessment.mastersection_set.all():
-            for fields in dic_translated_fields["master_section"]:
+            for fields in self.dic_translated_fields["master_section"]:
                 self.assertTrue(getattr(master_section, fields + "_fr"))
                 self.assertTrue(getattr(master_section, fields + "_en"))
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
-                for fields in dic_translated_fields["master_evaluation_element"]:
+                for fields in self.dic_translated_fields["master_evaluation_element"]:
                     self.assertTrue(getattr(master_evaluation_element, fields + "_fr"))
                     self.assertTrue(getattr(master_evaluation_element, fields + "_en"))
                 for master_choice in master_evaluation_element.masterchoice_set.all():
-                    for fields in dic_translated_fields["master_choice"]:
+                    for fields in self.dic_translated_fields["master_choice"]:
                         self.assertTrue(getattr(master_choice, fields + "_fr"))
                         self.assertTrue(getattr(master_choice, fields + "_en"))
                 for external_link in master_evaluation_element.external_links.all():
-                    for fields in dic_translated_fields["external_link"]:
+                    for fields in self.dic_translated_fields["external_link"]:
                         self.assertTrue(getattr(external_link, fields + "_fr"))
                         self.assertTrue(getattr(external_link, fields + "_en"))
 
@@ -115,6 +135,7 @@ class AssessmentLanguageTestCase(TestCase):
         ImportAssessment(self.assessment_data_2)
         import_assessment = ImportAssessment(self.assessment_data)
         self.assessment = import_assessment.assessment
+        self.dic_translated_fields = create_translated_fields()
 
     def test_assessment_get_available_languages(self):
         self.assertIn("fr", self.assessment.get_the_available_languages())
@@ -134,22 +155,21 @@ class AssessmentLanguageTestCase(TestCase):
         # Check that the English field name is empty
         self.assertIsNone(self.assessment.name_en)
 
-        dic_translated_fields = ManageAssessmentTranslation().dic_translated_fields
         # Check also on the master section
         for master_section in self.assessment.mastersection_set.all():
-            for fields in dic_translated_fields["master_section"]:
+            for fields in self.dic_translated_fields["master_section"]:
                 self.assertTrue(getattr(master_section, fields + "_fr"))
                 self.assertFalse(getattr(master_section, fields + "_en"))
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
-                for fields in dic_translated_fields["master_evaluation_element"]:
+                for fields in self.dic_translated_fields["master_evaluation_element"]:
                     self.assertTrue(getattr(master_evaluation_element, fields + "_fr"))
                     self.assertFalse(getattr(master_evaluation_element, fields + "_en"))
                 for master_choice in master_evaluation_element.masterchoice_set.all():
-                    for fields in dic_translated_fields["master_choice"]:
+                    for fields in self.dic_translated_fields["master_choice"]:
                         self.assertTrue(getattr(master_choice, fields + "_fr"))
                         self.assertFalse(getattr(master_choice, fields + "_en"))
                 for external_link in master_evaluation_element.external_links.all():
-                    for fields in dic_translated_fields["external_link"]:
+                    for fields in self.dic_translated_fields["external_link"]:
                         self.assertTrue(getattr(external_link, fields + "_fr"))
                         self.assertFalse(getattr(external_link, fields + "_en"))
 
@@ -164,22 +184,21 @@ class AssessmentLanguageTestCase(TestCase):
         # Check that the English field name is empty
         self.assertIsNone(self.assessment.name_fr)
 
-        dic_translated_fields = ManageAssessmentTranslation().dic_translated_fields
         # Check also on the master section
         for master_section in self.assessment.mastersection_set.all():
-            for fields in dic_translated_fields["master_section"]:
+            for fields in self.dic_translated_fields["master_section"]:
                 self.assertTrue(getattr(master_section, fields + "_en"))
                 self.assertFalse(getattr(master_section, fields + "_fr"))
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
-                for fields in dic_translated_fields["master_evaluation_element"]:
+                for fields in self.dic_translated_fields["master_evaluation_element"]:
                     self.assertTrue(getattr(master_evaluation_element, fields + "_en"))
                     self.assertFalse(getattr(master_evaluation_element, fields + "_fr"))
                 for master_choice in master_evaluation_element.masterchoice_set.all():
-                    for fields in dic_translated_fields["master_choice"]:
+                    for fields in self.dic_translated_fields["master_choice"]:
                         self.assertTrue(getattr(master_choice, fields + "_en"))
                         self.assertFalse(getattr(master_choice, fields + "_fr"))
                 for external_link in master_evaluation_element.external_links.all():
-                    for fields in dic_translated_fields["external_link"]:
+                    for fields in self.dic_translated_fields["external_link"]:
                         self.assertTrue(getattr(external_link, fields + "_en"))
                         self.assertFalse(getattr(external_link, fields + "_fr"))
 

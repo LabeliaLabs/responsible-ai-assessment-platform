@@ -13,7 +13,7 @@ from django.utils.translation import gettext as _, activate, get_language_from_r
 
 from assessment.forms import ChoiceForm, ResultsForm, SectionResultsForm
 from assessment.models import EvaluationScore, Evaluation, get_last_assessment_created, Assessment, \
-    EvaluationElement, unpack_exposition_dic
+    EvaluationElement, MasterEvaluationElement
 
 LANGUAGE_QUERY_PARAMETER = 'language'
 logger = logging.getLogger('monitoring')
@@ -417,3 +417,27 @@ def get_element_user_can_edit(element_id, user):
         )
         .get()
     )
+
+
+def unpack_exposition_dic(exposition_dic):
+    """
+    This function is used to set the exposition dic dynamically before rendering it in the results.html or in
+    resultPDF.html.
+    Indeed, the dictionary is saved as json in the database but the keys (risk_domains) need to be translated
+    for the rendering, so we need to set the risk_domain dynamically again.
+    """
+    new_exposition_dic = {}
+    for key, value in exposition_dic.items():
+        if EvaluationElement.objects.filter(master_evaluation_element__risk_domain_fr=key):
+            element = EvaluationElement.objects.filter(master_evaluation_element__risk_domain_fr=key)[0]
+        elif EvaluationElement.objects.filter(master_evaluation_element__risk_domain_en=key):
+            element = EvaluationElement.objects.filter(master_evaluation_element__risk_domain_en=key)[0]
+        # Key is not a risk domain (example "none" so the exposition dic is not rendered)
+        else:
+            return {}
+        if element:
+            new_exposition_dic[element.master_evaluation_element] = [
+                master_element.get_verbose_name() for master_element_id in value
+                for master_element in MasterEvaluationElement.objects.filter(id=master_element_id)
+            ]
+    return new_exposition_dic

@@ -173,7 +173,6 @@ def get_all_change_logs():
                         try:
                             change_log = ElementChangeLog.objects.get(
                                 assessment=assessment,
-                                previous_assessment=assessment.previous_assessment,
                                 eval_element_numbering=master_evaluation_element.
                                 get_numbering()
                             )

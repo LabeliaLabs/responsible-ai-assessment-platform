@@ -8,6 +8,7 @@ from django.utils.translation import gettext as _
 from assessment.utils import get_client_ip
 from assessment.forms import EvaluationForm
 from assessment.models import Evaluation
+from home.models import Organisation
 
 logger = logging.getLogger('monitoring')
 
@@ -28,7 +29,7 @@ def treat_evaluation_name_edition(request):
         evaluation_id = int(request.POST.dict().get("evaluation_id"))
         evaluation = get_object_or_404(Evaluation, id=evaluation_id)  # Check the organisation below
         # If the evaluation get by the POST is not one where user can edit (so user modified html)
-        if evaluation.organisation not in user.get_list_organisations_user_can_edit():
+        if evaluation.organisation not in Organisation.get_list_organisations_user_can_edit(user):
             logger.warning(f"[html_forced] The user {user.email}, with IP address {get_client_ip(request)}"
                            f" tried to modify the name of an evaluation"
                            f" (id {evaluation_id} he should not be able to edit")
