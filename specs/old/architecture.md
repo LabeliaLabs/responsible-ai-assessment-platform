@@ -3,7 +3,7 @@
 ## Composants principaux
 
 - Assets :
-  - L'assessment en lui-même (les assessements en réalité, cf. [Gestion des multiples versions de référentiels d'évaluation](#gestion-des-multiples-versions-de-référentiels-dévaluation))
+  - L'assessment en lui-même (les assessements en réalité, cf. [Gestion des multiples versions de référentiels d'évaluation](./multiple_versions.md))
   - Le(s) modèle(s) de scoring attaché(s) à un référentiel d'évaluation
   - Les ressources complémentaires de l'assessment : articles de références, outils / librairies utiles, explications additionnelles, articles d'illustration
   - Site statique > Contenus : textes de page d'accueil, FAQ, CGU, mentions légales

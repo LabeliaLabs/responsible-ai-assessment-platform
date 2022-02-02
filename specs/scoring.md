@@ -1,8 +1,7 @@
 # Approche de notation (_scoring_) des évaluations
 
-Liens rapides :
+Lien rapide :
 
-- La réflexion sur le(s) [modèle(s) de scoring](https://docs.google.com/spreadsheets/d/1QhvOTsPpNhNcLlt7z_-vL3EBCRAxhjrhy_ybYKcDuFM/edit?usp=sharing)
 - [Issue sur le scoring](https://github.com/LabeliaLabs/referentiel-evaluation-dsrc/issues/38) sur le repo public
 
 ## Positionnement du problème
@@ -12,7 +11,6 @@ Pour donner corps à une évaluation il faut lui associer une notation. Cela per
 - mesurer une évolution dans le temps et voir les progrès d'une organisation
 - positionner une organisation par rapport à la moyenne des autres
 - fixer un ou plusieurs seuils qui peuvent servir à déterminer une note minimale pour prétendre à être certifié
-- ...
 
 Cela n'est pas sans difficulté, et on peut énoncer les grands principes suivants :
 
