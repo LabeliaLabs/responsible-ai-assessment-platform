@@ -81,7 +81,7 @@ Generate a dedicated ssh key (RSA 4096 bit key with email as a comment):
 ```sh
 # OVH needs a rsa key if you want to add it from web interface
 ssh-keygen -t rsa -b 4096 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY>
-# if ppossible use ed25519
+# if possible use ed25519
 ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY>
 ```
 
@@ -131,7 +131,7 @@ scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump ./
 
 Use the `update.sh` script (with `./update.sh`), but be careful with programs! For instance, it is better to stop docker (down) before installing docker upgrades.
 
-This script basilly does this:
+This script basically does this:
 
 ```sh
 sudo apt update && \
