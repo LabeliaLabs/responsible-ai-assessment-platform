@@ -22,4 +22,4 @@ RUN pip install -r requirements.txt
 # make entrypoint.sh executable
 RUN chmod +x ./entrypoint.sh
 
-ENTRYPOINT ["/code/entrypoint.sh"]
+ENTRYPOINT ["sh", "/code/entrypoint.sh"]

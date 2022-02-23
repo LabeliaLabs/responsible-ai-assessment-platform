@@ -595,7 +595,7 @@ class EvaluationElement(models.Model):
                     previous_assessment=self.section.evaluation.upgraded_from,
                     assessment=self.section.evaluation.assessment
                 )
-            except ElementChangeLog.DoesNotExist:
+            except (ElementChangeLog.DoesNotExist, ElementChangeLog.MultipleObjectsReturned):
                 change_log = None
         else:
             try:
@@ -604,7 +604,7 @@ class EvaluationElement(models.Model):
                     previous_assessment=self.section.evaluation.assessment.previous_assessment,
                     assessment=self.section.evaluation.assessment
                 )
-            except ElementChangeLog.DoesNotExist:
+            except (ElementChangeLog.DoesNotExist, ElementChangeLog.MultipleObjectsReturned):
                 change_log = None
 
         return change_log
