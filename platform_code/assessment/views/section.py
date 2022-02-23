@@ -233,7 +233,7 @@ class SectionView(LoginRequiredMixin, ListView):
         If the form is valid, update the message to say success!
         """
         # As the user has edit or admin role, the value "user_can_edit" is set to True to not disable the form
-        form = SectionNotesForm(request.POST, user_can_edit=True)
+        form = SectionNotesForm(request.POST, section=section, user_can_edit=True)
         # Treat the case if the form is valid
         # Else the form is invalid, the default message is let and displayed to the user "an issue occurred"
         if form.is_valid():
