@@ -172,11 +172,11 @@ def get_all_change_logs():
                     for master_evaluation_element in master_evaluation_elements:
                         try:
                             change_log = ElementChangeLog.objects.get(
-                                assessment=assessment,
-                                eval_element_numbering=master_evaluation_element.
-                                get_numbering()
+                                eval_element_numbering=master_evaluation_element.get_numbering(),
+                                previous_assessment=assessment.previous_assessment,
+                                assessment=assessment
                             )
-                        except ElementChangeLog.DoesNotExist:
+                        except (ElementChangeLog.DoesNotExist, ElementChangeLog.MultipleObjectsReturned):
                             change_log = None
 
                         if change_log is not None:
