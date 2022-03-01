@@ -1324,6 +1324,39 @@ body.navbar-is-fixed-top {
 
 /************************************************* END FOOTER ***********************************************/
 
+/*************************************************** COOKIE ***********************************************/
+
+.cookie-banner {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    z-index: 5000;
+    background-color: #5550FF;
+    color: white;
+    padding: 10px 10px 10px 30px;
+}
+
+.close-cookie {
+    position: fixed;
+    right: 10px;
+    bottom: 35px;
+    color: white;
+    opacity: 0.9;
+}
+
+.cookie-buttons {
+    margin-left: 30px;
+}
+
+.cookie-content {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/************************************************* END COOKIE ***********************************************/
+
 /************************************************* PROGRESS BAR *********************************************/
 
 .progress-section-page{
