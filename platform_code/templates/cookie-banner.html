@@ -28,6 +28,8 @@ function setAcceptCookie(value) {
   document.getElementById("cookie-banner").classList.add("display-none")
   if (value) {
     _paq.push(['setConsentGiven']);
+  } else {
+    _paq.push(['forgetConsentGiven']);
   }
 }
 
