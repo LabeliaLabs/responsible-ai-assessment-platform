@@ -1,0 +1,35 @@
+{% load static %}
+{% load assessment_tags %}
+{% load home_tags %}
+{% load i18n %}
+
+<div class="cookie-banner display-none" id="cookie-banner">
+  <div class="cookie-content">
+    {% trans "This website stores cookies to enable site functionality including analytics." %}
+    <div class="cookie-buttons">
+      <button type="button" class="btn btn-outline-light mr-3" id="denyCookieBtn" onclick="setAcceptCookie(false)">
+        {% trans "Decline" %}
+      </button>
+      <button type="button" class="btn btn-light" id="acceptCookieBtn" onclick="setAcceptCookie(true)">
+        {% trans "Allow cookies" %}
+      </button>
+    </div>
+  </div>
+  <button class="close close-cookie remove-smaller-than-small-screen" 
+    onclick="setAcceptCookie(true)" 
+    type="button">&times;</button>
+</div>
+
+<script>
+
+function setAcceptCookie(value) {
+  localStorage["acceptCookie"] = value;
+  localStorage["dateCookieSet"] = Date.now();
+  document.getElementById("cookie-banner").classList.add("display-none")
+  if (value) {
+    _paq.push(['setConsentGiven']);
+  }
+}
+
+
+</script>
