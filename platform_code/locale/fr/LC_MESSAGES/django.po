@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-01 22:17+0100\n"
+"POT-Creation-Date: 2022-03-06 23:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2892,8 +2892,9 @@ msgid "Data export"
 msgstr "Export de mes données personnelles"
 
 #: platform_code/home/templates/home/profile-settings.html:37
-msgid "Export personnal data"
-msgstr "Export des données personnelles"
+#: platform_code/home/templates/home/settings-export-data.html:6
+msgid "Personnal data"
+msgstr "Données personnelles"
 
 #: platform_code/home/templates/home/profile-settings.html:44
 msgid "Account deletion"
@@ -3067,17 +3068,21 @@ msgstr "Etes-vous sûr de vouloir supprimer votre compte ?"
 msgid "Delete my account"
 msgstr "Supprimer mon compte"
 
-#: platform_code/home/templates/home/settings-export-data.html:6
-msgid "Personnal data export"
-msgstr "Export de mes données personnelles"
+#: platform_code/home/templates/home/settings-export-data.html:11
+msgid "Use of cookies"
+msgstr "Utilisation des cookies"
 
-#: platform_code/home/templates/home/settings-export-data.html:9
+#: platform_code/home/templates/home/settings-export-data.html:15
+msgid "Your changes have been taken into account."
+msgstr "Vos changements ont bien été pris en compte."
+
+#: platform_code/home/templates/home/settings-export-data.html:18
 msgid "Do you want to download your personnal data stored in the platform?"
 msgstr ""
 "Voulez-vous exporter vos données personnelles enregistrées sur la "
 "plateforme ?"
 
-#: platform_code/home/templates/home/settings-export-data.html:15
+#: platform_code/home/templates/home/settings-export-data.html:24
 msgid "Download"
 msgstr "Télécharger"
 
@@ -3252,8 +3257,11 @@ msgstr ""
 
 #: platform_code/templates/cookie-banner.html:8
 msgid ""
-"This website stores cookies to enable site functionality including analytics."
-msgstr "Ce site internet utilise des cookies pour permettre certaines fonctionnalités."
+"This website stores cookies to analyze the use of the site and improve its "
+"ergonomics."
+msgstr ""
+"Ce site internet utilise des cookies pour ppour analyser les usages du site "
+"et améliorer son ergonomie ."
 
 #: platform_code/templates/cookie-banner.html:11
 msgid "Decline"
