@@ -3260,8 +3260,8 @@ msgid ""
 "This website stores cookies to analyze the use of the site and improve its "
 "ergonomics."
 msgstr ""
-"Ce site internet utilise des cookies pour ppour analyser les usages du site "
-"et améliorer son ergonomie ."
+"Ce site internet utilise des cookies pour analyser les usages du site "
+"et améliorer son ergonomie."
 
 #: platform_code/templates/cookie-banner.html:11
 msgid "Decline"
