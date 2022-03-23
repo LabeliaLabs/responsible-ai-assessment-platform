@@ -12,6 +12,7 @@ services:
       - main
     volumes:
       - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
     expose:
       - 8080
     env_file:
@@ -40,6 +41,7 @@ services:
       - main
     volumes:
       - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
       - ./nginx/prod-like-local.conf:/etc/nginx/conf.d/custom.conf
     depends_on:
       - web
