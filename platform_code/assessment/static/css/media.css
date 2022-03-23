@@ -70,10 +70,6 @@ Inside each section, first you have, if it exists:
         width: 85%;
     }
 
-    /* signup */
-    .grid-container-2-cols-signup {
-        display: block;
-    }
     .center-smartphone-screen {
         text-align: center;
     }
@@ -258,9 +254,6 @@ Inside each section, first you have, if it exists:
     .width-35 {
         width: 55%;
     }
-    .signup-field-tablet-min-screen {
-        grid-template-columns: 80% 20%;
-    }
     .profile-settings-pills{
         width: 50%;
     }
@@ -281,6 +274,9 @@ Inside each section, first you have, if it exists:
     }
     .smaller-tablet-place-center{
         place-content: center;
+    }
+    .margin-top-50-smaller-tablet {
+        margin-top: 50px;
     }
     .remove-smaller-than-tablet {
         display: none;
@@ -373,16 +369,15 @@ Inside each section, first you have, if it exists:
     .cookie-buttons > button {
         width: 150px
     }
+    .grid-homepage {
+        display: block;
+    }
 
 }
 
 /* LARGER THAN 481px */
 
 @media (min-width: 481px) {
-    .signup-field-tablet-min-screen {
-        display: grid;
-        margin-top: 10px;
-    }
     .tablet-min-screen-signup {
         padding-left: 15%;
         float: right;
@@ -625,6 +620,10 @@ Inside each section, first you have, if it exists:
         margin-top: 50px;
         margin-bottom: 50px;
     }
+    .h1-homepage {
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
     .larger-small-screen-margin-left-18vw{
         margin-left: 18vw;
     }
@@ -635,10 +634,6 @@ Inside each section, first you have, if it exists:
         left: 3%;
         margin-top: 20px;
     }
-    .signup-field-tablet-min-screen {
-        grid-template-columns: 60% 40%;
-    }
-
 }
 
 @media (min-width: 381px) and (max-width: 900px) {

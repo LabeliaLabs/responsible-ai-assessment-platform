@@ -17,7 +17,7 @@ class ResourcesView(LoginRequiredMixin, generic.DetailView):
      This page is different from the resource page of the user dashboard although the template is almost the same"""
     model = User
     template_name = 'home/resources.html'
-    login_url = 'home:login'
+    login_url = 'home:homepage'
     redirect_field_name = 'home:homepage'
 
     def get(self, request, *args, **kwargs):

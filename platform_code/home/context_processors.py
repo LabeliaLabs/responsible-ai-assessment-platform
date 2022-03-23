@@ -1,13 +1,12 @@
-from django.contrib.auth.forms import AuthenticationForm
 from django.utils.translation import activate
 
-from home.models import PlatformManagement
+from home.models import PlatformManagement, Footer
 from assessment.models import is_language_activation_allowed
 
 
-def add_my_login_form(request):
+def add_footer_list(request):
     return {
-        'login_form': AuthenticationForm(auto_id=False),
+        'footer_list': Footer.objects.all(),
     }
 
 

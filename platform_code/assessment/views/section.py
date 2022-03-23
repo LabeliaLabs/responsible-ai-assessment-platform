@@ -30,7 +30,7 @@ class SectionView(LoginRequiredMixin, ListView):
     template_name = "assessment/section.html"
     paginate_by = 1
     success_url = "assessment:results"
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
     context = {}
     data_update = {}

@@ -1,32 +1,13 @@
-{% extends 'base-evaluation.html' %}
 {% load i18n %}
 {% load static %}
 
-{% block content %}
-<head>
-    <title>{% trans 'Labelia assessment: Signup' %}</title>
-    <meta name="description"
-          content="{% blocktrans trimmed %}
-           The Labelia assessment is the result of a participatory work carried out by the Labelia Labs
-           association. Create an account to evaluate your organisation on responsible and trustworthy data science
-           practices.
-          {% endblocktrans %}"
-    />
-
-</head>
-
-
-<h1 class="margin-left-signup h1-margin-no-breadcrumbs">{% trans "Sign up" %}</h1>
-<div class="grid-container-2-cols-signup">
-    <div class="remove-smartphone-screen">
-        <img alt="image" class="img-fluid d-block mx-auto margin-110 image-max-350"
-             src="{% static 'image/sign_up.png' %}">
-    </div>
-    <div class="center-smartphone-screen tablet-min-screen-signup">
+<h1 class="h1-homepage">{% trans "Sign up" %}</h1>
+<div class="">
+    <div class="">
         <form id="signup" method="post">
             {% csrf_token %}
-            {% for field in form %}
-                <div class="tablet-min-screen-field-margin-10 small-screen-field-signup">
+            {% for field in signup_form %}
+                <div class="">
                     {{ field.label_tag }}
                 </div>
                 <div class="signup-field-tablet-min-screen">
@@ -43,25 +24,21 @@
                     {% endif %}
 
                 </div>
-                <div class="margin-10">
+                <div class="">
                     {% for error in field.errors %}
-                    <p class="red-color">{{ error }}</p>
+                    <p class="red-color margin-10">{{ error }}</p>
                     {% endfor %}
                 </div>
             {% endfor %}
             <div class="tablet-min-screen-buttons-signup">
                 <div class="center">
                     <button class="btn btn-primary margin-bot-top-20"
+                            name="action" value="signup"
                             type="submit">{% trans "Sign up" %}
                     </button>
-                </div>
-                <div class="center">
-                    <a class="margin-10" href="{% url 'home:login' %}">{% trans "already have an account?" %}</a>
                 </div>
                 </div>
         </form>
 
     </div>
 </div>
-
-{% endblock %}

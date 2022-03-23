@@ -204,10 +204,6 @@ color: #4D566B;
     visibility: visible;
 }
 
-.not-displayed-div{
-    displayed: none;
-}
-
 .display-line{
     display: flex;
     align-items: center;
@@ -238,6 +234,10 @@ color: #4D566B;
 
 .circle {
     border-radius: 50%;
+}
+
+.full-height {
+    height: 100%
 }
 
 /******************************************* END GLOBAL PROPERTIES *******************************************/
@@ -387,6 +387,10 @@ color: #4D566B;
     width: 65%;
 }
 
+.width-90 {
+    width: 90%;
+}
+
 .width-50{ /* media on it - smartphone */
     width: 50%;
 }
@@ -438,10 +442,9 @@ li {
   grid-template-columns: 95% 5%;
 }
 
-.grid-container-2-cols-signup {
-  display: grid;
-  grid-template-columns: 30% 70%;
-  margin: auto;
+.signup-field-tablet-min-screen {
+    display: grid;
+    grid-template-columns: 95% 10%;
 }
 
 .grid-container-3-cols-signup {
@@ -472,6 +475,11 @@ li {
 
 .result-grid{  /* media on it for grid-template-columns */
     display: grid;
+}
+
+.grid-homepage {
+    display: grid;
+    grid-template-columns: 50% 1px 50%;
 }
 
 /******************************************* END GRID ********************************************************/
@@ -1249,6 +1257,13 @@ body.navbar-is-fixed-top {
     text-decoration: none;
 }
 
+.link-without-border{
+    color: white;
+    font-size: 15px;
+    margin-bottom: 10px;
+    padding: 2px;
+}
+
 .fa-icon-footer{
   padding: 10px;
   font-size: 15px;
@@ -1721,7 +1736,8 @@ tr.spaceUnder>td {
 }
 
 .logo-d4g{
-    height: 70px;
+    height: 60px;
+    width: 60px;
 }
 
 .container-about-page{
@@ -1758,7 +1774,43 @@ tr.spaceUnder>td {
     border-radius: 0.5em;
     margin-top: 20px;
     margin-bottom: 40px;
+}
 
+.homepage-separator {
+    border-left: outset;
+    padding-top: 40px;
+}
+
+.footer-separator {
+    width: 30%;
+    place-items: center;
+    margin: auto;
+    background-color: white;
+    height: 2px;
+    margin-top: 10px;
+}
+
+.logo-footer {
+    display: flex;
+    justify-content: center;
+}
+
+.margin-logo {
+    margin-right: 5px;
+    margin-left: 5px;
+    max-width: 120px;
+    width: 110px;
+}
+
+.links-footer {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+}
+
+.links-footer > a {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 /*********************************************** END DIVERS ************************************************/

@@ -13,6 +13,7 @@ from .models import (
     PendingInvitation,
     PlatformManagement,
     ReleaseNote,
+    Footer,
 )
 
 # Register your models here.
@@ -25,5 +26,6 @@ admin.site.register(PendingInvitation)
 admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
 admin.site.register(ReleaseNote)
+admin.site.register(Footer)
 
 admin_dashboard = DashboardAdminSite(name='admin-monitoring')

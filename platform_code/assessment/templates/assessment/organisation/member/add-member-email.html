@@ -2,7 +2,7 @@
 {% trans "Dear Sir/Madam," %}
 {% trans "The user" %} {{user.email}} {% trans "invite you to join his organisation on the Labelia platform. To do this, you must create an account with the link below." %}
 
-{{ protocol }}://{{ domain }}{% url 'home:signup' %}
+{{ protocol }}://{{ domain }}{% url 'home:homepage' %}
 
 {% trans "If the link above doesn't work, please copy and paste the URL in a new browser window instead." %}
 

@@ -34,17 +34,13 @@
     cursor: pointer;
 }
 
-
-.card_title {
-}
-
-div.evaluation-title: h1 {
+div.evaluation-title > h1 {
     text-align: center;
     margin: 0 auto;
     position:absolute;
 }
 
-div.evaluation-title: h3 {
+div.evaluation-title > h3 {
     text-align: center;
     margin: 0 auto;
     margin-bottom: 20px;
