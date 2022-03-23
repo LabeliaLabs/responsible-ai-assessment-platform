@@ -85,7 +85,7 @@ class SummaryView(LoginRequiredMixin, DetailView):
     model = Organisation
     template_name = "assessment/organisation/organisation.html"
     form_class = EvaluationForm
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
     context = {}
     data_update = {}

@@ -46,7 +46,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
     """
 
     model = Evaluation
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
 
     STAMP_WIDTH = 300

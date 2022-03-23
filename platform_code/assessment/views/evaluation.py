@@ -22,7 +22,7 @@ class EvaluationView(LoginRequiredMixin, DetailView):
     template_name = "assessment/evaluation.html"
     context_object_name = "evaluation"
     pk_url_kwarg = "pk"
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
 
     def get(self, request, *args, **kwargs):
@@ -69,7 +69,7 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
     model = Evaluation
     form_class = EvaluationForm
     template_name = "assessment/creation-evaluation.html"
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
 
     def get(self, request, *args, **kwargs):
@@ -109,7 +109,7 @@ class EvaluationCreationView(LoginRequiredMixin, CreateView):
 class DeleteEvaluation(LoginRequiredMixin, DeleteView):
     model = Evaluation
     success_url = "home:user-profile"
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
 
     def delete(self, request, *args, **kwargs):

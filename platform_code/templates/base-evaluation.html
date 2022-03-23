@@ -84,13 +84,6 @@
         </div>
     {% endif %}
 
-    <div aria-hidden="true" class="modal" id="modal-login-user">
-        <div class="modal-dialog ">
-            <div class="modal-content">
-                {% include "home/login-modal.html" %}
-            </div>
-        </div>
-    </div>
     {% if platform_management.platform_update and user.is_authenticated %}
         <div name="page-container">
     {% else %}

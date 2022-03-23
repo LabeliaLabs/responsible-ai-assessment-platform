@@ -404,11 +404,6 @@ li {
   grid-template-columns: 95% 5%;
 }
 
-.grid-container-2-cols-signup {
-  display: grid;
-  grid-template-columns: 30% 70%;
-  margin: auto;
-}
 
 .grid-container-3-cols-signup {
   display: grid;
@@ -1420,7 +1415,8 @@ tr.spaceUnder>td {
 }
 
 .logo-d4g{
-    height: 70px;
+    height: 60px;
+    width: 60px;
 }
 
 .container-about-page{

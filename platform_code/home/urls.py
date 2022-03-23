@@ -1,14 +1,13 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path, include, re_path, reverse_lazy
 from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
 
 
 from .views import (
-    LoginView,
-    signup,
+    HomepageView,
     activate,
-    legal_notices_view,
-    faq_view,
     ProfileView,
     ProfileSettingsView,
     OrganisationCreationView,
@@ -17,25 +16,19 @@ from .views import (
     export_user_data,
     PasswordReset,
     ResourcesView,
-    LoginPageView,
     ReleaseNotesView,
     DashboardView,
-
 )
 
 
 app_name = "home"
 urlpatterns = [
-    path("", LoginView.as_view(), name="homepage"),
-    path("signup/", signup, name="signup"),
+    path("", HomepageView.as_view(), name="homepage"),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z\_\.\-]+)/$',
             activate,
             name='activate'
             ),
-    path("login/", LoginPageView.as_view(), name="login"),  # login page when redirect
-    path("legal-notices/", legal_notices_view, name="legal-notices"),
     path("release-notes/", ReleaseNotesView.as_view(), name="release-notes"),
-    path("faq/", faq_view, name="faq"),
     path("admin-dashboard/", DashboardView.as_view(), name="admin-dashboard"),
     re_path(r"admin-dashboard/(?P<tab>[a-z]{1,15})", DashboardView.as_view(), name="admin-dashboard"),
     path("robots.txt", TemplateView.as_view(
@@ -99,3 +92,6 @@ urlpatterns = [
         ),
     ),
 ]
+
+if bool(settings.DEBUG):
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

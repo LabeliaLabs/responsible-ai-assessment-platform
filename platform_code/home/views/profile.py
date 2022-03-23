@@ -42,7 +42,7 @@ logger = logging.getLogger("monitoring")
 class ProfileView(LoginRequiredMixin, generic.DetailView):
     model = User
     template_name = "home/profile.html"
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
     context = {}
 

@@ -77,7 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'home.context_processors.add_my_login_form',
+                'home.context_processors.add_footer_list',
                 'home.context_processors.add_platform_management',
                 'django.template.context_processors.i18n',
             ],
@@ -186,6 +186,8 @@ mimetypes.add_type("text/css", ".css", True)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ["assessment/static"]  # []
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
 
 # Email configuration
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
