@@ -14,37 +14,6 @@ from assessment.models import (
 logger = logging.getLogger('monitoring')
 
 
-def manage_message_login_page(request):
-    """
-    This function manages the messages displayed to the user in the login page
-    I have chosen to not use the Django messages process (messages.add_message) as it doesn't work properly
-    :param request:
-    :return:
-    """
-    previous_url = request.META.get("HTTP_REFERER")
-    # Case it s a redirection because the user wanted to access content where as he is not login
-    if previous_url is None:
-        message = {
-            "alert-danger": _("You must be connected to access this content.")
-        }
-        return message  # break the function
-    # Case the user failed to provide a good combination of email and password
-    elif "/login/" in previous_url:
-        message = {
-            "alert-warning": _("The attempt to connect with this combination email/password failed. Please try again!")
-        }
-
-    # When signup is the previous page, the user has clicked on connexion button in the navbar after the login popin
-    # process
-    # Case "/signup/" in previous_url
-    else:
-        message = {
-            " alert-info": _("Please, enter your email and your password to login to your account.\n "
-                             "If you don't have an account, click on the \"I haven't an account\" button.")
-        }
-    return message
-
-
 def organisation_required_message(context):
     """
     I do not use the django method to display messages as the front is to 'ugly' and I have an easier way to do this

@@ -56,11 +56,12 @@ class HomepageView(LoginView):
 
     def post(self, request, *args, **kwargs):
         if request.method == "POST":
-            print("PPPPPP", request.POST["action"])
             if request.POST["action"] == "login":
                 return self.login(request, args, kwargs)
             elif request.POST['action'] == 'signup':
                 return self.signup(request, args, kwargs)
+            else:
+                return redirect("home:homepage")
 
     def login(self, request, *args, **kwargs):
         # Redirect to user profile if he is already logged
@@ -81,8 +82,10 @@ class HomepageView(LoginView):
                 return redirect("home:homepage")
         else:
             context = self.get_context_data()
-            context["message_login"] = {"alert-warning": _("The attempt to connect with \
-                this combination email/password failed. Please try again!")}
+            context["message_login"] = {
+                "alert-warning":
+                    _("The attempt to connect with this combination email/password failed. Please try again!")
+            }
             return self.render_to_response(context)
 
     def signup(self, request, *args, **kwargs):
@@ -125,7 +128,9 @@ class HomepageView(LoginView):
             email.send()
             logger.info(f"[account_creation] The user {user.email} created an account")
             return render(request, "home/account/acc_activate_done.html")
-        return render(request, "home/homepage.html", {"signup_form": form})
+        context = self.get_context_data()
+        context["signup_form"] = form
+        return render(request, "home/homepage.html", context)
 
 
 def activate(request, uidb64, token):
