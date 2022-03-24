@@ -16,12 +16,9 @@
 
 <div>
   <row class="form-center">
-    <a class=" centered-image" title="labelia-logo">
-      <img class="image-max-150" src="{% static 'image/labelia_homepage_logo.png' %}">
-    </a>
     <h1 class="margin-30">{% trans "Assessment platform" %}</h1>
-    <h4 class="margin-10">{% trans "Responsible and trustworthy AI assessment" %}</h4>
-    <p class="width-90">{% blocktrans trimmed %}
+    <h4 class="margin-10">{% trans "Labelia assessment - Responsible and Trustworthy AI" %}</h4>
+    <p class="width-70">{% blocktrans trimmed %}
       This free and open access platform allows organizations to assess the level of maturity of their AI activity 
       against the "responsible and trusted data science" 
       <a href="https://github.com/LabeliaLabs/referentiel-evaluation-dsrc" target="_blank">framework</a>. 
@@ -42,7 +39,7 @@
     </div>  
   {% else %}
   <div class="grid-homepage">
-    <div class="form-center full-height">
+    <div class="form-center full-height width-350">
       {% include 'home/login.html' %}
     </div>
     <div class="homepage-separator remove-smaller-than-tablet"></div>

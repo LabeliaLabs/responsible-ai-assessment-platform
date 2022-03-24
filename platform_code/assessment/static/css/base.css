@@ -383,12 +383,16 @@ color: #4D566B;
     width: 150px;
 }
 
+.width-350 {
+    width: 350px;
+}
+
 .middle-width {  /* media smartphone on it */
     width: 65%;
 }
 
-.width-90 {
-    width: 90%;
+.width-70 {
+    width: 70%;
 }
 
 .width-50{ /* media on it - smartphone */
@@ -480,6 +484,8 @@ li {
 .grid-homepage {
     display: grid;
     grid-template-columns: 50% 1px 50%;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
 /******************************************* END GRID ********************************************************/
