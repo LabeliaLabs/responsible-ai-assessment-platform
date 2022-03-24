@@ -1,9 +1,6 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path, include, re_path, reverse_lazy
 from django.views.generic import TemplateView
-from django.conf import settings
-from django.conf.urls.static import static
-
 
 from .views import (
     HomepageView,
