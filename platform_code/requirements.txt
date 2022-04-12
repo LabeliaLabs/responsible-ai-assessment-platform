@@ -1,10 +1,11 @@
 #Version of the packages used
 Django==3.2.7
+bleach===4.1.0
 psycopg2-binary==2.8.4
 gunicorn==20.0.4
 django-bootstrap4==2.3.0
 django-countries==7.2.1
-django-markdownify==0.8.1
+django-markdownify==0.9.0
 django-modeltranslation==0.16.1
 django-ckeditor==6.1.0
 requests==2.24.0
