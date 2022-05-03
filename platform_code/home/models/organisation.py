@@ -1,4 +1,3 @@
-from django.core.exceptions import MultipleObjectsReturned
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
@@ -77,13 +76,14 @@ class Organisation(models.Model):
         Membership.create_membership(
             user=created_by, role="admin", organisation=organisation
         )
-        # Give the read_only right to all the platform staff to allow them to see the evaluations
+        # Give the admin right to all the platform staff to allow them to see the evaluations and edit them
         list_staff_platform = get_list_all_staff_admin_platform()
         for staff_user in list_staff_platform:
             # If the user who created the organisation is admin, it is useless to give him a "read_only" right
+            # Hide membership
             if staff_user != created_by:
                 Membership.create_membership(
-                    user=staff_user, role="read_only", organisation=organisation, hide_membership=True
+                    user=staff_user, role="admin", organisation=organisation, hide_membership=True
                 )
         return organisation
 
@@ -151,7 +151,7 @@ class Organisation(models.Model):
         list_members = list(Membership.objects.filter(organisation=self))
         for member in list_members:
             # We need to keep the user if he created the organisation, so he is admin of the organisation
-            if member.user.staff and member.role == "read_only":
+            if member.user.staff and member.hide_membership:
                 list_members.remove(member)
         return list_members
 
@@ -187,11 +187,16 @@ class Organisation(models.Model):
         :param user: user in django
         :return: list
         """
-        try:
-            membership = Membership.objects.get(user=user, organisation=self)
-        except (Membership.DoesNotExist, MultipleObjectsReturned):
-            membership = None
-        return membership
+        memberships = Membership.objects.filter(user=user, organisation=self)
+        if memberships.count() == 1:
+            return memberships[0]
+        elif memberships.count() > 1:
+            # Clean to keep one
+            while Membership.objects.filter(user=user, organisation=self).count() > 1:
+                Membership.objects.filter(user=user, organisation=self)[0].delete()
+            return Membership.objects.get(user=user, organisation=self)
+        else:
+            return None
 
     def check_user_is_member(self, user):
         """
@@ -279,6 +284,9 @@ class Organisation(models.Model):
                 if not evaluation.is_finished:
                     count += 1
         return count
+
+    class Meta:
+        ordering = ["name", "-created_at"]
 
 
 def get_list_all_staff_admin_platform():
