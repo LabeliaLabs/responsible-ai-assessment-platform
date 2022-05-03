@@ -71,7 +71,7 @@ class Membership(models.Model):
         return list(cls.objects.filter(user=user))
 
     def __str__(self):
-        return str(self.user) + " in " + str(self.organisation) + " (" + self.role + ")"
+        return f"{self.pk}"
 
 
 class PendingInvitation(models.Model):
@@ -111,4 +111,4 @@ class PendingInvitation(models.Model):
         return list(cls.objects.filter(organisation=organisation))
 
     def __str__(self):
-        return "Invitation for "+self.email+" in the organisation "+self.organisation.name+" with the role "+self.role
+        return f"{self.pk}"

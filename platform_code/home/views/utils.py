@@ -58,17 +58,20 @@ def manage_user_resource(request):
     :returns: user_resources
     """
     user = request.user
-    if len(UserResources.objects.filter(user=user)) == 1:
-        user_resources = UserResources.objects.get(user=user)
+    user_resources = UserResources.objects.filter(user=user)
+    if len(user_resources) == 1:
+        return user_resources[0]
     # Case the user resource does not exist, which should not happen
     # but it does when you create super user with the shell
-    elif len(UserResources.objects.filter(user=user)) == 0:
+    elif len(user_resources) == 0:
         UserResources.create_user_resources(user=user)  # create user_resources so the user can access resources
         user_resources = UserResources.objects.get(user=user)
+        return user_resources
     else:
-        logger.error(f"[multiple_user_resources] The user {user.email} has multiple user resources")
-        user_resources = None
-    return user_resources
+        logger.error(f"[multiple_user_resources] The user {user.email} has multiple user resources, auto-cleaning")
+        while UserResources.objects.filter(user=user).count() > 1:
+            UserResources.objects.filter(user=user)[-1].delete()
+        return UserResources.objects.get(user=user)
 
 
 def add_last_version_last_assessment_dictionary(dictionary):

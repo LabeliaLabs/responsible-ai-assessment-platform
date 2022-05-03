@@ -1,8 +1,6 @@
 from django import template
 from django.utils.safestring import mark_safe
 
-from home.models import Membership
-
 register = template.Library()
 
 
@@ -14,8 +12,11 @@ def get_role(organisation, user):
     :param user: user
     :return: string : "admin" or "read_only"
     """
-    member = Membership.objects.get(user=user, organisation=organisation)
-    return member.role
+    member = organisation.get_membership_user(user)
+    if member:
+        return member.role
+    else:
+        None
 
 
 @register.filter
