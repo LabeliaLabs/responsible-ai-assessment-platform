@@ -3,34 +3,10 @@
 > Reminder: No deploy friday!
 
 - [Dev Setup](#dev-setup)
-  - [1. Linux](#1-linux)
-    - [[new server only] Config](#new-server-only-config)
-    - [SSH](#ssh)
-      - [Generate key](#generate-key)
-      - [Connection](#connection)
-      - [SCP](#scp)
-    - [[monthly] Server Update](#monthly-server-update)
-    - [[monthly] Docker Update](#monthly-docker-update)
-    - [Install Docker & docker-compose](#install-docker--docker-compose)
-    - [Nginx](#nginx)
-    - [[not required] Install Certbot](#not-required-install-certbot)
-    - [Certificate Renewal](#certificate-renewal)
-      - [Resources](#resources)
-      - [Input](#input)
-      - [Required](#required)
-    - [UFW: Uncomplicated FireWall](#ufw-uncomplicated-firewall)
-    - [[not required] Port forward](#not-required-port-forward)
-    - [Install Antivirus](#install-antivirus)
-    - [Install Fail2ban](#install-fail2ban)
-    - [Configure DNS](#configure-dns)
-    - [Use the makefile](#use-the-makefile)
-    - [Logs](#logs)
-    - [Deploy a new release aka deploy on Prod](#deploy-a-new-release-aka-deploy-on-prod)
-    - [Deploy on local](#deploy-on-local)
-  - [2. Docker](#2-docker)
+  - [1. Docker](#2-docker)
     - [Environments & environment variables](#environments--environment-variables)
     - [Run in detached mode and follow docker logs](#run-in-detached-mode-and-follow-docker-logs)
-  - [3. Django](#3-django)
+  - [2. Django](#3-django)
     - [Python Recommended tools](#python-recommended-tools)
     - [Django settings](#django-settings)
     - [Start a django shell in the django container](#start-a-django-shell-in-the-django-container)
@@ -40,7 +16,7 @@
     - [Django logs](#django-logs)
     - [Django check](#django-check)
     - [Django admin](#django-admin)
-  - [4. Postgresql](#4-postgresql)
+  - [3. Postgresql](#4-postgresql)
     - [Start a postgresql shell](#start-a-postgresql-shell)
     - [Debugger (pdb, ipdb)](#debugger-pdb-ipdb)
     - [Get the postgresql container id](#get-the-postgresql-container-id)
@@ -48,506 +24,13 @@
     - [Restaure full db](#restaure-full-db)
     - [Dump tables](#dump-tables)
     - [List tables](#list-tables)
-  - [5. Monthly routines](#5-monthly-routines)
-  - [6. Tips](#6-tips)
+  - [4. Monthly routines](#5-monthly-routines)
+  - [5. Tips](#6-tips)
     - [Utils](#utils)
     - [SEO](#seo)
     - [Debug & logs](#debug--logs)
 
-## 1. Linux
-
-> Warning: Treat with caution ssh keys and if you find some viruses on your machine, please let other members of the team know and update your keys once the issue is solved.
-
-### [new server only] Config
-
-On a new server, change unix user password: `whoami` & `sudo passwd`
-
-### SSH
-
-> Note: OVH requires rsa keys in order to add it to the server with the web interface (to regain access to the server in case of reinstallation).
->
-> We use port 22222 instead of 22
-
-[OVH ssh keys admin](https://www.ovh.com/manager/dedicated/#/billing/autorenew/ssh)
-
-[quick server config](https://docs.ovh.com/fr/vps/conseils-securisation-vps/)
-
-#### Generate key
-
-> Note: add your public key (`.pub`) to OVH or on a server and keep your private key for yourself!
-
-Generate a dedicated ssh key (RSA 4096 bit key with email as a comment):
-
-```sh
-# OVH needs a rsa key if you want to add it from web interface
-ssh-keygen -t rsa -b 4096 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY>
-# if ppossible use ed25519
-ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY>
-```
-
-Use the OVH web interface for first login, then you will be authorized to append this ssh key to `.ssh/authorized_keys` or with `ssh-copy-id`. When it's done you can connect to preprod server.
-
-#### Connection
-
-```sh
-ssh -i ~/.ssh/<PRIVATE_KEY> <UNIX_USER>@<IP> -p <PORT>
-# For example, to connect preprod
-ssh -i ~/.ssh/preprod ubuntu@51.68.125.118 -p 22222
-```
-
-You can also use this config to avoid some mistakes. When it is ready, you can simply use `ssh preprod` or `ssh prod`! Edit the `.ssh/config` file as follow:
-
-```sh
-Host preprod 
-        HostName 51.68.125.118
-        User ubuntu
-        IdentityFile ~/.ssh/<KEY>
-        Port 22222
-
-Host prod
-        HostName 146.59.147.178
-        User ubuntu
-        IdentityFile ~/.ssh/<KEY>
-        Port 22222
-```
-
-#### SCP
-
-- Copy a **local file to a remote host**: `scp {{path/to/local_file}} {{remote_host}}:{{path/to/remote_file}}`
-
-- Copy a file **from a remote host to a local directory**: `scp {{remote_host}}:{{path/to/remote_file}} {{path/to/local_directory}}`
-
-```sh
-scp -i ~/.ssh/<CLE> -P <PORT> <UNIX_USER>@<IP>:/home/ubuntu/platform_db_prod.dump ./
-# For example
-scp -i ~.ssh/preprod -P 22222 ubuntu@51.68.125.118:/home/ubuntu/platform_db_prod.dump ./
-# with .ssh/config ready
-scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump ./
-```
-
-> Please have a look at the /dump/dump_db_prod.sh script: a zip file containing several dumps can be generated and fetched!
-
-### [monthly] Server Update
-
-Use the `update.sh` script (with `./update.sh`), but be careful with programs! For instance, it is better to stop docker (down) before installing docker upgrades.
-
-This script basilly does this:
-
-```sh
-sudo apt update && \
-        sudo apt upgrade && \
-        sudo apt autoremove --purge && \
-        sudo apt autoclean
-```
-
-### [monthly] Docker Update
-
-Check the server updates to be performed:
-
-```sh
-apt list --upgradable
-```
-
-If there is no Docker update, use `update.sh` (see [Server Update](#monthly-server-update))
-
-If there is Docker updates:
-
-```sh
-# Create a dump 
-make prod_backup
-
-# Save locally your db - file name to be adapted
-scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump ./
-
-# Stop Docker
-make prod_down
-
-# Update servers 
-./update.sh
-
-# Restart Docker 
-make prod_buildupd
-
-# Check if everything is ok. If not, you can restore the DB
-docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod_<DATE>.dump
-```
-
-### Install Docker & docker-compose
-
-1. [docker](https://docs.docker.com/engine/install/ubuntu/)
-2. Don't forget to `sudo usermod -aG docker $USER`
-3. [docker-compose](https://docs.docker.com/compose/install/)
-
-### Nginx
-
-> Nginx is dockerized, so the following is not required, but it is still a good source of knowledge. Configuration files are located in the `nginx` folder.
-
-```sh
-# Ubuntu install
-sudo apt install nginx
-
-# [only once] Dereference default conf from enabled websites
-sudo unlink /etc/nginx/sites-enabled/default
-
-# Edit your config with the one located in data/nginx/nginx.conf
-sudo vi /etc/nginx/sites-available/preprod.assessment.labelia.org
-# [temp] use this path for statics: "/home/ubuntu/pf-assessment-dsrc/platform_code/assessment/static/;"
-
-# Link it to the enabled websites
-sudo ln -s /etc/nginx/sites-available/preprod.assessment.labelia.org /etc/nginx/sites-enabled
-
-# Test config & reload nginx: will provide feedbacks in case of errors
-sudo nginx -t && sudo nginx -s reload
-sudo nginx -T
-```
-
-### [not required] Install Certbot
-
-> This part is not required anymore as the project is using an ssl certicate issued by Gandi, but it is still a good source of knowledge.
-
-```sh
-# Ubuntu snap install, as advised on certbot website
-# https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx
-sudo snap install --classic certbot
-
-# First config
-sudo certbot --nginx
-
-# Test renew
-sudo certbot renew --dry-run
-sudo certbot renew --dry-run --verbose
-# Renew
-sudo certbot renew
-```
-
-### Certificate Renewal
-
-> Note: Use the wildcard domain to catch all sub-domains `*.labelia.org`
->
-> Validation method email: admin@labelia.org
-
-#### Resources
-
-- Follow Gandi CSR doc: <https://docs.gandi.net/en/ssl/common_operations/csr.html>
-- <https://nicolas.perriault.net/code/2012/gandi-standard-ssl-certificate-nginx/>
-- <https://jlecour.github.io/ssl-gandi-nginx-debian/>
-
-```sh
-openssl req -nodes -newkey rsa:2048 -sha256 -keyout myserver.key -out server.csr
-```
-
-- `newkey rsa:2048` - Generates a CSR request and a private key using RSA with 2048 bits. If you use the certificate with our Simple Hosting offer, your key can only be 2048 bits.
-- `sha256` - Use the SHA-2, SHA256 hash algorithm. Due to the deprecation of the SHA1 certificates, our partner, Sectigo, will automatically deliver a SHA2 certificate.
-- `keyout myserver.key`: Save the private key in the file “myserver.key” in the folder where the command was executed.
-- `out server.csr`: Save the CSR in the file “server.csr” in the folder where the command was executed.
-
-#### Input
-
-- `Country name`: Provide the two letter code of your country.
-- `State or Province Name`: Write out the name of your state or province; do not use an abbreviation.
-- `Locality Name`: Provide the name of your city or town.
-- `Organization Name`: Provide the name of your organization, such as the name of your business. This field is optional for Standard certificates standard_certificates, but for Pro and Business certificates, the organization name is mandatory.
-- `Organization Unit Name`: Provide the name of your organization unit within your company, such as the IT department.
-- `Common Name`: Provide the domain name you are wanting to secure. For more details see the previous section on this page.
-- `Email Address`: Provide your email address. The email address is **not mandatory**, but is recommended.
-- `A challenge password`: This is a rarely used and optional feature. We recommend you leave this blank.
-- `An optional company name`: We also recommend leaving this option blank.
-
-#### Required
-
-```sh
-# Append the key to your certificate
-cat GandiStandardSSLCA2.pem >> labelia.org.crt
-```
-
-Then refer to the `docker-compose` file to load the certificate into the containerized nginx.
-
-### UFW: Uncomplicated FireWall
-
-> Warning: please make sure you keep an ssh access to the server *before* applying rules!
-
-```sh
-# Status/On/Off
-sudo ufw status
-sudo ufw status verbose
-sudo ufw enable
-sudo ufw disable
-
-# Connections status
-sudo ufw app list
-sudo ufw status numbered
-
-# Allow required connections
-sudo ufw allow http
-sudo ufw allow https
-sudo ufw allow 22222
-sudo ufw allow 587
-sudo ufw allow out 587
-
-# Custom
-sudo ufw delete <ID>
-sudo ufw deny out <PORT>
-
-# Logs
-tail -f /var/log/ufw.log
-```
-
-As of now, available applications:
-
-- 80 (Nginx HTTP)
-- 443 (Nginx HTTPS)
-- 22222 (ssh)
-- 587 (email)
-
-Displayed like this:
-
-```sh
-sudo ufw status numbered 
-Status: active
-
-     To                         Action      From
-     --                         ------      ----
-[ 1] 22222                      ALLOW IN    Anywhere                  
-[ 2] 80/tcp                     ALLOW IN    Anywhere                  
-[ 3] 443/tcp                    ALLOW IN    Anywhere                  
-[ 4] 587                        ALLOW IN    Anywhere                  
-[ 5] 587                        ALLOW OUT   Anywhere                   (out)
-[ 6] 22222 (v6)                 ALLOW IN    Anywhere (v6)             
-[ 7] 80/tcp (v6)                ALLOW IN    Anywhere (v6)             
-[ 8] 443/tcp (v6)               ALLOW IN    Anywhere (v6)             
-[ 9] 587 (v6)                   ALLOW IN    Anywhere (v6)             
-[10] 587 (v6)                   ALLOW OUT   Anywhere (v6)              (out)
-      
-```
-
-### [not required] Port forward
-
-> This is required anymore, but it's a good piece of knowledge
-
-Enable `sysctl net.ipv4.forward` by editing `/etc/sysctl.conf` & `/etc/ufw/sysctl.conf` and running `sysctl -p`.
-
-Ufw: `/etc/ufw/before.rules`:
-
-```sh
-*nat
-:PREROUTING ACCEPT [0:0]
--A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8000
-COMMIT
-```
-
-And reload `ufw`
-
-```sh
-sudo ufw disable && sudo ufw enable
-sudo service ufw restart
-sudo ufw reload
-sudo systemctl restart ufw
-```
-
-### Install Antivirus
-
-```sh
-# install
-sudo apt install clamav
-
-# update signatures
-sudo freshclam
-
-# help
-clamscan --help
-
-# scan download folder
-clamscan -r -i /home/ubuntu/Downloads
-
-# scan all and remove infected files
-clamscan -r --remove /
-```
-
-### Install Fail2ban
-
-Ubuntu package: <https://packages.ubuntu.com/search?keywords=fail2ban>
-
-```sh
-# Install
-# Please use the latest version
-curl -LO http://fr.archive.ubuntu.com/ubuntu/pool/universe/f/fail2ban/fail2ban_0.11.1-1_all.deb
-
-sudo dpkg -i fail2ban_0.11.1-1_all.deb
-
-# Check service status 
-sudo service fail2ban status
-
-# Logs
-tail -f /var/log/fail2ban.log
-```
-
-### Configure DNS
-
-On Gandi.net interface (just [here](https://admin.gandi.net/domain/3547e9fe-5ee6-11ea-ba20-00163e8fd4b8/substra.ai/records)), set `A` and `AAAA` records to the servers IP (`ipv4` & `ipv6`).
-
-### Use the makefile
-
-Help yourself and use the `Makefile` at the root of the repo! You might need to first install `build-essential` on linux or `make` (with chocolatey package manager for [example](https://chocolatey.org/packages/make) on Windows).
-
-You'll then be able to use `make buildupd` instead of typing `docker-compose up --build -d` and so on!
-
-Available commands:
-
-```sh
-# Dev
-- up: start
-- upd: start in detached mode
-- buildup: build image
-- buildupd: build in detached mode
-- migr: generate migrations & apply it
-- migr-show: show migrations
-- migr-fake: force migrations
-- static: collect statics
-- admin: create admin user
-- down: stop
-- downv: stop & remove volume (including db)
-- tests: run tests
-- trans-prep: prepare translations (local only)
-- translate: make translations (local only)
-- backup: create a platform_db_<DATE>.dump from the whole database
-
-# Prod-like-local
-- prodlike_up: start
-- prodlike_upd: start in detached mode
-- prodlike_buildup: build image
-- prodlike_buildupd: build in detached mode
-- prodlike_migr: generate migrations & apply it
-- prodlike_migr-show: show migrations
-- prodlike_migr-fake: force migrations
-- prodlike_static: collect statics
-- prodlike_admin: create admin user
-- prodlike_down: stop
-- prodlike_downv: stop & remove volume (including db)
-- prodlike_tests: run tests
-
-# Preprod
-- preprod_up: start
-- preprod_upd: start in detached mode
-- preprod_buildup: build image
-- preprod_buildupd: build in detached mode
-- preprod_migr: generate migrations & apply it
-- preprod_migr-show: show migrations
-- preprod_migr-fake: force migrations
-- preprod_static: collect statics
-- preprod_admin: create admin user
-- preprod_down: stip
-- preprod_downv: stop & remove volume (including db)
-- preprod_tests: run tests
-- preprod_backup: create a platform_db_preprod_<DATE>.dump from the whole database
-
-# Prod
-- prod_up: start
-- prod_upd: start in detached mode
-- prod_buildup: build image
-- prod_buildupd: build in detached mode
-- prod_migr: generate migrations & apply it
-- prod_migr-show: show migrations
-- prod_migr-fake: force migrations
-- prod_static: collect statics
-- prod_admin: create admin user
-- prod_down: stip
-- prod_downv: stop & remove volume (including db)
-- prod_tests: run tests
-- prod_backup: create a platform_db_prod_<DATE>.dump from the whole database
-```
-
-### Logs
-
-```sh
-# live logs
-journalctl -f
-
-tail -f /var/log/nginx/access.log;            # container
-tail -f /var/log/nginx/error.log;             # container
-tail -f /var/log/ufw.log                      # server
-tail -f /var/log/letsencrypt/letsencrypt.log  # obsolete
-
-tail -f /var/log/fail2ban.log                 # server
-tail -f /var/log/auth.log                     # server
-tail -f /var/log/syslog                       # server
-```
-
-### Deploy a new release aka deploy on Prod
-
-[optional] Before deploying, if you want to save locally the db, you can run the following commands:
-
-```sh
-# Create a dump 
-make prod_backup
-
-# Save locally your db - file name to be adapted
-scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump ./
-```
-
-The deploy script (`./deploy.sh`) is ready to handle this but as an overview of the required steps, here is what is happening during a code release:
-
-- [optional] Apply server updates (especially docker updates!): `./update.sh`
-- Backup: `docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_dump -Fc platform_db_prod > platform_db_prod.dump` (`make prod_backup`)
-- Stop docker: `docker-compose -f docker-compose.prod.yml down` (`make prod_down`)
-- Pull the code with the "*deploy*" user (**read-only**): `git fetch && git pull --rebase`
-- Re-build the code: `docker-compose -f docker-compose.prod.yml up --build -d` (`make prod_buildupd`)
-- Apply migrations (`make prod_migr`):
-  - `docker-compose -f docker-compose.prod.yml exec web python manage.py makemigrations`
-  - `docker-compose -f docker-compose.prod.yml exec web python manage.py migrate --noinput`
-- Update statics (`make prod_static`): `docker-compose -f docker-compose.prod.yml exec web python manage.py collectstatic --no-input --clear`
-
-If needed, use backup:
-
-- Postgresql `pg_restore`
-
-```sh
-docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_restore -d platform_db_prod --clean < platform_db_prod.dump
-```
-
-- migrate
-
-```sh
-docker-compose -f docker-compose.prod.yml exec python manage.py showmigrations # make prod_migr-show
-docker-compose -f docker-compose.prod.yml exec python manage.py makemigrations # make prod_migr
-docker-compose -f docker-compose.prod.yml exec python manage.py migrate        # make prod_migr
-# In case of failing migrations, you can try
-docker-compose -f docker-compose.prod.yml exec python manage.py migrate --fake # make prod_migr-fake
-docker-compose -f docker-compose.prod.yml exec python manage.py showmigrations # make prod_migr-show
-```
-
-### Deploy on local
-
-You may be required as a dev to deploy locally but also to perform some tests.
-
-```sh
-# Switch to the branch you need 
-git fetch && git pull --rebase
-git checkout <branch>
-
-# Build your docker image
-make buildup
-
-# Create a super user to login to the platform: you will be requested an email and a password 
-make admin 
-
-# You have now access on your local machine to the platform: http://0.0.0.0:8080/  
-
-# Apply translations
-make trans-prep
-make translate
-
-# You can stop and start again if needed 
-make down
-make up 
-
-# For Dev: run tests 
-make tests
-
-# Delete your build
-make downv 
-```
-
-## 2. Docker
+## 1. Docker
 
 > At some point, you will want to cleanup your dockers images `docker rmi -f $(docker images -q)`.
 > /!\ This will **remove** your images!
@@ -587,7 +70,7 @@ docker-compose exec web watch cat dev.log
 docker-compose exec web sh
 ```
 
-## 3. Django
+## 2. Django
 
 ### Python Recommended tools
 
@@ -831,7 +314,7 @@ django-admin testserver                  # Runs a development server with data f
 django-admin version                     # display the current django version
 ```
 
-## 4. Postgresql
+## 3. Postgresql
 
 ### Start a postgresql shell
 
@@ -919,11 +402,13 @@ docker exec -u postgres $(docker ps | grep postgres | awk '{print $1}') psql -d 
 ```sh
 assessment_assessment
 assessment_choice
+assessment_elementchangelog
 assessment_evaluation
 assessment_evaluationelement
 assessment_evaluationelementweight
 assessment_evaluationscore
 assessment_externallink
+assessment_labelling
 assessment_masterchoice
 assessment_masterevaluationelement
 assessment_masterevaluationelement_external_links
@@ -938,9 +423,12 @@ django_admin_log
 django_content_type
 django_migrations
 django_session
+home_footer
 home_membership
 home_organisation
 home_pendinginvitation
+home_platformmanagement
+home_releasenot
 home_user
 home_user_groups
 home_user_user_permissions
@@ -948,14 +436,14 @@ home_userresources
 home_userresources_resources
 ```
 
-## 5. Monthly routines
+## 4. Monthly routines
 
 Once a month:
 
 - Check [antivirus](#install-antivirus). In doubt, scan the whole system with `clamscan -r -i /`, but it will be long...
 - Check [server updates](#monthly-server-update), including [Docker updates](#monthly-docker-update)
 
-## 6. Tips
+## 5. Tips
 
 ### Utils
 
