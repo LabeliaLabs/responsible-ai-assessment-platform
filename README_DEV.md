@@ -3,34 +3,10 @@
 > Reminder: No deploy friday!
 
 - [Dev Setup](#dev-setup)
-  - [1. Linux](#1-linux)
-    - [[new server only] Config](#new-server-only-config)
-    - [SSH](#ssh)
-      - [Generate key](#generate-key)
-      - [Connection](#connection)
-      - [SCP](#scp)
-    - [[monthly] Server Update](#monthly-server-update)
-    - [[monthly] Docker Update](#monthly-docker-update)
-    - [Install Docker & docker-compose](#install-docker--docker-compose)
-    - [Nginx](#nginx)
-    - [[not required] Install Certbot](#not-required-install-certbot)
-    - [Certificate Renewal](#certificate-renewal)
-      - [Resources](#resources)
-      - [Input](#input)
-      - [Required](#required)
-    - [UFW: Uncomplicated FireWall](#ufw-uncomplicated-firewall)
-    - [[not required] Port forward](#not-required-port-forward)
-    - [Install Antivirus](#install-antivirus)
-    - [Install Fail2ban](#install-fail2ban)
-    - [Configure DNS](#configure-dns)
-    - [Use the makefile](#use-the-makefile)
-    - [Logs](#logs)
-    - [Deploy a new release aka deploy on Prod](#deploy-a-new-release-aka-deploy-on-prod)
-    - [Deploy on local](#deploy-on-local)
-  - [2. Docker](#2-docker)
+  - [1. Docker](#2-docker)
     - [Environments & environment variables](#environments--environment-variables)
     - [Run in detached mode and follow docker logs](#run-in-detached-mode-and-follow-docker-logs)
-  - [3. Django](#3-django)
+  - [2. Django](#3-django)
     - [Python Recommended tools](#python-recommended-tools)
     - [Django settings](#django-settings)
     - [Start a django shell in the django container](#start-a-django-shell-in-the-django-container)
@@ -40,7 +16,7 @@
     - [Django logs](#django-logs)
     - [Django check](#django-check)
     - [Django admin](#django-admin)
-  - [4. Postgresql](#4-postgresql)
+  - [3. Postgresql](#4-postgresql)
     - [Start a postgresql shell](#start-a-postgresql-shell)
     - [Debugger (pdb, ipdb)](#debugger-pdb-ipdb)
     - [Get the postgresql container id](#get-the-postgresql-container-id)
@@ -48,8 +24,8 @@
     - [Restaure full db](#restaure-full-db)
     - [Dump tables](#dump-tables)
     - [List tables](#list-tables)
-  - [5. Monthly routines](#5-monthly-routines)
-  - [6. Tips](#6-tips)
+  - [4. Monthly routines](#5-monthly-routines)
+  - [5. Tips](#6-tips)
     - [Utils](#utils)
     - [SEO](#seo)
     - [Debug & logs](#debug--logs)
@@ -587,7 +563,7 @@ docker-compose exec web watch cat dev.log
 docker-compose exec web sh
 ```
 
-## 3. Django
+## 2. Django
 
 ### Python Recommended tools
 
@@ -831,7 +807,7 @@ django-admin testserver                  # Runs a development server with data f
 django-admin version                     # display the current django version
 ```
 
-## 4. Postgresql
+## 3. Postgresql
 
 ### Start a postgresql shell
 
@@ -919,11 +895,13 @@ docker exec -u postgres $(docker ps | grep postgres | awk '{print $1}') psql -d 
 ```sh
 assessment_assessment
 assessment_choice
+assessment_elementchangelog
 assessment_evaluation
 assessment_evaluationelement
 assessment_evaluationelementweight
 assessment_evaluationscore
 assessment_externallink
+assessment_labelling
 assessment_masterchoice
 assessment_masterevaluationelement
 assessment_masterevaluationelement_external_links
@@ -938,9 +916,12 @@ django_admin_log
 django_content_type
 django_migrations
 django_session
+home_footer
 home_membership
 home_organisation
 home_pendinginvitation
+home_platformmanagement
+home_releasenot
 home_user
 home_user_groups
 home_user_user_permissions
@@ -948,14 +929,14 @@ home_userresources
 home_userresources_resources
 ```
 
-## 5. Monthly routines
+## 4. Monthly routines
 
 Once a month:
 
 - Check [antivirus](#install-antivirus). In doubt, scan the whole system with `clamscan -r -i /`, but it will be long...
 - Check [server updates](#monthly-server-update), including [Docker updates](#monthly-docker-update)
 
-## 6. Tips
+## 5. Tips
 
 ### Utils
 

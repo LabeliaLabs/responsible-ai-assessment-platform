@@ -5,7 +5,7 @@
 
 <div class="container">
     <a class="navbar-brand white-color" href="{% url 'home:homepage' %}" title="home">
-        <img class="logo-navbar" src="{% static 'image/Logo_Labelia_horizontal_BL_RVB.png' %}">
+        <img class="logo-navbar" src="{% static 'image/labelia_dry.png' %}">
     </a>
     <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
         class="navbar-toggler icon-navbar" data-target="#navbarResponsive" data-toggle="collapse"
@@ -33,13 +33,8 @@
                     </a>
                 </li>
                 <li class="nav-item navbar-item">
-                    <a class="nav-link" href="{% url 'home:resources' %}">
-                        {% trans "Resources" %}
-                    </a>
-                </li>
-                <li class="nav-item navbar-item">
-                    <a class="nav-link" href="{% url 'home:faq' %}">
-                        {% trans "FAQ" %}
+                    <a class="nav-link" href="{% url 'home:release-notes' %}">
+                        {% trans "Releases" %}
                     </a>
                 </li>
                 {% if platform_management.activate_multi_languages %}
@@ -63,37 +58,19 @@
                 </li>
             <!-- User not connected -->
             {% else %}
-                <li class="nav-item navbar-item">
-                    <a class="nav-link" href="{% url 'home:faq' %}">
-                    {% trans "FAQ" %}
-                    </a>
-                </li>
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:homepage' %}">
+                    {% trans "Homepage" %}
+                </a>
+            </li>
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:release-notes' %}">
+                    {% trans "Releases" %}
+                </a>
+            </li>
                 {% if platform_management.activate_multi_languages %}
                     <li class="nav-item navbar-item">
                         {% include "navbar-language-select.html" %}
-                    </li>
-                {% endif %}
-                {% if request.get_full_path|need_login_page %}
-                    <li class="nav-item navbar-item">
-                        <a class="nav-link" href="{% url 'home:login' %}">
-                        {% trans "Login" %}
-                        </a>
-                    </li>
-                    <li class="nav-item navbar-item">
-                        <a class="nav-link" href="{% url 'home:signup' %}">
-                            {% trans "Sign up" %}
-                        </a>
-                    </li>
-                {% else %}
-                    <li class="nav-item navbar-item">
-                        <a class="nav-link" data-target="#modal-login-user" data-toggle="modal"
-                            href="{% url 'home:homepage' %}">{% trans "Login" %}
-                        </a>
-                    </li>
-                    <li class="nav-item navbar-item">
-                        <a class="nav-link" href="{% url 'home:signup' %}">
-                            {% trans "Sign up" %}
-                        </a>
                     </li>
                 {% endif %}
             {% endif %}

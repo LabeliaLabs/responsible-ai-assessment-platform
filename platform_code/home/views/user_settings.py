@@ -20,7 +20,7 @@ logger = logging.getLogger('monitoring')
 class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
     template_name = "home/profile-settings.html"
     model = User
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
     data_update = {}
 

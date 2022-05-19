@@ -29,7 +29,7 @@ class ResultsView(LoginRequiredMixin, DetailView):
     """
     model = Evaluation
     template_name = "assessment/results.html"
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
 
     def get(self, request, *args, **kwargs):

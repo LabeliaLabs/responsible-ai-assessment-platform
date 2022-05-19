@@ -38,7 +38,8 @@ urlpatterns = i18n_patterns(
     path("admin/", admin.site.urls),
     path('admin-monitoring/', admin_dashboard.urls),
     prefix_default_language=True
-) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + \
+    static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404 = 'assessment.views.utils.error_handler.error_404_view_handler'
 handler500 = 'assessment.views.utils.error_handler.error_500_view_handler'

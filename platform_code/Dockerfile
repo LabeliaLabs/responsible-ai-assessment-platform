@@ -14,7 +14,8 @@ COPY . .
 
 # install psycopg2 dependencies
 RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev jpeg-dev zlib-dev
+    && apk add postgresql-dev gcc python3-dev \
+        musl-dev jpeg-dev zlib-dev libpq libjpeg
 
 RUN /usr/local/bin/python -m pip install --upgrade pip
 RUN pip install -r requirements.txt
@@ -22,4 +23,4 @@ RUN pip install -r requirements.txt
 # make entrypoint.sh executable
 RUN chmod +x ./entrypoint.sh
 
-ENTRYPOINT ["/code/entrypoint.sh"]
+ENTRYPOINT ["sh", "/code/entrypoint.sh"]

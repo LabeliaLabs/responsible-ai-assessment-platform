@@ -70,7 +70,9 @@
                 </li>
                  <li class="nav-item column-button">
                     <a class="nav-link profile-column" data-toggle="pill" href="#content-change-logs"
-                       id="tab-change-logs" name="column-button">{% trans "Change logs" %}</a>
+                       id="tab-change-logs" name="column-button"
+                       onclick="displayTextLink('Change logs', 'active-profile')"
+                    >{% trans "Change logs" %}</a>
                 </li>
             </ul>
         </div>
@@ -100,7 +102,7 @@
                      id="content-action-plan"><br>
                     {% include "home/profile-action-plan.html" %}
                 </div>
-                <div class="container-profile tab-pane fade" id="content-change-logs">
+                <div class="container-profile tab-pane fade" style="min-width: 70vw" id="content-change-logs">
                     {% include "home/profile-change-logs.html" %}
                 </div>
 

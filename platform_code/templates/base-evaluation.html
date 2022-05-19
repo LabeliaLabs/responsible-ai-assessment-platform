@@ -41,9 +41,29 @@
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
     <script src="{% url 'javascript-catalog' %}"></script>
+    
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(["setDomains", ["*.assessment.labelia.org"]]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        // accurately measure the time spent in the visit
+        _paq.push(['enableHeartBeatTimer']);
+        (function() {
+        var u="https://labelia.matomo.cloud/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src='//cdn.matomo.cloud/labelia.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
 </head>
 
 <body class="navbar-is-fixed-top">
+    {% include "cookie-banner.html" %}
     <header class="navbar-fixed">
         <nav class="navbar navbar-expand-lg  is-fixed-top">
             {% include "navbar.html" %}
@@ -64,13 +84,6 @@
         </div>
     {% endif %}
 
-    <div aria-hidden="true" class="modal" id="modal-login-user">
-        <div class="modal-dialog ">
-            <div class="modal-content">
-                {% include "home/login-modal.html" %}
-            </div>
-        </div>
-    </div>
     {% if platform_management.platform_update and user.is_authenticated %}
         <div name="page-container">
     {% else %}
@@ -90,6 +103,13 @@
 
 </body>
 </html>
+<script>
+    var consentDuration = 1209600000;
+    // If not cookie set yet because first time user comes (ie no date) or if set to False and more than 14 days ago
+    if (!localStorage["dateCookieSet"] || localStorage["acceptCookie"] === 'false' && Date.now() - localStorage["dateCookieSet"] >  consentDuration) {
+        document.getElementById("cookie-banner").classList.remove("display-none")
+    };
+</script>
 
 <script>
 
@@ -126,10 +146,11 @@ adaptNavbar();
 window.addEventListener('resize', adaptNavbar);
 
 function adaptMarginFooter() {
+    // To always set the footer at the bottom of the page and not higher
     const height = window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
     const contentHeight = document.querySelector("[name=page-container]") ?
         document.querySelector("[name=page-container]").getBoundingClientRect().height : null;
-    if (contentHeight && contentHeight + 150 < height) {
+    if (contentHeight && contentHeight + 150 < height && innerWidth > 768) {
         // If the body is shorter thant the page height
         // Set margin to footer to fit the bottom of the page
         var footer = document.getElementById("app-footer");

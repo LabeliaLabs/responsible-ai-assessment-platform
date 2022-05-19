@@ -54,5 +54,5 @@ class SectionNotesForm(ModelForm):
                                                 initial=section.user_notes,
                                                 required=False,
                                             )
-        if not user_can_edit or not section.evaluation.is_editable:
+        if not user_can_edit or section and not section.evaluation.is_editable:
             self.fields["user_notes"].disabled = True

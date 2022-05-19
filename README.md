@@ -1,18 +1,37 @@
-# Plateforme d'assessment data science responsable et de confiance (DSRC)
+# Readme 
+
+## Installation
+
+- Clone the project:
+
+  ```console
+  git clone git@framagit.org:labelia-labs/pf-assessment-dsrc.git
+  ```
+
+- Create `.env.dev` from `env_dev_template`:
+
+  ```console
+  cp env_dev_template .env.dev
+  ```
+>>>>>>> README.md
+
+- Replace variables in the .env.dev file
+
+- Build Docker image and start it:
+
+  ```console
+  docker-compose up --build
+  ```
+
+- Migrations
+
+  ```
+  docker-compose exec questionnaire-grpc ./manage.py migrate
+  ```
 
 ## Contexte et ambition
 
 Dans le prolongement des travaux participatifs démarrés en 2019 sur la définition de la data science responsable et de confiance qui peuvent être consultés sur le [repo dédié](https://github.com/LabeliaLabs/referentiel-ds-responsable-confiance), l'initiative s'est petit à petit orientée vers une évaluation de maturité, un _assessment_, à destination des organisations qui ont une activité data science / IA.
-
-La suite du projet recouvre :
-
-- la conception et le développement d'une **plateforme d'assessment** (ce repo)
-- l'élaboration d'une méthode et d'un service de **certification**
-- la création d'un **réseau de partenaires experts**
-
-## Accès rapide aux ressources-clés
-
-Voici les liens permettant un accès rapide aux ressources-clés du projet :
 
 - L'[assessment DSRC](https://github.com/LabeliaLabs/referentiel-evaluation-dsrc/blob/master/referentiel_evaluation.md)
 - Le [story mapping](https://www.featuremap.co/m/ddC0Rj/plateforme-dsrc) de la plateforme d'assessment

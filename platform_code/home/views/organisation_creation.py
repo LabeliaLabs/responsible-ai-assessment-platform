@@ -21,7 +21,7 @@ class OrganisationCreationView(LoginRequiredMixin, FormView):
 
     template_name = "home/profile-organisation-creation.html"
     model = Organisation
-    login_url = "home:login"
+    login_url = "home:homepage"
     redirect_field_name = "home:homepage"
     form_class = OrganisationCreationForm
     success_url = "assessment:creation-evaluation"

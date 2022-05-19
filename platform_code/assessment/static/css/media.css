@@ -70,10 +70,6 @@ Inside each section, first you have, if it exists:
         width: 85%;
     }
 
-    /* signup */
-    .grid-container-2-cols-signup {
-        display: block;
-    }
     .center-smartphone-screen {
         text-align: center;
     }
@@ -258,9 +254,6 @@ Inside each section, first you have, if it exists:
     .width-35 {
         width: 55%;
     }
-    .signup-field-tablet-min-screen {
-        grid-template-columns: 80% 20%;
-    }
     .profile-settings-pills{
         width: 50%;
     }
@@ -282,6 +275,9 @@ Inside each section, first you have, if it exists:
     .smaller-tablet-place-center{
         place-content: center;
     }
+    .margin-top-50-smaller-tablet {
+        margin-top: 50px;
+    }
     .remove-smaller-than-tablet {
         display: none;
     }
@@ -298,7 +294,7 @@ Inside each section, first you have, if it exists:
         margin-left: 0px;
     }
     .h1-margin-breadcrumbs{
-        margin-bottom: 30px;
+        margin-bottom: 100px;
         margin-top: 30px;
     }
     .question-name {
@@ -363,25 +359,33 @@ Inside each section, first you have, if it exists:
     .cke_dialog_contents {
         width: 95vw !important;
     }
+    .cookie-buttons {
+        text-align: center;
+    }
+    .cookie-buttons > button:first-child {
+        margin-bottom: 10px;
+        margin-right: 0px!important;
+    }
+    .cookie-buttons > button {
+        width: 150px
+    }
+    .grid-homepage {
+        display: block;
+        margin-right: 0%;
+        margin-left: 0%;
+    }
 
 }
 
 /* LARGER THAN 481px */
 
 @media (min-width: 481px) {
-    .signup-field-tablet-min-screen {
-        display: grid;
-        margin-top: 10px;
-    }
     .tablet-min-screen-signup {
         padding-left: 15%;
         float: right;
     }
     .tablet-min-screen-field-margin-10{
         margin-top: 10px;
-    }
-    .tablet-min-screen-buttons-signup{
-        width: 60%;
     }
     .float-left-larger-tablet{
         float: left;
@@ -615,6 +619,10 @@ Inside each section, first you have, if it exists:
         margin-top: 50px;
         margin-bottom: 50px;
     }
+    .h1-homepage {
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
     .larger-small-screen-margin-left-18vw{
         margin-left: 18vw;
     }
@@ -625,10 +633,6 @@ Inside each section, first you have, if it exists:
         left: 3%;
         margin-top: 20px;
     }
-    .signup-field-tablet-min-screen {
-        grid-template-columns: 60% 40%;
-    }
-
 }
 
 @media (min-width: 381px) and (max-width: 900px) {
