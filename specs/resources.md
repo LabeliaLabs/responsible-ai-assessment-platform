@@ -27,7 +27,7 @@ Cela soulève plusieurs [questions d'architecture](#questions-darchitecture) et 
 
 1. Quelle(s) interface(s) pour les admins pour agir sur ces ressources ? (ajout, modification, suppression)
 
-   Ces ressources complémentaires peuvent toutes être ramenées à du texte formatté. En effet les articles et outils seront fournis naturellement sous forme de liens (*note : dans un second temps il pourrait être intéressant de pouvoir fournir des images*).
+   Ces ressources complémentaires peuvent toutes être ramenées à du texte formatté. En effet les articles et outils seront fournis naturellement sous forme de liens (_*note : dans un second temps il pourrait être intéressant de pouvoir fournir des images_).
 
    Toute interface permettant d'interagir avec du texte ferait donc l'affaire. Les candidats sont donc naturellement :
 
@@ -47,21 +47,6 @@ Cela soulève plusieurs [questions d'architecture](#questions-darchitecture) et 
 
 ## Questions produit
 
-*À compléter.*
-
-- Comment capitaliser sur et marketer ces ressources ? En fait-on quelque chose "d'important" ou "d'accessoire" du produit ?
-
-  Il faut distinguer deux types de ressources :
-
-  - Les ressources externes "trouvées" et apportées par la communauté : ces ressources viennent aider l'utilisateur à réfléchir sur un point en particulier et lui apporter des clés pour le résoudre. Elle montre que le questionnaire est dans une démarche positive et apporte des éléments de réponses.
-  - Les ressources créées pour la plateforme : on peut imaginer que Substra ou ses partenaires crééent du contenus dédiés et exclusives sur certains sujets. Le but étant de renforcer la crédibilité des partenaires sur certains sujets en vu d'être reconnus comme experts (et vendre des prestations de services).
-
-  Il faudrait probablement marketer les ressources que si un vrai travail de fond est réalisé sur les ressources :
-  
-  - Si on ne produit pas de contenu, le risque de trop marketer les ressources est de se voir reprocher leur qualité : _"Je suis venu parce qu'on m'a promis des ressources et vous ne parlez pas de cela / vous faites la promotion de tel outil qui est dépassé"_. On peut tout à fait être d'accord mais cela demande alors que l'on prenne vraiment le temps sur chaque contenu pour s'assurer de sa qualité. Ou décider que notre valeur ajoutée est sur le questionnaire et scoring et que cela est donc accessoire.
-  - Entre les deux approches, on peut imaginer le faire que pour une partie des ressources et avoir une petite cocarde "ressource de choix". Une sélection de la sélection, qui représenterait moins de travail.
-  - Si on produit du contenu, pour le coup cela sera un vrai plus et il faudra le marketer : "retrouver du contenu exclusive".
-
 - Faut-il imaginer une logique de notifications des inscrits quand de nouvelles ressources sont ajoutées ? Auquel cas il faudrait en ajouter avec précaution, par petits paquets et pas au fil de l'eau ?
 
   On peut distinguer deux types de notification :
@@ -75,5 +60,3 @@ Cela soulève plusieurs [questions d'architecture](#questions-darchitecture) et 
   - Sans centre de ressources, l'utilisateur est obligé d'initialiser / modifier / consulter une évaluation pour avoir accès aux ressources. Avoir un regroupement pour trouver une ressource semble approprié.
   - --> Sur la page dédiée "Ressources", une manière qui maintient une bonne cohérence et qui faciliterait bien la vie sous le capot, ça serait de présenter les ressources rangées par éléments d'éval (juste id et titre). En fait même finalement la structure du référentiel (titres de section > titres d'éléments d'éval) c'est un très bon chapitrage des sujets de Data science responsable et de confiance.
   - Il faudrait pouvoir effectuer de la recherche sur ces ressources, et / ou les catégoriser.
-
-- ...

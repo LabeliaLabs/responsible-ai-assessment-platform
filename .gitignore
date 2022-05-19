@@ -24,6 +24,7 @@ data/certbot/
 nohup.out
 .coverage
 *.pynb
+*.code-workspace
 */media/*
 
 # DB
