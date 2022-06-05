@@ -1,6 +1,7 @@
 import logging
 from datetime import datetime, timedelta
 import jwt
+from sentry_sdk import set_user
 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.views import (
@@ -76,6 +77,7 @@ class HomepageView(LoginView):
             user = authenticate(email=email, password=password)
             if user is not None and user.active:
                 login(self.request, user)
+                set_user({"email": email})
                 logger.info(f"[user_connection] The user {user.email} has logged in")
                 return HttpResponseRedirect(self.get_success_url())
             else:

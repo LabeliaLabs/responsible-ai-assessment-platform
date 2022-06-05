@@ -160,27 +160,34 @@ def treat_feedback(request, *args, **kwargs):
         user_email = user.get_email()
         user_name = user.get_full_name()
         # Create the request to the framagit/gitlab API
-        url = "https://framagit.org/api/v4/projects/" + project_id + "/issues"
+        if settings.DEBUG:
+            url = ""
+            print("Create feedback - nothing pushed as debug")
+            data_update["success"] = True
+            data_update["message"] = "Success, nothing created as debug"
+            return HttpResponse(json.dumps(data_update), content_type="application/json")
+        else:
+            url = settings.FEEDBACK_URL + project_id + "/issues"
         headers = {"PRIVATE-TOKEN": private_token}
         data = {
             "title": "Feedback sur "
-                     + str(feedback_object)
-                     + " ("
-                     + object_type
-                     + " id="
-                     + str(master_id)
-                     + ")",
+                    + str(feedback_object)
+                    + " ("
+                    + object_type
+                    + " id="
+                    + str(master_id)
+                    + ")",
             "labels": "feedback",
             "description": "["
-                           + str(feedback_text)
-                           + "] de "
-                           + user_name
-                           + ", "
-                           + user_email
-                           + " sur l'objet "
-                           + str(feedback_object)
-                           + ".\n\n Message de l'utilisateur : "
-                           + text,
+                        + str(feedback_text)
+                        + "] de "
+                        + user_name
+                        + ", "
+                        + user_email
+                        + " sur l'objet "
+                        + str(feedback_object)
+                        + ".\n\n Message de l'utilisateur : "
+                        + text,
         }
 
         # If the user doesn't spam the feedback, ie he doesn't send more than max_feedback (19)
