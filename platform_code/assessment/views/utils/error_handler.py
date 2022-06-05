@@ -1,4 +1,5 @@
 import logging
+from sentry_sdk import capture_exception
 
 from django.http import HttpResponseRedirect
 from django.utils.translation import gettext as _
@@ -23,6 +24,7 @@ VIEW_ERRORS = {
 
 
 def error_view_handler(request, exception, status):
+    capture_exception(exception)
     return render(
         request,
         template_name="errors.html",
