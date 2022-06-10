@@ -1,0 +1,113 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load assessment_tags %}
+{% load home_tags %}
+{% load i18n %}
+{% block content %}
+
+<div class="breadcrumbs">
+    <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
+    <span> ></span>
+    <a class="active-breadcrumb" href="#">{% trans 'Organisation' %}</a>
+</div>
+
+<h1 class="h1-margin-breadcrumbs">{% trans "Organisation: " %}{{organisation.name}} </h1>
+
+{% if messages %}
+<ul class="messages margin-3em">
+    {% for message in messages %}
+    <li class="alert alert-{{ message.tags }} overflow-auto" >
+        <div>{{ message }}</div>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+<div class="">
+<div class="row-pills-table">
+    <div class="col-ms-3 container-platform column-right">
+        <ul class="nav nav-pills nav-stacked flex-column table-column-profile" id="PillProfile" role="tablist">
+            <li class="nav-item column-button">
+                <a aria-controls="content-eval" aria-selected="true" class="nav-link profile-column active"
+                   data-toggle="tab" href="#content-eval" id="eval"
+                   name="column-button" role="tab">{% trans "Evaluations" %}</a>
+            </li>
+            <li class="nav-item column-button">
+                <a aria-controls="content-members" aria-selected="true" class="nav-link profile-column"
+                   data-toggle="tab" href="#content-members" id="members"
+                   name="column-button" role="tab">{% trans "Members" %}</a>
+            </li>
+            <li class="nav-item column-button">
+                <a aria-controls="content-settings" aria-selected="true" class="nav-link profile-column"
+                   data-toggle="tab" href="#content-settings" id="settings"
+                   name="column-button" role="tab">{% trans "Organisation's parameters" %}</a>
+            </li>
+        </ul>
+    </div>
+    <div class="data-nav-pills">
+        <div class="tab-content" id="PillProfileContent">
+
+            <div aria-labelledby="tab-eval"
+                 class="tab-pane active small-screen-max-center margin-left-medium-screen"
+                 id="content-eval" role="tabpanel">
+                {% include "assessment/organisation/orga-evaluation.html" %}
+
+            </div>
+            <div aria-labelledby="tab-members" class="tab-pane fade"
+                 id="content-members" role="tabpanel">
+                {% include "assessment/organisation/member/orga-members.html" %}
+            </div>
+            <div aria-labelledby="tab-settings" class="tab-pane fade"
+                 id="content-settings" role="tabpanel">
+                {% include "assessment/organisation/orga-settings.html" %}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="row bottom-page-button margin-70">
+    <form action="{% url 'home:user-profile'  %}" class="margin-auto">
+        <input class="btn btn-primary same-size-280 " type="submit"
+               value="{% trans 'Back to your dashboard' %}"/>
+    </form>
+    {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor"%}
+    {% if last_version %}
+    <!-- Button to Open the Modal -->
+    <button class="btn btn-primary float-right same-size-280 margin-auto margin-10-new-eval-button"
+            data-target="#modal-create-eval"
+            data-toggle="modal"
+            type="button">
+        {% trans "Start a new evaluation" %}
+    </button>
+    {% else %}
+    <button class="btn btn-primary float-right same-size-280 margin-auto margin-10-new-eval-button"
+            disabled
+            title="{% trans 'We are sorry, there is no assessment available yet.' %}"
+            type="button">
+        {% trans "Start a new evaluation" %}
+    </button>
+    {% endif %}
+    {% else %}
+    <button class="btn btn-primary float-right same-size-280 margin-auto margin-10-new-eval-button"
+            disabled
+            title="{% trans 'You do not have the right to do this action' %}"
+            type="button">
+        {% trans "Start a new evaluation" %}
+    </button>
+    {% endif %}
+</div>
+
+<!-- The Modal create evaluation -->
+<div aria-hidden="true" class="modal" id="modal-create-eval">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+
+            {% include "assessment/creation-evaluation-modal.html" %}
+
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+

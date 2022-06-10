@@ -1,0 +1,36 @@
+# Rename this file to .env.prod
+
+# Django configuration
+SECRET_KEY=
+DJANGO_ALLOWED_HOSTS=  # localhost 127.0.0.1 [::1] preprodassessment.labelia.org assessment.labelia.org
+DJANGO_SETTINGS_MODULE=dev_platform.settings_prod
+
+# Database configuration
+SQL_ENGINE=django.db.backends.postgresql
+SQL_DATABASE=platform_db_prod
+SQL_USER=postgres
+SQL_PASSWORD=
+SQL_HOST=db
+SQL_PORT=5432
+
+DATABASE=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=  # Same password that SQL_PASSWORD
+POSTGRES_DB=platform_db_prod
+
+# Gitlab issue tracker / Feedback (scope: api)
+PRIVATE_TOKEN= # https://framagit.org/labelia-labs/pf-assessment-dsrc/-/settings/access_tokens
+PROJECT_ID=65925 # https://framagit.org/labelia-labs/pre-prod-assessment/-/issues
+
+# Email
+EMAIL_USER=
+EMAIL_PASSWORD=
+EMAIL_URL=
+EMAIL_PORT= #587
+
+# Feedback url
+FEEDBACK_URL=
+
+# Sentry, set sentry dsn to enable sentry feature
+SENTRY_DSN = 
+SENTRY_RATE=  # By default 1

@@ -1,0 +1,115 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="breadcrumbs">
+    <a class="active-breadcrumb" href="#">{% trans 'Dashboard' %}</a>
+    <span> ></span>
+    <a class="active-breadcrumb" href="#" id="active-profile"><span>{% trans "My evaluations" %}</span></a>
+</div>
+
+<h1 class="h1-margin-breadcrumbs">{% trans "My dashboard" %} </h1>
+{% if messages %}
+<ul class="messages margin-3em padding-0-smaller-tablet">
+    {% for message in messages %}
+    <li class="alert alert-{{ message.tags }} overflow-auto">
+        <div>{{ message }}</div>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="">
+    <div class="row-pills-table">
+        <div class="col-ms-3 container-platform column-right">
+            <ul class="nav nav-pills nav-stacked flex-column table-column-profile" role="tablist">
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column {% if tab == 'evaluations' %} active {% endif %}"
+                       data-toggle="pill" href="#content-eval"
+                       id="tab-eval" name="column-button"
+                       onclick="displayTextLink('{% trans 'My evaluations' %}', 'active-profile')"
+                    >{% trans "My evaluations" %}</a>
+                </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column {% if tab == 'organisations' %} active {% endif %}"
+                       data-toggle="pill" href="#content-orga"
+                       id="tab-orga" name="column-button"
+                       onclick="displayTextLink('{% trans 'My organisations' %}', 'active-profile')">
+                        {% trans "Organisation" %}</a>
+                </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column {% if tab == 'labelling' %} active {% endif %}"
+                       data-toggle="pill" href="#content-labelling"
+                       id="tab-labelling" name="column-button"
+                       onclick="displayTextLink('{% trans 'Labelling' %}', 'active-profile')"
+                    >{% trans "Labelling" %}</a>
+                </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column {% if tab == 'resources' %} active {% endif %}"
+                       data-toggle="pill" href="#content-ressource"
+                       id="tab-resource" name="column-button"
+                       onclick="displayTextLink('{% trans 'My resources' %}', 'active-profile')"
+                    >{% trans "My resources" %}</a>
+                </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column {% if tab == 'notes' %} active {% endif %}"
+                       data-toggle="pill" href="#content-user-notes"
+                       id="tab-user-notes" name="column-button"
+                       onclick="displayTextLink('{% trans 'My notes' %}', 'active-profile')"
+                    >{% trans "My notes" %}</a>
+                </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column {% if tab == 'action_plan' %} active {% endif %}"
+                       data-toggle="pill" href="#content-action-plan"
+                       id="tab-action-plan" name="column-button"
+                       onclick="displayTextLink('{% trans 'My action plans' %}', 'active-profile')"
+                    >{% trans "My action plans" %}</a>
+                </li>
+                 <li class="nav-item column-button">
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-change-logs"
+                       id="tab-change-logs" name="column-button"
+                       onclick="displayTextLink('Change logs', 'active-profile')"
+                    >{% trans "Change logs" %}</a>
+                </li>
+            </ul>
+        </div>
+        <div class="data-nav-pills">
+            <div class="tab-content">
+                <div class="container-profile tab-pane small-screen-max-center margin-left-medium-screen {% if tab == 'evaluations' %} active {% else %} fade {% endif %}"
+                     id="content-eval">
+                    {% include "home/profile-user-evaluations.html" %}
+                </div>
+                <div class="container-profile tab-pane small-screen-max-center {% if tab == 'organisations' %} active {% else %} fade {% endif %}"
+                     id="content-orga">
+                    {% include "home/profile-orga-cards.html" %}
+                </div>
+                <div class="container-profile tab-pane small-screen-max-center {% if tab == 'labelling' %} active {% else %} fade {% endif %}"
+                     id="content-labelling">
+                    {% include "home/profile-labelling.html" %}
+                </div>
+                <div class="container-profile tab-pane {% if tab == 'resources' %} active {% else %} fade {% endif %}"
+                     id="content-ressource"><br>
+                    {% include "home/profile-my-ressources.html" %}
+                </div>
+                <div class="container-profile tab-pane {% if tab == 'notes' %} active {% else %} fade {% endif %}"
+                     id="content-user-notes"><br>
+                    {% include "home/profile-user-notes.html" %}
+                </div>
+                <div class="container-profile tab-pane {% if tab == 'action_plan' %} active {% else %} fade {% endif %}"
+                     id="content-action-plan"><br>
+                    {% include "home/profile-action-plan.html" %}
+                </div>
+                <div class="container-profile tab-pane fade" style="min-width: 70vw" id="content-change-logs">
+                    {% include "home/profile-change-logs.html" %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

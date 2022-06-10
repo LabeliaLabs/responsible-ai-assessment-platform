@@ -1,0 +1,15 @@
+{% extends 'base-evaluation.html' %}
+{% load i18n %}
+
+{% block content %}
+<div class="evaluation-title container">
+    <p>
+        {% trans "We have sent you a validation link by email." %}
+        {% trans "You should receive it shortly." %}
+    </p>
+    <p>
+       {% trans "If you don't, please make sure you have entered a correct email address and check your spam folder."%}
+    </p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+{% load markdownify %}
+
+{% block content %}
+<title>Labelia Assessment: release notes</title>
+
+<div class="static-wrapper">
+    <h1 class="h1-margin-no-breadcrumbs">{% trans "Release Notes" %}</h1>
+    {% if release_notes %}
+        {% for release in release_notes %}
+        <div class="release-note">
+            {% if forloop.first %}
+            <div class="date-release-note first-date-release-note">
+                {{release.date}}
+            </div>
+            <div class="box-release-note first-box-release-note">
+                <div class="circle-release-note"></div>
+
+                <div data-toggle="collapse" href="#collapse-{{release.id}}"
+                    onclick="changeIconRelease(this)" aria-expanded="true">
+                    <i class="fa fa-angle-up arrow-release-note"></i>
+                    <h2 class="htext-release-note fake-link">{% trans 'Version' %}
+                        {{release.version}}</h2>
+                </div>
+                <div class="text-release-note collapse show" id="collapse-{{release.id}}">
+                    {% if release.text %}
+                    {{release.text|markdownify}}
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="date-release-note">
+                {{release.date}}
+            </div>
+                <div class="circle-release-note"></div>
+                <div class="box-release-note">
+                    <div class="circle-release-note"></div>
+                    <div data-toggle="collapse" href="#collapse-{{release.id}}"
+                        onclick="changeIconRelease(this)" aria-expanded="false" class="collapsed">
+                        <i class="fa fa-angle-down arrow-release-note"></i>
+                        <h2 class="htext-release-note fake-link">{% trans 'Version' %}
+                            {{release.version}}</h2>
+                    </div>
+                    <div class="text-release-note collapse" id="collapse-{{release.id}}">
+                        {% if release.text %}
+                        {{release.text|markdownify}}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>{% trans "There is no release note yet." %}</p>  
+    {% endif %}
+</div>
+{% endblock %}

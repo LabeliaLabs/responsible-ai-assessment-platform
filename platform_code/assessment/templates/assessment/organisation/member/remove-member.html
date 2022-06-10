@@ -1,0 +1,38 @@
+{% load i18n %}
+{% load static %}
+
+<div class="content-modal-remove-member">
+    <div class="modal-header">
+        <h4 class="modal-title">{% trans "Are you sure you want to remove the user" %} {{member.user.email}}
+            {% trans "from the organisation?" %}
+        </h4>
+        <button class="close" data-dismiss="modal" type="button" id="close-remove-member{{member.id}}">&times;</button>
+    </div>
+    <div class="modal-body-delete">
+        <p>{% blocktrans trimmed %}
+            The user will not be able to consult the evaluations anymore. You may also edit his role within the
+            organisation to limit the actions he can take.
+            {% endblocktrans %}
+        </p>
+
+    </div>
+
+    <div class="modal-footer self-center">
+        <form action="{% url 'assessment:orga-summary' organisation.id %}"
+              id="removeMember{{member.id}}"
+              class="tablet-max-center"
+              method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary adapted-button-size-250 margin-auto"
+                    onclick="removeMember('removeMember{{member.id}}', '{{member.id}}', false)"
+                    type="button">
+                {% trans 'Yes' %}
+            </button>
+            <button class="btn btn-danger adapted-button-size-250 margin-auto right-button smartphone-margin-top"
+                    data-dismiss="modal"
+                    type="button">{% trans 'Cancel' %}
+            </button>
+        </form>
+
+    </div>
+</div>

@@ -1,0 +1,54 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+{% block content %}
+<h1>{% trans "Organisation creation" %}</h1>
+
+{% if messages %}
+    <ul class="messages center margin-20">
+        {% for message in messages %}
+            <li class="alert alert-{{ message.tags }}" >{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+<!--If message in context -->
+{% if message %}
+    <div class="alert {{message|get_key_by_position:0}} center margin-20">{{message|get_value_by_position:0}}</div>
+{% endif %}
+
+<div class="form-center width-35">
+    <div class="column">
+        <form class="" id="orga-creation-form" method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <span>{{ field.label_tag }}</span><br>
+                    <p>{{ field }}</p>
+                {% if field.help_text %}
+                    <small class="grey-color">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <p class="red-color">{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+            <button class="btn btn-primary button-190-or-220 margin-10" id="orga-creation" type="submit">{% trans "Create" %}
+            </button>
+        </form>
+
+        {% if skip_button %}
+            <form action="{% url 'home:user-profile' %}">
+                <button class="btn btn-danger button-190-or-220 margin-10" type="submit">{% trans 'Pass' %}
+                </button>
+            </form>
+            {% else %}
+            <form action="{% url 'home:user-profile' %}">
+                <button class="btn btn-danger button-190-or-220 margin-10" type="submit">{% trans 'Back' %}
+                </button>
+            </form>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

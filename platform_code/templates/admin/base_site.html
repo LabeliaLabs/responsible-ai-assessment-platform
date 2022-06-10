@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+    <link href="{% static 'image/favicon.ico' %}" rel="shortcut icon" type="image/png">
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+
+    <img src="{% static 'image/Icone_Labelia_RVB.svg' %}" height="40px" />
+    <a href="{% url 'admin:index' %}">
+        Admin panel
+    </a>
+
+    <a href="{% url 'admin-monitoring:monitoring' %}">
+        - Monitoring
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}

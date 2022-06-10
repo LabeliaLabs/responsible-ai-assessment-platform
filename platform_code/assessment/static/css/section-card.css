@@ -1,0 +1,125 @@
+h1-section {
+    text-align: center;
+    margin: 0 auto;
+    color: #293484;
+    position:relative;
+    font-size: 3em;
+}
+
+.centered {
+    margin: 0 auto;
+    padding: 0 1em;
+}
+
+.card-section {
+    flex: 1 0 100%;
+    box-sizing: border-box;
+    margin: 1rem .25em;
+    padding: 10px;
+    border: solid 1px lightgrey;
+    height: fit-content;
+    border-radius: 0.5em;
+}
+
+.cards-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+}
+
+h5.card-title-section {
+    text-align: left;
+    /*height: 100px;*/
+    overflow: hidden;
+    margin-left: 10px;
+    width: 50%;
+    margin-top:10px;
+}
+
+.section-card-title{
+    width: 50%;
+    margin-left: 10px;
+    margin: auto;
+}
+
+
+.card-text-section{
+  float: left;
+  text-justify: auto;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  width: 100%;
+  min-height: 8.5em;
+  line-height: 1.25em;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+   -webkit-line-clamp: 7; /* number of lines to show */
+   -webkit-box-orient: vertical;
+}
+
+.card-button-section{
+    text-align: center;
+    align-self: center;
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    margin-top: 10px;
+}
+.card-img-top{
+    height: 80px;
+     width: 200px;
+}
+
+.card-img-top{
+    height: 100px;
+    width: 100px
+}
+
+.progress-eval{
+    margin-top: -2.5em;
+    margin-bottom: 2em;
+    height: 1.5em;
+}
+
+.progress-section{
+    height: 14px;
+    margin: auto;
+    width: 40%;
+}
+
+.margin-right-8{
+    margin-right: 8%;
+}
+
+@media screen and (min-width: 40em) {
+    .card-section {
+        flex: 0 1 calc(50% - 1em);
+    }
+}
+
+@media screen and (min-width: 60em) {
+    .card-section {
+        max-width: calc(32% - 1em);
+    }
+}
+
+
+
+@media screen and (min-width: 52em) {
+    .centered {
+        max-width: 60em;
+    }
+    .card-section {
+        max-width: calc(32% - 1em);
+    }
+}
+
+
+@media screen and (min-width: 80em) {
+    .card-section {
+        max-width: calc(32% - 1em);
+    }
+}

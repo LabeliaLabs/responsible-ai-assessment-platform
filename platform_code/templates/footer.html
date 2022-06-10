@@ -1,0 +1,49 @@
+{% load static %}
+{% load assessment_tags %}
+{% load home_tags %}
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
+
+
+<div>
+    {% if footer_list %}
+    <span class="white-color">{% trans 'With the support of:' %}</span>
+    <div class="center logo-footer">
+        {% for footer_instance in footer_list %}
+            <div class="margin-logo">
+                <a href="{{ footer_instance.link }}"
+                title="{{ footer_instance.link }}"
+                target="_blank">
+                    <img alt="{{ footer_instance.name }}"
+                    class="img-fluid d-block mx-auto logo-d4g margin-10 circle"
+                    src="{{ footer_instance.logo.url }}">
+                </a>
+                <a href="{{ footer_instance.link }}"
+                title="{{ footer_instance.link }}"
+                class="link-without-border"
+                target="_blank">{{ footer_instance.name }}</a>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="footer-separator"></div>
+    {% endif %}
+    <div class="links-footer">
+        <a class="link-with-border" href="{% url 'home:homepage' %}">{% trans "Homepage" %}</a><br>
+        <a class="link-with-border" target="_blank" href="https://www.labelia.org/fr/faq-plateforme">{% trans "FAQ" %}</a>
+        <a class="link-with-border" target="_blank" href="https://www.labelia.org/fr/mentions-legales">{% trans "Legal notices" %}</a>
+        <a class="link-with-border" href="{% url 'home:release-notes' %}">{% trans "Releases" %}</a>
+
+    </div>
+    <div class="col-md-3 col-md-3-footer">
+        <a class="fa fa-icon-footer fa-twitter" href="https://twitter.com/LabeliaLabs" target="_blank"></a>
+        <a class="fa fa-icon-footer fa-linkedin" href="https://www.linkedin.com/company/labelialabs/"
+            target="_blank"></a>
+        <a class="fa fa-icon-footer fa-github" href="https://github.com/LabeliaLabs" target="_blank"></a>
+        <a class="fa fa-icon-footer fa-envelope" href="mailto:hello.assessment@labelia.org" target="_blank"></a>
+        <a class="fa fa-icon-footer fa-meetup" href="https://www.meetup.com/data-science-responsable-et-de-confiance/" target="_blank"></a>
+    </div>
+
+</div>

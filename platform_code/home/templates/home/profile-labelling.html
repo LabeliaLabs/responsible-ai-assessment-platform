@@ -1,0 +1,130 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+<div class="margin-50 margin-bot-30">
+    {% blocktrans trimmed %}
+    You can initiate a labeling request for completed evaluation with a score above {{ labelling_threshold }}
+    to become a Labelia company. Learn more about Labelia on
+    <a href="https://www.labelia.org/fr/labelia" target="_blank">our website.</a>
+    {% endblocktrans %}
+</div>
+
+
+{% if labelable_evaluations %}
+
+<div id="table-label-user">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="col-array" scope="col">{% trans "Evaluation name" %}</th>
+            <th class="col-array" scope="col">{% trans "Version" %}</th>
+            <th class="col-array" scope="col">{% trans "Organisation" %}</th>
+            <th class="col-array" scope="col">{% trans "Creation date" %}</th>
+            <th class="col-array" scope="col">{% trans "Score" %}</th>
+            <th class="col-array" scope="col">{% trans "Status" %}</th>
+            <th class="col-array" scope="col">{% trans "Number of submissions" %}</th>
+            <th class="col-array width-150px" scope="col">{% trans "Action" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for evaluation in labelable_evaluations %}
+        <div>
+            <tr class="row-array">
+                <td class="case-array first-case-array">
+                    <div>{{ evaluation.name }}</div>
+                </td>
+                <td class="case-array">V{{ evaluation.assessment.version }}</td>
+                <td class="case-array">
+                    <div>{{ evaluation.organisation }}</div>
+                </td>
+                <td class="case-array">{{ evaluation.created_at|format_date_calendar }}</td>
+
+                <td class="case-array">{{ evaluation_score_dic|get_item:evaluation.id }}</td>
+
+                {% if evaluation.has_labelling %}
+                    <td class="case-array {% if evaluation.labelling.status == 'labelled' %} green-color {% elif evaluation.labelling.status == 'refused' %} red-color {% endif %}">
+                        {% if evaluation.labelling.status == "justification" %}
+                            {% trans "Justification required" %}
+                        {% elif evaluation.labelling.status == "progress" %}
+                            {% trans "Ongoing review" %}
+                        {% elif evaluation.labelling.status == "refused" %}
+                            {% trans "Refused" %}
+                        {% else %}
+                            {% trans 'Labelled' %}
+                        {% endif %}
+                    </td>
+                {% else %}
+                    <td class="case-array">{% trans "No labelling process yet" %}</td>
+                {% endif %}
+
+                <!-- Number of submissions-->
+                {% if evaluation.has_labelling %}
+                    <td class="case-array">{{ evaluation.labelling.counter }}</td>
+                {% else %}
+                    <td class="case-array">-</td>
+                {% endif %}
+
+                <!-- Actions -->
+                {% if evaluation.has_labelling %}
+                    {% if evaluation.need_justification %}
+                    <td class="case-array last-case-array">
+                        <a class="btn btn-modify large-button margin-10"
+                           href="{{ evaluation.get_absolute_url}}">
+                            {% trans "Modify" %}
+                        </a>
+                        {% if evaluation.is_finished %}
+                        <a class="btn btn-results large-button margin-10"
+                           href="{% url 'assessment:submit-labelling-again' evaluation.organisation.id evaluation.slug evaluation.id %}">
+                            {% trans "Submit again" %}
+                        </a>
+                        {% else %}
+                        <div class="btn btn-results large-button margin-10 disabled"
+                           title="{% trans 'You need to complete your evaluation before submitting again' %}">
+                            {% trans "Submit again" %}
+                        </div>
+                        {% endif %}
+                    </td>
+                    {% else %}
+                    <td class="case-array last-case-array">-</td>
+                    {% endif %}
+                {% else %}
+                <td class="case-array last-case-array">
+                    <a class="btn btn-primary btn-labelling large-button margin-10"
+                       data-target="#modal-start-label-eval{{evaluation.id}}"
+                       data-toggle="modal"
+                       href="#">
+                        {% trans "Initiate labelling" %}
+                    </a>
+                </td>
+                {% endif %}
+                <!--  Modal to initiate the labelling process  -->
+                <div aria-hidden="true" class="modal" data-backdrop="static"
+                     data-keyboard="false" id="modal-start-label-eval{{evaluation.id}}">
+                    <div class="modal-dialog ">
+                        <div class="modal-content">
+                            {% include "assessment/labelling/create-labelling-modal.html" %}
+                        </div>
+                    </div>
+                </div>
+
+            </tr>
+        </div>
+
+
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+{% else %}
+
+<div>
+    {% blocktrans trimmed %}
+    You do not have a completed evaluation with a score above {{ labelling_threshold }}.
+    You must meet these requirements to initiate an application for labelling.
+    {% endblocktrans %}
+</div>
+
+{% endif %}

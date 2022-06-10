@@ -1,0 +1,50 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+<p>{{err}}</p>
+
+<h3 class="settings-subtitle">{% trans "Are you sure you want to delete your account?" %}</h3>
+
+<p class="center-smartphone"
+    >{% trans "The organisations you are the only admin member will be deleted, as well as their evaluations." %}</p>
+
+<div class="center-smartphone">
+    <a class="btn btn-primary adapted-width-button float-left-larger-tablet"
+       href="{% url 'home:user-profile-settings' %}"
+    >{% trans "Cancel"%}</a>
+    <button class="btn btn-danger adapted-width-button float-right-larger-tablet smartphone-margin-top"
+            data-target="#modal-delete-account"
+            data-toggle="modal"
+    >{% trans "Delete" %}
+    </button>
+</div>
+
+<div aria-hidden="true" class="modal" id="modal-delete-account">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel"
+                >{% trans "Are you really sure you want to delete your account?" %}</h4>
+                <button class="close" data-dismiss="modal" type="button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>{% blocktrans trimmed %}
+                    The organisations you are the only admin member will be deleted, as well as their
+                    evaluations.
+                    {% endblocktrans %}
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary same-size-250 margin-auto smartphone-60-height"
+                        data-dismiss="modal"
+                        type="button">
+                    {% trans "Cancel" %}
+                </button>
+                <a class="btn btn-danger same-size-250 margin-auto smartphone-60-height"
+                   href="{% url 'home:delete-user' %}">
+                    {% trans "Delete my account" %}</a>
+            </div>
+        </div>
+    </div>
+</div>

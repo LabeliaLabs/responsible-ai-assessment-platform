@@ -1,0 +1,71 @@
+{% load static %}
+{% load assessment_tags %}
+{% load home_tags %}
+{% load i18n %}
+
+<div class="create-eval-modal">
+    <form action="{% url 'assessment:orga-summary' organisation.id %}"
+          class="form" id="send_invitation_form" method='post' role="form"
+          onkeydown="return event.key != 'Enter';">
+        <div class="modal-header">
+            <h4 class="modal-title larger-small-screen-absolute-position"
+                id="myModalLabel">{% trans "Add a new member to the organisation" %}</h4>
+            <button class="close" data-dismiss="modal" type="button" id="close-button-invitation">&times;</button>
+        </div>
+        <div class="modal-body margin-auto">
+            <p>{% blocktrans trimmed %}
+                You can add another user to your organisation. If the user does not already have an account on
+                the platform, an invitation email will be sent to him to join your organisation.
+                {% endblocktrans %}
+            </p>
+            <p>{% trans "You can chose the rights you want to give to the user:" %}</p>
+            <ul class="inline-padding">
+                <li class="li-with-disc">
+                    {% blocktrans trimmed %}
+                    <strong>Read-only user</strong>: the read-only user can only consult
+                    the evaluations, he cannot create, edit or delete one.
+                    {% endblocktrans %}
+                </li>
+                <li class="li-with-disc">
+                    {% blocktrans trimmed %}
+                    <strong>Editor</strong>: the editor can create, modify or delete evaluations.
+                    {% endblocktrans %}
+                </li>
+                <li class="li-with-disc">
+                    {% blocktrans trimmed %}
+                    <strong>Admin</strong>: the admin user can create, modify or delete
+                    evaluations. He also can edit rights of other members and add/remove users to the organisation.
+                    {% endblocktrans %}
+                </li>
+            </ul>
+            <p>{% blocktrans trimmed %}
+                <strong>Note that you cannot remove an user with admin rights from the organisation, neither
+                change its rights. It is recommended to add user with edit rights</strong>.
+                {% endblocktrans %}</p>
+            <div class="create-form width-35">
+                {% csrf_token %}
+                {% for field in add_member_form %}
+                <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                <span class="float-left">{% blocktrans with label=field.label %}{{ label }}{% endblocktrans %}</span>
+                <p> {{ field }} </p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="modal-footer center one-column">
+            <div class="column">
+                <div>
+                    <button class="btn btn-primary adapted-button-size-250 margin-auto" id="sendInvitationButton"
+                            onclick="sendInvitation('send_invitation_form')"
+                            type="button">{% trans 'Send the invitation' %}
+                    </button>
+                </div>
+                <div class="margin-10">
+                    <input class="btn btn-danger adapted-button-size-250 margin-auto" data-dismiss="modal" type="button"
+                           value="{% trans 'Cancel' %}"/>
+                </div>
+            </div>
+        </div>
+        <div id="confirmationInvitation"></div>
+    </form>
+</div>
+

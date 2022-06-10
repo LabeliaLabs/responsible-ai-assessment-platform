@@ -1,0 +1,116 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+<div class="labelling-threshold">
+    {% trans 'Current labelling threshold:' %} {{ labelling_threshold }}
+</div>
+<h1 class="center margin-30 margin-bot-30">{% trans "Labelling" %}</h1>
+
+{% if messages %}
+<ul class="messages margin-3em padding-0-smaller-tablet">
+    {% for message in messages %}
+    <li class="alert alert-{{ message.tags }} overflow-auto">
+        <div>{{ message }}</div>
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form action="#" class="attribute-form-bis center" method="post"
+      id="labelling-status-form" role="form"
+>
+    {% csrf_token %}
+        {{ labelling_status_form }}
+</form>
+
+
+
+<div id="table-label-admin" class=" margin-50">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th class="col-array" scope="col">{% trans "Evaluation name" %}</th>
+            <th class="col-array" scope="col">{% trans "Version" %}</th>
+            <th class="col-array" scope="col">{% trans "Organisation" %}</th>
+            <th class="col-array same-size-250" scope="col">{% trans "Created by" %}</th>
+            <th class="col-array" scope="col">{% trans "Score" %}</th>
+            <th class="col-array" scope="col">{% trans "Submission date" %}</th>
+            <th class="col-array" scope="col">{% trans "Number of submissions" %}</th>
+            <th class="col-array" scope="col">{% trans "Last modification date" %}</th>
+            <th class="col-array" scope="col">{% trans "Status" %}</th>
+            <th class="col-array" scope="col">{% trans "Justification request date" %}</th>
+            <th class="col-array width-150px" scope="col">{% trans "Action" %}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for labelling in labellings %}
+        <div>
+            <tr class="row-array">
+                <td class="case-array first-case-array">
+                    <a href="{{ labelling.evaluation.get_absolute_url}}">
+                        {{ labelling.evaluation.name }}
+                    </a>
+                </td>
+                <td class="case-array">V{{ labelling.evaluation.assessment.version }}</td>
+                <td class="case-array">
+                    <a href="{% url 'assessment:orga-summary' labelling.evaluation.organisation.id %}">
+                        {{ labelling.evaluation.organisation }}
+                    </a>
+                </td>
+                <td class="case-array">{{ labelling.evaluation.created_by.email }}</td>
+                <td class="case-array">{{ labelling.evaluation.evaluationscore_set.first.score }}</td>
+                <td class="case-array">{{ labelling.start_date|format_date_calendar }}</td>
+                <td class="case-array">{{ labelling.counter }}</td>
+                <td class="case-array">{{ labelling.last_update|format_date_calendar }}</td>
+                <td class="case-array" name="labelling-status">{{ labelling.status }}</td>
+                <td class="case-array">{{ labelling.justification_request_date|format_date_calendar }}</td>
+                <td class="case-array">
+                    {% if labelling.status == "progress" %}
+                        <a class="btn btn-modify large-button margin-10"
+                           title="This do not send an email to the user"
+                           href="{% url 'assessment:labelling-justification' labelling.evaluation.organisation.id labelling.evaluation.slug labelling.evaluation.id %}">
+                            {% trans "Justifications" %}
+                        </a>
+                        <a class="btn btn-results btn-labelling large-button margin-10"
+                           data-target="#modal-validate-labelling{{labelling.id}}"
+                           data-toggle="modal"
+                           href="#">
+                            {% trans "Validate" %}
+                        </a>
+                        <a class="btn btn-danger btn-labelling large-button margin-10"
+                           data-target="#modal-reject-labelling{{labelling.id}}"
+                           data-toggle="modal"
+                           href="#">
+                            {% trans "Reject" %}
+                        </a>
+                    {% elif labelling.status == "justification" %}
+                        -
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <div aria-hidden="true" class="modal"
+                     id="modal-validate-labelling{{labelling.id}}">
+                    <div class="modal-dialog ">
+                        <div class="modal-content">
+                            {% include "assessment/labelling/validation-modal.html" %}
+                        </div>
+                    </div>
+                </div>
+                <div aria-hidden="true" class="modal"
+                     id="modal-reject-labelling{{labelling.id}}">
+                    <div class="modal-dialog ">
+                        <div class="modal-content">
+                            {% include "assessment/labelling/rejection-modal.html" %}
+                        </div>
+                    </div>
+                </div>
+            </tr>
+        </div>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+

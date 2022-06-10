@@ -1,0 +1,35 @@
+{% load i18n %}
+{% autoescape off %}
+<div class="create-orga-modal">
+    <form class="form" id="orga-creation-form" method='post' role="form">
+        <div class="modal-header">
+            <h4 class="modal-title larger-small-screen-absolute-position"
+                id="myModalLabel">{% trans "Create a new organisation" %}</h4>
+            <button class="close" data-dismiss="modal" type="button">&times;</button>
+        </div>
+        <div class="modal-body create-form width-50">
+            {% csrf_token %}
+            <div class="one-column">
+                {% for field in new_orga_form %}
+                <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                <span>{{ field.label }}</span>
+                <p> {{ field }} </p>
+                {% endfor %}
+            </div>
+
+        </div>
+        <div class="modal-footer center one-column">
+            <div class="column">
+                <div>
+                    <input class="btn btn-primary same-size-250 margin-auto" id="orga-creation"
+                           type="submit" value="{% trans 'Create the organisation' %}"/>
+                </div>
+                <div class="margin-10">
+                    <input class="btn btn-danger same-size-250 margin-10 margin-auto" data-dismiss="modal"
+                           type="button" value="{% trans 'Cancel' %}"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endautoescape %}

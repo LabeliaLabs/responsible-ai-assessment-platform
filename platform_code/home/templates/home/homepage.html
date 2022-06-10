@@ -1,0 +1,54 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li class="alert-warning ">{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<div>
+  <row class="form-center">
+    <h1 class="margin-30">{% trans "Assessment platform" %}</h1>
+    <h4 class="margin-10">{% trans "Labelia assessment - Responsible and Trustworthy AI" %}</h4>
+    <p class="width-70">{% blocktrans trimmed %}
+      This free and open access platform allows organizations to assess the level of maturity of their AI activity 
+      against the "responsible and trusted data science" 
+      <a href="https://github.com/LabeliaLabs/referentiel-evaluation-dsrc" target="_blank">framework</a>. 
+      A complete evaluation results in a score between 0 and 100, broken down over the 6 sections of the framework.
+      <br>
+      An organization obtaining a score >= 45 or >= 55 is eligible for the 
+      <a target="_blank" href="https://www.labelia.org/en/home">Labelia label</a>, 
+      respectively intermediate or advanced level.
+      {% endblocktrans %}
+    </p>
+  </row>
+  <row>
+  {% if user.is_authenticated %}
+    <div class="center margin-70">
+      <a class="btn btn-primary margin-auto" href="{% url 'home:user-profile' %}">
+        {% trans "My dashboard" %}
+      </a>
+    </div>  
+  {% else %}
+  <div class="grid-homepage">
+    <div class="form-center full-height width-350">
+      {% include 'home/login.html' %}
+    </div>
+    <div class="homepage-separator remove-smaller-than-tablet"></div>
+    <div class="form-center full-height margin-top-50-smaller-tablet">
+      {% include 'home/signup.html' %}
+    </div>
+  </div>
+  {% endif %}
+  </row>
+</div>
+
+{% endblock %}

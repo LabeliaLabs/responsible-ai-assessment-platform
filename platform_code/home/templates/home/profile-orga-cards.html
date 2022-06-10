@@ -1,0 +1,41 @@
+{% load static %}
+{% load assessment_tags %}
+{% load home_tags %}
+{% load i18n %}
+
+
+<div class="larger-large-screen-50-top margin-bot-30 center-max-1130">
+    <a class="btn btn-primary card-button" data-target="#modal-create-orga" data-toggle="modal"
+       href="{% url 'home:orga-creation' %}">{% trans "Create a new organisation" %}
+    </a>
+</div>
+
+<section class="cards-orga">
+    {% for organisation in organisations %}
+    <article class="card text-center ">
+        <h5 class="card-title">{{organisation.name}} </h5>
+
+        <div class="card-body">
+            <p class="card-text">{% trans "My role: "%}{{organisation|get_role:user}}</p>
+            <p class="card-text">{% trans "Number of evaluations in progress: "%}
+                {{organisation.evaluation_set.all|eval_not_finished}} </p>
+            <p class="card-text">{% trans "Number of completed evaluations: "%}
+                {{organisation.evaluation_set.all|eval_finished}} </p>
+            <a class="btn btn-primary card-button"
+               href="{% url 'assessment:orga-summary' organisation.id %}">{% trans "Go to the organisation" %}</a>
+        </div>
+    </article>
+    {% endfor %}
+
+
+</section>
+
+<div aria-hidden="true" class="modal" id="modal-create-orga">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+
+            {% include "home/profile-orga-creation-modal.html" %}
+
+        </div>
+    </div>
+</div>

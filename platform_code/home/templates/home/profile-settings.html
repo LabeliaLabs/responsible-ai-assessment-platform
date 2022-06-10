@@ -1,0 +1,80 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+{% block content %}
+
+<div class="breadcrumbs">
+    <a class="active-breadcrumb" href="#">{% trans 'User settings' %}</a>
+    <span> ></span>
+    <a class="active-breadcrumb" href="#" id="active-profile-settings"><span>{% trans "My information" %}</span></a>
+</div>
+
+<h1 class="h1-margin-breadcrumbs">{% trans "My account" %}</h1>
+<div class="">
+    <div class="row-pills-table">
+        <div class="col-md-3 column-right profile-settings-pills">
+            <ul class="nav nav-pills nav-stacked flex-column table-column-profile"
+                role="tablist">
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column active" data-toggle="pill" href="#content-username"
+                       name="column-button"
+                       onclick="displayTextLink('{% trans 'My information' %}', 'active-profile-settings')">
+                        {% trans "User information" %}
+                    </a>
+                </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-password"
+                       name="column-button"
+                       onclick="displayTextLink('{% trans 'Password' %}', 'active-profile-settings')"
+                    >{% trans "Password" %}</a>
+                </li>
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-export"
+                       name="column-button"
+                       onclick="displayTextLink('{% trans 'Data export' %}', 'active-profile-settings')">
+                        {% trans "Personnal data" %}
+                    </a>
+                </li>
+
+                <li class="nav-item column-button">
+                    <a class="nav-link profile-column" data-toggle="pill" href="#content-delete"
+                       name="column-button"
+                       onclick="displayTextLink('{% trans 'Account deletion' %}', 'active-profile-settings')">
+                        {% trans "Delete the account" %}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="data-nav-pills">
+            <div class="tab-content">
+                <div class="tab-pane active small-screen-max-center"
+                     id="content-username">
+                    {% include "home/settings-data.html" %}
+                </div>
+                <div class="tab-pane fade small-screen-max-center"
+                     id="content-password"><br>
+                    {% include "home/settings-password.html" %}
+                </div>
+                <div class="tab-pane fade small-screen-max-center"
+                     id="content-export"><br>
+                    {% include "home/settings-export-data.html" %}
+                </div>
+                <div class="container-profile tab-pane fade small-screen-max-center"
+                     id="content-delete"><br>
+                    {% include "home/settings-delete.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--<form action="{% url 'home:user-profile' %}"-->
+<!--      class="center-smartphone">-->
+<!--    <input class="btn btn-primary bottom-page-button float-right-larger-tablet same-size-280 " type="submit"-->
+<!--           value="{% trans 'Go back to my dashboard' %}"/>-->
+<!--</form>-->
+
+
+{% endblock %}
