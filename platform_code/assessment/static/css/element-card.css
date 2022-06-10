@@ -34,11 +34,6 @@
     cursor: pointer;
 }
 
-div.evaluation-title > h1 {
-    text-align: center;
-    margin: 0 auto;
-    position:absolute;
-}
 
 div.evaluation-title > h3 {
     text-align: center;
