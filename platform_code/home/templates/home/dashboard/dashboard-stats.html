@@ -1,0 +1,68 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+<h1 class="center margin-30 margin-bot-30">{% trans "Statistics" %}</h1>
+<div id="admin-dashboard-error" class="center margin-20">
+</div>
+    <nav>
+        <div class="nav nav-tabs justify-content-center nav-fill" id="nav-tab" role="tablist">
+            <a aria-controls="nav-user"
+               aria-selected="true"
+               class="nav-item nav-link title-nav-resources active"
+               data-toggle="tab"
+               href="#nav-user"
+               id="nav-user-tab"
+               onclick="changeDashboardTab('users-dashboard-tab')"
+               role="tab">
+                {% trans "User stats" %}
+            </a>
+            <a aria-controls="nav-organisation"
+               aria-selected="false"
+               class="nav-item nav-link title-nav-resources"
+               data-toggle="tab"
+               href="#nav-organisation"
+               id="nav-organisation-tab"
+               role="tab"
+               onclick="changeDashboardTab('organisations-dashboard-tab')"
+                >
+                {% trans "Organisations stats " %}
+            </a>
+            <a aria-controls="nav-evaluation"
+               aria-selected="false"
+               class="nav-item nav-link title-nav-resources"
+               data-toggle="tab"
+               href="#nav-evaluation"
+               id="nav-evaluation-tab"
+               role="tab"
+               onclick="changeDashboardTab('evaluations-dashboard-tab')"
+                >{% trans "Evaluations stats" %}
+            </a>
+        </div>
+    </nav>
+
+<div id="users-dashboard-tab"
+     name="dashboard-tab">
+    {% include "home/dashboard/dashboard-admin-users-tab.html" %}
+</div>
+<div id="evaluations-dashboard-tab"
+     name="dashboard-tab"
+     class="display-none">
+    {% include "home/dashboard/dashboard-admin-evaluations-tab.html" %}
+</div>
+<div id="organisations-dashboard-tab"
+     name="dashboard-tab"
+     class="display-none">
+    {% include "home/dashboard/dashboard-admin-organisations-tab.html" %}
+</div>
+
+
+<script>
+
+function changeDashboardTab(tabId) {
+    var allTabs = Array.from(document.getElementsByName('dashboard-tab'));
+    allTabs.forEach((tab) => {
+        tab.id != tabId ? tab.classList.add("display-none") : tab.classList.remove("display-none")
+    })
+}
+</script>

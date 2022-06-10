@@ -1,0 +1,45 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+
+<h3 class="settings-subtitle">{% trans "Personnal data" %}</h3>
+
+
+<div id="cookie-authorization" class="">
+    <label class="checkbox-inline">
+        <input type="checkbox" id="checkbox-cookie"> {% trans "Use of cookies" %}
+      </label>
+</div>
+
+<div id="message-cookie" class="display-none alert alert-success margin-50">{% trans "Your changes have been taken into account." %}</div>
+
+<div class="margin-50 center-smartphone">
+    <p>{% trans "Do you want to download your personnal data stored in the platform?" %}</p>
+</div>
+<div class="center-smartphone">
+<form action="{% url 'home:export-user-data' %}">
+    <input class="btn btn-primary float-left-larger-tablet"
+           type="submit"
+           value="{% trans 'Download' %}"/>
+</form>
+</div>
+
+<script>
+
+let cookieCheckbox = document.getElementById("checkbox-cookie");
+cookieCheckbox.checked = localStorage["acceptCookie"] === "true";
+
+cookieCheckbox.addEventListener('click', function(e) {
+    let newValue = localStorage['acceptCookie'] === "true" ? false : true;
+    setAcceptCookie(newValue);
+    cookieCheckbox.checked = newValue;
+    let cookieMessage = document.getElementById("message-cookie");
+    cookieMessage.classList.remove("display-none");
+
+    setTimeout(function() {
+        cookieMessage.classList.add("display-none");
+    }, 4000);
+});
+
+</script>

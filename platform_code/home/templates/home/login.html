@@ -1,0 +1,55 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+<form 
+    class="form width-350"
+    id="user_login_page_form"
+    method='post'
+    role="form"
+    action="{% url 'home:homepage' %}"
+>
+    <div class="header">
+        <h1 class="title h1-homepage">{% trans "Login" %}</h1>
+    </div>
+    <div class="body">
+        {% csrf_token %}
+        <div class="margin-auto">
+            <div>
+                <div class="">{{ login_form.username.label_tag }}</div>
+            </div>
+            <div>
+                <div class="">{{ login_form.username }}</div>
+            </div>
+            <div>
+                <div class="margin-20">{{ login_form.password.label_tag }}</div>
+            </div>
+            <div>
+                <div class="">{{ login_form.password }}</div>
+            </div>
+        </div>
+    </div>
+    {% if message_login %}
+    <div class="alert {{message_login|get_key_by_position:0}} margin-30 width-70">
+        {{message_login|get_value_by_position:0}}
+    </div>
+    {% endif %}
+    <div class="margin-40 row one-column">
+        <div class="column">
+            <div>
+                <button 
+                    class="btn btn-primary adapted-button-size-250 margin-auto"
+                    name="action"
+                    value="login"
+                    type="submit"
+                >
+                    {% trans 'Login' %}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="margin-10 center">
+    <a href="{% url 'home:password_reset' %}">{% trans "Forgotten password?" %}</a>
+</div>

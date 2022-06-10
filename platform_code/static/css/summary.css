@@ -1,0 +1,121 @@
+h1{
+}
+
+.modal-body-2-cols{
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-gap: 10px;
+    grid-auto-rows: minmax(70px, auto);
+}
+
+.modal-dialog{
+    max-width: 600px;
+}
+
+.modal-body-delete{
+    margin: auto;
+    padding: 25px;
+    text-align: center;
+}
+
+
+.modal-backdrop.show {
+    opacity: 0;
+    display: none;
+}
+
+.modal-title{
+    width: 95%;
+    text-align: center;
+    margin: 0 auto;
+    color: #5550FF;
+}
+
+.modal-dialog{
+    margin-top: 10%;
+}
+
+.label-create {
+    font-size: x-large;
+    grid-column: 1;
+    grid-row: 1;
+    margin: auto;
+}
+
+.name-eval-field{
+    grid-column: 2;
+    grid-row: 1;
+    margin: auto;
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+}
+
+.text-form {
+    font-size: x-large;
+    grid-column: 1;
+    grid-row: 2;
+    margin: auto;
+    margin-left: 13%;
+}
+
+.attribute-form{
+    font-size: x-large;
+    grid-column: 2;
+    grid-row: 2;
+    margin: auto;
+    margin-left: 0%;
+}
+
+.table{
+    color: #4B6073;
+    border-top: 0;
+    border-bottom: 0;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+.table td{
+    vertical-align: middle;
+    margin: auto;
+    border-top: 0;
+    border: 0;
+}
+
+.table thead th {
+    vertical-align: unset;
+    margin: auto;
+    border-top: 0;
+    border: 0px;
+
+}
+
+.col-array {
+    background-color: ;
+    color: ;
+    border-color: ;
+    border-width: ;
+    text-align: center;
+    margin: auto;
+
+}
+
+.progress-bar-section{
+    background-color: #28a745;
+}
+
+
+.case-array {
+    text-align: center;
+    margin: auto;
+}
+
+.row-array:hover .div-hidden-icons {
+    visibility: visible;
+}
+
+.div-hidden-icons{
+    visibility: hidden;
+    border-top:0px;
+}
+

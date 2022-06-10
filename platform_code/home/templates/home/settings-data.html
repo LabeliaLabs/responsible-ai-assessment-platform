@@ -1,0 +1,31 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+
+<h3 class="settings-subtitle">{% trans "My information" %}</h3>
+{% if message %}
+<div class="alert {{message|get_key_by_position:0}}">{{message|get_value_by_position:0}}</div>
+{% endif %}
+<div class="body form-center">
+    <div class="column-larger-tablet">
+        <form action="#" id="form-user-data" method='post'>
+            {% csrf_token %}
+            {% for field in user_data_form %}
+            <span class="float-left-larger-tablet">
+                {% blocktrans with tag=field.label_tag %}{{tag}}{% endblocktrans %}
+            </span>
+            <p>{{ field }}</p>
+            {% endfor %}
+            <button class="btn btn-primary float-left-larger-tablet"
+                    onclick="submitUserSettingsDataForm('form-user-data')"
+                    type="button">{% trans "Modify" %}
+            </button>
+        </form>
+    </div>
+</div>
+<div id="message" class="display-none alert margin-50"></div>
+
+
+
+

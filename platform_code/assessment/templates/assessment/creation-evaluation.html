@@ -1,0 +1,36 @@
+{% extends 'base-evaluation.html' %}
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+{% block content %}
+
+<h1 class="h1-margin-breadcrumbs">{% trans "Evaluation creation" %}</h1>
+
+<div class="form-center width-50 smartphone-margin-top">
+    <div>
+        <form class="form" id="create_evaluation_form" method='post' role="form">
+
+            <div>
+                {% csrf_token %}
+                {% for field in form %}
+                <!-- For loop on the only field in the form in order to separate the label and the field for the css grid-->
+                <span class="">{{ field.label}}</span>
+                <p> {{field}} </p>
+                {% endfor %}
+                <p class="text-form-bis">{% trans "Assessment version" %} :</p>
+                <p class="attribute-form-bis"
+                   title="{% trans 'This number corresponds to the version of the assessment that is currently in use.' %}">
+                    {{last_version}}
+                </p>
+
+            </div>
+
+            <input class="btn btn-primary same-size-250 margin-auto" type="submit"
+                   value="{% trans 'Create the evaluation' %}"/>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load static %}
+{% load home_tags %}
+{% load i18n %}
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="google-site-verification" content="VF_97-O0owZKL4JhutS6RoGExraIN1eL8nulwWPzbL0" />
+    <title>Labelia Assessment</title>
+    <meta name=keywords"
+          content="{% blocktrans trimmed %}
+          labelia, assessment, data science, trustworthy, responsible, resources, evaluation, label, association
+          {% endblocktrans %}"
+    />
+    <meta name="description"
+          content="{% blocktrans trimmed %}
+           Labelia assessment is the result of a participatory work carried out by the Labelia Labs
+           association (ex Substra Foundation) to promote responsible and trustworthy data science practices.
+          {% endblocktrans %}"
+    />
+    <link href="{% static 'image/favicon.ico' %}" rel="shortcut icon" type="image/png">
+
+    <script src="https://kit.fontawesome.com/bf86389514.js" crossorigin="anonymous"></script>
+    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap-grid.min.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'vendor/bootstrap/css/bootstrap-reboot.min.css' %}" rel="stylesheet" type="text/css">
+    <script defer src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script defer src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script defer src="{% static 'js/bootstrap.modal.js' %}"></script>
+    <script defer src="{% static 'js/functions.js' %}"></script>
+    <link href="{% static 'css/element-card.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/base.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/summary.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/results.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/media.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/section-card.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'css/ubuntu-family.css' %}" rel="stylesheet" type="text/css">
+
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% url 'javascript-catalog' %}"></script>
+    
+    <!-- Matomo -->
+    <script>
+        var _paq = window._paq = window._paq || [];
+        /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+        _paq.push(["setDomains", ["*.assessment.labelia.org"]]);
+        _paq.push(['trackPageView']);
+        _paq.push(['enableLinkTracking']);
+        // accurately measure the time spent in the visit
+        _paq.push(['enableHeartBeatTimer']);
+        (function() {
+        var u="https://labelia.matomo.cloud/";
+        _paq.push(['setTrackerUrl', u+'matomo.php']);
+        _paq.push(['setSiteId', '1']);
+        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+        g.async=true; g.src='//cdn.matomo.cloud/labelia.matomo.cloud/matomo.js'; s.parentNode.insertBefore(g,s);
+        })();
+    </script>
+    <!-- End Matomo Code -->
+</head>
+
+<body class="navbar-is-fixed-top">
+    {% include "cookie-banner.html" %}
+    <header class="navbar-fixed">
+        <nav class="navbar navbar-expand-lg  is-fixed-top">
+            {% include "navbar.html" %}
+        </nav>
+    </header>
+    {% get_current_language as LANGUAGE_CODE %}
+    {% if user.is_authenticated %}
+        <div>
+            {% if platform_management.platform_update %}
+            <div class="delivery-banner margin-110">
+                {% if LANGUAGE_CODE == "fr" %}
+                    {{ platform_management.delivery_text_fr|linebreaksbr }}
+                {% else %}
+                    {{ platform_management.delivery_text_en|linebreaksbr }}
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    {% if platform_management.platform_update and user.is_authenticated %}
+        <div name="page-container">
+    {% else %}
+        <div name="page-container" class="margin-normal-navbar">
+    {% endif %}
+        <div class="content container" id="content-wrap">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-2 footer" id="app-footer">
+        {% include "footer.html" %}
+    </footer>
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+
+</body>
+</html>
+<script>
+    var consentDuration = 1209600000;
+    // If not cookie set yet because first time user comes (ie no date) or if set to False and more than 14 days ago
+    if (!localStorage["dateCookieSet"] || localStorage["acceptCookie"] === 'false' && Date.now() - localStorage["dateCookieSet"] >  consentDuration) {
+        document.getElementById("cookie-banner").classList.remove("display-none")
+    };
+</script>
+
+<script>
+
+
+function adaptNavbar() {
+// When the width is < 768px
+    var pageContainer = document.getElementsByName("page-container")[0];
+    var header = document.getElementsByTagName("header")[0];
+    var navbarButton = document.getElementById("navbar-button");
+    var deliveryBanner = document.querySelector(".delivery-banner");
+    pageContainer.classList.remove("expand-navbar");
+    navbarButton.addEventListener("click", function(evt) {
+        if (deliveryBanner) {
+            if (header.offsetHeight < 100) {  // Toggle the navbar down
+                deliveryBanner.classList.remove("margin-110");
+                deliveryBanner.style.marginTop = "";
+                deliveryBanner.classList.add("expand-navbar");
+            } else {
+                // Set style instead of removing "expand-navbar" to keep smoothness
+                deliveryBanner.style.marginTop = "110px";
+            }
+        } else {
+            if (header.offsetHeight < 100) {  // Toggle the navbar down
+                pageContainer.classList.remove("margin-normal-navbar");
+                pageContainer.classList.add("expand-navbar");
+            } else {
+                pageContainer.classList.add("margin-normal-navbar");
+            }
+        }
+    });
+}
+
+adaptNavbar();
+window.addEventListener('resize', adaptNavbar);
+
+function adaptMarginFooter() {
+    // To always set the footer at the bottom of the page and not higher
+    const height = window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+    const contentHeight = document.querySelector("[name=page-container]") ?
+        document.querySelector("[name=page-container]").getBoundingClientRect().height : null;
+    if (contentHeight && contentHeight + 150 < height && innerWidth > 768) {
+        // If the body is shorter thant the page height
+        // Set margin to footer to fit the bottom of the page
+        var footer = document.getElementById("app-footer");
+        var footerHeight = footer ? footer.getBoundingClientRect().height : null;
+        var margin = height - contentHeight - footerHeight - 111;  // 111 for the margin top
+        footer ? footer.style.marginTop = margin + "px" : "";
+    }
+}
+
+adaptMarginFooter();
+
+</script>

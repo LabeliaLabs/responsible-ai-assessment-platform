@@ -1,0 +1,29 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="{{ previous_section.get_absolute_url }}">{% trans "Previous section" %}</a>
+
+        {% else %}
+            <a href="{{ evaluation.get_absolute_url }}">{% trans "Evaluation summary" %}</a>
+
+        {% endif %}
+        <br class="remove-larger-than-smartphone">
+        {% if page_obj.has_next %}
+        <span class="current"> - {% trans "Section" %} {{ page_obj.number }} -</span>
+        {% else %}
+        <span class="current"> - {% trans "Section" %} {{ page_obj.number }}</span>
+        {% endif %}
+        <br class="remove-larger-than-smartphone">
+        {% if page_obj.has_next %}
+            <a href="{{ next_section.get_absolute_url }}">{% trans "Next section" %}</a>
+
+
+        {% endif %}
+    </span>
+</div>
+

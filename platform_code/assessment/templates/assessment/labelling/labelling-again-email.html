@@ -1,0 +1,14 @@
+{% load i18n %}{% load static %}{% autoescape off %}
+{% trans "A request to label again an evaluation has been made by " %}{{ user.first_name}} {{ user.last_name }}
+{% trans "with the email address " %}{{ user.email }}
+{% trans " and from the organisation " %}{{ organisation.name }}.
+
+{% trans "This is the" %} {{evaluation.labelling.counter }} {% trans "back and forth for this labelling process" %}
+
+{% trans "You can see the evaluation with this link:" %}
+{{ protocol }}://{{ domain }}{% url 'assessment:evaluation' organisation.id evaluation.slug evaluation.id %}
+
+{% trans "You can also see the evaluation in the admin pannel with this link:" %}
+{{ protocol }}://{{ domain }}{% url 'home:admin-dashboard' 'labelling' %}
+
+{% endautoescape %}

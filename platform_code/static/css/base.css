@@ -1,0 +1,1472 @@
+/*
+The file is used to define the main css classes used in the html, thus other css files exist for specific
+pages (results, section-card, etc). The best way to see the use of a css class is to do, on pycharm, ctrl+maj+r of the
+class.
+
+The file is order from the more general, abstract properties (GLOBAL PROPERTIES, MARGIN, LIST, BUTTONS, etc)
+to the more specific of an element of the html files (FOOTER, NAVBAR, CARDS, etc).
+
+The media are mainly stored in media.css even if some may remain in this file.
+
+*/
+
+/*************************************** GLOBAL PROPERTIES *******************************************/
+
+body{
+    margin: 0 0 0 0;
+    font-family: Ubuntu;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 1.2em;
+    color :  #4D566B;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container-platform{
+    max-width: max-content;
+    margin-right: 10px;
+    margin-left: 10px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.blue-color{
+    color: #007BFF;
+}
+
+.green-color {
+    color: green;
+}
+
+.red-color {
+    color: red;
+}
+
+.white-color{
+    color: white;
+}
+
+.grey-color{
+    color: grey;
+}
+
+.display-none{
+    display: none;
+}
+
+.italic{
+    font-style: italic;
+}
+
+.medium-font-weight {
+    font-weight: 700;
+}
+
+h1 {
+    text-align: center;
+    margin: 0 auto;
+    color: #5550FF;
+    position:relative;
+    font-size: 2rem;
+}
+
+.h-big{
+    text-align: center;
+    margin: 0 auto;
+    color: #5550FF;
+    position:relative;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+
+.h-small{
+    text-align: center;
+    margin: 0 auto;
+    color: #5550FF;
+    position:relative;
+    font-size: 1rem;
+}
+
+
+
+.center-select{
+    text-align-last: center;
+}
+
+select {
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+}
+input {
+    border-radius: 0.25em;
+    border: 1px solid lightsteelblue;
+    max-width: -webkit-fill-available;
+}
+
+a {
+    color: #5550ff;
+}
+
+a:hover {
+    color: #8985FF;
+    text-decoration: underline;
+}
+
+.a-re-init-btn {
+color: #4D566B;
+}
+
+.a-re-init-btn:hover {
+ color: #8985FF;
+ text-decoration: underline;
+}
+
+
+.hidden-div{
+    visibility: hidden;
+    margin: 0;
+}
+
+.center{
+    text-align: center;
+}
+
+.absolute-position{
+    position: absolute;
+}
+
+.flex{
+    display: flex;
+}
+
+.inline-grid{
+    display: inline-grid;
+}
+
+.overflow-scroll{
+    overflow: scroll;
+}
+
+.padding-1{
+    padding: 1em;
+}
+
+.no-padding-inline-start{
+    padding-inline-start: 0;
+}
+
+.waiting-cursor:hover{
+    cursor: wait;
+}
+
+.one-column{
+    columns: 1;
+}
+
+.font-25{
+    font-size: 25px;
+}
+
+.two-columns-adapted{ /* media on it */
+    columns: 2;
+}
+
+.three-columns{
+    columns: 3;
+}
+
+.liked{
+    cursor: pointer;
+}
+
+.not-liked{
+    cursor: pointer;
+}
+
+.self-center{
+    align-self: center;
+    justify-content: center;
+}
+
+.object-linked:hover .hidden-div {
+    visibility: visible;
+}
+
+.not-displayed-div{
+    displayed: none;
+}
+
+.display-line{
+    display: flex;
+    align-items: center;
+}
+
+.next-element:hover{
+    cursor: pointer;
+}
+
+.column{
+    float: left;
+    padding: 10px;
+    flex: 1;
+}
+
+.center-content{
+    align-self: center;
+}
+
+.overflow-auto{
+    overflow: auto;
+}
+
+.transition {
+    opacity: 0;
+    transition-duration: 1s;
+}
+
+.circle {
+    border-radius: 50%;
+}
+
+/******************************************* END GLOBAL PROPERTIES *******************************************/
+
+/************************************************** MARGIN ***************************************************/
+
+.margin-10 {
+    margin-top: 10px;
+}
+
+.margin-3em{
+    margin-top: 3em;
+}
+
+.margin-20 {
+    margin-top: 20px;
+}
+
+.margin-30 {
+    margin-top: 30px;
+}
+
+.margin-50 {
+    margin-top: 50px;
+}
+.margin-70 {
+    margin-top: 70px;
+}
+
+.margin-110{
+    margin-top: 110px;
+}
+
+.margin-150 { /* media smartphone 480px on it */
+    margin-top: 150px;
+}
+
+
+.margin-bottom-0 {
+    margin-bottom: 0px;
+}
+
+.margin-bottom-1em {
+    margin-bottom: 1em;
+}
+
+.margin-bot-30 {
+    margin-bottom: 30px;
+}
+
+.margin-bot-50{
+    margin-bottom: 50px;
+}
+
+.margin-all-20{
+    margin: 20px;
+}
+
+.margin-bot-top-20 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.margin-auto{
+    margin: auto;
+}
+
+.margin-left-em{
+    margin-left: 0.2em;
+}
+
+.margin-left-1em{
+    margin-left: 1em;
+}
+
+.margin-left-20 {
+    margin-left: 20px;
+}
+
+.margin-right-1em{
+    margin-right: 1em;
+}
+
+.margin-left-signup{
+    margin-left: 10%;
+}
+
+/******************************************* END MARGIN ******************************************************/
+
+/********************************************** WIDTH ********************************************************/
+
+.same-size-100{
+   width: 100px;
+}
+
+.same-size-220{
+    width: 220px;
+}
+
+.same-size-250{
+    width: 250px;
+}
+
+.same-size-280{
+    width: 280px;
+}
+
+.width-30 {   /* edited with media */
+    width: 30%;
+}
+
+.width-35{    /* edited with media */
+    width: 35%;
+}
+
+.middle-width {  /* media smartphone on it */
+    width: 65%;
+}
+
+.width-50{ /* media on it - smartphone */
+    width: 50%;
+}
+
+.full-width{
+    width: 100%;
+}
+
+/******************************************* END WIDTH ******************************************************/
+
+
+/********************************************** LIST ******************************************************/
+
+.li-with-disc{
+    list-style-type: disc;
+}
+
+.li-with-circle{
+    list-style-type: circle;
+}
+
+li {
+    list-style-type: none;
+}
+
+/* By default, the list has no style type - used for the choices of an evaluation element */
+.list-with-disc{
+    list-style-type: disc;
+}
+
+.icon-list{
+    float: right;
+    border-top:0px;
+    background-color: white;
+    margin: auto;
+}
+
+/******************************************* END LIST ******************************************************/
+
+/******************************************** GRID *********************************************************/
+
+.grid-container-2-cols {
+  display: grid;
+  grid-template-columns: 95% 5%;
+}
+
+
+.grid-container-3-cols-signup {
+  display: grid;
+  grid-template-columns: 45% 45% 10%;
+}
+
+.grid-container-3-cols{
+    display: grid;
+    grid-template-columns: 75% 15% 8%;;
+}
+
+.grid-container-feedback-section {
+    display: grid;
+    grid-template-columns: 90% 10%;
+}
+
+.grid-2-cols-resource-section { /* media smartphone*/
+    display: grid;
+    grid-template-columns: 5% 95%;
+}
+
+.grid-2-cols-resource-section:hover {
+    cursor: pointer;
+}
+
+.result-grid{  /* media on it for grid-template-columns */
+    display: grid;
+}
+
+/******************************************* END GRID ********************************************************/
+
+
+/******************************************** LINK ***********************************************************/
+
+/* Need to create special class for the sections in the resource list because no href to not reload the page */
+.fake-link {
+    color: #5752ff;
+}
+
+.fake-link:hover {
+    color: #8985FF;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.pagination a{
+    left:50px;
+}
+
+/******************************************* END LINK ********************************************************/
+
+
+/******************************************** BUTTONS ********************************************************/
+
+.column-button{
+    padding-bottom: 3px;
+}
+
+.btn-primary{
+    background-color : #FCE180;
+    border-color: #FCE180;
+    color: #4D566B;
+}
+
+.btn-primary:hover {
+    background-color: #FAE8A7;
+    border-color: #FAE8A7;
+    color: #70788B;
+}
+
+.btn-modify{
+    background-color: #5550FF;
+    border-color: #5550FF;
+    color: white;
+}
+
+.btn-modify:hover{
+    color: white;
+    background-color: #726EF5;
+    border-color: #726EF5;
+}
+
+.btn-results{
+    background-color: #00C292;
+    border-color: #00C292;
+    color: white;
+}
+
+.btn-results:hover{
+    color: white;
+    background-color: #0DE1AC;
+    border-color: #0DE1AC;
+}
+.btn-results:disabled{
+    background-color: #A9E7D8;
+    border-color: #83E4CC;
+    color: #34453B;
+}
+
+.btn-primary:active{
+    background-color: #5550FF;
+}
+
+.btn-primary:disabled{
+    background-color: #FAE8A7;
+    border-color: #FAE8A7;
+    color: #70788B;
+}
+
+.bottom-page-button{
+    margin-top: 20px;
+    margin-bottom: 100px;
+}
+
+.center-button{
+    align-item: center;
+}
+
+.btn-blue{
+    background-color: #91D3FF;
+    border-color: #91D3FF;
+    color: #4D566B;
+}
+
+.btn-blue:hover{
+   background-color: #B8DFFA;
+   border-color: #B8DFFA;
+   color: #70788B;
+}
+
+.upgrade-button-width {
+    width: 220px;
+}
+
+/* button in the profile and the organisation column */
+.profile-column{
+    background-color: #FCE180;
+    border-color: #FCE180;
+    color: #4D566B;
+    padding: 20px;
+    border-radius: .10rem;
+}
+
+a[name="column-button"].nav-link.active{
+    background-color: #91D3FF;
+    border-color: #91D3FF;
+    color: #4D566B;
+}
+
+a[name="column-button"]:hover{
+    background-color: #FAE8A7;
+    border-color: #FAE8A7;
+    color: #4D566B;
+}
+
+.btn-new{
+    background-color: #FFF9C0;
+    border-color: #FFF9C0;
+    color: #848482;
+    height: 30px;
+    width: 60px;
+    font-size: 18px;
+    padding: 0;
+    border-radius: .25rem;
+    border: 1px solid transparent;
+}
+
+.btn-new:hover{
+    cursor: pointer;
+    color: #848482;
+    text-decoration: none;
+}
+
+.top-section{
+    margin-left: 50%;
+    margin-top: 5px;
+    position: absolute;
+}
+
+.medium-button{
+    width: 95px;
+}
+
+.small-btn{
+    width: 40px;
+    height: 35px;
+    text-align: center;
+}
+
+.btn-submit-newsletter{
+    border-radius: 300px;
+    padding: 13px 37px;
+    color: white;
+    font-weight: bold;
+    background-color: #FFBE3C;
+    margin: 0 15px;
+}
+
+.btn-cursor{
+    cursor: pointer;
+}
+
+/******************************************* END BUTTONS *****************************************************/
+
+/********************************************* IMAGE *********************************************************/
+
+h1 img {
+    height: 80px;
+     width: 200px;
+}
+
+.image-max-350{
+    max-height: 350px;
+}
+
+.image-faq {
+    height: 11em;
+}
+
+.centered-image{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/********************************************* END IMAGE *****************************************************/
+
+/********************************************** MODAL ********************************************************/
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 3; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.large-modal-dialog{
+    max-width: 80%;
+    position: relative;
+    width: auto;
+    pointer-events: none;
+    margin: auto;
+    margin-top: 20px;
+}
+
+/******************************************** END MODAL ******************************************************/
+
+
+/******************************************** FORM ***********************************************************/
+
+.form-body{
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: max-content;
+    grid-auto-rows: minmax(70px, auto);
+    text-align: left;
+}
+
+.form-input input{
+    border-radius: 0.25em;
+    border-color: lightsteelblue;
+    width: 90%;
+}
+
+.margin-right-form{
+    margin-right: 9em;
+}
+
+.form-center{
+    text-align: center;
+    text-align: -webkit-center;
+    columns: 1;
+    margin: auto;
+}
+
+.change-password-form{
+    width: 40%;
+    columns: 1;
+}
+
+.create-form{
+    columns: 1;
+    margin: auto;
+    text-align: center;
+}
+
+.text-form-bis {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.attribute-form-bis{
+    grid-column: 2;
+    grid-row: 2;
+}
+
+/****************************************** END FORM *********************************************************/
+
+/***************************************** RISK EXPOSITION ***************************************************/
+
+#exposition-table {
+    width: 80%;
+    margin: auto;
+    margin-top: 50px;
+}
+
+.risk-column{
+    width: 20%;
+}
+
+.table-legend {
+    margin-top: 50px;
+}
+
+.table-legend>span {
+    padding: 20px;
+}
+
+.tooltip-exposition {
+    display: inline-block;
+}
+
+.tooltip-exposition .tooltiptext-exposition {
+    visibility: hidden;
+    width: 500px;
+    margin-top: 10px;
+    margin-left: 20px;
+    background-color: #F5F5F5;
+    text-align: justify;
+    padding: 15px;
+    border-radius: 6px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip-exposition:hover .tooltiptext-exposition {
+  visibility: visible;
+}
+
+
+
+/**************************************** END EXPOSITION RISKS ***********************************************/
+
+
+/****************************************** NEWSLETTER *******************************************************/
+
+.newsletter-form-container{
+    border-radius: 30px;
+    padding: 15px 0 0 0;
+    background-color: #00C3D2;
+    color: white;
+    width: 50%;
+    margin-top: 60px;
+    margin-bottom: -60px;
+}
+
+.newsletter-label{
+    display: block;
+    padding-bottom: 5px;
+    font-weight: bold;
+}
+
+.newsletter-submit-container{
+    display: inline-block;
+}
+
+.newsletter-form-container .email{
+    padding: 15px;
+    color: #4D566B;
+}
+
+/*Used on a honeypot field to hide it. https://mailchimp.com/help/about-fake-signups*/
+.out-of-screen{
+    position: absolute;
+    left: -5000px;
+}
+
+.newsletter-form-footnote p {
+    opacity: .8;
+    margin: 17px 0;
+    padding: 0;
+    font-size: 13px;
+    line-height: normal;
+}
+
+.newsletter-confirmation-text{
+    text-align: center;
+    padding-bottom: 15px;
+    font-weight: bold;
+}
+
+.field-error {
+    display: block;
+    margin-bottom: 12px;
+    background: #fed9db;
+    width: 85%;
+}
+
+.field-error p {
+    line-height: normal;
+    padding: 6px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #f23d3d;
+}
+
+/****************************************** END NEWSLETTER ****************************************************/
+
+/****************************************** RELEASE NOTES ***************************************************/
+
+.date-release-note{
+    float: left;
+    margin-bottom: 2em;
+    margin-top: 2em;
+    width: 10%;
+    text-align: right;
+}
+
+.box-release-note{
+    float: left;
+    border-left: 3px solid #5550FF;
+    position: relative;
+    width: 83%;
+    margin: 0 3%;
+    padding-bottom: 0.5em;
+}
+
+.circle-release-note{
+    background-color: #fff;
+    border: 3px solid #5550FF;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    top: 45px;
+    left: -13px;
+}
+
+.arrow-release-note{
+    display: inline-block;
+    position: absolute;
+    top: 1em;
+    left: 0.8em;
+    color: #5550FF;
+    font-size: 2em;
+}
+
+.text-release-note{
+    padding: 0 64px;
+    margin: 32px 0;
+}
+
+.htext-release-note{
+    padding: 0 64px;
+    margin: 34px 0;
+}
+
+.text-release-note li{
+    display: list-item;
+    list-style-type: disc;
+    line-height: 25px;
+    margin: 10px 0;
+}
+
+/**************************************** END RELEASE NOTES **************************************************/
+
+/******************************************* OTHER BANNERS *************************************************/
+
+.homepage-banner{
+    color: white;
+    background-color: #5550FF;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    left: 0;
+    position: absolute;
+}
+
+.under-homepage-banner{
+    margin-top: 8em;
+}
+
+.upgrade-banner{
+    background-color: #FFF9C0;
+    text-align: center;
+    padding: 12px;
+}
+
+.delivery-banner{
+    color: white;
+    background-color: #E47F75;
+    padding: 15px;
+    margin-bottom: 30px;
+    text-align: center;
+    width: 100%;
+}
+
+/********************************************* END OTHER BANNERS *******************************************/
+
+
+/********************************************* NAVBAR *******************************************************/
+
+.navbar {
+    border-bottom: solid lightgrey;
+    padding-top: 20px;
+    padding-bottom: 0;
+}
+
+.navbar-fixed {
+    position: fixed;
+    width: 100%;
+    background-color: #fff;
+    z-index: 2;
+}
+
+.navbar-brand {
+    padding-top: 0;
+    margin-top: -5px;
+    padding-bottom: 0.5em;
+}
+
+.navbar>.container {
+    max-width: 95%;
+    margin-left: 0;
+}
+
+.topnav .icon {
+  display: none;
+}
+
+.logo-navbar{
+    height: 50px;
+     width: 140px;
+}
+
+.navbar-item a{
+    color: #5550FF;
+    font-size: 16px;
+}
+
+body.navbar-is-fixed-top {
+    padding-top: 0 !important;
+}
+
+.title-nav-resources{
+    margin: 20px;
+    font-size: 18px;
+}
+
+.center-nav{
+    justify-content: center;
+}
+
+.navbar-nav .nav-link{
+    float: right;
+}
+
+.icon-navbar{
+    border: solid 2px lightgrey;
+}
+
+.fa-bars{
+    color: #5550ff;
+}
+
+.select-language-navbar{
+    background-color: white;
+    font-family: Ubuntu;
+    font-size: 15px;
+    color: #5550FF;
+}
+
+.language-options{
+    font-family: Ubuntu;
+}
+
+.margin-normal-navbar {
+    margin-top: 110px;
+}
+
+.expand-navbar {
+    margin-top: 338px;
+    -webkit-transition: margin-top 0.3s ease-out;
+}
+
+/*********************************************** END NAVBAR ***********************************************/
+
+
+/*********************************************** FOOTER *****************************************************/
+
+.footer {
+    flex-shrink: 0;
+    background-color: #5550FF;
+    text-align: center;
+}
+
+.link-with-border{
+    color: white;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+    font-size: 15px;
+    margin-bottom: 10px;
+    padding: 2px;
+}
+
+.link-with-border:hover {
+    border-bottom-color: white;
+    color: white;
+    text-decoration: none;
+}
+
+.fa-icon-footer{
+  padding: 10px;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+  margin: 5px 2px;
+  border-radius: 50%;
+
+}
+
+.fa-icon-footer:hover {
+    opacity: 0.7;
+    color: white;
+    text-decoration: none;
+}
+
+.fa-twitter {
+  background: #55ACEE;
+  color: white;
+}
+.fa-linkedin {
+  background: #007bb5;
+  color: white;
+}
+
+.fa-github{
+    background: #495057;
+    color: white;
+}
+
+.fa-envelope{
+    background: #222;
+    color: white;
+}
+
+.fa-meetup{
+     background: red;
+     color: white;
+}
+
+.col-md-3-footer{
+    padding: 4px;
+    margin: auto;
+}
+
+.text-partnership{
+    font-size: 15px;
+}
+
+.button-language-footer {
+    background-color: #5550FF;
+    border-color: #5550FF;
+    color: white;
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: white;
+    border-radius: 0px;
+    font-size: 15px;
+    margin-bottom: 0px;
+    padding: 2px;
+    font-size: 15px;
+    width: 130px;
+}
+
+.button-language-footer:hover {
+    background-color: #5550FF;
+    color: white;
+}
+
+.button-language-footer:focus {
+    box-shadow: none;
+}
+
+/************************************************* END FOOTER ***********************************************/
+
+/************************************************* PROGRESS BAR *********************************************/
+
+.progress-section-page{
+    height: 15px;
+    width: 50%;
+    margin: auto;
+    margin-top: 15px;
+}
+
+.progress-bar-section{
+    background-color: #28a745;
+}
+
+/*************************************************** END PROGRESS BAR *****************************************/
+
+/*************************************************** BREADCRUMBS **********************************************/
+
+.breadcrumbs{
+    font-size: 16px;
+}
+
+.active-breadcrumb{
+    color: #8985FF;
+}
+
+.active-breadcrumb:hover{
+    color: #8985FF;
+    text-decoration: none;
+}
+
+/********************************************* END BREADCRUMBS ********************************************/
+
+
+/********************************************* CARDS ORGA *************************************************/
+
+.cards-orga {
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    grid-gap: 10px;
+    grid-auto-rows: minmax(70px, auto);
+}
+
+/*********************************************** END CARDS ORGA ********************************************/
+
+/*********************************************** RESULTS ***************************************************/
+
+.scroll-div-results {
+    resize: vertical;
+    overflow-y: scroll;
+    height: 100px;
+    background-color: #f4f4f4;
+}
+
+
+/************************************************ END RESULTS ***********************************************/
+
+/******************************************* ADMIN DASHBOARD *****************************************/
+
+.reset-filter-btn {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    color: #FFBE3C;
+    cursor: pointer;
+}
+
+.reset-filter-btn:hover {
+    text-decoration: underline;
+}
+
+.dash-stats-table {
+  border-collapse: collapse;
+}
+
+.dash-stats-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.dash-stats-table tr:hover {
+    background-color: #ddd;
+}
+
+.dash-stats-table td, .dash-stats-table th {
+  border: 2px solid #5550FF;
+  padding: 8px;
+  width: 50%;
+}
+
+.dash-stats-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  background-color: #5550FF;
+  color: white;
+  text-align: center;
+}
+
+.filter-field {
+    margin : 10px;
+}
+
+.indicator{
+    text-align: center;
+    margin: 0 auto;
+    color: #5550FF;
+    position:relative;
+    font-size: 1rem;
+}
+
+/******************************************** END DASHBOARD ******************************************/
+
+/*********************************************** HELP TIP **************************************************/
+
+.help-tip{
+    right: 18px;
+    text-align: center;
+    background-color: #5550FF;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
+    line-height: 26px;
+    cursor: default;
+    font-size: 18px;
+}
+
+.help-tip:before{
+    content:'?';
+    font-weight: bold;
+    color:#fff;
+}
+
+.help-tip:hover p{
+    display:block;
+    transform-origin: 100% 0%;
+
+    -webkit-animation: fadeIn 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-in-out;
+
+}
+
+.help-tip-explanation p{    /* The tooltip */
+    display: none;
+    text-align: justify;
+    background-color: #eaeef0;
+    padding: 20px;
+    width: 500px;
+    position: absolute;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    right: -4px;
+    color: #23272a;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.help-tip-right p{    /* The tooltip */
+    display: none;
+    text-align: justify;
+    background-color: #eaeef0;
+    padding: 20px;
+    width: 300px;
+    border-radius: 3px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    right: -4px;
+    color: #23272a;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.help-tip p:before{ /* The pointer of the tooltip */
+    position: absolute;
+    content: '';
+    width:0;
+    height: 0;
+    border:6px solid transparent;
+    border-bottom-color:#eaeef0;
+    right:10px;
+    top:-12px;
+}
+
+.help-tip p:after{ /* Prevents the tooltip from being hidden */
+    width:100%;
+    height:40px;
+    content:'';
+    position: absolute;
+    top:5%;
+    left:0;
+}
+
+/************************************************ END HELP TIP *********************************************/
+
+/************************************************ CKEDITOR *************************************************/
+
+.cke_dialog {
+    width: 500px !important;
+}
+
+.cke_dialog_contents {
+    width: 420px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+.django-ckeditor-widget {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.cke_bottom {
+    border-top: none !important;
+    background: #fff !important;
+}
+
+.element-justification-result {
+    padding: 20px;
+}
+
+/*********************************************** END CKEDITOR **********************************************/
+
+
+/************************************************ DIVERS ***************************************************/
+
+
+.evaluation-title {
+    text-align: center;
+    margin: 0 auto;
+    position:relative;
+}
+
+.data-nav-pills{
+    max-width: 45em;
+    margin-top: 50px;
+}
+
+.about-subtitle{
+    color: #6c7b89;
+    font-size: 17px;
+    text-align: center;
+    margin-block-start: 1em;
+    font-weight: 700;
+    margin-block-end: 1em;
+    margin-top: 50px;
+}
+
+.progress-bar-text{
+    margin: auto;
+    font-size: 10px;
+    color: #22242B;
+}
+
+.pagination {
+  display: inline-block;
+  text-align: center;
+  position:relative;
+  overflow:hidden;
+  width: 100%;
+}
+
+.table-column-profile{
+    margin-top: 100px;
+    margin-bottom: 50px;
+}
+
+.table td{
+    padding: 0.5em;
+    overflow: auto;
+}
+
+td>div{
+    overflow: auto;
+}
+
+.member-td{
+    max-width: 250px;
+}
+
+tr.spaceUnder>td {
+  padding-bottom: 1em;
+}
+
+.title-column{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.password-forgotten{
+    margin-bottom: 10px;
+    font-size: 15px;
+}
+
+.title-pills{
+    margin: 20px;
+}
+
+.graph-admin{
+    width: 600px;
+    height: 500px;
+}
+
+.settings-subtitle{
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+.first-case-array{
+    border-radius: 0.5em 0 0 0.5em;
+}
+
+.last-case-array{
+    border-radius: 0 0.5em 0.5em 0;
+}
+
+.logo-d4g{
+    height: 60px;
+    width: 60px;
+}
+
+.container-about-page{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.profile-notes-buttons{
+    width: fit-content;
+}
+
+.profile-notes-text{
+    width: 90%;
+}
+
+.note-disabled{
+    opacity: 0.6;
+}
+
+.element-notes-card {
+    border: solid 1px rgba(0,0,0,0.125);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.section-notes-results {
+    flex-direction: column;
+    display: flex;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: 0.5em;
+    margin-top: 20px;
+    margin-bottom: 40px;
+
+}
+
+/*********************************************** END DIVERS ************************************************/
+
+/************************************************** BY ID **************************************************/
+
+#page-container {
+    flex: auto;
+}
+
+#content-wrap {
+  padding-bottom: 10rem;    /* Footer height */  /* check if used */
+}
+
+
+/******************************************** END BY ID **********************************************/

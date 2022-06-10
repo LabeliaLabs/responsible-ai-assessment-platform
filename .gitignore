@@ -1,0 +1,33 @@
+# Django
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+trash/
+*.env*
+*.env.*
+.env.dev
+
+# PyCharm
+.idea/*
+
+# Dia
+*.dia~
+*.dia.autosave
+*.jpeg~
+
+# Other
+vim.exe.*
+nohup.out
+data/certbot/
+nohup.out
+.coverage
+*.pynb
+*.code-workspace
+*/media/*
+
+# DB
+*.dump
+*.sql
+

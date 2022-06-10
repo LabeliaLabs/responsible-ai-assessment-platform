@@ -1,0 +1,273 @@
+{% extends 'base-evaluation.html' %}
+{% load assessment_tags %}
+{% load static %}
+{% load i18n %}
+{% load markdownify %}
+
+{% block content %}
+
+<div class="breadcrumbs">
+    <a href="{% url 'home:user-profile' %}">{% trans 'Dashboard' %}</a>
+    <span> ></span>
+    <a href="{% url 'home:user-profile' %}">{% trans 'My evaluations' %}</a>
+    <span> ></span>
+    <a class="active-breadcrumb" href="#">{% trans 'Results' %}</a>
+</div>
+
+{% if evaluation.is_upgradable %}
+<div class="upgrade-banner-section-evaluation">
+    {% include "assessment/upgrade-banner.html" %}
+</div>
+{% endif %}
+
+{% if messages %}
+<ul class="messages margin-3em">
+    {% for message in messages %}
+    <li class=" alert alert-{{ message.tags }}" >{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<h1 class="h1-margin-breadcrumbs">{{evaluation.name}}</h1>
+
+<div class="bg-white rounded-lg p-5 shadow margin-x-10-vw">
+    <h2 class="h6 font-weight-bold text-center mb-4">{% trans "Your score" %}</h2>
+
+    <!-- Progress bar 1 -->
+    <div class="progress progress-results mx-auto"
+         id="progress-results"
+         data-value='{{evaluation_score}}'>
+          <span class="progress-left progress-left-results">
+              <span class="progress-bar progress-bar-results border-primary"></span>
+          </span>
+        <span class="progress-right progress-right-results">
+              <span class="progress-bar progress-bar-results border-primary"></span>
+          </span>
+        <div class="progress-value progress-value-results w-100 h-100
+           rounded-circle d-flex align-items-center justify-content-center">
+            <div class="h2 font-weight-bold">{{evaluation_score}}<sup class="small"></sup></div>
+        </div>
+    </div>
+
+    <div>
+        <h6 class="font-weight-bold text-center mb-4 margin-70 remove-smaller-than-tablet">
+            {% trans "Score per section" %}
+        </h6>
+        <div class="remove-smaller-than-tablet">
+            {{radar_chart|safe}}
+        </div>
+    </div>
+    <div>
+        <h6 class="font-weight-bold text-center mb-4 margin-30">
+            {% trans "Exposition score" %}
+        </h6>
+        {% if exposition_dic %}
+        <p class="center">{% blocktrans trimmed with nb_exposed=nb_risks_exposed %}
+            You are exposed to {{ nb_exposed }}/{{ len_exposition_dic }} of the risks identified in the assessment.
+            {% endblocktrans %}
+        </p>
+        <table class="table table-striped table-width margin-30" id="exposition-table">
+            <thead>
+                <tr>
+                    <th class="col-array" scope="col">{% trans "Risk domain" %}</th>
+                    <th class="col-array risk-column" scope="col">{% trans "Exposition to the risks" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for key, value in exposition_dic.items %}
+            <div>
+                <tr>
+                    <td>
+                        {% if key %}
+                        <div id="exposition-element-{{key.id}}" class="tooltip-exposition">
+                            {{ key.risk_domain }}
+                            {% if value|length %}
+                                <p class="tooltiptext-exposition">{{ value|stringify_list|markdownify }}</p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td class="center">
+                        {% if value|length %}
+                            <p class="red-color medium-font-weight">{% trans "Exposed" %}</p>
+                        {% else %}
+                            <p class="green-color medium-font-weight">{% trans "Not exposed" %}</p>
+                        {% endif %}
+                    </td>
+                </tr>
+            </div>
+            {% endfor %}
+            </tbody>
+        </table>
+        <div class="center">
+            <p class="table-legend">{% trans "Legend: " %}
+            <span><span class="green-color medium-font-weight">{% trans "Not Exposed" %}</span>{% trans ": Not concerned by the risk" %}</span>
+            <span> <span class="red-color medium-font-weight">{% trans "Exposed" %}</span>{% trans ": Concerned by the risk" %}</span></p>
+        </div>
+        {% else %}
+        <p>{% trans "An error occured during the calculation of the exposition score..." %}</p>
+        {% endif %}
+    </div>
+
+    <div class="margin-70 margin-bot-50">
+        <h6 class="font-weight-bold text-center mb-4 margin-30">
+            {% trans "Explanation" %}
+        </h6>
+        <p class="">{% blocktrans trimmed %}
+            The synthetic score is on a total of 100 theoretical maximum points for your full
+            assessment. It provides an indication of the organization maturity level concerning a responsible and
+            trustworthy data science. At the end of 2020, the 50/100 threshold can be considered a very advanced
+            maturity level.
+            {% endblocktrans %}
+        </p>
+        <p class="">{% blocktrans trimmed %}
+            Note: the score is a synthetic indication, not an end in itself. In particular, we invite
+            you to consult the resources associated with each assessment element, which are excellent entry points for
+            building skills on your topics of interest.
+            {% endblocktrans %}
+        </p>
+        <p>{% blocktrans trimmed %}
+            Where the evaluation score provides a synthetic summary of an organization maturity level
+            on responsible and trustworthy data science and enables to compare with other organizations,
+            one might be interested in breaking it down to evaluation main sections. To that end, the maturity
+            levels per section allows you to identify how your organization performs on each section.
+            Please note that they are expressed in percentages, as the scoring model, taking into account
+            the fact same organizations might not be concerned by all areas of risks and all evaluations items,
+            doesn't allow a simple additive breakdown.
+            {% endblocktrans %}
+        </p>
+    </div>
+    <div class="results-buttons-grid">
+        <form action="{% url 'assessment:orga-summary' organisation.id %}" class="float-left margin-auto">
+            <input class="btn btn-primary width-200" type="submit"
+                   value="{% trans 'Back to organisation' %}"/>
+        </form>
+
+        {% if evaluation.is_editable %}
+        <form action="{{ evaluation.get_absolute_url }}" class="margin-auto">
+            <input class="btn btn-primary width-200" type="submit" value="{% trans 'Modify' %}"/>
+        </form>
+        {% else %}
+        <button class="btn btn-primary margin-auto width-200" disabled
+                title="{% trans 'You cannot edit an evaluation with a labelling process' %}">{% trans "Modify" %}
+        </button>
+        {% endif %}
+
+        {% if evaluation_score >= labelling_threshold %}
+            {% if not evaluation.has_labelling %}
+                <form action="{{ evaluation.get_absolute_url }}labelling/" class="float-right margin-auto">
+                    <input class="btn btn-primary width-200" type="submit" value="{% trans 'Initiate labelling' %}"/>
+                </form>
+            {% else %}
+                <form action="{% url 'home:user-profile' 'labelling' %}" class="margin-auto">
+                    <input class="btn btn-primary width-200" type="submit" value="{% trans 'See labelling' %}"/>
+                </form>
+            {% endif %}
+        {% endif %}
+
+        <form action="{{ evaluation.get_absolute_url }}results/pdf/" class="margin-auto">
+            <input class="btn btn-primary width-200" type="submit" value="{% trans 'Export PDF' %}"/>
+        </form>
+    </div>
+</div>
+    <div class="response margin-70 margin-x-10-vw" id="responses">
+        <h2>{% trans "Your answers" %}</h2>
+        <!--    Need to create a new form, initiate with database, disable other choices-->
+        {% for element in evaluation_element_list %}
+            {% if element.master_evaluation_element.order_id == 1 %}
+                <h3 class="margin-30">
+                    Section {{ element.section.master_section.order_id}}. {{ element.section.master_section.name }}
+                </h3>
+                {% for field in dic_form_results|get_item:element.section %}
+                    <div class="section-notes-results">
+                        <label class="margin-left-20 margin-10">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card ">
+                <div class="card-header card-headers-results row" id="heading{{element.id}}">
+                    <p>Q{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}} :
+                        {{element.master_evaluation_element.name}}
+                    </p>
+                </div>
+                <div class="card-content">
+                    {% if element.has_condition_on and element|is_not_applicable %}
+                    <div class='alert alert-warning' id="warningmessage{{element.id}}">
+                        {% trans 'You are not concerned by this evaluation element' %}
+                    </div>
+                    {% endif %}
+                    <div class="question-name margin-all-20" id="question-name">
+                        Q{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                        {% trans ":" %}
+                        {{element.master_evaluation_element.question_text}}
+                    </div>
+                    {% if element.master_evaluation_element.question_type == "radio" %}
+                    <p class="italic margin-all-20">
+                        R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                        {% trans ": Please select one answer which best matches to your organisation situation" %}
+                    </p>
+
+                    {% elif element.master_evaluation_element.question_type == "checkbox"%}
+                    <p class="italic margin-all-20">
+                        R{{element.section.master_section.order_id}}.{{element.master_evaluation_element.order_id}}
+                        {% blocktrans trimmed %}
+                        : Please select all the answers which best match to your organisation situation. Be
+                        careful, some combinations are not coherent.
+                        {% endblocktrans %}
+                    </p>
+
+                    {% endif %}
+
+                    {% for field in dic_form_results|get_item:element %}
+                        {% if field.name == "justification" %}
+                            {% if element.user_justification %}
+                                <div class="margin-left-20">{% trans 'Answer justification' %}</div>
+                                <div class="textarea-data-results scroll-div-results">
+                                    {{ element.user_justification|safe }}
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <label class="margin-left-20">{{ field.label }}</label>
+                            {{ field }}
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        <button class="btn btn-primary float-right" id="top-button" onclick="topFunction()"
+                title="{% trans 'Top of the page' %}">{% trans 'Top of the page' %}
+        </button>
+    </div>
+
+<script>
+(function() {
+    var progress = document.getElementById("progress-results");
+    var value = progress.getAttribute('data-value');
+    if (typeof value === "string") {
+        value = parseFloat(value);
+    }
+    var left = progress.children[0].children[0];
+    var right = progress.children[1].children[0];
+
+    if (value >= 0 && value < 50) {
+        right.style.transform = 'rotate(' + percentageToDegrees(value) + 'deg)'
+    }
+    if ( value >= 50 && value <=100) {
+        right.style.transform = 'rotate(180deg)'
+        left.style.transform = 'rotate(' + percentageToDegrees(value - 50) + 'deg)'
+    }
+
+})();
+
+function percentageToDegrees(percentage) {
+    return percentage / 100 * 360
+}
+</script>
+
+
+{% endblock %}

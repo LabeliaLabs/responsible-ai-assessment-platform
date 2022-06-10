@@ -1,0 +1,38 @@
+{% load i18n %}
+{% load static %}
+
+<h1 class="h1-homepage">{% trans "Sign up" %}</h1>
+<form id="signup" method="post" class="width-350">
+    {% csrf_token %}
+    {% for field in signup_form %}
+        <div class="">
+            {{ field.label_tag }}
+        </div>
+        <div class="signup-field-tablet-min-screen">
+            <div class=" form-input">
+                <p>{{ field }}</p>
+            </div>
+            {% if forloop.counter == 4 %}
+            <div class="help-tip help-tip-right remove-smartphone-screen">
+                <p>{% blocktrans trimmed %}
+                    Your password must contain at least 8 characters, with at least one number and one letter
+                    {% endblocktrans %}
+                </p>
+            </div>
+            {% endif %}
+
+        </div>
+        <div class="">
+            {% for error in field.errors %}
+            <p class="red-color margin-10">{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    <div class="center">
+        <button class="btn btn-primary margin-bot-top-20 adapted-button-size-250"
+                name="action" value="signup"
+                type="submit">{% trans "Sign up" %}
+        </button>
+    </div>
+</form>
+

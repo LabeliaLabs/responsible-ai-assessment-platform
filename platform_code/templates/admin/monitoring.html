@@ -1,0 +1,15 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+
+{% block content %}
+{% block object-tools %}{% endblock %}
+{{ content }}
+
+<div class="graph-admin">
+    {% for graph in graph_list %}
+        {{graph|safe}}
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,868 @@
+/* This file is used to manage the element position, size in function of the user screen size
+
+320px - 480px: Mobile devices
+481px - 768px: iPads, Tablets
+769px - 1024px: Small screens, laptops
+1025px - 1200px: Desktops, large screens
+1201px and more - Extra large screens, TV
+
+Inside each section, first you have, if it exists:
+    -the width between the thresholds
+    -then the smaller than the max
+    -then the larger than the min
+    -other
+
+*/
+
+
+/*********************************** MOBILE DEVICES 320 - 480 ***********************************/
+
+
+/* SMALLER THAN 480 */
+
+@media (max-width: 480px) {
+
+    /* Homepage */
+    .two-columns-adapted {
+        columns: 1;
+    }
+    .remove-smartphone-screen {
+        display: none;
+    }
+    .tbody {
+        grid-template-columns: repeat(1, 1fr);
+	}
+    .tooltip-exposition .tooltiptext-exposition {
+	    width: 200px;
+	    margin-left: 0px;
+	    margin-top: 50px;
+	}
+    .column-larger-tablet{
+        flex: auto;
+        float: none;
+    }
+    .margin-150 {
+        margin-top: 30px;
+    }
+    .margin-bottom-smartphone-30{
+        margin-bottom: 30px;
+    }
+    .image-max-350 {
+        max-height: 250px;
+    }
+    .middle-width {
+        width: 45%;
+    }
+    .width-35 {
+        width: 75%;
+    }
+    #content-wrap {
+        padding-bottom: 3rem;
+    }
+    .smartphone-margin-top {
+        margin-top: 20px;
+    }
+    /* login popin */
+    .width-50 {
+        width: 90%;
+    }
+    .modal-title {
+        width: 85%;
+    }
+
+    .center-smartphone-screen {
+        text-align: center;
+    }
+    .margin-left-signup {
+        margin-left: 0;
+    }
+    .grid-2-cols-resource-section {
+        grid-template-columns: 15% 85%;
+    }
+    .settings-subtitle {
+        margin-top: -30px;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    .center-smartphone{
+        text-align: center;
+    }
+    .change-password-form{
+        width: 100%;
+    }
+    .smartphone-60-height{
+        height: 60px;
+    }
+    .adapted-width-button{
+        width: 100%;
+    }
+    .organisation-evaluation-cards{
+	    width: 250px;
+	    margin: auto;
+	}
+	.adapted-button-size-250{
+	    width: 200px;
+	}
+	.no-padding-inline-start-smartphone{
+        padding-inline-start: 0;
+    }
+    .progress-eval{
+        width: 80%;
+    }
+    .section-description {
+        text-align: center;
+    }
+    .progress-section-page{
+        width: 80%;
+    }
+    .grid-container-3-cols{
+       grid-template-columns: 50% 25% 15%;
+    }
+    ul{
+        padding-inline-start: 5px;
+    }
+    .inline-padding{
+        padding-inline-start: 20px;
+    }
+    .help-tip {
+        width: 20px;
+        height: 20px;
+        font-size: 14px;
+        line-height: 22px;
+        font-size: 15px;
+    }
+    .grid-container-2-cols {
+        grid-template-columns: 90% 5%;
+    }
+    .help-tip-explanation>p{
+        font-size: 17px;
+        width: 100%;
+    }
+    .button-190-or-220{
+        width: 190px;
+    }
+    .result-grid{
+        grid-template-columns: 15% 85%;
+    }
+    .profile-settings-pills{
+        width: 100%;
+    }
+    .select-feedback-popin{
+        font-size: 12px;
+    }
+    .help-tip-edito p {
+        width: 280px;
+    }
+    /* manage pastilles in the card header */
+    /* only display the interrogation mark */
+    .new-pastille {
+        font-size: 0px;
+        text-align: center;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        padding: 0px 20px 0px 0px;
+        background-color: transparent;
+    }
+
+    .updated-pastille {
+        font-size: 0px;
+        text-align: center;
+        border: 1px solid transparent;
+        border-radius: 5px;
+        padding: 0px 20px 0px 0px;
+        background-color: transparent;
+
+    }
+    .unchanged-pastille {
+        font-size: 0px;
+        border-color: transparent;
+        background-color: transparent;
+    }
+    .grid-two-cols {
+        grid-template-columns: auto;
+        justify-items: center;
+    }
+
+}
+
+@media (max-width: 380px) {
+    .navbar-expand-lg>.container {
+        padding-right: 0;
+        padding-left: 1em;
+        max-width: 100%;
+    }
+    .remove-smaller-380{
+        display: none;
+    }
+
+     .help-tip-edito p {
+        width: 180px;
+    }
+}
+
+@media (min-width: 380px) {
+    .remove-larger-380{
+        display: none;
+    }
+}
+
+/* Orga cards */
+@media (max-width: 435px) {
+    .cards-orga {
+        grid-template-columns: repeat(1, 1fr);
+    }
+}
+
+/*********************************** END MOBILE DEVICES 320 - 480 ***********************************/
+
+
+/*********************************** IPAD TABLET 481 - 768 ******************************************/
+
+/* between */
+
+@media (min-width: 481px) and (max-width: 768px) {
+    /* homepage */
+    .margin-150 {
+        margin-top: 80px;
+    }
+    #content-wrap {
+        padding-bottom: 5rem;
+    }
+    tbody {
+        grid-template-columns: repeat(2, 1fr);
+	}
+	.tooltip-exposition .tooltiptext-exposition {
+	    width: 300px;
+	    margin-left: 0px;
+	    margin-top: 50px;
+	}
+	.organisation-evaluation-cards{
+	    width: 400px;
+	}
+	.progress-eval{
+	    width: 60%;
+	}
+	.progress-section-page{
+        width: 60%;
+    }
+    .result-grid{
+        grid-template-columns: 8% 92%;
+    }
+    .middle-width {
+        width: 45%;
+    }
+    .width-35 {
+        width: 55%;
+    }
+    .profile-settings-pills{
+        width: 50%;
+    }
+      .help-tip-edito p {
+        width: 310px;
+    }
+}
+
+/* SMALLER THAN 768 */
+
+@media (max-width: 768px) {
+    .column {
+        flex: auto;
+        float: none;
+    }
+    .tablet-max-center {
+        text-align: center;
+    }
+    .smaller-tablet-place-center{
+        place-content: center;
+    }
+    .margin-top-50-smaller-tablet {
+        margin-top: 50px;
+    }
+    .remove-smaller-than-tablet {
+        display: none;
+    }
+    .padding-0-smaller-tablet{
+        padding: 0;
+    }
+    .bottom-page-button{
+        margin-bottom: 0px;
+    }
+    .smaller-tablet-margin-10{
+        margin-top: 10px;
+    }
+    .main{
+        margin-left: 0px;
+    }
+    .h1-margin-breadcrumbs{
+        margin-bottom: 100px;
+        margin-top: 30px;
+    }
+    .question-name {
+        text-align: left;
+    }
+    .resource-wrapper {
+        width: 90vw;
+    }
+    .under-homepage-banner {
+        margin: 8em 50px auto 50px;
+    }
+    .breadcrumbs{
+        margin-top: -50px;
+        margin-bottom: 20px;
+        margin-left: 0;
+    }
+    .column-right{
+        margin-top: -80px;
+    }
+    .larger-small-screen-absolute-position{
+        position: relative;
+    }
+    .results-buttons-grid {
+        grid-template-columns: auto;
+        grid-row-gap: 30px;
+    }
+    .title-nav-resources{
+        text-align: center;
+        width: 100%;
+    }
+    .delivery-banner {
+        margin-bottom: 60px;
+    }
+    .margin-normal-navbar {
+        margin-top: 150px;
+    }
+    /* newsletter */
+    .newsletter-form-container {
+        width: 100%;
+    }
+
+    .newsletter-form-container input.email {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .newsletter-submit-container {
+        display: block;
+        width: 100%
+    }
+
+    .btn-submit-newsletter{
+        margin-top: 10px;
+    }
+
+    .newsletter-form-container{
+        margin-bottom: 0;
+    }
+    .cke_dialog {
+        width: 95vw !important;
+    }
+    .cke_dialog_contents {
+        width: 95vw !important;
+    }
+    .cookie-buttons {
+        text-align: center;
+    }
+    .cookie-buttons > button:first-child {
+        margin-bottom: 10px;
+        margin-right: 0px!important;
+    }
+    .cookie-buttons > button {
+        width: 150px
+    }
+    .grid-homepage {
+        display: block;
+        margin-right: 0%;
+        margin-left: 0%;
+    }
+
+}
+
+/* LARGER THAN 481px */
+
+@media (min-width: 481px) {
+    .tablet-min-screen-signup {
+        padding-left: 15%;
+        float: right;
+    }
+    .tablet-min-screen-field-margin-10{
+        margin-top: 10px;
+    }
+    .float-left-larger-tablet{
+        float: left;
+    }
+    .float-right-larger-tablet{
+        float: right;
+    }
+    .adapted-button-size-250{
+        width: 250px;
+    }
+    .remove-larger-than-smartphone{
+        display: none;
+    }
+    .larger-tablet-absolute-position{
+        position: absolute;
+    }
+    .button-190-or-220{
+        width: 220px;
+    }
+    .column-larger-tablet{ /* same as column but media only between smartphone and tablet width */
+        float: left;
+        padding: 10px;
+        flex: 1;
+    }
+}
+
+@media (max-width: 571px) {
+    .upgrade-button-width {
+        width: 100px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 580px) {
+    .adapted-width-button{
+        width: 150px;
+    }
+}
+
+@media (min-width: 580px) and (max-width: 768px){
+    .adapted-width-button{
+        width: 220px;
+    }
+}
+
+@media (max-width: 650px) {
+    .margin-10-new-eval-button {
+        margin-top: 10px;
+    }
+
+    .profile-notes-buttons {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    }
+}
+
+/*********************************** END IPAD TABLET 481 - 768 **************************************/
+
+
+
+/*********************************** SMALL SCREENS 769 - 1024 ***************************************/
+
+/* BETWEEN */
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    tbody {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    .content-section {
+        margin-left: 170px;
+        margin-right: 30px;
+    }
+    .organisation-settings{
+        width: 400px;
+    }
+    .column-right {
+        margin-top: -50px;
+    }
+
+    .btn-submit-newsletter{
+        margin-top: 15px;
+    }
+    /* width of the edito tooltip*/
+      .help-tip-edito p {
+        width: 350px;
+    }
+}
+
+/* ALL SMALLER THAN 1024px */
+
+@media (max-width: 1024px) {
+    /* Change tables for example for evaluations */
+    /* Force table to not be like tables anymore */
+	table, thead, th, td, tr {
+		display: block;
+	}
+	 tbody {
+        display: grid;
+        grid-gap: 15px;
+        grid-auto-rows: minmax(70px, auto);
+	}
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	tr {
+	    border: 1px solid #ccc;
+	    border-radius: 0.5em;
+	}
+	td {
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee;
+		position: relative;
+		padding-left: 50%;
+		max-width: 90%;
+		width: 200px;
+	}
+	td:before {
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%;
+		padding-right: 10px;
+		white-space: nowrap;
+	}
+	.table-striped tbody tr:nth-of-type(odd) {
+        background-color: white;
+    }
+    .two-columns-adapted {
+        margin-left: inherit;
+        margin-right: inherit;
+    }
+    #exposition-table>tbody {
+        justify-items: center;
+        grid-template-columns: repeat(1, 1fr);
+    }
+    #exposition-table>tbody>tr {
+        width: 100%;
+    }
+    #exposition-table>tbody>tr>td {
+        width: 100%;
+        position: inherit;
+    }
+	.small-screen-max-center {
+	    text-align: center;
+	}
+	.hidden-delete-button{
+        margin-left: 10px;
+    }
+    .small-screen-max-right{
+        float: right;
+    }
+    .small-screen-max-float-left{
+        float: left;
+    }
+    .remove-smaller-than-small-screen{
+        display: none;
+    }
+}
+
+/* ALL LARGER THAN 769px */
+
+@media (min-width: 769px) {
+    .small-screen-min-margin-10 {
+        margin-top: 10px;
+    }
+    /* NAVBAR */
+    .navbar-expand-lg .navbar-collapse {
+        display: -webkit-box!important;
+        display: -ms-flexbox!important;
+        display: flex!important;
+        -ms-flex-preferred-size: auto;
+        flex-basis: auto;
+    }
+    .navbar-expand-lg .navbar-nav .nav-link {
+        padding-right: .5rem;
+        padding-left: .5rem;
+        float: right;
+    }
+    .navbar-expand-lg .navbar-toggler {
+        display: none;
+    }
+    .navbar-expand-lg .navbar-nav {
+        -ms-flex-direction: row;
+        flex-direction: row;
+    }
+    .navbar-collapse {
+        margin-top: -15px;
+    }
+    /* END NAVBAR */
+    .profile-settings-pills {
+        max-width: 250px
+    }
+    .adapted-width-button {
+        width: 220px;
+    }
+    .adapted-width-button-250 {
+        width: 250px;
+    }
+    .ml-50-removed-small-screen {
+        margin-left: 50px;
+    }
+    .mr-50-removed-small-screen {
+        margin-right: 50px;
+    }
+    .larger-small-screen-absolute-position{
+        position: absolute;
+    }
+    .remove-larger-than-small-screen{
+        display: none;
+    }
+    .progress-eval {
+        width: 50%;
+    }
+    .float-left-larger-small-screen{
+        float: left;
+    }
+    .float-right-larger-small-screen{
+        float: right;
+    }
+    .result-grid{
+        grid-template-columns: 5% 95%;
+    }
+    .h1-margin-no-breadcrumbs, .h1-margin-breadcrumbs{
+        margin-top: 50px;
+        margin-bottom: 50px;
+    }
+    .h1-homepage {
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+    .larger-small-screen-margin-left-18vw{
+        margin-left: 18vw;
+    }
+    .upgrade-banner-section-evaluation{
+        margin-top: 3em;
+    }
+    .partnership-footer{
+        left: 3%;
+        margin-top: 20px;
+    }
+}
+
+@media (min-width: 381px) and (max-width: 900px) {
+    .navbar-expand-lg>.container {
+        padding-right: 0;
+        padding-left: 1em;
+    }
+}
+
+
+/*********************************** END SMALL SCREENS 769 - 1024 ************************************/
+
+
+
+
+/*********************************** LARGE SCREEN 1025 - 1200 ****************************************/
+
+/* BETWEEN */
+
+@media (min-width: 1025px) and (max-width: 1200px){
+    .organisation-settings{
+        width: 400px;
+    }
+    .content-section {
+        margin-left: 170px;
+        margin-right: 30px;
+    }
+    .margin-left-large-screen {
+        margin-left: -50px;
+    }
+
+    .btn-submit-newsletter{
+        margin-top: 15px;
+    }
+    .margin-btn-orga-members {
+        margin-top: 10px;
+    }
+     /* width of the edito tooltip*/
+      .help-tip-edito p {
+        width: 380px;
+    }
+}
+
+/* SMALLER */
+
+@media (max-width: 1200px) {
+    .height-title {
+        height: 5em;
+    }
+
+    .date-release-note {
+        display: none;
+    }
+
+    .box-release-note {
+        float: left;
+        border-left: 0;
+        position: relative;
+        width: 100%;
+        margin: 0 3%;
+        padding-bottom: 0.5em;
+    }
+
+    .circle-release-note{
+        display: none;
+    }
+
+    .arrow-release-note{
+        position: relative;
+    }
+
+    .text-release-note{
+        margin-top: 32px;
+        padding-right: 0;
+    }
+
+    .htext-release-note {
+        padding: 0 64px;
+        margin: 0;
+    }
+}
+
+/* LARGER */
+
+@media (min-width: 1025px) {
+    .hidden-delete-button {
+        margin-top: 10px;
+    }
+    .div-hidden-icons{
+        vertical-align: middle;
+    }
+    .larger-large-screen-30-top{
+        margin-top: 30px;
+    }
+    .larger-large-screen-50-top{
+        margin-top: 50px;
+    }
+    .remove-larger-than-large-screen{
+        display: none;
+    }
+    .large-array-large-screen{
+        max-width: min-content;
+    }
+    td {
+        max-width: 120px;
+    }
+    .margin-btn-orga-members {
+        margin-top: 7px;
+    }
+    #exposition-table {
+        border-radius: 20px 20px 20px 20px;
+        box-shadow: 1px 1px 12px;
+    }
+}
+
+@media (max-width: 1130px) {
+    .margin-auto-max-1130 {
+        margin: auto;
+    }
+    .data-nav-pills {
+        margin: auto;
+        max-width: 80vw;
+    }
+    .column-right {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .row-pills-table {
+        display: block;
+    }
+    .center-max-1130 {
+        text-align: center;
+    }
+    #content-user-notes {
+        margin: auto;
+    }
+    .flex-center-small-screen {
+        justify-content: center;
+    }
+    .form-center-small-screen {
+        text-align: center;
+        text-align: -webkit-center;
+        columns: 1;
+        margin: auto;
+        width: fit-content;
+    }
+}
+
+@media (min-width: 1025px) and (max-width: 1130px) {
+    .margin-left-medium-screen {
+        /*margin-left: 60px;*/
+    }
+}
+
+@media (min-width: 1130px) {
+    .column-right {
+        margin-left: 30px;
+    }
+    #content-members {
+        width: 60vw;
+    }
+}
+
+
+/*********************************** END LARGE SCREEN 1025 - 1200 ************************************/
+
+
+
+
+/*********************************** EXTRA LARGE SCREEN 1201++  **************************************/
+
+
+/* LARGER 1200 */
+
+@media (min-width: 1201px) {
+    .height-title {
+        height: 3em;
+    }
+    .organisation-settings {
+        width: 700px;
+        max-width: 80%;
+    }
+    .content-section {
+        margin-left: 18vw;
+        margin-right: 10vw;
+    }
+     /* width of the edito tooltip*/
+      .help-tip-edito p {
+        width: 700px;
+    }
+}
+
+
+@media (max-width: 1300px) {
+    .extra-large-screen {
+        display: none;
+    }
+    .smaller-1300 {
+        display: block;
+    }
+}
+
+@media (min-width: 1301px){
+    .sidenav {
+        width: 230px;
+    }
+    .extra-large-screen {
+        display: block;
+    }
+    .smaller-1300 {
+        display: none;
+    }
+}
+
+@media (min-width: 1350px) {
+    .table thead th {
+        font-size: 18px;
+        padding: 0.75em;
+    }
+    .container-profile {
+        width: 88%;
+    }
+}
+
+@media (min-width: 1400px) {
+    .column-right {
+        width: max-content
+    }
+}
+
+
+
+/*********************************** END EXTRA LARGE SCREEN 1201++ ***********************************/

@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}
+
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+{% block object-tools %}{% endblock %}
+{{ content }}
+
+<h1>{% blocktrans with language=assessment_language_import trimmed %}
+    Import the assessment in <strong>{{ language }}</strong>
+    {% endblocktrans %}
+</h1>
+
+<p>{% blocktrans trimmed %}
+    Your assessment is currently in "<strong>{{ assessment_language_tag }}</strong>".
+    <br><br>
+    Please, import the {{ assessment_language_import }} version. Note that it must be the same version, same structure.
+    {% endblocktrans %}
+</p>
+
+<form method="post" action="{% url 'admin:add-assessment-language' assessment.id %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form}}
+    <input type="submit" value="Upload">
+</form>
+
+{% endblock %}

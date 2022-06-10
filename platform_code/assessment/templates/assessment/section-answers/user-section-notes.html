@@ -1,0 +1,27 @@
+{% load static %}
+{% load assessment_tags %}
+{% load i18n %}
+{% load markdownify %}
+
+<div class="margin-10, margin-bot-50">
+    <form action="{{ section.get_absolute_url }}" id="sectionNotes{{section.id}}" method="POST">
+        {% csrf_token %}
+        {{section_notes_form}}
+        <div class="wrapper">
+            {% if evaluation|user_can_edit_evaluation:user %}
+                <button class="btn btn-primary same-size-220 margin-10"
+                        onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
+                        title="{% trans 'Save the notes' %}"
+                        type="button">{% trans "Save" %}
+                </button>
+            {% else %}
+                <button class="btn btn-primary same-size-220" disabled
+                        title="{% if not evaluation.is_editable %} {% trans 'You cannot edit this evaluation' %} {% else %}
+                        {% trans 'You do not have the right to do this action' %} {% endif %}"
+                        type="button">{% trans "Save" %}
+                </button>
+            {% endif %}
+        </div>
+    </form>
+    <div class="display-none margin-bot-top-20" id="messageSectionNotes{{section.id}}"></div>
+</div>

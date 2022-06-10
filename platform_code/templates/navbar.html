@@ -1,0 +1,79 @@
+{% load static %}
+{% load assessment_tags %}
+{% load home_tags %}
+{% load i18n %}
+
+<div class="container">
+    <a class="navbar-brand white-color" href="{% url 'home:homepage' %}" title="home">
+        <img class="logo-navbar" src="{% static 'image/labelia_dry.png' %}">
+    </a>
+    <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
+        class="navbar-toggler icon-navbar" data-target="#navbarResponsive" data-toggle="collapse"
+        id="navbar-button" type="button">
+        <i aria-hidden="true" class="fa fa-bars"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+            {% if user.is_authenticated %}
+                {% if user.is_staff %}
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'admin:index' %}">
+                            {% trans "Admin" %}
+                        </a>
+                    </li>
+                    <li class="nav-item navbar-item">
+                        <a class="nav-link" href="{% url 'home:admin-dashboard' %}">
+                            {% trans "Admin Dashboard" %}
+                        </a>
+                    </li>
+                {% endif %}
+                <li class="nav-item navbar-item">
+                    <a class="nav-link" href="{% url 'home:user-profile' %}">
+                        {% trans "My dashboard" %}
+                    </a>
+                </li>
+                <li class="nav-item navbar-item">
+                    <a class="nav-link" href="{% url 'home:release-notes' %}">
+                        {% trans "Releases" %}
+                    </a>
+                </li>
+                {% if platform_management.activate_multi_languages %}
+                    <li class="nav-item navbar-item">
+                        {% include "navbar-language-select.html" %}
+                    </li>
+                {% endif %}
+                <li class="nav-item navbar-item margin-left-nav-icons">
+                    <a class="nav-link navbar-icon-settings" href="{% url 'home:user-profile-settings' %}"
+                        title="{% trans 'User settings' %}"
+                    >
+                        <i class="fas fa-user-cog"></i>
+                    </a>
+                </li>
+                <li class="nav-item navbar-item">
+                    <a class="nav-link navbar-icon-logout" href="{% url 'home:logout' %}"
+                        title="{% trans 'Logout' %}"
+                    >
+                        <i class="fa fa-sign-out"></i>
+                    </a>
+                </li>
+            <!-- User not connected -->
+            {% else %}
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:homepage' %}">
+                    {% trans "Homepage" %}
+                </a>
+            </li>
+            <li class="nav-item navbar-item">
+                <a class="nav-link" href="{% url 'home:release-notes' %}">
+                    {% trans "Releases" %}
+                </a>
+            </li>
+                {% if platform_management.activate_multi_languages %}
+                    <li class="nav-item navbar-item">
+                        {% include "navbar-language-select.html" %}
+                    </li>
+                {% endif %}
+            {% endif %}
+        </ul>
+    </div>
+</div>

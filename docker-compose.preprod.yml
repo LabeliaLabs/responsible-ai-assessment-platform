@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  web:
+    container_name: web
+    restart: always
+    build:
+      context: ./platform_code
+      dockerfile: Dockerfile.prod
+    command: gunicorn dev_platform.wsgi:application --bind 0.0.0.0:8080 --workers=4 --timeout 10 --log-file=./gunicorn_preprod.log
+    networks:
+      - main
+    volumes:
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+    expose:
+      - 8080
+    env_file:
+      - .env.prod
+    depends_on:
+      - db
+
+  db:
+    container_name: db
+    image: postgres:latest
+    networks:
+      - main
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env.prod
+
+  nginx:
+    container_name: nginx
+    image: nginx:latest
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - main
+    volumes:
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+      - ./nginx/preprodassessment.labelia.org.conf:/etc/nginx/conf.d/custom.conf
+      - ../ssl/labelia.org.crt:/etc/ssl/preprodassessment.labelia.org.crt
+      - ../ssl/labeliadotorg.key:/etc/ssl/preprodassessment.labeliadotorg.key
+    depends_on:
+      - web
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
+
+networks:
+  main:

@@ -1,0 +1,123 @@
+{% load static %}
+{% load assessment_tags %}
+{% load markdownify %}
+{% load i18n %}
+{% load home_tags %}
+
+<div class="content" id="action-plans-wrapper">
+    {% for evaluation, sections in user_action_plans_dic.items %}
+    <div class="margin-10" id="accordion-evaluation-action-plan-{{evaluation.id}}">
+        <div class="card">
+            <div class="grid-2-cols-resource-section card-header collapsed background-white"
+                 data-toggle="collapse"
+                 href="#evaluation-action-plan-{{evaluation.id}}"
+                 id="cardHeader-evaluation-{{evaluation.id}}" onclick="changeIconResource(this)">
+                <div class="resource-section-icon fa fa-plus"
+                     id="iconUserNotesEvaluation{{evaluation.id}}">
+
+                </div>
+                <div class="">
+                    <span class="fake-link">{{ evaluation.name }} - {{ evaluation.organisation.name }} - {{ evaluation.created_at }} - {{ evaluation.calculate_progression }}%</span>
+                </div>
+            </div>
+            <div class="card-body collapse" data-parent="#accordion-evaluation-action-plan-{{evaluation.id}}"
+                 id="evaluation-action-plan-{{evaluation.id}}">
+                {% for section, elements in sections.items %}
+                <div class="card" id="action-plan-section-{{section.id}}">
+                    <div class="card-header">
+                        <p class="margin-10">
+                            {{ section }}
+                        </p>
+                    </div>
+
+
+                    <div class="card-body">
+                        {% for element in elements %}
+                        <div id="action-plan-element-{{element.id}}" class="element-notes-card">
+                            <p class="mx-2 font-weight-bold">
+                                Q{{ section.master_section.order_id }}.{{ element.master_evaluation_element.order_id }}
+                                :
+                                {% if element.master_evaluation_element.name %}
+                                {{ element.master_evaluation_element.name|markdownify }}
+                                {% endif %}
+                            </p>
+                            <p class="mx-2">
+                                {% if element.master_evaluation_element.question_text %}
+                                {{ element.master_evaluation_element.question_text|markdownify }}
+                                {% endif %}
+                            </p>
+
+                            <div class="ml-25">
+                                {% for choice in element.get_choices_list %}
+                                <p class="grid-2-cols-resource-section">
+                                    {% if element.master_evaluation_element.question_type == "radio" %}
+                                        {% if choice.is_ticked %}
+                                        <i class="fa fa-circle fa-bars" style="margin-top: 3px;"></i>
+                                        {% else %}
+                                        <i class="fa fa-circle-o" style="margin-top: 3px;"></i>
+                                        {% endif %}
+                                    {% else %}
+                                        {% if choice.is_ticked %}
+                                        <i class="fa fa-square fa-bars" style="margin-top: 3px;"></i>
+                                        {% else %}
+                                        <i class="fa fa-square-o" style="margin-top: 3px;"></i>
+                                        {% endif %}
+                                    {% endif %}
+                                    <span>{{ choice.master_choice.answer_text|markdownify }}</span>
+                                </p>
+                                {% endfor %}
+                            </div>
+                            {% if element.user_justification %}
+                            <div class="margin-40">
+                                <div class="margin-left-20">{% trans 'Justifications: ' %}</div>
+                                <div class="textarea-data-results scroll-div-results">
+                                    {{ element.user_justification|safe }}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            {% if element.user_notes %}
+                            <div class="margin-40">
+                                <div class="margin-left-20">{% trans 'Notes: ' %}</div>
+                                <div class="textarea-data-results scroll-div-results">
+                                    {{ element.user_notes }}
+                                </div>
+                            </div>
+                            {% endif %}
+                            <div class="center margin-40" id="element-footer{{element.id}}">
+                                 <a
+                                    class="btn btn-modify"
+                                    href="{% url 'assessment:orga-summary' evaluation.organisation.id %}{{evaluation.name|slugify}}/{{evaluation.id}}/section/{{section.id}}/{{section.master_section.keyword|slugify}}/{{section.master_section.order_id}}?element={{element.master_evaluation_element.order_id}}"
+                                 >
+                                    {% trans "Go to the element" %}
+                                 </a>
+                                 <form
+                                    action="{% url 'home:user-profile' %}"
+                                    id="remove-element-action-plan-form{{element.id}}"
+                                    method='post'
+                                    role="form"
+                                 >
+                                     {% csrf_token %}
+                                     <p
+                                        class="fake-link margin-20"
+                                        onclick="removeElementActionPlan({{element.id}}, 'message-action-plan')"
+                                     >
+                                         {% trans "Remove evaluation element from my action plan" %}
+                                    </p>
+
+
+                                </form>
+                            </div>
+                            <div id="message-action-plan{{element.id}}"></div>
+
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    <p id="no-action-plan" class="margin-30" {% if user_action_plans_dic %} hidden {% endif %}>{% trans "You do not have evaluation elements in an action plan." %}</p>
+</div>

@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  web:
+    build: ./platform_code
+    container_name: django
+    command: python manage.py runserver 0.0.0.0:8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./platform_code/:/code
+    env_file:
+      - ./.env.dev
+    depends_on:
+      - db
+    links:
+      - db
+    # Debug
+    # docker ps | grep web
+    # docker attach <container_id>
+    # you can now use import pdb; pdb.set_trace()
+    stdin_open: true
+    tty: true
+
+  db:
+    container_name: postgres
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.dev
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:

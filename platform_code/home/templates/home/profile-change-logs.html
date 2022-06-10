@@ -1,0 +1,88 @@
+{% load static %}
+{% load assessment_tags %}
+{% load home_tags %}
+{% load i18n %}
+
+<head>
+    <title>this where all the change logs will be displayed</title>
+</head>
+    {% if change_logs  %}
+        {% for assessment, master_sections in change_logs.items  %}
+            <div class="accordion-resource-section margin-50" id="accordion-{{forloop.counter}}">
+                <div class="card mb-0">
+                    <div class="grid-2-cols-resource-section card-header collapsed background-white"
+                         data-toggle="collapse"
+                         href="#collapse-{{forloop.counter}}"
+                         id="cardHeader{{assessment.version}}" onclick="changeIconResource(this)">
+                        <div class="resource-section-icon fa fa-plus" id="iconResource{{assessment.version}}">
+
+                        </div>
+                        <div class="">
+                            <span class="fake-link">{{assessment.name}} - version{% trans " : " %}
+                                {{assessment.version}}</span>
+                            <div class="change-logs-version">{% trans "Change logs for "%} {% trans "version" %}
+                                {{assessment.version}} VS {% trans "version " %}
+                                {{assessment.previous_assessment.version}} </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body collapse" data-parent="#accordion-{{forloop.counter}}"
+                         id="collapse-{{forloop.counter}}">
+
+                        {% for master_section, master_elements in master_sections.items %}
+                        <div class="accordion-resource-section margin-10" id="accordion-section{{forloop.counter}}">
+                            <div class="card mb-0">
+                                <div class="grid-2-cols-resource-section card-header collapsed background-white"
+                                     data-toggle="collapse"
+                                     href="#collapse-section{{forloop.counter}}"
+                                     id="cardHeader{{master_section.name}}"
+                                     onclick="changeIconResource(this)">
+                                    <div class="resource-section-icon fa fa-plus" id="iconResource{{master_section.name}}">
+
+                                    </div>
+                                    <div class="">
+                                        <span class="fake-link">S{{master_section.order_id}} {{master_section.name}}</span>
+                                    </div>
+                                 </div>
+
+                                <div class="card-body collapse"
+                                    data-parent="#accordion-section{{forloop.counter}}"
+                                    id="collapse-section{{forloop.counter}}"
+                                >
+                                    {% for master_element, change_log in master_elements.items %}
+                                        <div name="wrapper" class="margin-bot-30">
+                                            <div class="element-pastille-grid">
+                                                <div class="margin-left-20">
+                                                   <span class="element-title-change-log">Q{{ master_element.get_numbering }}{% trans ": " %}{{master_element.name}} </span>
+                                                </div>
+                                                {% if change_log.pastille == "New" or change_log.pastille == "Nouveau" %}
+                                                    <div class="element-pastille-change-log-new">
+                                                        <span>{{ change_log.pastille }}</span>
+                                                    </div>
+                                                {% elif change_log.pastille == "Updated" or change_log.pastille == "Mis à jour" %}
+                                                    <div class="element-pastille-change-log-updated">
+                                                        <span>{{ change_log.pastille }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <ul>
+                                                <li class="element-edito-change-log margin-20">{{change_log.edito}}</li>
+                                            </ul>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+
+
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        {% endfor %}
+
+    {% else %}
+      <p class="margin-50">{% trans "There are no change logs available" %}</p>
+    {% endif %}
+
