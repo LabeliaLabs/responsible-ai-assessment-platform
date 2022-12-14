@@ -1,45 +1,46 @@
-# Readme 
+# Responsible and Trustworthy AI assessment platform - an open source project by Labelia Labs
 
-## Installation
+## Structure of repositories
+
+This repository `/responsible-ai-assessment-platform` corresponds to the web platform enabling users to conduct an assessment of their organization. It is linked to the following other repositories:
+
+- [`/referentiel-evaluation-dsrc`](https://github.com/LabeliaLabs/referentiel-evaluation-dsrc): the "Responsible and Trustworthy AI" master framework. This is a text content
+- [`/referentiel-processing-scripts`](https://github.com/LabeliaLabs/referentiel-processing-scripts): Python scripts required to process the master framework (and its associated upgrade table when processing a more recent version of a framework already uploaded in the assessment platform) into a set of `.json` files required by the assessment platform
+
+## Assessment platform installation
+
+Basic instructions to clone the repository and install locally the platform are given below.
+For more details on platform installation, operation and maintenance, please refer to [`README_DEV.md`](./README_DEV.md).
 
 - Clone the project:
-
+  
   ```console
   git clone git@framagit.org:labelia-labs/pf-assessment-dsrc.git
   ```
 
 - Create `.env.dev` from `env_dev_template`:
-
+  
   ```console
   cp env_dev_template .env.dev
   ```
->>>>>>> README.md
 
 - Replace variables in the .env.dev file
 
 - Build Docker image and start it:
-
+  
   ```console
   docker-compose up --build
   ```
 
-- Migrations
-
-  ```
+- Apply Django migrations
+  
+  ```console
   docker-compose exec questionnaire-grpc ./manage.py migrate
   ```
 
-## Contexte et ambition
+## Technical choices
 
-Dans le prolongement des travaux participatifs démarrés en 2019 sur la définition de la data science responsable et de confiance qui peuvent être consultés sur le [repo dédié](https://github.com/LabeliaLabs/referentiel-ds-responsable-confiance), l'initiative s'est petit à petit orientée vers une évaluation de maturité, un _assessment_, à destination des organisations qui ont une activité data science / IA.
-
-- L'[assessment DSRC](https://github.com/LabeliaLabs/referentiel-evaluation-dsrc/blob/master/referentiel_evaluation.md)
-- Le [story mapping](https://www.featuremap.co/m/ddC0Rj/plateforme-dsrc) de la plateforme d'assessment
-- Les scripts [jsonize-dsrc-assessment](https://framagit.org/labelia-labs/jsonize-dsrc-assessment) pour convertir l'assessment de son format texte à un objet JSON et pour implémenter la grille de scoring
-
-## Conventions et choix techniques
-
-Pour assurer une cohérence et une homogénéité entre les contributeurs à ce repo, il est important de suivre les pratiques décrites dans les sections qui suivent.
+*The below sections were written in French at the beginning of the project. They are kept in this README document to reflect the rationale behind technical choices made historically.*
 
 ### Commit messages
 
@@ -50,7 +51,7 @@ Une approche qui est devenue une référence au fil des ans est celle décrite d
 - Par souci d'homogénéité et pour préserver les futures collaborations possibles, les commits messages doivent être **en anglais**
 - Ils démarrent par une majuscule, un verbe à l'impératif, et finissent sans point. Exemple :
     > `Populate README with context and quick links to key resources`
-- Ils ne doivent pas être trop longs (72 caractères est une bonne limite : les commits messages plus longs sont tronqués sur GitHub). Si besoin, utiliser la possibilité d'ajouter un _body_ en plus du _subject_ du commit message.
+- Ils ne doivent pas être trop longs (72 caractères est une bonne limite : les commits messages plus longs sont tronqués sur GitHub). Si besoin, utiliser la possibilité d'ajouter un *body* en plus du *subject* du commit message.
 
 ### Branching model
 
@@ -123,9 +124,7 @@ On retient Postgresql : open source, battle-testé...
 
 ### Emailings
 
-Pour les emailings transactionnels on choisit le [module Mandrill de Mailchimp](https://mailchimp.com/fr/help/mailchimp-vs-mandrill/). On élaborera et designera les templates via l'interface Mandrill directement.
-
-> Cela n'est pas encore implémenté - à ce stade les emails transactionnels sont templatés directement avec Django.
+Les emails transactionnels sont templatés directement avec Django.
 
 ### Serveur(s) web
 
@@ -138,5 +137,3 @@ Comme le suggère le [tutoriel ci-dessus](https://testdriven.io/blog/dockerizing
 
 - Git flow: `develop` > `preprod` > `prod`
 - Url preprod: <http://preprod.assessment.labelia.org/>
-
-See the [dedicated document](./README_DEPLOY.md).
