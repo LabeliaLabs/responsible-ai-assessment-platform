@@ -2,6 +2,7 @@ import random
 from ckeditor.fields import RichTextField
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from .section import Section, MasterSection
 from .element_change_log import ElementChangeLog
@@ -211,7 +212,7 @@ class EvaluationElement(models.Model):
                     (
                         choice,
                         choice.master_choice.answer_text
-                        + " | (Lorsque cette réponse est sélectionnée, les autres ne peuvent pas l'être)",
+                        + _(" | (When this answer is selected, the others cannot be selected)"),
                     )
                 )
             else:
