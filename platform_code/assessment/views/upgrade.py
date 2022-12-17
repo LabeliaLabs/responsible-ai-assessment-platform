@@ -41,7 +41,7 @@ def upgradeView(request, *args, **kwargs):
     if float(evaluation_version) < float(latest_version):
 
         try:
-            new_eval = evaluation.upgrade(user=user)
+            new_eval = evaluation.upgrade(user=user, created_at=evaluation.created_at)
             # Manage the redirection between the different pages where the user clicked to upgrade the evaluation
             url = manage_upgrade_next_url(request, new_eval, organisation, evaluation_id)
             data_update["redirection"] = url

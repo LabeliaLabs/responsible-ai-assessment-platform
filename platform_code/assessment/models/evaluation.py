@@ -261,6 +261,7 @@ class Evaluation(models.Model):
         """
 
         user_request = kwargs.get("user")
+        created_at = kwargs.get("created_at", timezone.now())
         origin_assessment = self.assessment
         final_assessment = get_last_assessment_created()
 
@@ -284,6 +285,7 @@ class Evaluation(models.Model):
             user=user_eval,
             upgraded_from=origin_assessment,
         )
+        new_eval.created_at = created_at
         new_eval.create_evaluation_body()
 
         for new_section in new_eval.section_set.all():
