@@ -212,7 +212,7 @@ class EvaluationElement(models.Model):
                     (
                         choice,
                         choice.master_choice.answer_text
-                        + _(" | (Lorsque cette réponse est sélectionnée, les autres ne peuvent pas l'être)"),
+                        + _(" | (When this answer is selected, the others cannot be selected)"),
                     )
                 )
             else:
