@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Check end of lines config: require CRLF on Unix and LF on Windows
+
 if [ "$DATABASE" = "postgres" ]
 then
     echo "Waiting for postgres..."

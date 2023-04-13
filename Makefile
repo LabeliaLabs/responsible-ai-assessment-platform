@@ -1,22 +1,36 @@
+# See https://stackoverflow.com/questions/66514436/difference-between-docker-compose-and-docker-compose
+# `docker compose` should now be used instead of `docker-compose`
+
 #######
 # DEV #
 #######
 
 up:
 	docker-compose up
+up-new:
+	docker compose up
 
 upd:
 	docker-compose up -d
+upd-new:
+	docker compose up -d
 
 buildup:
 	docker-compose up --build
+buildup-new:
+	docker compose up --build
 
 buildupd:
 	docker-compose up --build -d
+buildupd-new:
+	docker compose up --build -d
 
 migr:
 	docker-compose exec web python manage.py makemigrations
 	docker-compose exec web python manage.py migrate --noinput
+migr-new:
+	docker compose exec web python manage.py makemigrations
+	docker compose exec web python manage.py migrate --noinput
 
 migr-show:
 	docker-compose exec web python manage.py showmigrations
@@ -29,9 +43,13 @@ static:
 
 admin:
 	docker-compose exec web python manage.py createsuperuser
+admin-new:
+	docker compose exec web python manage.py createsuperuser
 
 down:
 	docker-compose down
+down-new:
+	docker compose down
 	
 downv:
 	docker-compose down -v
