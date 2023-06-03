@@ -12,41 +12,45 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
-      image: postgres:latest
-      env:
-      - POSTGRES_USER: postgres
-      - POSTGRES_PASSWORD: postgres
-      - POSTGRES_BD: postgres
-      ports:
-      - 5432:5432
-      options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      postgres_main:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
-      steps:
-        - uses: actions/checkout@v3
-        - name: Set up Python 3.8.0-alpine
-          uses: actions/setup-python@v3
-          with:
-            python-version: 3.8.0-alpine
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-        - name: Install Dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements.txt
+      - name: Setup Python 3.8.0-alpine
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.0-alpine
 
-        - name: Lint
-          run: |
-            python manage.py check --deploy
-            pre-commit run --all-files --show-diff-on-failure
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-        - name: Set up Django
-          run: |
-            python manage.py makemigrations
-            python manage.py migrate
+      - name: Lint
+        run: |
+          python manage.py check --deploy
+          pre-commit run --all-files --show-diff-on-failure
 
-        - name: Run Tests
-          env:
-            SECRET_KEY: "test"
-            DEBUG: "True"
-            DATABASE_URL: "postgres://postgres:postgres@localhost:5432/postgres"
-          run: |
-            python manage.py test
+      - name: Set up Django
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
+
+      - name: Run Tests
+        env:
+          SECRET_KEY: "test"
+          DEBUG: "True"
+          DATABASE_URL: "postgres://postgres:postgres@localhost:5432/postgres"
+        run: |
+          python manage.py test
