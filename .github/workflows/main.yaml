@@ -43,7 +43,6 @@ jobs:
         python manage.py makemigrations
         python manage.py migrate
 
-
     - name: Run Tests
       env:
         SECRET_KEY: "test"
