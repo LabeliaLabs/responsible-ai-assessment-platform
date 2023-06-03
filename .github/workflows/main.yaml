@@ -7,6 +7,12 @@ on:
     branches: [ "develop" ]
   workflow_dispatch:
 
+env:
+  SECRET_KEY: test
+  SQL_USER: postgres
+  SQL_PASSWORD: postgres
+  SQL_DATABASE: postgres
+
 jobs:
   test:
 
@@ -16,9 +22,9 @@ jobs:
       postgres_main:
         image: postgres:latest
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: postgres
+          SQL_USER: postgres
+          SQL_PASSWORD: postgres
+          SQL_DATABASE: postgres
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
@@ -39,22 +45,17 @@ jobs:
           pip install -r platform_code/requirements.txt
 
       - name: Lint
-        env:
-            SECRET_KEY: "test"
         run: |
           python platform_code/manage.py check --deploy
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Set up Django
-        env:
-          SECRET_KEY: "test"
         run: |
           python platform_code/manage.py makemigrations
           python platform_code/manage.py migrate
 
       - name: Run Tests
         env:
-          SECRET_KEY: "test"
           DEBUG: "True"
           DATABASE_URL: "postgres://postgres:postgres@localhost:5432/postgres"
         run: |
