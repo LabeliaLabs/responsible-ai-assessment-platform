@@ -62,7 +62,7 @@ Conséquences à retenir :
 ```json
 {   "assessment_version" : "3.0",
     "diff_per_version" : {
-            "1.0" : {           
+            "1.0" : {
                 "sections" : {
                     "1": "1",
                     "2": "2",
@@ -86,7 +86,7 @@ Conséquences à retenir :
                         "pastille_en": "New",
                         "edito_fr": "C'est un nouvel élément",
                         "edito_en": "This is a new element"
-                        
+
                     },
                     "2.1": {
                         "upgrade_status": "no_fetch",
@@ -109,7 +109,7 @@ Conséquences à retenir :
                     "1.1.b": "no_fetch",
                     ...
                 },
-            "2.0" : {           
+            "2.0" : {
                 "sections" : {
                     "1": "1",
                     "2": "2",
@@ -128,7 +128,7 @@ Conséquences à retenir :
                     "1.1.b": "no_fetch",
                     ...
                 }
-            }   
+            }
      }
 }
 ```
@@ -147,7 +147,7 @@ Les *changelogs* sont des objets stockés dans la base de données, ils représe
 - La première version de l'assessment (ou toute version de l'assessment qui n'a pas de version précédente) n'a pas donc de changelogs
 - Chaque changelog est identifié par 3 choses:
   - `assessment`: l'objet d'assessment auquel ce changelog est lié
-  - `previous_assessment`: l'object d'assessment précédent auquel nous comparons l'assessment  
+  - `previous_assessment`: l'object d'assessment précédent auquel nous comparons l'assessment
   - `eval_element_numbering`: le *numbering* de l'élément d'évaluation auquel ce *changelog* est lié
 - les *changelogs* sont créés à partir de la *table des upgrades* après son importation
 - les *changelogs* sont affichés sous forme de *pastille* sur l'en-tête des éléments d'évaluation, ils sont visibles par défaut mais ils peuvent être masqués dans la page d'admin

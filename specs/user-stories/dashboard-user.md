@@ -16,6 +16,6 @@ Le dashboard présente :
   - Note moyenne par section
   - Découpage par secteur / taille d'entreprises / secteur géographique
 
-Sur chaque section, un bouton permet d'accéder à la section correspondante.   
+Sur chaque section, un bouton permet d'accéder à la section correspondante.
 
 _Work in progress_

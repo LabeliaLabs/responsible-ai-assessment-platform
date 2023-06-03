@@ -26,7 +26,7 @@ Il est possible de naviguer entre les évaluations :
 - Entrer un numéro de page
 
 Il est possible de cliquer sur l'intitulé des colonnes pour changer le tri.
-Par défaut, le tri appliqué est par date de création de l'évaluation, du plus récent au plus ancien.  
+Par défaut, le tri appliqué est par date de création de l'évaluation, du plus récent au plus ancien.
 
 ## Accès à une évaluation
 
