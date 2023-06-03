@@ -12,6 +12,7 @@ env:
   SQL_USER: postgres
   SQL_PASSWORD: postgres
   SQL_DATABASE: postgres
+  DATABASE_URL: "postgres://postgres:postgres@localhost:5432/postgres"
 
 jobs:
   test:
@@ -22,9 +23,9 @@ jobs:
       postgres_main:
         image: postgres:latest
         env:
-          SQL_USER: postgres
-          SQL_PASSWORD: postgres
-          SQL_DATABASE: postgres
+        - POSTGRES_USER: postgres
+        - POSTGRES_PASSWORD: postgres
+        - POSTGRES_BD: postgres
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
