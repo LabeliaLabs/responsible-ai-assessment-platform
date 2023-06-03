@@ -12,7 +12,7 @@ env:
   SQL_USER: postgres
   SQL_PASSWORD: postgres
   SQL_DATABASE: postgres
-  DATABASE_URL: "postgres://postgres:postgres@localhost:5432/postgres"
+  DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
 
 jobs:
   test:
