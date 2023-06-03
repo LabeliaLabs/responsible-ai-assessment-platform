@@ -1,25 +1,25 @@
+from assessment.forms import EvaluationElementWeightForm
 from django.contrib import admin, messages
 from django.db.models import JSONField
 from django.shortcuts import redirect
 
 from .utils import PrettyJSONWidget
-from assessment.forms import EvaluationElementWeightForm
 
 
 class EvaluationAdmin(admin.ModelAdmin):
-    """
+    """ """
 
-    """
-    list_display = ("name",
-                    "created_at",
-                    "created_by",
-                    "organisation",
-                    "assessment",
-                    "get_version",
-                    "is_finished",
-                    "get_progression",
-                    "get_score",
-                    )
+    list_display = (
+        "name",
+        "created_at",
+        "created_by",
+        "organisation",
+        "assessment",
+        "get_version",
+        "is_finished",
+        "get_progression",
+        "get_score",
+    )
     list_filter = (
         "created_at",
         "assessment__version",
@@ -27,12 +27,12 @@ class EvaluationAdmin(admin.ModelAdmin):
         "organisation",
     )
     actions = [
-        'complete_normal',
-        'complete_without_conditions',
-        'complete_max_points',
-        'complete_min_points',
-        'complete_with_conditions',
-        'upgrade_evaluation',
+        "complete_normal",
+        "complete_without_conditions",
+        "complete_max_points",
+        "complete_min_points",
+        "complete_with_conditions",
+        "upgrade_evaluation",
     ]
 
     def get_version(self, obj):
@@ -48,13 +48,19 @@ class EvaluationAdmin(admin.ModelAdmin):
     def complete_normal(self, request, queryset):
         for evaluation in queryset:
             try:
-                evaluation.complete_evaluation(characteristic="normal", probability_condition=0.8)
-                self.message_user(request, f"The evaluation {evaluation} has been completed!", messages.SUCCESS)
+                evaluation.complete_evaluation(
+                    characteristic="normal", probability_condition=0.8
+                )
+                self.message_user(
+                    request,
+                    f"The evaluation {evaluation} has been completed!",
+                    messages.SUCCESS,
+                )
             except Exception as e:
                 self.message_user(
                     request,
                     f"An error occurred, {e}, when completing the evaluation{evaluation}",
-                    messages.ERROR
+                    messages.ERROR,
                 )
         return redirect(request.path_info)
 
@@ -62,12 +68,16 @@ class EvaluationAdmin(admin.ModelAdmin):
         for evaluation in queryset:
             try:
                 evaluation.complete_evaluation(characteristic="no_condition")
-                self.message_user(request, f"The evaluation {evaluation} has been completed!", messages.SUCCESS)
+                self.message_user(
+                    request,
+                    f"The evaluation {evaluation} has been completed!",
+                    messages.SUCCESS,
+                )
             except Exception as e:
                 self.message_user(
                     request,
                     f"An error occurred, {e}, when completing the evaluation{evaluation}",
-                    messages.ERROR
+                    messages.ERROR,
                 )
         return redirect(request.path_info)
 
@@ -75,12 +85,16 @@ class EvaluationAdmin(admin.ModelAdmin):
         for evaluation in queryset:
             try:
                 evaluation.complete_evaluation(characteristic="max")
-                self.message_user(request, f"The evaluation {evaluation} has been completed!", messages.SUCCESS)
+                self.message_user(
+                    request,
+                    f"The evaluation {evaluation} has been completed!",
+                    messages.SUCCESS,
+                )
             except Exception as e:
                 self.message_user(
                     request,
                     f"An error occurred, {e}, when completing the evaluation{evaluation}",
-                    messages.ERROR
+                    messages.ERROR,
                 )
         return redirect(request.path_info)
 
@@ -88,12 +102,16 @@ class EvaluationAdmin(admin.ModelAdmin):
         for evaluation in queryset:
             try:
                 evaluation.complete_evaluation(characteristic="min")
-                self.message_user(request, f"The evaluation {evaluation} has been completed!", messages.SUCCESS)
+                self.message_user(
+                    request,
+                    f"The evaluation {evaluation} has been completed!",
+                    messages.SUCCESS,
+                )
             except Exception as e:
                 self.message_user(
                     request,
                     f"An error occurred, {e}, when completing the evaluation{evaluation}",
-                    messages.ERROR
+                    messages.ERROR,
                 )
         return redirect(request.path_info)
 
@@ -101,12 +119,16 @@ class EvaluationAdmin(admin.ModelAdmin):
         for evaluation in queryset:
             try:
                 evaluation.complete_evaluation(characteristic="conditions")
-                self.message_user(request, f"The evaluation {evaluation} has been completed!", messages.SUCCESS)
+                self.message_user(
+                    request,
+                    f"The evaluation {evaluation} has been completed!",
+                    messages.SUCCESS,
+                )
             except Exception as e:
                 self.message_user(
                     request,
                     f"An error occurred, {e}, when completing the evaluation{evaluation}",
-                    messages.ERROR
+                    messages.ERROR,
                 )
         return redirect(request.path_info)
 
@@ -115,24 +137,26 @@ class EvaluationAdmin(admin.ModelAdmin):
             if evaluation.is_upgradable():
                 try:
                     new_eval = evaluation.upgrade(user=evaluation.created_by)
-                    self.message_user(request,
-                                      f"The evaluation {evaluation} ({evaluation.calculate_progression()}%)"
-                                      f" has been upgraded from the version "
-                                      f"{evaluation.assessment.version} to version "
-                                      f"{new_eval.assessment.version} and has "
-                                      f"{new_eval.calculate_progression()}% of progression",
-                                      messages.SUCCESS)
+                    self.message_user(
+                        request,
+                        f"The evaluation {evaluation} ({evaluation.calculate_progression()}%)"
+                        f" has been upgraded from the version "
+                        f"{evaluation.assessment.version} to version "
+                        f"{new_eval.assessment.version} and has "
+                        f"{new_eval.calculate_progression()}% of progression",
+                        messages.SUCCESS,
+                    )
                 except Exception as e:
                     self.message_user(
                         request,
                         f"An error occurred, {e}, when upgrading the evaluation {evaluation}",
-                        messages.ERROR
+                        messages.ERROR,
                     )
             else:
                 self.message_user(
                     request,
                     f"The evaluation {evaluation} is not upgradable (version {evaluation.assessment.version})",
-                    messages.WARNING
+                    messages.WARNING,
                 )
         return redirect(request.path_info)
 
@@ -140,4 +164,8 @@ class EvaluationAdmin(admin.ModelAdmin):
 class EvaluationElementWeightAdmin(admin.ModelAdmin):
     form = EvaluationElementWeightForm
     add_form = EvaluationElementWeightForm
-    formfield_overrides = {JSONField: {"widget": PrettyJSONWidget, }}
+    formfield_overrides = {
+        JSONField: {
+            "widget": PrettyJSONWidget,
+        }
+    }

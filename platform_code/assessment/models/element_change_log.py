@@ -13,12 +13,11 @@ class ElementChangeLog(models.Model):
     pastille = models.CharField(max_length=200, null=False)
     eval_element_numbering = models.CharField(max_length=200, null=False)
 
-    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name="new_assessment")
+    assessment = models.ForeignKey(
+        Assessment, on_delete=models.CASCADE, related_name="new_assessment"
+    )
     previous_assessment = models.ForeignKey(
-        Assessment,
-        on_delete=models.CASCADE,
-        related_name="old_assessment",
-        null=True
+        Assessment, on_delete=models.CASCADE, related_name="old_assessment", null=True
     )
     visibility = models.BooleanField(default=True)
 
@@ -34,14 +33,24 @@ class ElementChangeLog(models.Model):
         self.save()
 
     @classmethod
-    def create_element_change_log(cls, edito_en, edito_fr, pastille_en, pastille_fr, eval_element_numbering,
-                                  previous_assessment, new_assessment):
-        change_log = cls(edito_en=edito_en,
-                         edito_fr=edito_fr,
-                         pastille_en=pastille_en,
-                         pastille_fr=pastille_fr,
-                         eval_element_numbering=eval_element_numbering,
-                         previous_assessment=previous_assessment,
-                         assessment=new_assessment)
+    def create_element_change_log(
+        cls,
+        edito_en,
+        edito_fr,
+        pastille_en,
+        pastille_fr,
+        eval_element_numbering,
+        previous_assessment,
+        new_assessment,
+    ):
+        change_log = cls(
+            edito_en=edito_en,
+            edito_fr=edito_fr,
+            pastille_en=pastille_en,
+            pastille_fr=pastille_fr,
+            eval_element_numbering=eval_element_numbering,
+            previous_assessment=previous_assessment,
+            assessment=new_assessment,
+        )
 
         change_log.save()

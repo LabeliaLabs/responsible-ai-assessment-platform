@@ -1,8 +1,8 @@
-import re
-import plotly.offline as opy
-import plotly.graph_objs as go
 import datetime
+import re
 
+import plotly.graph_objs as go
+import plotly.offline as opy
 from django.conf import settings
 from django.contrib import admin
 from django.shortcuts import redirect
@@ -20,9 +20,7 @@ class DashboardAdminSite(admin.AdminSite):
         urls = super().get_urls()
         # Replace the admin-dashboard:index by admin:index in order to route well in the template
         urls[0] = admin.site.urls[0][0]
-        urls += [
-            path('monitoring/', self.admin_view(self.get_view), name="monitoring")
-        ]
+        urls += [path("monitoring/", self.admin_view(self.get_view), name="monitoring")]
         return urls
 
     def get_view(self, request):
@@ -56,17 +54,17 @@ class DashboardAdminSite(admin.AdminSite):
         """
         if "file_name" in kwargs:
             file_name = kwargs.get("file_name")
-            with open(file_name, "r") as file:
+            with open(file_name) as file:
                 file_data = file.read()
                 file.close()
         else:
             if settings.DEBUG:
-                with open("dev.log", "r") as file:
+                with open("dev.log") as file:
                     file_data = file.read()
                     file.close()
             # Prod configuration
             else:
-                with open("prod.log", "r") as file:
+                with open("prod.log") as file:
                     file_data = file.read()
                     file.close()
         return file_data
@@ -77,7 +75,14 @@ class DashboardAdminSite(admin.AdminSite):
         """
         self.context["graph_list"].append(graph)
 
-    def make_time_graph(self, days, graph_type, log_tag, graph_title, y_axis_title, ):
+    def make_time_graph(
+        self,
+        days,
+        graph_type,
+        log_tag,
+        graph_title,
+        y_axis_title,
+    ):
         """
         This method creates a plotly graph with time in x axis and you chose the variable for y "log_tag"
         which will be search in the logs.
@@ -98,73 +103,86 @@ class DashboardAdminSite(admin.AdminSite):
             x = [today - datetime.timedelta(i)] + x
             date = today - datetime.timedelta(i)
             date_readable = datetime.datetime.strftime(date, "%Y-%m-%d")
-            regex = re.findall(rf'({date_readable})(.*)\[({log_tag})\]', logs_data)
+            regex = re.findall(rf"({date_readable})(.*)\[({log_tag})\]", logs_data)
             y[-i - 1] = len(regex)
         if graph_type == "bar":
             data = go.Bar(x=x, y=y)
         elif graph_type == "line":
-            data = go.Scatter(x=x, y=y,
-                              marker={'color': 'red'},
-                              mode="lines",
-                              )
+            data = go.Scatter(
+                x=x,
+                y=y,
+                marker={"color": "red"},
+                mode="lines",
+            )
 
-        layout = go.Layout(title=graph_title,
-                           xaxis={'title': 'date',
-                                  'type': 'date',
-                                  'tick0': x[0],
-                                  'tickmode': 'linear',
-                                  'tickformat': '%d %b %Y',
-                                  'dtick': 86400000.0 * 7  # every week a date
-                                  },
-                           yaxis={'title': y_axis_title,
-                                  'dtick': '1',
-                                  }
-                           )
+        layout = go.Layout(
+            title=graph_title,
+            xaxis={
+                "title": "date",
+                "type": "date",
+                "tick0": x[0],
+                "tickmode": "linear",
+                "tickformat": "%d %b %Y",
+                "dtick": 86400000.0 * 7,  # every week a date
+            },
+            yaxis={
+                "title": y_axis_title,
+                "dtick": "1",
+            },
+        )
         figure = go.Figure(data=data, layout=layout)
-        return opy.plot(figure, auto_open=False, output_type='div')
+        return opy.plot(figure, auto_open=False, output_type="div")
 
     def account_creation_graph(self):
         """
         Number of account creation ie account which has been activated
         """
-        graph = self.make_time_graph(days=30,
-                                     graph_type="bar",
-                                     log_tag="account_activated",
-                                     graph_title="Number of accounts created and activated per day",
-                                     y_axis_title="Account activated")
+        graph = self.make_time_graph(
+            days=30,
+            graph_type="bar",
+            log_tag="account_activated",
+            graph_title="Number of accounts created and activated per day",
+            y_axis_title="Account activated",
+        )
         self.add_graph_to_context(graph=graph)
 
     def organisation_creation_graph(self):
         """
         Organisation creation
         """
-        graph = self.make_time_graph(days=30,
-                                     graph_type="bar",
-                                     log_tag="organisation_creation",
-                                     graph_title="Number of organisations created per day",
-                                     y_axis_title="Organisations created")
+        graph = self.make_time_graph(
+            days=30,
+            graph_type="bar",
+            log_tag="organisation_creation",
+            graph_title="Number of organisations created per day",
+            y_axis_title="Organisations created",
+        )
         self.add_graph_to_context(graph=graph)
 
     def evaluation_creation_graph(self):
         """
         Evaluation creation
         """
-        graph = self.make_time_graph(days=30,
-                                     graph_type="bar",
-                                     log_tag="evaluation_creation",
-                                     graph_title="Number of evaluations created per day",
-                                     y_axis_title="Evaluations created")
+        graph = self.make_time_graph(
+            days=30,
+            graph_type="bar",
+            log_tag="evaluation_creation",
+            graph_title="Number of evaluations created per day",
+            y_axis_title="Evaluations created",
+        )
         self.add_graph_to_context(graph=graph)
 
     def error_graph(self):
         """
         Graph of all the error 404, 403, 500 and 400
         """
-        graph = self.make_time_graph(days=30,
-                                     graph_type="line",
-                                     log_tag="(.*)error(.*)",
-                                     graph_title="Number of errors - all",
-                                     y_axis_title="error")
+        graph = self.make_time_graph(
+            days=30,
+            graph_type="line",
+            log_tag="(.*)error(.*)",
+            graph_title="Number of errors - all",
+            y_axis_title="error",
+        )
         self.add_graph_to_context(graph=graph)
 
     def user_connection_graph(self):
@@ -174,9 +192,11 @@ class DashboardAdminSite(admin.AdminSite):
         to the corresponding date. We count them day by day (list y) using regex.
         :return:
         """
-        graph = self.make_time_graph(days=30,
-                                     graph_type="line",
-                                     log_tag="user_connection",
-                                     graph_title="Number of users connection per day",
-                                     y_axis_title="connections")
+        graph = self.make_time_graph(
+            days=30,
+            graph_type="line",
+            log_tag="user_connection",
+            graph_title="Number of users connection per day",
+            y_axis_title="connections",
+        )
         self.add_graph_to_context(graph=graph)

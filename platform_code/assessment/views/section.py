@@ -1,23 +1,30 @@
 import json
 import logging
 
+from assessment.forms import (
+    ChoiceForm,
+    ElementFeedbackForm,
+    SectionFeedbackForm,
+    SectionNotesForm,
+)
+from assessment.models import Evaluation, EvaluationElement, EvaluationScore, Section
+from assessment.utils import get_client_ip
+from assessment.views.utils.security_checks import (
+    can_edit_security_check,
+    membership_security_check,
+)
+from assessment.views.utils.treat_feedback_and_resources import treat_feedback, treat_resources
+from assessment.views.utils.utils import manage_missing_language, set_form_for_sections
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.http import HttpResponse
-from django.views.generic import ListView
+from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext as _
-from django.shortcuts import redirect, get_object_or_404
+from django.views.generic import ListView
+from home.models import Organisation
 from sentry_sdk import capture_message
 
-from assessment.forms import SectionNotesForm, ChoiceForm, ElementFeedbackForm, SectionFeedbackForm
-from assessment.models import Section, Evaluation, EvaluationElement, EvaluationScore
-from assessment.utils import get_client_ip
-from assessment.views.utils.security_checks import can_edit_security_check, membership_security_check
-from assessment.views.utils.treat_feedback_and_resources import treat_resources, treat_feedback
-from assessment.views.utils.utils import set_form_for_sections, manage_missing_language
-from home.models import Organisation
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 class SectionView(LoginRequiredMixin, ListView):
@@ -38,7 +45,11 @@ class SectionView(LoginRequiredMixin, ListView):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.data_update = {"success": False, "message": _("An error occurred."), "message_type": "alert-danger"}
+        self.data_update = {
+            "success": False,
+            "message": _("An error occurred."),
+            "message_type": "alert-danger",
+        }
 
     def get(self, request, *args, **kwargs):
         """
@@ -55,17 +66,21 @@ class SectionView(LoginRequiredMixin, ListView):
         organisation = get_object_or_404(Organisation, id=organisation_id)
         # Check if the user is member of the orga, if not, return HttpResponseForbidden
         if not membership_security_check(request, organisation=organisation):
-            return redirect('home:homepage')
+            return redirect("home:homepage")
 
         # Get ids and objects form the url
-        evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
+        evaluation = get_object_or_404(
+            Evaluation, id=kwargs.get("pk"), organisation=organisation
+        )
         manage_missing_language(request, evaluation)
         section_query = self.get_queryset(evaluation=evaluation)
         self.object_list = section_query
 
         # Create the context and add the list of the sections
         self.context = self.get_context_data()
-        self.context["section_list"] = list(section_query)  # used in section.html to cover all the section
+        self.context["section_list"] = list(
+            section_query
+        )  # used in section.html to cover all the section
 
         # Create the form for each evaluation element and add it to context, used in evaluation element cards
         self.context["dic_form"] = set_form_for_sections(section_query)
@@ -76,15 +91,15 @@ class SectionView(LoginRequiredMixin, ListView):
         # Order the list of evaluation elements by order_id
         section = get_object_or_404(Section, id=kwargs.get("id"), evaluation=evaluation)
         self.context["element_list"] = list(
-            section.evaluationelement_set.all().order_by(
-                "master_evaluation_element__order_id"
-            )
+            section.evaluationelement_set.all().order_by("master_evaluation_element__order_id")
         )
 
         # Get the form for section notes
         self.context["section_notes_form"] = SectionNotesForm(
             section=section,
-            user_can_edit=organisation.check_user_is_member_and_can_edit_evaluations(user=request.user)
+            user_can_edit=organisation.check_user_is_member_and_can_edit_evaluations(
+                user=request.user
+            ),
         )
 
         # Manage dynamic conditions between evaluation elements in a dictionary depends_on_dic
@@ -164,7 +179,9 @@ class SectionView(LoginRequiredMixin, ListView):
                 return redirect("home:homepage")
 
             # Evaluation must have this organisation in its fields organisation
-            evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
+            evaluation = get_object_or_404(
+                Evaluation, id=kwargs.get("pk"), organisation=organisation
+            )
 
             section = get_object_or_404(Section, id=kwargs.get("id"), evaluation=evaluation)
 
@@ -188,7 +205,9 @@ class SectionView(LoginRequiredMixin, ListView):
                 # The treatment of the post method is done inside the class (not externalized)
                 else:
                     if not can_edit_security_check(request, organisation=organisation):
-                        self.data_update["message"] = _("You don't have the right to do this action.")
+                        self.data_update["message"] = _(
+                            "You don't have the right to do this action."
+                        )
                     elif not evaluation.is_editable:
                         self.data_update["message"] = _("The evaluation is not editable.")
                     # User has the right to do an action and evaluation is editable
@@ -199,34 +218,48 @@ class SectionView(LoginRequiredMixin, ListView):
 
                         # If the user resets the evaluation elements choices, can save notes if modified
                         elif "reset_element_id" in request.POST:
-                            evaluation_element = get_evaluation_element_with_logs(request=request,
-                                                                                  section=section,
-                                                                                  element_id_name="reset_element_id")
+                            evaluation_element = get_evaluation_element_with_logs(
+                                request=request,
+                                section=section,
+                                element_id_name="reset_element_id",
+                            )
                             # If the evaluation elements exist for this section with the id provided by ajax post
                             # Else, do not treat the post, response is "an error occurred"
                             if evaluation_element:
                                 if evaluation_element.is_applicable():
-                                    self.treat_reset_element(request, evaluation, evaluation_element)
+                                    self.treat_reset_element(
+                                        request, evaluation, evaluation_element
+                                    )
                                     self.treat_element_notes(request, evaluation_element)
                                 else:
-                                    self.manage_evaluation_element_not_applicable(request, evaluation_element)
+                                    self.manage_evaluation_element_not_applicable(
+                                        request, evaluation_element
+                                    )
 
                         # Element choices validation and/or notes and/or justification
                         else:
-                            evaluation_element = get_evaluation_element_with_logs(request=request,
-                                                                                  section=section,
-                                                                                  element_id_name="element_id")
+                            evaluation_element = get_evaluation_element_with_logs(
+                                request=request, section=section, element_id_name="element_id"
+                            )
                             # If the evaluation elements exist for this section with the id provided by ajax post
                             # Else, do not treat the post, response is "an error occurred"
                             if evaluation_element:
                                 if evaluation_element.is_applicable():
                                     self.treat_element_notes(request, evaluation_element)
-                                    self.treat_element_validation(request, evaluation, evaluation_element)
-                                    self.treat_element_justification(request, evaluation_element)
+                                    self.treat_element_validation(
+                                        request, evaluation, evaluation_element
+                                    )
+                                    self.treat_element_justification(
+                                        request, evaluation_element
+                                    )
                                 else:
-                                    self.manage_evaluation_element_not_applicable(request, evaluation_element)
+                                    self.manage_evaluation_element_not_applicable(
+                                        request, evaluation_element
+                                    )
 
-                    return HttpResponse(json.dumps(self.data_update), content_type="application/json")
+                    return HttpResponse(
+                        json.dumps(self.data_update), content_type="application/json"
+                    )
 
     def treat_section_notes(self, request, section):
         """
@@ -248,8 +281,10 @@ class SectionView(LoginRequiredMixin, ListView):
                 self.data_update["message"] = _("Your notes have been saved!")
                 self.data_update["message_type"] = "alert-success"
         else:
-            capture_message(f"[invalid_form] The user {request.user.email} tries to save section notes (section id "
-                           f"{section.id} but the form is invalid")
+            capture_message(
+                f"[invalid_form] The user {request.user.email} tries to save section notes (section id "
+                f"{section.id} but the form is invalid"
+            )
 
     def treat_element_notes(self, request, evaluation_element):
         """
@@ -257,11 +292,19 @@ class SectionView(LoginRequiredMixin, ListView):
         If the form is valid and the notes has changed, new key in data_update, which is different than "message" as
         can both change notes and answers.
         """
-        self.data_update["message_notes"] = None  # We suppose there is no notes, initialization
-        form = ChoiceForm(request.POST, evaluation_element=evaluation_element, prefix=evaluation_element.id)
+        self.data_update[
+            "message_notes"
+        ] = None  # We suppose there is no notes, initialization
+        form = ChoiceForm(
+            request.POST, evaluation_element=evaluation_element, prefix=evaluation_element.id
+        )
         if form.is_valid():
             element_notes = form.cleaned_data.get("notes")
-            initial_note = form.fields["notes"].initial if form.fields["notes"].initial is not None else ''
+            initial_note = (
+                form.fields["notes"].initial
+                if form.fields["notes"].initial is not None
+                else ""
+            )
             # Case the notes have changed, else no message
             if element_notes != initial_note:
                 evaluation_element.user_notes = element_notes
@@ -271,29 +314,44 @@ class SectionView(LoginRequiredMixin, ListView):
                 self.data_update["message_notes_type"] = "alert-success"
 
         else:
-            capture_message(f"[invalid_form] The user {request.user.email} tries to save notes for an evaluation element"
-                           f"(id {evaluation_element.id} but the form is invalid")
-            self.data_update["message_notes"] = _("Your notes have not been saved, an error occurred.")
+            capture_message(
+                f"[invalid_form] The user {request.user.email} tries to save notes for an evaluation element"
+                f"(id {evaluation_element.id} but the form is invalid"
+            )
+            self.data_update["message_notes"] = _(
+                "Your notes have not been saved, an error occurred."
+            )
             self.data_update["message_notes_type"] = "alert-danger"
 
     def treat_element_justification(self, request, evaluation_element):
         """
         Treat the element justification part ie saving the user_justification field if this latter has changed.
         """
-        form = ChoiceForm(request.POST, evaluation_element=evaluation_element, prefix=evaluation_element.id)
+        form = ChoiceForm(
+            request.POST, evaluation_element=evaluation_element, prefix=evaluation_element.id
+        )
         if form.is_valid():
             element_justification = form.cleaned_data.get("justification")
-            initial_justification = form.fields["justification"].initial \
-                if form.fields["justification"].initial is not None else ''
+            initial_justification = (
+                form.fields["justification"].initial
+                if form.fields["justification"].initial is not None
+                else ""
+            )
             if element_justification != initial_justification:
                 evaluation_element.user_justification = element_justification
                 evaluation_element.save()
-                self.data_update["message_justification"] = _("Your justification have been saved!")
+                self.data_update["message_justification"] = _(
+                    "Your justification have been saved!"
+                )
                 self.data_update["message_justification_type"] = "alert-success"
         else:
-            capture_message(f"[invalid_form] The user {request.user.email} tries to save justification for an "
-                           f"evaluation element (id {evaluation_element.id} but the form is invalid")
-            self.data_update["message_justification"] = _("Your justification has not been saved, an error occurred.")
+            capture_message(
+                f"[invalid_form] The user {request.user.email} tries to save justification for an "
+                f"evaluation element (id {evaluation_element.id} but the form is invalid"
+            )
+            self.data_update["message_justification"] = _(
+                "Your justification has not been saved, an error occurred."
+            )
             self.data_update["message_justification_type"] = "alert-danger"
 
     def treat_reset_element(self, request, evaluation, evaluation_element):
@@ -338,13 +396,18 @@ class SectionView(LoginRequiredMixin, ListView):
         # False by default as we suppose there is no condition inter
         self.data_update["no_more_condition_inter"] = False
         # If the evaluation element potentially sets conditions on other element
-        if evaluation_element.has_condition_on_other_elements() and \
-           evaluation_element.get_choice_setting_conditions_on_other_elements().is_ticked:
+        if (
+            evaluation_element.has_condition_on_other_elements()
+            and evaluation_element.get_choice_setting_conditions_on_other_elements().is_ticked
+        ):
             # So at this point we know that the element disable another element and the choice doing this is ticked
             # So we need to check if this choice is still ticked or not
             # if reset, necessarily not ticked
-            if reset or evaluation_element.get_choice_setting_conditions_on_other_elements() not in \
-                    request.POST.getlist(str(evaluation_element.id)):
+            if (
+                reset
+                or evaluation_element.get_choice_setting_conditions_on_other_elements()
+                not in request.POST.getlist(str(evaluation_element.id))
+            ):
                 self.data_update["no_more_condition_inter"] = True
 
     def manage_element_status_change(self, initial_element_status, evaluation_element):
@@ -378,31 +441,42 @@ class SectionView(LoginRequiredMixin, ListView):
         # At least one choice ticked
         if list_choices_ticked:
             # If the evaluation element is a radio item (one choice possible) but several in the ajax POST (user hacked)
-            if evaluation_element.master_evaluation_element.question_type == "radio" and len(list_choices_ticked) > 1:
-                capture_message(f"[validation_error][html_forced] The user {request.user.email} tried to validate "
-                               f"the answer for the evaluation element (id {evaluation_element.id} but it is a radio"
-                               f"and they are {len(list_choices_ticked)} choices")
+            if (
+                evaluation_element.master_evaluation_element.question_type == "radio"
+                and len(list_choices_ticked) > 1
+            ):
+                capture_message(
+                    f"[validation_error][html_forced] The user {request.user.email} tried to validate "
+                    f"the answer for the evaluation element (id {evaluation_element.id} but it is a radio"
+                    f"and they are {len(list_choices_ticked)} choices"
+                )
             else:
                 # if the list_choices_ticked contains choices of the evaluation elements
                 if evaluation_element.are_choices_valid(list_choices_ticked):
                     # If the condition intra is respected
-                    if evaluation_element.are_conditions_between_choices_satisfied(list_choices_ticked):
+                    if evaluation_element.are_conditions_between_choices_satisfied(
+                        list_choices_ticked
+                    ):
                         # For all the choices of the evaluation element
-                        self.manage_ticking_choices_and_new_condition_inter(evaluation_element, list_choices_ticked)
+                        self.manage_ticking_choices_and_new_condition_inter(
+                            evaluation_element, list_choices_ticked
+                        )
                         self.data_update["message"] = _("Your answer has been saved!")
                         self.data_update["message_type"] = "alert-success"
                         self.data_update["success"] = True
                     else:
                         self.data_update["conditions_respected"] = False
                         self.data_update["message_type"] = "alert-warning"
-                        self.data_update["message"] = (
-                            _("You can not combine these answers, please select an appropriate combination of choices.")
+                        self.data_update["message"] = _(
+                            "You can not combine these answers, please select an appropriate combination of choices."
                         )
 
                 else:
-                    capture_message(f"[choice_validation_error] The user {request.user.email} wanted to validate the "
-                                   f"response to the evaluation element (id {evaluation_element.id}) but it failed"
-                                   f"because the choices are not valid {list_choices_ticked}.")
+                    capture_message(
+                        f"[choice_validation_error] The user {request.user.email} wanted to validate the "
+                        f"response to the evaluation element (id {evaluation_element.id}) but it failed"
+                        f"because the choices are not valid {list_choices_ticked}."
+                    )
         # If no choice ticked while "validation" it means blank validation/note saving or unticking checkbox
         # (radio cannot be fully unticked)
         else:
@@ -411,7 +485,9 @@ class SectionView(LoginRequiredMixin, ListView):
             self.data_update["message"] = _("No answer is selected.")
             self.data_update["message_type"] = "alert-warning"
 
-    def manage_ticking_choices_and_new_condition_inter(self, evaluation_element, list_choices_ticked):
+    def manage_ticking_choices_and_new_condition_inter(
+        self, evaluation_element, list_choices_ticked
+    ):
         """
         This method manages the choices of the evaluation element, ticking the choices in list_choices_ticked and
         unticking the others.
@@ -423,7 +499,10 @@ class SectionView(LoginRequiredMixin, ListView):
         for choice in evaluation_element.choice_set.all():
             # If this choice is ticked
             # Search the choice numbering in the list of string of ticked choices (containing choice numbering)
-            if any(choice.master_choice.get_numbering() in choice_str for choice_str in list_choices_ticked):
+            if any(
+                choice.master_choice.get_numbering() in choice_str
+                for choice_str in list_choices_ticked
+            ):
                 choice.set_choice_ticked()
                 # And if this choice turns other evaluation elements not applicable, the ids of the evaluation
                 # elements which won't be available due to this choice are added to list
@@ -435,7 +514,9 @@ class SectionView(LoginRequiredMixin, ListView):
             else:
                 choice.set_choice_unticked()
 
-    def manage_evaluation_progression_and_points(self, request, evaluation, evaluation_element):
+    def manage_evaluation_progression_and_points(
+        self, request, evaluation, evaluation_element
+    ):
         """
         This method manages the evaluation and section progression & points evolution resulting changes in the
         element choices (reset or validation).
@@ -468,13 +549,17 @@ class SectionView(LoginRequiredMixin, ListView):
 
         # First time the evaluation is finished
         if not evaluation_already_finished and evaluation.is_finished:
-            logger.info(f"[evaluation_finished] The user {request.user.email} has finished his evaluation "
-                        f"(id: {evaluation.id}) of the organisation {evaluation.organisation}")
+            logger.info(
+                f"[evaluation_finished] The user {request.user.email} has finished his evaluation "
+                f"(id: {evaluation.id}) of the organisation {evaluation.organisation}"
+            )
 
     def manage_evaluation_element_not_applicable(self, request, evaluation_element):
-        capture_message(f"[html_forced] The user {request.user.email} wants to do an action on the evaluation element"
-                       f"(id {evaluation_element.id}) while it is not applicable - he should not be able to do this"
-                       f"action")
+        capture_message(
+            f"[html_forced] The user {request.user.email} wants to do an action on the evaluation element"
+            f"(id {evaluation_element.id}) while it is not applicable - he should not be able to do this"
+            f"action"
+        )
         self.data_update["message"] = _("You cannot do this action.")
 
 
@@ -485,13 +570,17 @@ def get_evaluation_element_with_logs(request, section, element_id_name):
     """
     evaluation_element_id = request.POST.get(element_id_name)
     try:
-        evaluation_element = EvaluationElement.objects.get(id=int(evaluation_element_id), section=section)
+        evaluation_element = EvaluationElement.objects.get(
+            id=int(evaluation_element_id), section=section
+        )
 
     # The query failed because the evaluation element id does not belong to the section (user edited html)
     except (MultipleObjectsReturned, ObjectDoesNotExist, ValueError) as e:
-        capture_message(f"[html_forced] The user {request.user.email}, with IP address "
-                       f"{get_client_ip(request)} modified the js function to do "
-                       f"a POST request {request.POST} on an evaluation element which does not belong to"
-                       f"the current evaluation (id {section.evaluation.id}), error {e}")
+        capture_message(
+            f"[html_forced] The user {request.user.email}, with IP address "
+            f"{get_client_ip(request)} modified the js function to do "
+            f"a POST request {request.POST} on an evaluation element which does not belong to"
+            f"the current evaluation (id {section.evaluation.id}), error {e}"
+        )
         evaluation_element = None
     return evaluation_element

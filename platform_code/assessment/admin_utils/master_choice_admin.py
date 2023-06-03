@@ -2,9 +2,8 @@ from django.contrib import admin
 
 
 class MasterChoiceAdmin(admin.ModelAdmin):
-    """
+    """ """
 
-    """
     list_display = (
         "id",
         "numbering",
@@ -12,7 +11,6 @@ class MasterChoiceAdmin(admin.ModelAdmin):
         "get_master_evaluation_element",
         "is_concerned_switch",
         "get_master_evaluation_elements_depending_on",
-
     )
     list_filter = (
         "master_evaluation_element",

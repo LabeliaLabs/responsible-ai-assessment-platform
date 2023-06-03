@@ -48,7 +48,9 @@ class Section(models.Model):
     """
 
     master_section = models.ForeignKey(MasterSection, on_delete=models.CASCADE)
-    evaluation = models.ForeignKey("assessment.Evaluation", blank=True, on_delete=models.CASCADE)
+    evaluation = models.ForeignKey(
+        "assessment.Evaluation", blank=True, on_delete=models.CASCADE
+    )
     user_progression = models.IntegerField(
         default=0
     )  # progression of user inside this section, as percentage
@@ -62,9 +64,7 @@ class Section(models.Model):
 
     def __str__(self):
         if self.master_section.order_id:
-            return (
-                    "S" + str(self.master_section.order_id) + " " + self.master_section.name
-            )
+            return "S" + str(self.master_section.order_id) + " " + self.master_section.name
         else:
             return self.master_section.name
 
@@ -93,7 +93,7 @@ class Section(models.Model):
         """
         words = ["les moutons", "sont", "bien", "gardés", "dans la bergerie"]
         random.shuffle(words)
-        self.user_notes = ' '.join(words)
+        self.user_notes = " ".join(words)
         self.save()
 
     def set_progression(self):
@@ -108,7 +108,7 @@ class Section(models.Model):
         if list(evaluation_element_list):
             for element in evaluation_element_list:
                 if (
-                        element.status or not element.is_applicable()
+                    element.status or not element.is_applicable()
                 ):  # the element has been answered or is not applicable
                     count_element_done += 1
             self.user_progression = int(
@@ -117,7 +117,7 @@ class Section(models.Model):
         self.save()
 
     def set_points(self):
-        """ Set the points for a section according to the points set by each evaluation element of the section"""
+        """Set the points for a section according to the points set by each evaluation element of the section"""
         sum_points = 0
         for element in self.evaluationelement_set.all():
             # We only count the points of applicable element, the other points will be affected when
@@ -151,7 +151,9 @@ class Section(models.Model):
                 element_weight = evaluation_element_weight.get_master_element_weight(
                     element.master_evaluation_element
                 )
-                sum_points_not_concerned += element.calculate_points_not_concerned() * element_weight
+                sum_points_not_concerned += (
+                    element.calculate_points_not_concerned() * element_weight
+                )
         return sum_points_not_concerned
 
     def calculate_score_per_section(self):
@@ -162,5 +164,7 @@ class Section(models.Model):
         """
         pts_not_concerned = self.get_points_not_concerned()
         coeff = self.evaluation.evaluationscore_set.first().coefficient_scoring_system
-        dilatation_factor = (self.max_points - pts_not_concerned * coeff) / (self.max_points - pts_not_concerned)
+        dilatation_factor = (self.max_points - pts_not_concerned * coeff) / (
+            self.max_points - pts_not_concerned
+        )
         return self.points * dilatation_factor + coeff * pts_not_concerned

@@ -1,17 +1,16 @@
 import logging
 
-from django.contrib.auth.mixins import LoginRequiredMixin
+from assessment.models import get_last_assessment_created
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import FormView
 from django.shortcuts import redirect
-
-from assessment.models import get_last_assessment_created
 from home.forms import OrganisationCreationForm
 from home.models import Organisation
-from .utils import organisation_required_message, organisation_creation
 
+from .utils import organisation_creation, organisation_required_message
 
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 class OrganisationCreationView(LoginRequiredMixin, FormView):

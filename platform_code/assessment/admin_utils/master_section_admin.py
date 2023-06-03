@@ -2,19 +2,10 @@ from django.contrib import admin
 
 
 class MasterSectionAdmin(admin.ModelAdmin):
-    """
+    """ """
 
-    """
-    list_display = (
-        "id",
-        "numbering",
-        "get_name",
-        "assessment",
-        "number_of_elements"
-    )
-    list_filter = (
-        "assessment__version",
-    )
+    list_display = ("id", "numbering", "get_name", "assessment", "number_of_elements")
+    list_filter = ("assessment__version",)
 
     def get_name(self, obj):
         return "Master section : " + obj.name

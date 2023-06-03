@@ -13,13 +13,13 @@ Basic instructions to clone the repository and install locally the platform are 
 For more details on platform installation, operation and maintenance, please refer to [`README_DEV.md`](./README_DEV.md).
 
 - Clone the project:
-  
+
   ```console
   git clone git@framagit.org:labelia-labs/pf-assessment-dsrc.git
   ```
 
 - Create `.env.dev` from `env_dev_template`:
-  
+
   ```console
   cp env_dev_template .env.dev
   ```
@@ -27,13 +27,13 @@ For more details on platform installation, operation and maintenance, please ref
 - Replace variables in the .env.dev file
 
 - Build Docker image and start it:
-  
+
   ```console
   docker-compose up --build
   ```
 
 - Apply Django migrations
-  
+
   ```console
   docker-compose exec questionnaire-grpc ./manage.py migrate
   ```

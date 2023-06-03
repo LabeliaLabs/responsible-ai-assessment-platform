@@ -1,25 +1,24 @@
 import json
 import logging
+from datetime import datetime, timedelta
+
 import markdown
 import requests
-from datetime import datetime, timedelta
-from sentry_sdk import capture_message, capture_exception
-
-from django.http import HttpResponse
-from django.utils.translation import gettext as _
-from django.conf import settings
-
 from assessment.forms import (
     ElementFeedbackForm,
     SectionFeedbackForm,
     element_feedback_list,
     section_feedback_list,
 )
-from assessment.models import ExternalLink, EvaluationElement, Section
+from assessment.models import EvaluationElement, ExternalLink, Section
 from assessment.utils import get_client_ip
 from assessment.views.utils.error_handler import error_500_view_handler
+from django.conf import settings
+from django.http import HttpResponse
+from django.utils.translation import gettext as _
+from sentry_sdk import capture_exception, capture_message
 
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 private_token = settings.PRIVATE_TOKEN
 project_id = str(settings.PROJECT_ID)
 
@@ -101,9 +100,7 @@ def treat_feedback(request, *args, **kwargs):
             feedback_element_type = form.cleaned_data.get("element_feedback_type")
             object_id = request.POST.dict().get("element_id")
             feedback_text = next(
-                elem[1]
-                for elem in element_feedback_list
-                if feedback_element_type in elem
+                elem[1] for elem in element_feedback_list if feedback_element_type in elem
             )
             try:
                 feedback_object = EvaluationElement.objects.get(id=object_id)
@@ -116,21 +113,25 @@ def treat_feedback(request, *args, **kwargs):
                 # If the user forced the html, and tried to sent element feedback for an evaluation element which
                 # does not belong to the evaluation
                 if feedback_object not in evaluation.get_list_all_elements():
-                    capture_message(f"[html_forced] The user {request.user.email}, with IP address "
-                                   f"{get_client_ip(request)} modified the html to do "
-                                   f"a POST request {request.POST} for an element feedback on an evaluation element "
-                                   f"which does not belong to the current evaluation (id {evaluation.id})")
-                    data_update["message"] = _("An error occurred. The feedback does not have been sent.")
-                    return HttpResponse(json.dumps(data_update), content_type="application/json")
+                    capture_message(
+                        f"[html_forced] The user {request.user.email}, with IP address "
+                        f"{get_client_ip(request)} modified the html to do "
+                        f"a POST request {request.POST} for an element feedback on an evaluation element "
+                        f"which does not belong to the current evaluation (id {evaluation.id})"
+                    )
+                    data_update["message"] = _(
+                        "An error occurred. The feedback does not have been sent."
+                    )
+                    return HttpResponse(
+                        json.dumps(data_update), content_type="application/json"
+                    )
 
         # If the function is called by a post in the section feedback
         else:
             feedback_section_type = form.cleaned_data.get("section_feedback_type")
             object_id = request.POST.dict().get("section_id")
             feedback_text = next(
-                elem[1]
-                for elem in section_feedback_list
-                if feedback_section_type in elem
+                elem[1] for elem in section_feedback_list if feedback_section_type in elem
             )
             try:
                 feedback_object = Section.objects.get(id=object_id)
@@ -142,12 +143,18 @@ def treat_feedback(request, *args, **kwargs):
             # belong to the evaluation
             if feedback_object and evaluation:
                 if feedback_object not in evaluation.section_set.all():
-                    capture_message(f"[html_forced] The user {request.user.email}, with IP address "
-                                   f"{get_client_ip(request)} modified the html to do "
-                                   f"a POST request {request.POST} for a section feedback on a section which "
-                                   f"does not belong to the current evaluation (id {evaluation.id})")
-                    data_update["message"] = _("An error occurred. The feedback does not have been sent.")
-                    return HttpResponse(json.dumps(data_update), content_type="application/json")
+                    capture_message(
+                        f"[html_forced] The user {request.user.email}, with IP address "
+                        f"{get_client_ip(request)} modified the html to do "
+                        f"a POST request {request.POST} for a section feedback on a section which "
+                        f"does not belong to the current evaluation (id {evaluation.id})"
+                    )
+                    data_update["message"] = _(
+                        "An error occurred. The feedback does not have been sent."
+                    )
+                    return HttpResponse(
+                        json.dumps(data_update), content_type="application/json"
+                    )
         # Process variables to sent to the framagit API to create the issue
         text = form.cleaned_data.get("text")
         user = request.user
@@ -165,23 +172,23 @@ def treat_feedback(request, *args, **kwargs):
         headers = {"PRIVATE-TOKEN": private_token}
         data = {
             "title": "Feedback sur "
-                    + str(feedback_object)
-                    + " ("
-                    + object_type
-                    + " id="
-                    + str(master_id)
-                    + ")",
+            + str(feedback_object)
+            + " ("
+            + object_type
+            + " id="
+            + str(master_id)
+            + ")",
             "labels": "feedback",
             "description": "["
-                        + str(feedback_text)
-                        + "] de "
-                        + user_name
-                        + ", "
-                        + user_email
-                        + " sur l'objet "
-                        + str(feedback_object)
-                        + ".\n\n Message de l'utilisateur : "
-                        + text,
+            + str(feedback_text)
+            + "] de "
+            + user_name
+            + ", "
+            + user_email
+            + " sur l'objet "
+            + str(feedback_object)
+            + ".\n\n Message de l'utilisateur : "
+            + text,
         }
 
         # If the user doesn't spam the feedback, ie he doesn't send more than max_feedback (19)
@@ -198,13 +205,15 @@ def treat_feedback(request, *args, **kwargs):
                     logger.info(f"[feedback] The user {request.user.email} sent a feedback")
                 else:
                     data_update["message"] = _("An issue occured, please retry.")
-                    capture_message(f'Feedback issue for {data}, response {response}')
+                    capture_message(f"Feedback issue for {data}, response {response}")
             except requests.exceptions.RequestException as e:
                 data_update["message"] = _("An issue occured, please retry.")
                 capture_exception(e)
         else:
-            data_update["message"] = _("Please, do not spam the feature. If your are not, contact the support service!")
-            capture_message(f'Feedback spam for {data}')
+            data_update["message"] = _(
+                "Please, do not spam the feature. If your are not, contact the support service!"
+            )
+            capture_message(f"Feedback spam for {data}")
 
     return HttpResponse(json.dumps(data_update), content_type="application/json")
 

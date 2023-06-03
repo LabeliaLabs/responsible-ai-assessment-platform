@@ -1,19 +1,14 @@
 import json
 from ast import literal_eval
 
-from django.contrib import admin, messages
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.shortcuts import redirect
-from django.urls import path  # Used to import Json
-
 from assessment.forms import JsonUploadForm
 from assessment.import_assessment import ImportAssessment, check_upgrade, save_upgrade
-
-from assessment.models import (
-    ScoringSystem,
-    get_last_assessment_created,
-)
+from assessment.models import ScoringSystem, get_last_assessment_created
 from assessment.scoring import check_and_valid_scoring_json
+from django.contrib import admin, messages
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.shortcuts import redirect
+from django.urls import path  # Used to import Json
 
 
 class JsonUploadAssessmentAdmin(admin.ModelAdmin):
@@ -23,6 +18,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
     If there are more than one assessment in the database, an upgrade json must be provided (refer to the doc
     "multiple_version.md" to see the format). From this upgrade json, the table Upgrade is populated.
     """
+
     change_list_template = "assessment/admin/import-json.html"
 
     list_display = (
@@ -30,7 +26,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
         "version",
         "previous_assessment",
         "created_at",
-        "get_number_evaluations"
+        "get_number_evaluations",
     )
 
     @admin.display(description="Number of evaluations")
@@ -47,9 +43,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
     def changelist_view(self, request, extra_context=None):
         extra = extra_context or {}
         extra["json_upload_form"] = JsonUploadForm()
-        return super(JsonUploadAssessmentAdmin, self).changelist_view(
-            request, extra_context=extra
-        )
+        return super().changelist_view(request, extra_context=extra)
 
     def has_add_permission(self, request):
         return False
@@ -59,8 +53,9 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
             form = JsonUploadForm(request.POST, request.FILES)
             # There are the assessment and scoring files
             if form.is_valid():
-                if request.FILES["assessment_json_file"].name.endswith("json") and \
-                        request.FILES["scoring_json_file"].name.endswith("json"):
+                if request.FILES["assessment_json_file"].name.endswith(
+                    "json"
+                ) and request.FILES["scoring_json_file"].name.endswith("json"):
                     decoded_assessment_file = self.decode_file(
                         request, "assessment_json_file"
                     )  # check it works both cases
@@ -100,7 +95,9 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
 
                             # Update the scoring with the import file
                             if assessment_success:
-                                assessment = import_assessment.assessment  # It is the assessment just created
+                                assessment = (
+                                    import_assessment.assessment
+                                )  # It is the assessment just created
                                 self.import_scoring(request, assessment)
 
                             # Process the import of the upgrade json
@@ -108,10 +105,14 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             # Verify the validity of the upgrade json and if it s ok, save it in Upgrade
                             upgrade_success, upgrade_message = check_upgrade(dict_upgrade_data)
                             if not upgrade_success:
-                                upgrade_message = upgrade_message + \
-                                    " \n Due to this failure, the assessment and the scoring have been deleted. "
+                                upgrade_message = (
+                                    upgrade_message
+                                    + " \n Due to this failure, the assessment and the scoring have been deleted. "
+                                )
                                 self.message_user(
-                                    request, upgrade_message, level=messages.ERROR,
+                                    request,
+                                    upgrade_message,
+                                    level=messages.ERROR,
                                 )
                                 # if the upgade table is not valid then delete the assessment
                                 # and the scoring from the DB
@@ -122,7 +123,9 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             )
                             if not upgrade_save_success:
                                 self.message_user(
-                                    request, upgrade_save_message, level=messages.ERROR,
+                                    request,
+                                    upgrade_save_message,
+                                    level=messages.ERROR,
                                 )
                                 return redirect("admin:index")
 
@@ -130,9 +133,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
                             else:
                                 self.message_user(
                                     request,
-                                    assessment_save_message
-                                    + " and "
-                                    + upgrade_save_message,
+                                    assessment_save_message + " and " + upgrade_save_message,
                                     level=messages.SUCCESS,
                                 )
 
@@ -163,11 +164,15 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
 
                         if not assessment_success:
                             self.message_user(
-                                request, assessment_save_message, level=messages.ERROR,
+                                request,
+                                assessment_save_message,
+                                level=messages.ERROR,
                             )
                             return redirect("admin:index")
                         else:
-                            assessment = get_last_assessment_created()  # It is the assessment just created
+                            assessment = (
+                                get_last_assessment_created()
+                            )  # It is the assessment just created
                             self.import_scoring(request, assessment)
                             self.message_user(
                                 request,
@@ -208,9 +213,7 @@ class JsonUploadAssessmentAdmin(admin.ModelAdmin):
         # The scoring has been initialized with empty values
         if request.FILES["scoring_json_file"].name.endswith("json"):
             # Handles the exception in case it is a bad json format
-            decoded_scoring_file = self.decode_file(
-                request, "scoring_json_file"
-            )
+            decoded_scoring_file = self.decode_file(request, "scoring_json_file")
             # Test that the scoring system has a good format
             success_scoring, message_scoring = check_and_valid_scoring_json(
                 decoded_file=decoded_scoring_file, assessment=assessment

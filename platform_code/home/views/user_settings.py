@@ -2,19 +2,14 @@ import json
 import logging
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import PasswordChangeForm, update_session_auth_hash
 from django.http import HttpResponse
-from django.views import generic
-from django.contrib.auth.views import (
-    PasswordChangeForm,
-    update_session_auth_hash,
-    )
 from django.utils.translation import gettext as _
-
+from django.views import generic
 from home.forms import DataSettingsForm
 from home.models import User
 
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
@@ -29,7 +24,6 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
         self.data_update = {"success": False, "error_messages": []}
 
     def get(self, request, *args, **kwargs):
-
         user = request.user
         self.object = user
         context = self.get_context_data(object=self.object)
@@ -62,7 +56,9 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
             logger.info(f"[password_changed] The user {user.email} has changed his password.")
             self.data_update["message"] = _("Your password has been changed!")
         else:
-            all_error_data = json.loads(form.errors.as_json())  # need dict format to extract error code
+            all_error_data = json.loads(
+                form.errors.as_json()
+            )  # need dict format to extract error code
             error_list_values = list(all_error_data.values())[0]
 
             for error_dic in error_list_values:
@@ -86,4 +82,6 @@ class ProfileSettingsView(LoginRequiredMixin, generic.DetailView):
             self.data_update["success"] = True
             self.data_update["message"] = _("Your information has been updated!")
         else:
-            self.data_update["message"] = _("The validation failed. Please check you have filled all the fields.")
+            self.data_update["message"] = _(
+                "The validation failed. Please check you have filled all the fields."
+            )

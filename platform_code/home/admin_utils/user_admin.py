@@ -1,6 +1,5 @@
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
-from home.forms import UserAdminCreationForm, UserAdminChangeForm
+from home.forms import UserAdminChangeForm, UserAdminCreationForm
 
 
 class UserAdmin(BaseUserAdmin):
@@ -33,9 +32,25 @@ class UserAdmin(BaseUserAdmin):
 
     fieldsets = (
         (None, {"fields": ("email", "password")}),
-        ("Personal info", {"fields": ("first_name", "last_name",)}),
+        (
+            "Personal info",
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                )
+            },
+        ),
         ("Permissions", {"fields": ("admin",)}),
-        ("Creation and connexions", {"fields": ("created_at", "last_login",)}),
+        (
+            "Creation and connexions",
+            {
+                "fields": (
+                    "created_at",
+                    "last_login",
+                )
+            },
+        ),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -57,7 +72,7 @@ class UserAdmin(BaseUserAdmin):
         who are automatically members.
         """
         membership_list = obj.membership_set.all().filter(hide_membership=False)
-        return ', '.join([membership.organisation.name for membership in membership_list])
+        return ", ".join([membership.organisation.name for membership in membership_list])
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)

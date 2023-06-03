@@ -1,7 +1,11 @@
-from django.test import TestCase, Client
-from home.models import User, Organisation
-from assessment.tests.object_creation import create_assessment_body, create_evaluation, create_scoring
 from assessment.models import Assessment
+from assessment.tests.object_creation import (
+    create_assessment_body,
+    create_evaluation,
+    create_scoring,
+)
+from django.test import Client, TestCase
+from home.models import Organisation, User
 
 
 class DashAccessTestCase(TestCase):
@@ -37,30 +41,34 @@ class DashAccessTestCase(TestCase):
         create_scoring(assessment=self.assessment)
 
         # Organisations
-        self.organisation_2 = Organisation.create_organisation(name="orga_2",
-                                                               size=Organisation.SIZE[0][0],
-                                                               country="FR",
-                                                               sector=Organisation.SECTOR[0][0],
-                                                               created_by=self.user)
+        self.organisation_2 = Organisation.create_organisation(
+            name="orga_2",
+            size=Organisation.SIZE[0][0],
+            country="FR",
+            sector=Organisation.SECTOR[0][0],
+            created_by=self.user,
+        )
 
-        self.organisation_1 = Organisation.create_organisation(name="orga_1",
-                                                               size=Organisation.SIZE[0][0],
-                                                               country="FR",
-                                                               sector=Organisation.SECTOR[0][0],
-                                                               created_by=self.user_admin)
+        self.organisation_1 = Organisation.create_organisation(
+            name="orga_1",
+            size=Organisation.SIZE[0][0],
+            country="FR",
+            sector=Organisation.SECTOR[0][0],
+            created_by=self.user_admin,
+        )
 
         # Evaluations
         self.evaluation_1 = create_evaluation(
             assessment=self.assessment,
             name="evaluation",
             created_by=self.user_admin,
-            organisation=self.organisation_1
+            organisation=self.organisation_1,
         )
         self.evaluation_2 = create_evaluation(
             assessment=self.assessment,
             name="evaluation",
             created_by=self.user,
-            organisation=self.organisation_2
+            organisation=self.organisation_2,
         )
 
     # TODO

@@ -32,5 +32,5 @@ EMAIL_PORT= #587
 FEEDBACK_URL=
 
 # Sentry, set sentry dsn to enable sentry feature
-SENTRY_DSN = 
+SENTRY_DSN =
 SENTRY_RATE=  # By default 1

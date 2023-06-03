@@ -1,13 +1,13 @@
 import random
-from ckeditor.fields import RichTextField
 
+from ckeditor.fields import RichTextField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from .section import Section, MasterSection
 from .element_change_log import ElementChangeLog
-from .scoring_system import ScoringSystem
 from .evaluation_element_weight import EvaluationElementWeight
+from .scoring_system import ScoringSystem
+from .section import MasterSection, Section
 
 
 class MasterEvaluationElement(models.Model):
@@ -27,16 +27,12 @@ class MasterEvaluationElement(models.Model):
 
     # The name is the title of the element of evaluation which can be blank
     name = models.CharField(max_length=1000, blank=True, null=True)
-    master_section = models.ForeignKey(
-        MasterSection, blank=True, on_delete=models.CASCADE
-    )
+    master_section = models.ForeignKey(MasterSection, blank=True, on_delete=models.CASCADE)
     order_id = models.IntegerField(blank=True, null=True)
     question_text = models.TextField()
     # Number_answers represents the max choices the user can tick
     # By default it is one as it s a single answer and the max is the number of choices of the element
-    question_type = models.CharField(
-        max_length=200, choices=QUESTION_TYPES, default=RADIO
-    )
+    question_type = models.CharField(max_length=200, choices=QUESTION_TYPES, default=RADIO)
     explanation_text = models.TextField(blank=True, null=True)
     risk_domain = models.TextField(blank=True, null=True)
     # External links are the resources
@@ -60,12 +56,12 @@ class MasterEvaluationElement(models.Model):
     def __str__(self):
         if self.master_section.order_id and self.order_id and self.name:
             return (
-                    "Master Q"
-                    + str(self.master_section.order_id)
-                    + "."
-                    + str(self.order_id)
-                    + " "
-                    + self.name
+                "Master Q"
+                + str(self.master_section.order_id)
+                + "."
+                + str(self.order_id)
+                + " "
+                + self.name
             )
         elif self.master_section.order_id and self.order_id and not self.name:
             return f"Master evaluation element Q{str(self.master_section.order_id)}.{str(self.order_id)}"
@@ -75,12 +71,12 @@ class MasterEvaluationElement(models.Model):
     def get_verbose_name(self):
         if self.master_section.order_id and self.order_id and self.name:
             return (
-                    "Q"
-                    + str(self.master_section.order_id)
-                    + "."
-                    + str(self.order_id)
-                    + " "
-                    + self.name
+                "Q"
+                + str(self.master_section.order_id)
+                + "."
+                + str(self.order_id)
+                + " "
+                + self.name
             )
 
     def get_numbering(self):
@@ -88,7 +84,7 @@ class MasterEvaluationElement(models.Model):
             return str(self.master_section.order_id) + "." + str(self.order_id)
 
     def has_resources(self):
-        """ Used to know if a master evaluation element has resources in its external_links, in this case return True,
+        """Used to know if a master evaluation element has resources in its external_links, in this case return True,
         else, if it has no external linksor only explanations links, return False"""
         return list(self.external_links.all()) != []
 
@@ -119,16 +115,16 @@ class EvaluationElement(models.Model):
 
     def __str__(self):
         if (
-                self.master_evaluation_element.master_section.order_id
-                and self.master_evaluation_element.order_id
+            self.master_evaluation_element.master_section.order_id
+            and self.master_evaluation_element.order_id
         ):
             return (
-                    "Q"
-                    + str(self.master_evaluation_element.master_section.order_id)
-                    + "."
-                    + str(self.master_evaluation_element.order_id)
-                    + " "
-                    + self.master_evaluation_element.name
+                "Q"
+                + str(self.master_evaluation_element.master_section.order_id)
+                + "."
+                + str(self.master_evaluation_element.order_id)
+                + " "
+                + self.master_evaluation_element.name
             )
         else:
             return self.master_evaluation_element.name
@@ -156,7 +152,7 @@ class EvaluationElement(models.Model):
         scoring_choices = self.get_scoring_system().master_choices_weight_json
         return sorted(
             self.get_list_of_choices_without_conditions(),
-            key=lambda choice: float(scoring_choices[choice.master_choice.get_numbering()])
+            key=lambda choice: float(scoring_choices[choice.master_choice.get_numbering()]),
         )[0]
 
     def get_choices_list_max_points(self):
@@ -166,10 +162,14 @@ class EvaluationElement(models.Model):
         scoring_choices = self.get_scoring_system().master_choices_weight_json
         choices_list = []
         if self.master_evaluation_element.question_type == "radio":
-            choices_list = [sorted(
-                self.get_list_of_choices_without_conditions(),
-                key=lambda choice: float(scoring_choices[choice.master_choice.get_numbering()])
-            )[-1]]
+            choices_list = [
+                sorted(
+                    self.get_list_of_choices_without_conditions(),
+                    key=lambda choice: float(
+                        scoring_choices[choice.master_choice.get_numbering()]
+                    ),
+                )[-1]
+            ]
         else:
             choices_list = self.get_list_of_choices_without_conditions()
         return choices_list
@@ -179,15 +179,21 @@ class EvaluationElement(models.Model):
         Return the list of the choices of the evaluation element which do not set condition on
         an other evaluation element
         """
-        return [choice for choice in self.choice_set.all() if not choice.has_element_conditioned_on()]
+        return [
+            choice
+            for choice in self.choice_set.all()
+            if not choice.has_element_conditioned_on()
+        ]
 
     def get_list_of_choices_without_conditions(self):
         """
         Return the list of the choices of the evaluation element which do not set condition intra or inter
         """
         return [
-            choice for choice in self.choice_set.all()
-            if not choice.has_element_conditioned_on() and not choice.set_conditions_on_other_choices()
+            choice
+            for choice in self.choice_set.all()
+            if not choice.has_element_conditioned_on()
+            and not choice.set_conditions_on_other_choices()
         ]
 
     def get_list_of_choices_with_conditions(self):
@@ -196,12 +202,13 @@ class EvaluationElement(models.Model):
         an other evaluation element or condition on other choices
         """
         return [
-            choice for choice in self.choice_set.all()
+            choice
+            for choice in self.choice_set.all()
             if choice.has_element_conditioned_on() or choice.set_conditions_on_other_choices()
         ]
 
     def get_choices_as_tuple(self):
-        """ parse the choices field and return a tuple formatted appropriately
+        """parse the choices field and return a tuple formatted appropriately
         for the 'choices' argument of a form widget."""
         choices_query = self.choice_set.all().order_by("master_choice__order_id")
         choices_list = []
@@ -212,7 +219,9 @@ class EvaluationElement(models.Model):
                     (
                         choice,
                         choice.master_choice.answer_text
-                        + _(" | (When this answer is selected, the others cannot be selected)"),
+                        + _(
+                            " | (When this answer is selected, the others cannot be selected)"
+                        ),
                     )
                 )
             else:
@@ -221,7 +230,7 @@ class EvaluationElement(models.Model):
         return choices_tuple
 
     def reset_choices(self):
-        """ Set for all the choices of an evaluation element the attribute 'is_ticked' to False """
+        """Set for all the choices of an evaluation element the attribute 'is_ticked' to False"""
         list_choices = list(self.choice_set.all())
         for choice in list_choices:
             choice.set_choice_unticked()
@@ -242,9 +251,15 @@ class EvaluationElement(models.Model):
         """
         Fill the notes with random string
         """
-        words = ["Jean-Pierre", "mange", "un lapin dodu", "avec ses convives", "dans sa cuisine"]
+        words = [
+            "Jean-Pierre",
+            "mange",
+            "un lapin dodu",
+            "avec ses convives",
+            "dans sa cuisine",
+        ]
         random.shuffle(words)
-        self.user_notes = ' '.join(words)
+        self.user_notes = " ".join(words)
         self.save()
 
     def get_list_choices_ticked(self):
@@ -271,9 +286,7 @@ class EvaluationElement(models.Model):
                     choice_to_tick.set_choice_ticked()
         else:
             # Select one choice without condition and tick
-            random.choice(
-                self.get_list_of_choices_without_conditions()
-            ).set_choice_ticked()
+            random.choice(self.get_list_of_choices_without_conditions()).set_choice_ticked()
 
     def are_choices_valid(self, choice_list):
         """
@@ -311,7 +324,7 @@ class EvaluationElement(models.Model):
         return self.master_evaluation_element.depends_on
 
     def has_condition_on(self):
-        """ True if the evaluation element depends on a choice, else False"""
+        """True if the evaluation element depends on a choice, else False"""
         if self.get_master_choice_depending_on() is None:
             return False
         else:
@@ -330,7 +343,7 @@ class EvaluationElement(models.Model):
             return None
 
     def get_element_depending_on(self):
-        """Return the evaluation element on which the choice this evaluation element depends on belong  """
+        """Return the evaluation element on which the choice this evaluation element depends on belong"""
         if self.has_condition_on():
             choice = self.get_choice_depending_on()
             return choice.evaluation_element
@@ -371,7 +384,7 @@ class EvaluationElement(models.Model):
         return None
 
     def has_condition_between_choices(self):
-        """ Within an evaluation element, if the choices have condition on each other
+        """Within an evaluation element, if the choices have condition on each other
         if at least one choice disables other choices, return True, else False
         :return boolean
         """
@@ -422,7 +435,10 @@ class EvaluationElement(models.Model):
             choice_setting_condition = self.get_choice_condition_intra()
             # If the choice setting condition intra is in the list (already ticked or wanted to be)
             # It must be alone, other way the combination is not valid
-            if str(choice_setting_condition) in list_choices_wanted_ticked and len(list_choices_wanted_ticked) > 1:
+            if (
+                str(choice_setting_condition) in list_choices_wanted_ticked
+                and len(list_choices_wanted_ticked) > 1
+            ):
                 return False
         return True
 
@@ -534,9 +550,7 @@ class EvaluationElement(models.Model):
             for choice in self.choice_set.all():
                 # We take the max of the weight attributed to a choice of this evaluation element
                 if scoring_system.get_master_choice_points(choice.master_choice) > max_points:
-                    max_points = scoring_system.get_master_choice_points(
-                        choice.master_choice
-                    )
+                    max_points = scoring_system.get_master_choice_points(choice.master_choice)
 
         # it is a checkbox
         elif self.master_evaluation_element.question_type == "checkbox":
@@ -575,9 +589,10 @@ class EvaluationElement(models.Model):
 
         # We return the sum_points_not_concerned weighted by the evaluation element weight
         return (
-                sum_points_not_concerned
-                * master_evaluation_element_weight.get_master_element_weight(
-                 self.master_evaluation_element)
+            sum_points_not_concerned
+            * master_evaluation_element_weight.get_master_element_weight(
+                self.master_evaluation_element
+            )
         )
 
     def get_element_change_log(self):
@@ -594,7 +609,7 @@ class EvaluationElement(models.Model):
                 change_log = ElementChangeLog.objects.get(
                     eval_element_numbering=self.master_evaluation_element.get_numbering(),
                     previous_assessment=self.section.evaluation.upgraded_from,
-                    assessment=self.section.evaluation.assessment
+                    assessment=self.section.evaluation.assessment,
                 )
             except (ElementChangeLog.DoesNotExist, ElementChangeLog.MultipleObjectsReturned):
                 change_log = None
@@ -603,7 +618,7 @@ class EvaluationElement(models.Model):
                 change_log = ElementChangeLog.objects.get(
                     eval_element_numbering=self.master_evaluation_element.get_numbering(),
                     previous_assessment=self.section.evaluation.assessment.previous_assessment,
-                    assessment=self.section.evaluation.assessment
+                    assessment=self.section.evaluation.assessment,
                 )
             except (ElementChangeLog.DoesNotExist, ElementChangeLog.MultipleObjectsReturned):
                 change_log = None

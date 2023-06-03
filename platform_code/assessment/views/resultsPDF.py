@@ -1,11 +1,19 @@
-from datetime import date, datetime
 import io
 import logging
-from html import unescape
-import reportlab
-import textwrap
 import re
+import textwrap
+from datetime import date, datetime
+from html import unescape
 
+import reportlab
+from assessment.models import Evaluation
+from assessment.utils import get_client_ip, remove_markdown_bold, remove_markdownify_italic
+from assessment.views.utils.security_checks import membership_security_check
+from assessment.views.utils.utils import (
+    manage_evaluation_exposition_score,
+    manage_evaluation_max_points,
+    manage_evaluation_score,
+)
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -13,28 +21,15 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext as _
 from django.views.generic import DetailView
+from home.models import Organisation
+from reportlab.lib import colors
+from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import stringWidth
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
-from reportlab.lib.styles import ParagraphStyle
-from reportlab.lib import colors
 from sentry_sdk import capture_message
-
-from assessment.models import Evaluation
-from home.models import Organisation
-from assessment.utils import (
-    get_client_ip,
-    remove_markdown_bold,
-    remove_markdownify_italic,
-)
-from assessment.views.utils.security_checks import membership_security_check
-from assessment.views.utils.utils import (
-    manage_evaluation_score,
-    manage_evaluation_max_points,
-    manage_evaluation_exposition_score,
-)
 
 logger = logging.getLogger("monitoring")
 
@@ -152,9 +147,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
 
         # Score per section
         self.pdf.setFont("UbuntuRegular", 18)
-        self.pdf.drawCentredString(
-            self.PAGE_WIDTH / 2, self.cursor, _("Score per section")
-        )
+        self.pdf.drawCentredString(self.PAGE_WIDTH / 2, self.cursor, _("Score per section"))
         self.cursor -= self.LINE_JUMP * 2
         self.pdf.setFont("UbuntuRegular", 12)
         for section in context["dict_sections_elements"]:
@@ -173,40 +166,44 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         self.page_break(evaluation_name=context["evaluation"].name)
         self.pdf.setFillColorRGB(*self.COLOR_TEXT)
         self.pdf.setFont("UbuntuRegular", 18)
-        self.pdf.drawCentredString(
-            self.PAGE_WIDTH / 2,
-            self.cursor,
-            _("Exposition score")
-        )
+        self.pdf.drawCentredString(self.PAGE_WIDTH / 2, self.cursor, _("Exposition score"))
         self.pdf.setFont("UbuntuRegular", 12)
 
         self.cursor -= self.LINE_JUMP * 2
         self.pdf.drawCentredString(
             self.PAGE_WIDTH / 2,
             self.cursor,
-            _("You are exposed to ") + str(context["nb_risks_exposed"]) + '/' + str(context["len_exposition_dic"]) +
-            ' ' + _("of the risks identified in the assessment.")
+            _("You are exposed to ")
+            + str(context["nb_risks_exposed"])
+            + "/"
+            + str(context["len_exposition_dic"])
+            + " "
+            + _("of the risks identified in the assessment."),
         )
         self.cursor -= self.LINE_JUMP * 2
         data = convert_exposition_dic_to_data(context["exposition_dic"], 70)
         table = Table(data, colWidths=[self.PAGE_WIDTH / 3, 150], rowHeights=None)
-        table.setStyle(TableStyle([
-            ('INNERGRID', (0, 0), (-1, -1), 0.25, colors.black),
-            ('BOX', (0, 0), (-1, -1), 0.25, colors.black),
-        ]))
+        table.setStyle(
+            TableStyle(
+                [
+                    ("INNERGRID", (0, 0), (-1, -1), 0.25, colors.black),
+                    ("BOX", (0, 0), (-1, -1), 0.25, colors.black),
+                ]
+            )
+        )
         table_width, table_height = table.wrap(0, 0)
         table.wrapOn(self.pdf, 0, 0)
-        table.drawOn(self.pdf, self.PAGE_WIDTH / 2 - table_width / 2, self.PAGE_HEIGHT - 80 - table_height)
+        table.drawOn(
+            self.pdf,
+            self.PAGE_WIDTH / 2 - table_width / 2,
+            self.PAGE_HEIGHT - 80 - table_height,
+        )
 
         self.cursor -= table_height + self.LINE_JUMP * 2
 
         # Explanations text
         self.pdf.setFont("UbuntuRegular", 18)
-        self.pdf.drawCentredString(
-            self.PAGE_WIDTH / 2,
-            self.cursor,
-            _("Explanation")
-        )
+        self.pdf.drawCentredString(self.PAGE_WIDTH / 2, self.cursor, _("Explanation"))
         self.cursor -= self.LINE_JUMP * 2
         self.pdf.setFont("UbuntuRegular", 12)
         self.draw_string_on_pdf(
@@ -263,9 +260,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         """
         # 'Your answers' text
         self.pdf.setFont("UbuntuRegular", 25)
-        self.draw_string_on_pdf(
-            _("Evaluation details"), self.MARGIN_QUESTION
-        )
+        self.draw_string_on_pdf(_("Evaluation details"), self.MARGIN_QUESTION)
         self.cursor -= self.PARAGRAPH_SPACE
 
         for section, elements in dict_sections_elements.items():
@@ -311,7 +306,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
             )
 
         not_concerned = (
-                element.has_condition_on() and element.get_choice_depending_on().is_ticked
+            element.has_condition_on() and element.get_choice_depending_on().is_ticked
         )
         element_content = {
             "elem_text": str(element),
@@ -330,7 +325,9 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
 
         if element.user_notes:
             element_content["user_notes"] = element.user_notes
-            element_content["formatted_notes"] = self.split_complex_string(element.user_notes, self.MARGIN_NOTES)
+            element_content["formatted_notes"] = self.split_complex_string(
+                element.user_notes, self.MARGIN_NOTES
+            )
         else:
             element_content["formatted_notes"] = []
 
@@ -352,43 +349,57 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         if self.cursor - full_elem_height >= self.MARGIN_BOTTOM:
             # Space to draw the full element so classic border
             self.draw_element_border(full_elem_height, q_header_size)
-            self.draw_core_element(element, not_concerned, element_text, question_type_note, choices)
+            self.draw_core_element(
+                element, not_concerned, element_text, question_type_note, choices
+            )
             self.draw_justification_and_notes(
-                element_content["formatted_justification"],
-                element_content["formatted_notes"]
+                element_content["formatted_justification"], element_content["formatted_notes"]
             )
 
         else:
             # Not the space on the current page so need to cut it into 2 pages - or more
-            remaining_height = self.draw_element_cut_border_first_page(full_elem_height, q_header_size)
+            remaining_height = self.draw_element_cut_border_first_page(
+                full_elem_height, q_header_size
+            )
             # Draw element title, questions - always on the 1st page of the element box
-            self.draw_core_element(element, not_concerned, element_text, question_type_note, choices)
-            remaining_formatted_justification, remaining_formatted_notes = \
-                self.draw_justification_and_notes(
-                    element_content["formatted_justification"],
-                    element_content["formatted_notes"]
-                )
+            self.draw_core_element(
+                element, not_concerned, element_text, question_type_note, choices
+            )
+            (
+                remaining_formatted_justification,
+                remaining_formatted_notes,
+            ) = self.draw_justification_and_notes(
+                element_content["formatted_justification"], element_content["formatted_notes"]
+            )
             while remaining_height > 0:
                 self.page_break(
                     evaluation_name=element.section.evaluation.name,
                     section_order_id=element.section.master_section.order_id,
                 )
-                if remaining_height > self.PAGE_HEIGHT - self.MARGIN_BOTTOM - self.MARGIN_BASE - self.LINE_JUMP * 2:
+                if (
+                    remaining_height
+                    > self.PAGE_HEIGHT
+                    - self.MARGIN_BOTTOM
+                    - self.MARGIN_BASE
+                    - self.LINE_JUMP * 2
+                ):
                     # Not enough space for the remaining text (justification & notes) in a full page
                     remaining_height = self.draw_element_cut_border_full_page(remaining_height)
-                    remaining_formatted_justification, remaining_formatted_notes = \
-                        self.draw_justification_and_notes(
-                            remaining_formatted_justification,
-                            remaining_formatted_notes
-                        )
+                    (
+                        remaining_formatted_justification,
+                        remaining_formatted_notes,
+                    ) = self.draw_justification_and_notes(
+                        remaining_formatted_justification, remaining_formatted_notes
+                    )
                 else:
                     self.draw_element_cut_border_top(remaining_height + self.LINE_JUMP)
                     remaining_height = 0
-                    remaining_formatted_justification, remaining_formatted_notes = \
-                        self.draw_justification_and_notes(
-                            remaining_formatted_justification,
-                            remaining_formatted_notes
-                        )
+                    (
+                        remaining_formatted_justification,
+                        remaining_formatted_notes,
+                    ) = self.draw_justification_and_notes(
+                        remaining_formatted_justification, remaining_formatted_notes
+                    )
 
     def draw_element_border(self, elem_height, q_header_size):
         """
@@ -436,7 +447,9 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         """
         self.draw_element_border(self.cursor, q_header_size)
         self.hide_bottom_page_border()
-        remaining_height = full_elem_height - self.cursor + self.MARGIN_BOTTOM + self.LINE_JUMP * 2
+        remaining_height = (
+            full_elem_height - self.cursor + self.MARGIN_BOTTOM + self.LINE_JUMP * 2
+        )
         return remaining_height
 
     def draw_element_cut_border_full_page(self, remaining_height):
@@ -448,13 +461,13 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
             self.MARGIN_BASE,
             self.MARGIN_BOTTOM,
             self.MARGIN_BASE,
-            self.PAGE_HEIGHT - self.MARGIN_BASE
+            self.PAGE_HEIGHT - self.MARGIN_BASE,
         )
         self.pdf.line(
             self.PAGE_WIDTH - self.MARGIN_BASE * 2,
             self.MARGIN_BOTTOM,
             self.PAGE_WIDTH - self.MARGIN_BASE * 2,
-            self.PAGE_HEIGHT - self.MARGIN_BASE
+            self.PAGE_HEIGHT - self.MARGIN_BASE,
         )
         return remaining_height - self.PAGE_HEIGHT + self.MARGIN_BOTTOM + self.MARGIN_BASE + 50
 
@@ -483,9 +496,13 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
     def hide_top_page_border(self):
         self.pdf.setFillColorRGB(1, 1, 1)
         self.pdf.setStrokeColorRGB(1, 1, 1)
-        self.pdf.rect(0, self.PAGE_HEIGHT + 20, self.PAGE_WIDTH, self.MARGIN_BASE - 10, fill=1, stroke=0)
+        self.pdf.rect(
+            0, self.PAGE_HEIGHT + 20, self.PAGE_WIDTH, self.MARGIN_BASE - 10, fill=1, stroke=0
+        )
 
-    def draw_core_element(self, element, not_concerned, element_text, question_type_note, choices):
+    def draw_core_element(
+        self, element, not_concerned, element_text, question_type_note, choices
+    ):
         self.pdf.setFillColorRGB(*self.COLOR_TEXT)
         self.pdf.setFont("UbuntuRegular", 12)
 
@@ -618,10 +635,14 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         if "user_notes" in elem_content:
             # The "My notes: " text takes 1 line
             extra_size += self.LINE_JUMP
-            extra_size += self.PARAGRAPH_SPACE + count_total_height(elem_content["formatted_notes"])
+            extra_size += self.PARAGRAPH_SPACE + count_total_height(
+                elem_content["formatted_notes"]
+            )
         if "user_justification" in elem_content:
             extra_size += self.LINE_JUMP
-            extra_size += self.PARAGRAPH_SPACE + count_total_height(elem_content["formatted_justification"])
+            extra_size += self.PARAGRAPH_SPACE + count_total_height(
+                elem_content["formatted_justification"]
+            )
 
         return core_size, extra_size + core_size
 
@@ -631,9 +652,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         This is used for classic text (text of the assessment).
         """
         string = remove_markdownify_italic(remove_markdown_bold(string))
-        size = self.pdf.stringWidth(string) / (
-                self.PAGE_WIDTH - self.MARGIN_BASE - x - 25
-        )
+        size = self.pdf.stringWidth(string) / (self.PAGE_WIDTH - self.MARGIN_BASE - x - 25)
         if int(len(string) / size) < 1:
             list_string = [string]
         else:
@@ -647,32 +666,32 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         Splits a string with its linebreak and to fit the page width.
         Returns the list of the strings by line.
         """
-        split_list = string.split('\r\n')
+        split_list = string.split("\r\n")
         split_list = manage_html_list(split_list)
         formatted_list = []
         for row in split_list:
             row_margin = self.manage_margin_left(x, row)
             font_size = set_font_size(row)
-            row_text = re.sub(r'<(.|\n)*?>', '', row)
+            row_text = re.sub(r"<(.|\n)*?>", "", row)
             row_text = manage_special_characters(row_text)
-            row_size = self.pdf.stringWidth(row_text, 'UbuntuRegular', font_size) / \
-                (self.PAGE_WIDTH - self.MARGIN_BASE - row_margin - 25)
+            row_size = self.pdf.stringWidth(row_text, "UbuntuRegular", font_size) / (
+                self.PAGE_WIDTH - self.MARGIN_BASE - row_margin - 25
+            )
             row_format_dic = self.format_html_text(row)
             row_format_dic["margin_left"] = row_margin
             row_format_dic["font_size"] = font_size
-            row_format_dic["text_with_tags"] = \
-                re.sub(
-                    r'</?(h[1-6]|pre|p( style="margin-left:[0-9]+px")?|div|address|([uo])l|ol n=[0-9]+|li|\n)*?>',
-                    '',
-                    row
-                )
+            row_format_dic["text_with_tags"] = re.sub(
+                r'</?(h[1-6]|pre|p( style="margin-left:[0-9]+px")?|div|address|([uo])l|ol n=[0-9]+|li|\n)*?>',
+                "",
+                row,
+            )
             if row_size > 1:
                 row_split = textwrap.wrap(row_text, int(len(row_text) / row_size))
-                [row_format_dic['text'].append(val) for val in row_split]
+                [row_format_dic["text"].append(val) for val in row_split]
                 row_format_dic = self.calculate_height(row_format_dic)
                 formatted_list.append(row_format_dic)
             else:
-                row_format_dic['text'] = [row_text]
+                row_format_dic["text"] = [row_text]
                 formatted_list.append(row_format_dic)
 
         return formatted_list
@@ -683,11 +702,11 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         """
         decomposition_dic = {
             "text": [],
-            "text_with_tags": '',
+            "text_with_tags": "",
             "margin_left": self.manage_margin_left(0, text),
             "height": self.LINE_BREAK,
             "font_size": 12,
-            "bullet": text.count('<ul>') == 1,
+            "bullet": text.count("<ul>") == 1,
             "numbering": manage_numbering_list(text),
         }
 
@@ -701,7 +720,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         margin_left_list = re.findall(r'"margin-left:([0-9]*)px"', row)
         if len(margin_left_list) == 1:
             additional_margin_left += int(margin_left_list[0])
-        tabulations = re.findall('\t', row)
+        tabulations = re.findall("\t", row)
         additional_margin_left += len(tabulations) * self.MARGIN_BASE
         return additional_margin_left
 
@@ -710,9 +729,9 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         Calculate the height that the text of the dic will take in the page,
         depending of the styles, font size, etc.
         """
-        height = len(format_dic['text']) * self.LINE_BREAK
-        height = height * format_dic['font_size'] / 12
-        format_dic['height'] = height
+        height = len(format_dic["text"]) * self.LINE_BREAK
+        height = height * format_dic["font_size"] / 12
+        format_dic["height"] = height
         return format_dic
 
     def draw_html_on_pdf(self, formatted_list):
@@ -721,24 +740,31 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         This is used to draw the user justifciations and the user notes.
         """
         i = 0
-        while i < len(formatted_list) and self.cursor - formatted_list[i]['height'] > self.MARGIN_BOTTOM:
+        while (
+            i < len(formatted_list)
+            and self.cursor - formatted_list[i]["height"] > self.MARGIN_BOTTOM
+        ):
             # OK, space to write the text block
             format_dic = formatted_list[i]
-            text_list = format_dic['text']
+            text_list = format_dic["text"]
             self.pdf.setFont("UbuntuRegular", format_dic["font_size"])
             if format_dic["bullet"]:
                 self.pdf.setFillColorRGB(*self.COLOR_TEXT)
-                self.pdf.circle(format_dic['margin_left'] - 5, self.cursor + 5, 3.5, stroke=1, fill=1)
+                self.pdf.circle(
+                    format_dic["margin_left"] - 5, self.cursor + 5, 3.5, stroke=1, fill=1
+                )
             if format_dic["numbering"]:
-                self.pdf.drawString(format_dic['margin_left'] - 10, self.cursor, f'{format_dic["numbering"]}. ')
-            if len(re.findall(r'<(.|\n)*?>', format_dic["text_with_tags"])) > 0:
+                self.pdf.drawString(
+                    format_dic["margin_left"] - 10, self.cursor, f'{format_dic["numbering"]}. '
+                )
+            if len(re.findall(r"<(.|\n)*?>", format_dic["text_with_tags"])) > 0:
                 # If html, draw as paragraph
                 self.draw_paragraph(format_dic)
-                self.cursor -= int(format_dic['height'])
+                self.cursor -= int(format_dic["height"])
             else:
                 # Text with html special format so draw it
                 for text in text_list:
-                    self.pdf.drawString(format_dic['margin_left'], self.cursor, text)
+                    self.pdf.drawString(format_dic["margin_left"], self.cursor, text)
                     self.cursor -= self.LINE_BREAK
             i += 1
         if i < len(formatted_list):
@@ -762,15 +788,15 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         """
         Method to draw a paragraph on the pdf which can contains inline html tags (bold, italic, color, etc)
         """
-        message_style = ParagraphStyle('Normal')
+        message_style = ParagraphStyle("Normal")
         message_style.linkUnderline = 1
-        message = self.manage_html_tags(format_dic['text_with_tags'])
+        message = self.manage_html_tags(format_dic["text_with_tags"])
         message = Paragraph(message, style=message_style)
         message.wrap(
             self.PAGE_WIDTH - self.MARGIN_NOTES - self.MARGIN_BASE,  # Available width
-            format_dic["height"]  # Available height
+            format_dic["height"],  # Available height
         )
-        message.drawOn(self.pdf, format_dic['margin_left'], self.cursor)
+        message.drawOn(self.pdf, format_dic["margin_left"], self.cursor)
 
     def manage_html_tags(self, text):
         """
@@ -778,14 +804,24 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         Replace some tags with reportlab required tags.
         Manage the color of the text and for the background
         """
-        text = text.replace('<span', '<p').replace('</span', '</p')
-        text = re.sub(r'<p style="color:(#[0-9a-z]+)">(.*)(<\/p>)', r'<font color="\1">\2</font>', text)
-        text = re.sub(r'<p style="background-color:(#[0-9a-z]+)">(.*)(<\/p>)', r'<font  backcolor="\1">\2</font>', text)
-        text = text.replace('<a', '<a color="#5550ff"')
-        text = text.replace('<em', '<font name="UbuntuItalic"').replace('</em', '</font')
-        text = text.replace('<strong', '<font name="UbuntuBold"').replace('</strong', '</font')
-        text = text.replace('<s>', '<strike>').replace('</s>', '</strike>')
-        text = f'<font size="12" name="UbuntuRegular" color="{self.COLOR_TEXT}">' + text + '</font>'
+        text = text.replace("<span", "<p").replace("</span", "</p")
+        text = re.sub(
+            r'<p style="color:(#[0-9a-z]+)">(.*)(<\/p>)', r'<font color="\1">\2</font>', text
+        )
+        text = re.sub(
+            r'<p style="background-color:(#[0-9a-z]+)">(.*)(<\/p>)',
+            r'<font  backcolor="\1">\2</font>',
+            text,
+        )
+        text = text.replace("<a", '<a color="#5550ff"')
+        text = text.replace("<em", '<font name="UbuntuItalic"').replace("</em", "</font")
+        text = text.replace("<strong", '<font name="UbuntuBold"').replace("</strong", "</font")
+        text = text.replace("<s>", "<strike>").replace("</s>", "</strike>")
+        text = (
+            f'<font size="12" name="UbuntuRegular" color="{self.COLOR_TEXT}">'
+            + text
+            + "</font>"
+        )
         return text
 
     def get_line_count(self, string, font_name, font_size, line_width):
@@ -815,9 +851,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         self.draw_centered_string_on_pdf(evaluation_name, 300)
         self.cursor = 40
         if section_order_id is not None:
-            self.draw_string_on_pdf(
-                f"{_('Section')} {section_order_id}", self.MARGIN_QUESTION
-            )
+            self.draw_string_on_pdf(f"{_('Section')} {section_order_id}", self.MARGIN_QUESTION)
 
     def get(self, request, *args, **kwargs):
         context = {}
@@ -835,7 +869,6 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         # If the evaluation is finished, which should always be the case here,
         # set the score of the evaluation
         if evaluation.is_finished:
-
             # If the scoring system has changed,
             # it set the max points again for the evaluation, sections, EE
             success_max_points = manage_evaluation_max_points(
@@ -854,21 +887,20 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
             else:
                 return redirect("home:user-profile")
 
-            context[
-                "dict_sections_elements"
-            ] = evaluation.get_dict_sections_elements_choices()
+            context["dict_sections_elements"] = evaluation.get_dict_sections_elements_choices()
             context["evaluation"] = evaluation
             context["organisation"] = organisation
-            context['nb_risks_exposed'], context['len_exposition_dic'], context['exposition_dic'] = \
-                manage_evaluation_exposition_score(request, evaluation)
+            (
+                context["nb_risks_exposed"],
+                context["len_exposition_dic"],
+                context["exposition_dic"],
+            ) = manage_evaluation_exposition_score(request, evaluation)
             today_date = date.today().strftime("%Y-%m-%d")
             evaluation_name = evaluation.name.replace(" ", "-")
             organisation_name = organisation.name.replace(" ", "-")
             filename = f"{today_date}-{evaluation_name}-{organisation_name}-Labelia-Labs.pdf"
             filename = filename.replace("_", "-")
-            return FileResponse(
-                self.print_pdf(context), as_attachment=True, filename=filename
-            )
+            return FileResponse(self.print_pdf(context), as_attachment=True, filename=filename)
         else:
             capture_message(
                 f"[html_forced] The user {request.user.email}, "
@@ -886,10 +918,10 @@ def convert_exposition_dic_to_data(exposition_dic, size):
         risk = key.risk_domain
         if value:
             text = format_string_to_paragraph(risk, size)
-            data.append([Paragraph(f'''<b>{text}</b>'''), _("Exposed")])
+            data.append([Paragraph(f"""<b>{text}</b>"""), _("Exposed")])
         else:
             text = format_string_to_paragraph(risk, size)
-            data.append([Paragraph(f'''<b>{text}</b>'''), _("Not exposed")])
+            data.append([Paragraph(f"""<b>{text}</b>"""), _("Not exposed")])
     return data
 
 
@@ -899,14 +931,14 @@ def set_font_size(text):
     If not a title tag, return 12, the default font_size
     """
     matching_font = {
-        '1': 26,
-        '2': 21,
-        '3': 18,
-        '4': 16,
-        '5': 14,
-        '6': 12,
+        "1": 26,
+        "2": 21,
+        "3": 18,
+        "4": 16,
+        "5": 14,
+        "6": 12,
     }
-    html_tag = re.findall(r'<h([1-6])>', text)
+    html_tag = re.findall(r"<h([1-6])>", text)
     if len(html_tag) == 1:
         return matching_font.get(html_tag[0], 12)
     else:
@@ -928,39 +960,39 @@ def manage_html_list(split_text):
     Function used to remove the lines with the <ol> <ul> html tags and format the
     lines with <li> tags to keep the information.
     """
-    val_to_add = ''
+    val_to_add = ""
     new_data = []
     numbering = []
     bullet_depth = 0
     skip_value = False
     for i, val in enumerate(split_text):
-        if len(numbering) > 0 and val.count('<li>') >= 1:
-            val_to_add = f'<ol n={numbering[-1]}>'
+        if len(numbering) > 0 and val.count("<li>") >= 1:
+            val_to_add = f"<ol n={numbering[-1]}>"
             numbering[-1] += 1
-        if val.count('<ol>') >= 1:
+        if val.count("<ol>") >= 1:
             numbering.append(1)
             continue
-        elif val.count('<ul>') >= 1:
-            val_to_add = '<ul>'
+        elif val.count("<ul>") >= 1:
+            val_to_add = "<ul>"
             bullet_depth += 1
             continue
-        elif val.count('</ul>') >= 1:
+        elif val.count("</ul>") >= 1:
             bullet_depth -= 1
             skip_value = True
             if not bullet_depth:
-                val_to_add = ''
-        elif val.count('</li>') >= 1 and val.count('<li>') == 0:
+                val_to_add = ""
+        elif val.count("</li>") >= 1 and val.count("<li>") == 0:
             continue
-        elif val.count('</ol>') >= 1 and len(numbering) > 0:
+        elif val.count("</ol>") >= 1 and len(numbering) > 0:
             numbering = numbering[:-1]
-            val_to_add = ''
+            val_to_add = ""
             continue
-        elif val.count('<pre>') >= 1:
-            val_to_add = '<pre>'
+        elif val.count("<pre>") >= 1:
+            val_to_add = "<pre>"
             continue
-        elif val.count('</pre>') >= 1:
+        elif val.count("</pre>") >= 1:
             new_data.append(val_to_add + val)
-            val_to_add = ''
+            val_to_add = ""
             continue
         if not skip_value:
             new_data.append(val_to_add + val)
@@ -972,7 +1004,7 @@ def manage_numbering_list(text):
     """
     Return the numbering value if there is one, else 0
     """
-    numbering_list = re.findall(r'<ol n=([0-9]+)>', text)
+    numbering_list = re.findall(r"<ol n=([0-9]+)>", text)
     if len(numbering_list) == 1:
         val = int(numbering_list[0])
     else:
@@ -988,5 +1020,5 @@ def manage_special_characters(text):
 
 
 def format_string_to_paragraph(text, size):
-    split = [text[i:i + size] for i in range(0, len(text), size)]
-    return split[0] + ''.join(t.replace(' ', '<br/>', 1) for t in split[1:])
+    split = [text[i : i + size] for i in range(0, len(text), size)]
+    return split[0] + "".join(t.replace(" ", "<br/>", 1) for t in split[1:])

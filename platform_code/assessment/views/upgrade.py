@@ -1,19 +1,17 @@
 import json
 import logging
 
-from django.http import HttpResponse
-from django.utils.translation import gettext as _
-from django.contrib import messages
-from django.shortcuts import redirect, get_object_or_404
-from sentry_sdk import capture_message
-
 from assessment.models import Evaluation, get_last_assessment_created
 from assessment.views.utils.security_checks import can_edit_security_check
-from assessment.views.utils.utils import manage_upgrade_next_url, manage_missing_language
+from assessment.views.utils.utils import manage_missing_language, manage_upgrade_next_url
+from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import gettext as _
 from home.models import Organisation
+from sentry_sdk import capture_message
 
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 def upgradeView(request, *args, **kwargs):
@@ -36,23 +34,32 @@ def upgradeView(request, *args, **kwargs):
     manage_missing_language(request, evaluation)
     evaluation_version = evaluation.assessment.version
     latest_version = get_last_assessment_created().version
-    data_update = {"success": False, "message": _("The operation failed. Please try again or"
-                                                  " contact the site administrators")}
+    data_update = {
+        "success": False,
+        "message": _(
+            "The operation failed. Please try again or" " contact the site administrators"
+        ),
+    }
     if float(evaluation_version) < float(latest_version):
-
         try:
             new_eval = evaluation.upgrade(user=user, created_at=evaluation.created_at)
             # Manage the redirection between the different pages where the user clicked to upgrade the evaluation
             url = manage_upgrade_next_url(request, new_eval, organisation, evaluation_id)
             data_update["redirection"] = url
             data_update["success"] = True
-            data_update["message"] = _("Your evaluation has been upgraded."
-                                       " You will be redirected to the new version.")
-            logger.info(f"[upgrade] The user {request.user.email} upgrade his evaluation (id: {evaluation_id})")
+            data_update["message"] = _(
+                "Your evaluation has been upgraded."
+                " You will be redirected to the new version."
+            )
+            logger.info(
+                f"[upgrade] The user {request.user.email} upgrade his evaluation (id: {evaluation_id})"
+            )
 
         except ValueError:
-            capture_message(f"[upgrade_failed] The user {request.user.email} tried to upgrade his evaluation "
-                           f"(id: {evaluation_id}) but it failed")
+            capture_message(
+                f"[upgrade_failed] The user {request.user.email} tried to upgrade his evaluation "
+                f"(id: {evaluation_id}) but it failed"
+            )
             messages.warning(request, _("We are sorry, the operation failed."))
 
     return HttpResponse(json.dumps(data_update), content_type="application/json")

@@ -31,7 +31,12 @@ class Membership(models.Model):
     @classmethod
     def create_membership(cls, user, organisation, role, hide_membership=False):
         if cls.check_role(role):
-            member = cls(user=user, organisation=organisation, role=role, hide_membership=hide_membership)
+            member = cls(
+                user=user,
+                organisation=organisation,
+                role=role,
+                hide_membership=hide_membership,
+            )
             member.save()
 
     @classmethod

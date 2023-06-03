@@ -1,21 +1,11 @@
 import json
 
-from django.test import TestCase, RequestFactory
+from assessment.models import Assessment, Evaluation, EvaluationElement, MasterSection, Section
+from assessment.views.utils.utils import treat_archive_note, treat_delete_note
+from django.test import RequestFactory, TestCase
+from home.models import Organisation, User
 
-from assessment.models import (
-    Assessment,
-    Evaluation,
-    Section,
-    MasterSection,
-    EvaluationElement,
-)
-from assessment.views.utils.utils import treat_delete_note, treat_archive_note
-from home.models import User, Organisation
-from .object_creation import (
-    create_evaluation,
-    create_assessment_body,
-    create_scoring,
-)
+from .object_creation import create_assessment_body, create_evaluation, create_scoring
 
 
 class NotesTestCases(TestCase):
@@ -58,16 +48,12 @@ class NotesTestCases(TestCase):
         )
 
     def tearDown(self):
-        self.assertTrue(
-            Evaluation.objects.get(name="evaluation")
-        )  # Test is exists before
+        self.assertTrue(Evaluation.objects.get(name="evaluation"))  # Test is exists before
         self.evaluation.delete()
         self.organisation.delete()
         self.user.delete()
         with self.assertRaises(Exception):
-            Evaluation.objects.get(
-                name="evaluation"
-            )  # Test it does not exist after deletion
+            Evaluation.objects.get(name="evaluation")  # Test it does not exist after deletion
 
     def test_treat_delete_note(self):
         self.evaluation_element1.user_notes = "notes"

@@ -3,7 +3,6 @@ import re
 from django import template
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
-
 from home.models import Membership, Organisation
 
 register = template.Library()
@@ -33,7 +32,7 @@ def get_item(dictionary, key):
 
 @register.filter
 def get_type_form(dictionary, key):
-    """ For a dictionary with evaluation element as key and form as value (usually dic_form from SectionView)
+    """For a dictionary with evaluation element as key and form as value (usually dic_form from SectionView)
     Will return the type of the field in the form which has the key as name"""
     form = dictionary.get(key)
     type_form = form.fields[str(key.id)].widget.input_type
@@ -72,7 +71,11 @@ def is_not_applicable(self):
 @register.filter
 def turn_into_link(link, name):
     # print("TURN LINK", link, type(link), 'name', name, type(name))
-    return format_html('<a target="_blank" href="{0}">{1}</a>', link, str(name),)
+    return format_html(
+        '<a target="_blank" href="{0}">{1}</a>',
+        link,
+        str(name),
+    )
 
 
 @register.filter
@@ -84,9 +87,7 @@ def format_resource_link(text):
 @register.filter
 def order_elements_of_section(section):
     list_element = list(
-        section.evaluationelement_set.all().order_by(
-            "master_evaluation_element__order_id"
-        )
+        section.evaluationelement_set.all().order_by("master_evaluation_element__order_id")
     )
     return list_element
 
@@ -96,12 +97,12 @@ def format_date_calendar(string_date):
     if string_date:
         return string_date.strftime("%d/%m/%Y")
     else:
-        return '-'
+        return "-"
 
 
 @register.filter
 def manage_external_links(self, element):
-    """ Self is explanation text (string) and element is the evaluation element which belongs the explanation text"""
+    """Self is explanation text (string) and element is the evaluation element which belongs the explanation text"""
     # list of the explanation that should have their name in the explanation text of the master evalaution element
     list_explanation = list(element.master_evaluation_element.external_links.all())
     for explanation in list_explanation:
@@ -184,7 +185,7 @@ def stringify(element):
 
 @register.filter
 def stringify_list(list_to_display):
-    return str(list_to_display).replace('[', '').replace(']', '').replace('\'', '')
+    return str(list_to_display).replace("[", "").replace("]", "").replace("'", "")
 
 
 @register.filter
@@ -196,4 +197,6 @@ def get_member_role_as_str(role):
 @register.filter
 def get_sector_as_str(sector):
     sector_tuple = Organisation.SECTOR
-    return str([sector_tuple[1] for sector_tuple in sector_tuple if sector_tuple[0] == sector][0])
+    return str(
+        [sector_tuple[1] for sector_tuple in sector_tuple if sector_tuple[0] == sector][0]
+    )

@@ -1,15 +1,14 @@
 import logging
 
+from assessment.templatetags.assessment_tags import stringify_list
 from django.contrib import messages
 from django.contrib.auth.views import login_required
 from django.shortcuts import redirect
-
-from django.utils.translation import gettext as _, ngettext
-
-from assessment.templatetags.assessment_tags import stringify_list
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 from home.models import Organisation
 
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 @login_required(login_url="/login/")
@@ -27,13 +26,17 @@ def delete_user(request):
     """
 
     user = request.user
-    list_orga_user_is_admin = Organisation.get_list_organisations_where_user_as_role(user=user, role="admin")
+    list_orga_user_is_admin = Organisation.get_list_organisations_where_user_as_role(
+        user=user, role="admin"
+    )
     for orga in list_orga_user_is_admin:
         # If the user is the only admin of the organisation
         if orga.count_admin_members() == 1:
             # Delete the organisation and thus, the evaluations attached (CASCADE)
-            logger.info(f"[organisation_deletion] The orga {orga.name} has been deleted with the deletion of "
-                        f"the user account {user.email}")
+            logger.info(
+                f"[organisation_deletion] The orga {orga.name} has been deleted with the deletion of "
+                f"the user account {user.email}"
+            )
             orga.delete()
     # UserResources is deleted on CASCADE
     # Membership is deleted on CASCADE
@@ -43,13 +46,15 @@ def delete_user(request):
     if len(list_orga_user_is_admin) == 0:
         messages.success(request, _("Your account has been deleted."))
     else:
-        messages.success(request, ngettext("Your account has been deleted as well as the organisation"
-                                           " %(list_organisations)s and its evaluations.",
-                                           "Your account has been deleted as well as the organisations: "
-                                           "%(list_organisations)s and their evaluations associated.",
-                                           len(list_orga_user_is_admin)
-                                           ) % {
-                             'list_organisation': stringify_list(list_orga_user_is_admin)
-                         }
-                         )
+        messages.success(
+            request,
+            ngettext(
+                "Your account has been deleted as well as the organisation"
+                " %(list_organisations)s and its evaluations.",
+                "Your account has been deleted as well as the organisations: "
+                "%(list_organisations)s and their evaluations associated.",
+                len(list_orga_user_is_admin),
+            )
+            % {"list_organisation": stringify_list(list_orga_user_is_admin)},
+        )
     return redirect("home:homepage")

@@ -2,9 +2,8 @@ from django.contrib import admin
 
 
 class MasterEvaluationElementAdmin(admin.ModelAdmin):
-    """
+    """ """
 
-    """
     list_display = (
         "id",
         "numbering",
@@ -13,7 +12,6 @@ class MasterEvaluationElementAdmin(admin.ModelAdmin):
         "question_type",
         "get_depends_on",
         "has_resources",
-
     )
     list_filter = (
         "master_section",

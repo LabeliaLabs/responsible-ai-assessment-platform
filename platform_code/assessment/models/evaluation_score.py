@@ -1,8 +1,8 @@
-from django.db.models import JSONField
 from django.db import models
+from django.db.models import JSONField
 
-from .scoring_system import ScoringSystem
 from .evaluation_element_weight import EvaluationElementWeight
+from .scoring_system import ScoringSystem
 
 
 class EvaluationScore(models.Model):
@@ -23,7 +23,9 @@ class EvaluationScore(models.Model):
     be calculated again.
     """
 
-    evaluation = models.ForeignKey("assessment.Evaluation", on_delete=models.CASCADE)  # TODO set OneToOne field
+    evaluation = models.ForeignKey(
+        "assessment.Evaluation", on_delete=models.CASCADE
+    )  # TODO set OneToOne field
     # Boolean field to know if all the fields need to be calculated
     # if there are modifications after the 1st validation for example, the field switch from False to true
     need_to_set_max_points = models.BooleanField(default=False)
@@ -52,7 +54,9 @@ class EvaluationScore(models.Model):
         evaluation_score = cls(evaluation=evaluation)
         evaluation_score.save()
         evaluation_score.set_max_points()
-        evaluation_score.coefficient_scoring_system = evaluation_score.set_coefficient_scoring_system()
+        evaluation_score.coefficient_scoring_system = (
+            evaluation_score.set_coefficient_scoring_system()
+        )
         return evaluation_score
 
     def get_element_weight(self):
@@ -73,11 +77,12 @@ class EvaluationScore(models.Model):
         # organisation_type = self.section.evaluation.orga_id.type_orga  # Not implemented yet
         organisation_type = "entreprise"
         query_scoring_system = ScoringSystem.objects.filter(
-            assessment=self.evaluation.assessment,
-            organisation_type=organisation_type
+            assessment=self.evaluation.assessment, organisation_type=organisation_type
         )
         if len(list(query_scoring_system)) == 1:
-            self.coefficient_scoring_system = query_scoring_system[0].attributed_points_coefficient
+            self.coefficient_scoring_system = query_scoring_system[
+                0
+            ].attributed_points_coefficient
         else:
             # Todo see how we should manage communication with this case
             self.coefficient_scoring_system = 0.5
@@ -137,7 +142,9 @@ class EvaluationScore(models.Model):
                     element_weight = evaluation_element_weight.get_master_element_weight(
                         element.master_evaluation_element
                     )
-                    sum_points_not_concerned += element.calculate_points_not_concerned() * element_weight
+                    sum_points_not_concerned += (
+                        element.calculate_points_not_concerned() * element_weight
+                    )
         self.points_not_concerned = sum_points_not_concerned
         self.save()
 
@@ -157,25 +164,37 @@ class EvaluationScore(models.Model):
         """
         exposition_dic = {}
         for section in self.evaluation.section_set.all().order_by("master_section__order_id"):
-            for element in section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
-                if not element.master_evaluation_element.risk_domain and not element.has_condition_on():
+            for element in section.evaluationelement_set.all().order_by(
+                "master_evaluation_element__order_id"
+            ):
+                if (
+                    not element.master_evaluation_element.risk_domain
+                    and not element.has_condition_on()
+                ):
                     continue
                 # Check condition inter elements
                 if element.has_condition_on():
                     # No condition inter, so concerned by the risk, register it with evaluation setting conditions
                     if element.is_applicable():
-                        if element.get_element_depending_on().master_evaluation_element.risk_domain not in \
-                                exposition_dic:
-                            exposition_dic[element.get_element_depending_on().master_evaluation_element.risk_domain] = [
+                        if (
+                            element.get_element_depending_on().master_evaluation_element.risk_domain
+                            not in exposition_dic
+                        ):
+                            exposition_dic[
+                                element.get_element_depending_on().master_evaluation_element.risk_domain
+                            ] = [
                                 element.get_element_depending_on().master_evaluation_element.id
                             ]
 
                     # Condition inter, so not concerned by the risk, just register it
                     else:
-                        if element.get_element_depending_on().master_evaluation_element.risk_domain not in \
-                                exposition_dic:
-                            exposition_dic[element.get_element_depending_on().master_evaluation_element.risk_domain] = \
-                                []
+                        if (
+                            element.get_element_depending_on().master_evaluation_element.risk_domain
+                            not in exposition_dic
+                        ):
+                            exposition_dic[
+                                element.get_element_depending_on().master_evaluation_element.risk_domain
+                            ] = []
                 # Check conditions intra element (and not the case with condition intra)
                 if element.has_condition_between_choices() and element.is_applicable():
                     # If the choice is ticked, so not concerned by the risk
@@ -187,13 +206,14 @@ class EvaluationScore(models.Model):
                     else:
                         # The risk is not in the dictionary
                         if element.master_evaluation_element.risk_domain not in exposition_dic:
-                            exposition_dic[element.master_evaluation_element.risk_domain] = \
-                                [element.master_evaluation_element.id]
+                            exposition_dic[element.master_evaluation_element.risk_domain] = [
+                                element.master_evaluation_element.id
+                            ]
                         # Already the risk in the dictionary
                         else:
-                            exposition_dic[element.master_evaluation_element.risk_domain].append(
-                                element.master_evaluation_element.id
-                            )
+                            exposition_dic[
+                                element.master_evaluation_element.risk_domain
+                            ].append(element.master_evaluation_element.id)
                 # Case element with condition intra and not applicable due to conditions inter, still add the risk as
                 # not exposed
                 if element.has_condition_between_choices() and not element.is_applicable():
@@ -226,7 +246,9 @@ class EvaluationScore(models.Model):
         """
         coefficient = self.coefficient_scoring_system
 
-        self.points_to_dilate = round(self.points_obtained - self.points_not_concerned * coefficient, 4)
+        self.points_to_dilate = round(
+            self.points_obtained - self.points_not_concerned * coefficient, 4
+        )
         self.save()
 
     def set_dilatation_factor(self):
@@ -238,7 +260,9 @@ class EvaluationScore(models.Model):
         max_points = self.max_points
         pts_not_concerned = self.points_not_concerned
         coeff = self.coefficient_scoring_system
-        self.dilatation_factor = round((max_points - pts_not_concerned * coeff) / (max_points - pts_not_concerned), 6)
+        self.dilatation_factor = round(
+            (max_points - pts_not_concerned * coeff) / (max_points - pts_not_concerned), 6
+        )
         self.save()
 
     def set_score(self):
@@ -249,8 +273,8 @@ class EvaluationScore(models.Model):
         """
 
         score_after_dilatation = (
-                self.dilatation_factor * self.points_to_dilate
-                + self.points_not_concerned * self.coefficient_scoring_system
+            self.dilatation_factor * self.points_to_dilate
+            + self.points_not_concerned * self.coefficient_scoring_system
         )
         self.score = round(score_after_dilatation * 100 / self.max_points, 1)
         self.save()

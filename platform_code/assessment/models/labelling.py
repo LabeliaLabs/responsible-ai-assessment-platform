@@ -15,6 +15,7 @@ class Labelling(models.Model):
     for the evaluation by Labelia Labs.
     Last update field is used to store the date of the last
     """
+
     evaluation = models.OneToOneField(Evaluation, on_delete=models.CASCADE)
     PROGRESS = "progress"
     JUSTIFICATION = "justification"
@@ -25,7 +26,7 @@ class Labelling(models.Model):
         (PROGRESS, _("progress")),
         (JUSTIFICATION, _("justification")),
         (LABELLED, _("labelled")),
-        (REFUSED, _("refused"))
+        (REFUSED, _("refused")),
     )
     status = models.CharField(max_length=200, choices=STATUS, default=PROGRESS)
     counter = models.IntegerField(default=1)

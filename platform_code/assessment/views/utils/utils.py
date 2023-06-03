@@ -1,24 +1,28 @@
 import json
 import logging
 
-from sentry_sdk import capture_message
-
 import plotly.graph_objects as go
 import plotly.offline as opy
-from django.contrib import messages
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
-from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import redirect, get_object_or_404
-from django.utils.translation import LANGUAGE_SESSION_KEY
-from django.utils.translation import gettext as _, activate, get_language_from_request
-
 from assessment.forms import ChoiceForm, ResultsForm, SectionResultsForm
-from assessment.models import EvaluationScore, Evaluation, get_last_assessment_created, Assessment, \
-    EvaluationElement, MasterEvaluationElement
+from assessment.models import (
+    Assessment,
+    Evaluation,
+    EvaluationElement,
+    EvaluationScore,
+    MasterEvaluationElement,
+    get_last_assessment_created,
+)
+from django.contrib import messages
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
+from django.db.models import Q
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import LANGUAGE_SESSION_KEY, activate, get_language_from_request
+from django.utils.translation import gettext as _
+from sentry_sdk import capture_message
 
-LANGUAGE_QUERY_PARAMETER = 'language'
-logger = logging.getLogger('monitoring')
+LANGUAGE_QUERY_PARAMETER = "language"
+logger = logging.getLogger("monitoring")
 
 
 def set_form_for_sections(section_query):
@@ -54,7 +58,7 @@ def set_form_for_results(evaluation):
             prefix=section.id,
         )
         for evaluation_element in section.evaluationelement_set.all().order_by(
-                "master_evaluation_element__order_id"
+            "master_evaluation_element__order_id"
         ):
             dic_form[evaluation_element] = ResultsForm(
                 evaluation_element=evaluation_element,
@@ -83,8 +87,10 @@ def manage_evaluation_score(request, evaluation_list):
                 evaluation_score.process_score_calculation()
             evaluation_score_dic[evaluation.id] = evaluation_score.score
         except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
-            capture_message(f"[evaluation_score_error] The query to return the evaluation score for the evaluation "
-                           f"{evaluation.id} failed, error {e}")
+            capture_message(
+                f"[evaluation_score_error] The query to return the evaluation score for the evaluation "
+                f"{evaluation.id} failed, error {e}"
+            )
             messages.warning(request, _("An error occurred."))
             evaluation_score_dic[evaluation.id] = None
 
@@ -106,17 +112,27 @@ def manage_evaluation_exposition_score(request, evaluation):
             evaluation_score.process_score_calculation()
         assessment = evaluation_score.evaluation.assessment
         # If the exposition idc is not set yet or a key is "null" which shouldn't happen, calculate it
-        if not evaluation_score.exposition_dic or "null" in evaluation_score.exposition_dic.keys() or \
-                len(evaluation_score.exposition_dic) < assessment.count_master_elements_with_risks():
+        if (
+            not evaluation_score.exposition_dic
+            or "null" in evaluation_score.exposition_dic.keys()
+            or len(evaluation_score.exposition_dic)
+            < assessment.count_master_elements_with_risks()
+        ):
             evaluation_score.set_exposition_dic()
         exposition_dic = evaluation_score.exposition_dic
         nb_risk_exposed = len([li for li in exposition_dic.values() if li])
     except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
-        capture_message(f"[evaluation_exposition_error] The query to return the evaluation exposition score "
-                       f"for the evaluation {evaluation.id} failed, error {e}")
-        messages.warning(request, _("An error occurred during the calculation of the exposition score."))
+        capture_message(
+            f"[evaluation_exposition_error] The query to return the evaluation exposition score "
+            f"for the evaluation {evaluation.id} failed, error {e}"
+        )
+        messages.warning(
+            request, _("An error occurred during the calculation of the exposition score.")
+        )
 
-    exposition_dic = unpack_exposition_dic(exposition_dic)  # If a key is not a risk domain, exposition dic is just {}
+    exposition_dic = unpack_exposition_dic(
+        exposition_dic
+    )  # If a key is not a risk domain, exposition dic is just {}
     exposition_dic = order_exposition_dic(exposition_dic)
     return nb_risk_exposed, len(exposition_dic), exposition_dic
 
@@ -144,8 +160,10 @@ def manage_evaluation_max_points(request, evaluation_list):
             if evaluation_score.need_to_set_max_points:
                 evaluation_score.calculate_max_points()
         except (ObjectDoesNotExist, MultipleObjectsReturned, ValueError) as e:
-            capture_message("[evaluation_score_error] The query to return the evaluation score for the evaluation "
-                           f"(id {evaluation.id}) failed, error {e}, request {request}")
+            capture_message(
+                "[evaluation_score_error] The query to return the evaluation score for the evaluation "
+                f"(id {evaluation.id}) failed, error {e}, request {request}"
+            )
             messages.warning(request, _("An error occurred with the score calculation."))
             success = False
     return success
@@ -160,15 +178,25 @@ def manage_upgrade_next_url(request, new_eval, organisation, evaluation_id, *arg
     # If the new version is finished, we redirect to the results in any case
     if new_eval.is_finished:
         url = redirect("assessment:results", organisation.id, new_eval.slug, new_eval.pk)
-        messages.success(request, _("Your evaluation has been upgraded! You have been redirected to it. "), )
+        messages.success(
+            request,
+            _("Your evaluation has been upgraded! You have been redirected to it. "),
+        )
     # We do not redirect to the results as the evaluation is not finished so we need to know which page
     else:
         if "/section/" in previous_url and not new_eval.is_finished:
             # url = redirect("assessment:section", organisation.id, new_eval.slug, new_eval.pk)
-            messages.success(request, _("Your evaluation has been upgraded! You have been redirected to it."), )
-            url = redirect("assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk)
+            messages.success(
+                request,
+                _("Your evaluation has been upgraded! You have been redirected to it."),
+            )
+            url = redirect(
+                "assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk
+            )
         elif "/results/" in previous_url and not new_eval.is_finished:
-            url = redirect("assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk)
+            url = redirect(
+                "assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk
+            )
             messages.success(
                 request,
                 _(
@@ -179,13 +207,22 @@ def manage_upgrade_next_url(request, new_eval, organisation, evaluation_id, *arg
         elif "/profile/" in previous_url and not new_eval.is_finished:
             url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
             messages.success(request, _("Your evaluation has been upgraded!"))
-        elif "organisation" in previous_url and not str(evaluation_id) in previous_url and not new_eval.is_finished:
+        elif (
+            "organisation" in previous_url
+            and not str(evaluation_id) in previous_url
+            and not new_eval.is_finished
+        ):
             url = HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
             messages.success(request, _("Your evaluation has been upgraded!"))
         # Case "else" when it is the evaluation page
         else:
-            url = redirect("assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk)
-            messages.success(request, _("Your evaluation has been upgraded! You have been redirected to it."), )
+            url = redirect(
+                "assessment:evaluation", organisation.id, new_eval.slug, new_eval.pk
+            )
+            messages.success(
+                request,
+                _("Your evaluation has been upgraded! You have been redirected to it."),
+            )
 
     return url.url
 
@@ -212,11 +249,17 @@ def treat_evaluation_creation_valid_form(form, organisation, user):
         user=user,
     )
     eval.create_evaluation_body()
-    logger.info(f"[evaluation_creation] The user {user.email} created an evaluation {eval.name} in the organisation "
-                f"{organisation.name}")
+    logger.info(
+        f"[evaluation_creation] The user {user.email} created an evaluation {eval.name} in the organisation "
+        f"{organisation.name}"
+    )
     # Check if we need to fetch the evaluation
-    if last_version_in_organisation and last_version_in_organisation < float(get_last_assessment_created().version):
-        origin_assessment = get_object_or_404(Assessment, version=str(last_version_in_organisation))
+    if last_version_in_organisation and last_version_in_organisation < float(
+        get_last_assessment_created().version
+    ):
+        origin_assessment = get_object_or_404(
+            Assessment, version=str(last_version_in_organisation)
+        )
         eval.fetch_the_evaluation(origin_assessment=origin_assessment)
 
     # redirect to a new URL:
@@ -235,15 +278,20 @@ def create_radar_chart(object_list, math_expression, text_expression, hovertext_
     :param hovertext_expression: lambda expression
     """
     if math_expression.__name__ == "<lambda>" and text_expression.__name__ == "<lambda>":
-        fig = go.Figure(data=go.Scatterpolar(
-            # r is the radius, the first value is added at the end to loop the trace
-            r=[math_expression(obj) for obj in object_list] + [math_expression(object_list[0])],
-            # theta is the label
-            theta=[text_expression(obj) for obj in object_list] + [text_expression(object_list[0])],
-            fill='toself',
-            hoverinfo="text",
-            text=[hovertext_expression(obj) for obj in object_list] + [hovertext_expression(object_list[0])]
-        ))
+        fig = go.Figure(
+            data=go.Scatterpolar(
+                # r is the radius, the first value is added at the end to loop the trace
+                r=[math_expression(obj) for obj in object_list]
+                + [math_expression(object_list[0])],
+                # theta is the label
+                theta=[text_expression(obj) for obj in object_list]
+                + [text_expression(object_list[0])],
+                fill="toself",
+                hoverinfo="text",
+                text=[hovertext_expression(obj) for obj in object_list]
+                + [hovertext_expression(object_list[0])],
+            )
+        )
 
         fig.update_layout(
             polar=dict(
@@ -254,12 +302,12 @@ def create_radar_chart(object_list, math_expression, text_expression, hovertext_
                     tickvals=[0, 20, 40, 60, 80, 100],
                     ticktext=["0%", "20%", "40%", "60%", "80%", "100%"],
                     ticks="outside",
-                    angle=90
+                    angle=90,
                 ),
             ),
-            showlegend=False
+            showlegend=False,
         )
-        return opy.plot(fig, auto_open=False, output_type='div')
+        return opy.plot(fig, auto_open=False, output_type="div")
     else:
         return None
 
@@ -291,7 +339,7 @@ def treat_delete_note(request):
         element = get_element_user_can_edit(element_id, user)
         # if notes are not empty delete it and return success
         # else return an error
-        if element.user_notes is not None and element.user_notes != '':
+        if element.user_notes is not None and element.user_notes != "":
             element.user_notes = None
             element.user_notes_archived = False
             element.save()
@@ -330,7 +378,7 @@ def treat_archive_note(request):
         element = get_element_user_can_edit(element_id, user)
         # if notes are not empty archive it and return success
         # else return an error
-        if element.user_notes is not None and element.user_notes != '':
+        if element.user_notes is not None and element.user_notes != "":
             element.user_notes_archived = not element.user_notes_archived
             element.save()
             response = {
@@ -372,17 +420,21 @@ def treat_action_plan(request, element_key):
             "success": True,
             "message_type": "alert-success",
             "section_id": element.section.id,
-            "evaluation_id": element.section.evaluation.id
+            "evaluation_id": element.section.evaluation.id,
         }
         if element.is_in_action_plan:
             element.is_in_action_plan = False
             element.save()
-            response["message"] = _("The evaluation element has been removed from your action plan.")
+            response["message"] = _(
+                "The evaluation element has been removed from your action plan."
+            )
             response["added_action_plan"] = False
         else:
             element.is_in_action_plan = True
             element.save()
-            response["message"] = _("The evaluation element has been added to your action plan.")
+            response["message"] = _(
+                "The evaluation element has been added to your action plan."
+            )
             response["added_action_plan"] = True
 
     except ObjectDoesNotExist:
@@ -431,15 +483,22 @@ def unpack_exposition_dic(exposition_dic):
     new_exposition_dic = {}
     for key, value in exposition_dic.items():
         if EvaluationElement.objects.filter(master_evaluation_element__risk_domain_fr=key):
-            element = EvaluationElement.objects.filter(master_evaluation_element__risk_domain_fr=key)[0]
+            element = EvaluationElement.objects.filter(
+                master_evaluation_element__risk_domain_fr=key
+            )[0]
         elif EvaluationElement.objects.filter(master_evaluation_element__risk_domain_en=key):
-            element = EvaluationElement.objects.filter(master_evaluation_element__risk_domain_en=key)[0]
+            element = EvaluationElement.objects.filter(
+                master_evaluation_element__risk_domain_en=key
+            )[0]
         # Key is not a risk domain (example "none" so the exposition dic is not rendered)
         else:
             return {}
         if element:
             new_exposition_dic[element.master_evaluation_element] = [
-                master_element.get_verbose_name() for master_element_id in value
-                for master_element in MasterEvaluationElement.objects.filter(id=master_element_id)
+                master_element.get_verbose_name()
+                for master_element_id in value
+                for master_element in MasterEvaluationElement.objects.filter(
+                    id=master_element_id
+                )
             ]
     return new_exposition_dic

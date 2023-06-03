@@ -1,5 +1,5 @@
+from assessment.utils import markdownify_bold, markdownify_italic, select_label_choice
 from django.test import TestCase
-from assessment.utils import markdownify_italic, markdownify_bold, select_label_choice
 
 
 class TestMarkdownify(TestCase):
@@ -13,9 +13,7 @@ class TestMarkdownify(TestCase):
 
     def testBold(self):
         self.assertEqual(self.text1, markdownify_bold(self.text1))
-        self.assertEqual(
-            "Bonjour <strong>madame</strong>", markdownify_bold(self.text2)
-        )
+        self.assertEqual("Bonjour <strong>madame</strong>", markdownify_bold(self.text2))
         self.assertEqual(
             "I <strong>gonna</strong> take _a break_", markdownify_bold(self.text3)
         )
@@ -29,9 +27,7 @@ class TestMarkdownify(TestCase):
     def testItalic(self):
         self.assertEqual("Bonjour <i>madame</i>", markdownify_italic(self.text1))
         self.assertEqual(self.text2, markdownify_italic(self.text2))
-        self.assertEqual(
-            "I **gonna** take <i>a break</i>", markdownify_italic(self.text3)
-        )
+        self.assertEqual("I **gonna** take <i>a break</i>", markdownify_italic(self.text3))
         self.assertEqual(self.text4, markdownify_italic(self.text4))
         self.assertEqual(self.text5, markdownify_italic(self.text5))
 
@@ -57,16 +53,23 @@ class TestMarkdownify(TestCase):
 
 class TestSelectLabelChoice(TestCase):
     def setUp(self):
-        self.text1 = ' <input type="checkbox" name="29" value="6.4.a Notre organisation' \
-                     ' n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage automatique" id="id_29_0">' \
-                     'Notre organisation n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage' \
-                     ' automatique</label>'
-        self.text2 = '<li><label for="id_30_1"><input type="radio" name="30" value="6.5.b Nous communiquons sur nos' \
-                     ' résultats" id="id_30_1">'
+        self.text1 = (
+            ' <input type="checkbox" name="29" value="6.4.a Notre organisation'
+            ' n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage automatique" id="id_29_0">'
+            "Notre organisation n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage"
+            " automatique</label>"
+        )
+        self.text2 = (
+            '<li><label for="id_30_1"><input type="radio" name="30" value="6.5.b Nous communiquons sur nos'
+            ' résultats" id="id_30_1">'
+        )
 
     def test_select_label_choice(self):
         # Catch the pattern
-        self.assertIn('Notre organisation n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage'
-                      ' automatique</label', select_label_choice(self.text1))
+        self.assertIn(
+            "Notre organisation n&#x27;utilise pas de modèles prédictifs élaborés par apprentissage"
+            " automatique</label",
+            select_label_choice(self.text1),
+        )
         # Case the pattern is not found in the regex of select_label_choice, so the function returns empty list
         self.assertEqual([], select_label_choice(self.text2))

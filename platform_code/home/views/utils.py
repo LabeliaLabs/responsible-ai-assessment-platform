@@ -1,18 +1,17 @@
 import logging
+
+from assessment.models import (
+    Assessment,
+    ElementChangeLog,
+    MasterEvaluationElement,
+    MasterSection,
+    get_last_assessment_created,
+)
+from django.utils.translation import gettext as _
+from home.models import Organisation, UserResources
 from sentry_sdk import capture_message
 
-from django.utils.translation import gettext as _
-
-from home.models import Organisation, UserResources
-from assessment.models import (
-    get_last_assessment_created,
-    Assessment,
-    MasterSection,
-    MasterEvaluationElement,
-    ElementChangeLog,
-)
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 def organisation_required_message(context):
@@ -23,7 +22,9 @@ def organisation_required_message(context):
     :return:
     """
     context["message"] = {
-        "alert-warning": _("You first need to create your organisation before creating your evaluation.")
+        "alert-warning": _(
+            "You first need to create your organisation before creating your evaluation."
+        )
     }
 
 
@@ -44,10 +45,16 @@ def organisation_creation(request, form):
     sector = form.cleaned_data.get("sector")
     # This method handles the fact that the membership is created for this orga as admin
     organisation = Organisation.create_organisation(
-        name=name, size=size, country=country, sector=sector, created_by=user,
+        name=name,
+        size=size,
+        country=country,
+        sector=sector,
+        created_by=user,
     )
-    logger.info(f"[organisation_creation] A new organisation {organisation.name} has been created by "
-                f"the user {user.email}")
+    logger.info(
+        f"[organisation_creation] A new organisation {organisation.name} has been created by "
+        f"the user {user.email}"
+    )
     return organisation
 
 
@@ -65,11 +72,15 @@ def manage_user_resource(request):
     # Case the user resource does not exist, which should not happen
     # but it does when you create super user with the shell
     elif len(user_resources) == 0:
-        UserResources.create_user_resources(user=user)  # create user_resources so the user can access resources
+        UserResources.create_user_resources(
+            user=user
+        )  # create user_resources so the user can access resources
         user_resources = UserResources.objects.get(user=user)
         return user_resources
     else:
-        capture_message(f"[multiple_user_resources] The user {user.email} has multiple user resources, auto-cleaning")
+        capture_message(
+            f"[multiple_user_resources] The user {user.email} has multiple user resources, auto-cleaning"
+        )
         while UserResources.objects.filter(user=user).count() > 1:
             UserResources.objects.filter(user=user)[-1].delete()
         return UserResources.objects.get(user=user)
@@ -85,7 +96,9 @@ def add_last_version_last_assessment_dictionary(dictionary):
     """
     if isinstance(dictionary, dict):
         if get_last_assessment_created():
-            dictionary["last_version"] = get_last_assessment_created().version  # get last version
+            dictionary[
+                "last_version"
+            ] = get_last_assessment_created().version  # get last version
             dictionary["last_assessment"] = get_last_assessment_created()
         else:
             dictionary["last_version"] = []
@@ -141,21 +154,33 @@ def get_all_change_logs():
                 master_sections = MasterSection.objects.filter(assessment=assessment)
                 for master_section in master_sections:
                     change_logs_dict[assessment][master_section] = {}
-                    master_evaluation_elements = MasterEvaluationElement.objects.filter(master_section=master_section)
+                    master_evaluation_elements = MasterEvaluationElement.objects.filter(
+                        master_section=master_section
+                    )
                     for master_evaluation_element in master_evaluation_elements:
                         try:
                             change_log = ElementChangeLog.objects.get(
                                 eval_element_numbering=master_evaluation_element.get_numbering(),
                                 previous_assessment=assessment.previous_assessment,
-                                assessment=assessment
+                                assessment=assessment,
                             )
-                        except (ElementChangeLog.DoesNotExist, ElementChangeLog.MultipleObjectsReturned):
+                        except (
+                            ElementChangeLog.DoesNotExist,
+                            ElementChangeLog.MultipleObjectsReturned,
+                        ):
                             change_log = None
 
                         if change_log is not None:
-                            if change_log.pastille != "Unchanged" and change_log.pastille != "Inchangé":
-                                change_logs_dict[assessment][master_section][master_evaluation_element] = {}
-                                change_logs_dict[assessment][master_section][master_evaluation_element] = change_log
+                            if (
+                                change_log.pastille != "Unchanged"
+                                and change_log.pastille != "Inchangé"
+                            ):
+                                change_logs_dict[assessment][master_section][
+                                    master_evaluation_element
+                                ] = {}
+                                change_logs_dict[assessment][master_section][
+                                    master_evaluation_element
+                                ] = change_log
                     if not change_logs_dict[assessment][master_section]:
                         # delete sections that contain unchanged elements only
                         del change_logs_dict[assessment][master_section]

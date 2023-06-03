@@ -1,14 +1,9 @@
+from assessment.models import Choice, Section
+from assessment.utils import remove_markdown_bold, remove_markdownify_italic
 from django import forms
-from django.forms import ModelForm
-from django.forms import widgets
+from django.forms import ModelForm, widgets
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-
-from assessment.utils import (
-    remove_markdown_bold,
-    remove_markdownify_italic,
-)
-from assessment.models import Choice, Section
 
 
 class ResultsForm(ModelForm):
@@ -25,7 +20,7 @@ class ResultsForm(ModelForm):
     def __init__(self, *args, **kwargs):
         # Catch the evaluation element
         evaluation_element = kwargs.pop("evaluation_element")
-        super(ResultsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         if evaluation_element.master_evaluation_element.question_type == "radio":
             choices_tuple = evaluation_element.get_choices_as_tuple()
@@ -79,7 +74,10 @@ class ResultsForm(ModelForm):
         Used during the initialization of a class instance to add a new field in the form for the
         user_justification field of the evaluation_element class model.
         """
-        if evaluation_element.user_justification is None or evaluation_element.user_justification == "":
+        if (
+            evaluation_element.user_justification is None
+            or evaluation_element.user_justification == ""
+        ):
             justification = forms.CharField(
                 label=_("Answer justification"),
                 widget=forms.Textarea(
@@ -88,7 +86,8 @@ class ResultsForm(ModelForm):
                         "size": 100,
                         "width": "100%",
                         "class": "textarea textarea-data-results",
-                    }),
+                    }
+                ),
                 required=False,
             )
         elif evaluation_element.user_justification is not None:
@@ -100,7 +99,8 @@ class ResultsForm(ModelForm):
                         "size": 100,
                         "width": "100%",
                         "class": "textarea textarea-data-results",
-                    }),
+                    }
+                ),
                 initial=evaluation_element.user_justification,
                 required=False,
             )
@@ -121,7 +121,7 @@ class SectionResultsForm(ModelForm):
     def __init__(self, *args, **kwargs):
         # Catch the section
         section = kwargs.pop("section")
-        super(SectionResultsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # If the user has registered the champ user_notes for the section
         if section.user_notes and section.user_notes != "":
@@ -152,7 +152,6 @@ class RadioResultsWidget(widgets.CheckboxSelectMultiple):
     def render(self, name, value, attrs=None, renderer=None):
         string_html = '<ul style="margin: 18px;" id="' + attrs["id"] + '">'
         for choice in value:
-
             order_choice = choice.convert_order_id_to_int()
             if choice.is_ticked:
                 string_html += (
@@ -163,7 +162,9 @@ class RadioResultsWidget(widgets.CheckboxSelectMultiple):
                     + "_"
                     + str(order_choice)
                     + '" >'
-                    + remove_markdown_bold(remove_markdownify_italic(choice.master_choice.answer_text))
+                    + remove_markdown_bold(
+                        remove_markdownify_italic(choice.master_choice.answer_text)
+                    )
                     + "</label></li>"
                 )
             else:
@@ -175,7 +176,9 @@ class RadioResultsWidget(widgets.CheckboxSelectMultiple):
                     + "_"
                     + str(order_choice)
                     + '" >'
-                    + remove_markdown_bold(remove_markdownify_italic(choice.master_choice.answer_text))
+                    + remove_markdown_bold(
+                        remove_markdownify_italic(choice.master_choice.answer_text)
+                    )
                     + "</label></li>"
                 )
 
@@ -193,7 +196,6 @@ class CheckboxResultsWidget(widgets.RadioSelect):
     def render(self, name, value, attrs=None, renderer=None):
         string_html = '<ul style="margin: 18px;" id="' + attrs["id"] + '">'
         for choice in value:
-
             order_choice = choice.convert_order_id_to_int()
             if choice.is_ticked:
                 string_html += (
@@ -204,7 +206,9 @@ class CheckboxResultsWidget(widgets.RadioSelect):
                     + "_"
                     + str(order_choice)
                     + '" >'
-                    + remove_markdown_bold(remove_markdownify_italic(choice.master_choice.answer_text))
+                    + remove_markdown_bold(
+                        remove_markdownify_italic(choice.master_choice.answer_text)
+                    )
                     + "</label></li>"
                 )
             else:
@@ -216,7 +220,9 @@ class CheckboxResultsWidget(widgets.RadioSelect):
                     + "_"
                     + str(order_choice)
                     + '" >'
-                    + remove_markdown_bold(remove_markdownify_italic(choice.master_choice.answer_text))
+                    + remove_markdown_bold(
+                        remove_markdownify_italic(choice.master_choice.answer_text)
+                    )
                     + "</label></li>"
                 )
 

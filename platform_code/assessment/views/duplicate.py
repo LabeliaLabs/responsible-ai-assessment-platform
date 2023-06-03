@@ -1,20 +1,20 @@
-import logging
 import json
-
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
-from django.contrib import messages
-from django.shortcuts import redirect
-from django.utils.translation import gettext as _
-from sentry_sdk import capture_message
+import logging
 
 from assessment.models import Evaluation
-from assessment.views.utils.security_checks import membership_security_check, can_edit_security_check
+from assessment.views.utils.security_checks import (
+    can_edit_security_check,
+    membership_security_check,
+)
 from assessment.views.utils.utils import manage_missing_language
+from django.contrib import messages
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect
+from django.utils.translation import gettext as _
 from home.models import Organisation
+from sentry_sdk import capture_message
 
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 def duplicateView(request, *args, **kwargs):
@@ -48,16 +48,21 @@ def duplicateView(request, *args, **kwargs):
     try:
         new_evaluation = evaluation.duplicate_evaluation()
         # Manage the redirection between the different pages where the user clicked to upgrade the evaluation
-        logger.info(f"[duplication] The user {request.user.email} has duplicated his evaluation (id: {evaluation_id}),"
-                    f" new evaluation (id: {new_evaluation.id})")
+        logger.info(
+            f"[duplication] The user {request.user.email} has duplicated his evaluation (id: {evaluation_id}),"
+            f" new evaluation (id: {new_evaluation.id})"
+        )
         data_update["success"] = True
         messages.success(
-            request, _(f"Your evaluation has been duplicated. The duplicate is {str(new_evaluation)}")
+            request,
+            _(f"Your evaluation has been duplicated. The duplicate is {str(new_evaluation)}"),
         )
 
     except ValueError:
-        capture_message(f"[duplication_failed] The user {request.user.email} tried to duplicate his evaluation "
-                       f"(id: {evaluation_id}) but it failed")
+        capture_message(
+            f"[duplication_failed] The user {request.user.email} tried to duplicate his evaluation "
+            f"(id: {evaluation_id}) but it failed"
+        )
         data_update["success"] = False
         data_update["message"] = _("We are sorry, the operation failed.")
         messages.warning(request, _("We are sorry, the operation failed."))

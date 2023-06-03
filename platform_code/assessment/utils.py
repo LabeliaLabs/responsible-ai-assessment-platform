@@ -1,4 +1,5 @@
 import re
+
 from django.db.models import JSONField
 
 
@@ -9,7 +10,7 @@ class RawJSONField(JSONField):
     """
 
     def db_type(self, connection):
-        return 'json'
+        return "json"
 
 
 def markdownify_bold(text):
@@ -21,12 +22,12 @@ def markdownify_bold(text):
     """
     text_bis = re.sub(
         r"(?<!\_)\_\_(?!\_)(.*?)(?<!\_)\_\_(?!\_)",
-        "<strong>\g<1></strong>",  # noqa
+        r"<strong>\g<1></strong>",  # noqa
         text,
     )
     return re.sub(
         r"(?<!\*)\*\*(?!\*)(.*?)(?<!\*)\*\*(?!\*)",
-        "<strong>\g<1></strong>",  # noqa
+        r"<strong>\g<1></strong>",  # noqa
         text_bis,
     )
 
@@ -41,12 +42,12 @@ def remove_markdown_bold(text):
     # todo tests
     text_bis = re.sub(
         r"(?<!\_)\_\_(?!\_)(.*?)(?<!\_)\_\_(?!\_)",
-        "\g<1>",  # noqa
+        r"\g<1>",  # noqa
         text,
     )
     return re.sub(
         r"(?<!\*)\*\*(?!\*)(.*?)(?<!\*)\*\*(?!\*)",
-        "\g<1>",  # noqa
+        r"\g<1>",  # noqa
         text_bis,
     )
 
@@ -58,12 +59,8 @@ def markdownify_italic(text):
     :param text:
     :return: text
     """
-    text_bis = re.sub(
-        r"(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)", "<i>\g<1></i>", text  # noqa
-    )
-    return re.sub(
-        r"(?<!\_)\_(?!\_)(.*?)(?<!\_)\_(?!\_)", "<i>\g<1></i>", text_bis  # noqa
-    )
+    text_bis = re.sub(r"(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)", r"<i>\g<1></i>", text)  # noqa
+    return re.sub(r"(?<!\_)\_(?!\_)(.*?)(?<!\_)\_(?!\_)", r"<i>\g<1></i>", text_bis)  # noqa
 
 
 def remove_markdownify_italic(text):
@@ -73,12 +70,8 @@ def remove_markdownify_italic(text):
     :return: text
     """
     # Todo tests
-    text_bis = re.sub(
-        r"(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)", "\g<1>", text  # noqa
-    )
-    return re.sub(
-        r"(?<!\_)\_(?!\_)(.*?)(?<!\_)\_(?!\_)", "\g<1>", text_bis  # noqa
-    )
+    text_bis = re.sub(r"(?<!\*)\*(?!\*)(.*?)(?<!\*)\*(?!\*)", r"\g<1>", text)  # noqa
+    return re.sub(r"(?<!\_)\_(?!\_)(.*?)(?<!\_)\_(?!\_)", r"\g<1>", text_bis)  # noqa
 
 
 def select_label_choice(text):
@@ -96,9 +89,9 @@ def get_client_ip(request):
     :param request:
     :return: string
     """
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
     if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
+        ip = x_forwarded_for.split(",")[0]
     else:
-        ip = request.META.get('REMOTE_ADDR')
+        ip = request.META.get("REMOTE_ADDR")
     return ip

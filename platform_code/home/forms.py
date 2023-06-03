@@ -1,12 +1,16 @@
+from assessment.models import Labelling
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, _unicode_ci_compare
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import (
+    PasswordResetForm,
+    ReadOnlyPasswordHashField,
+    UserCreationForm,
+    _unicode_ci_compare,
+)
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import ReadOnlyPasswordHashField, PasswordResetForm
 
-from .models import User, Organisation
-from assessment.models import Labelling
+from .models import Organisation, User
 
 UserModel = get_user_model()
 
@@ -14,12 +18,8 @@ UserModel = get_user_model()
 class SignUpForm(UserCreationForm):
     # username = forms.CharField(required=False) # Username not used as it is replaced by email
     email = forms.EmailField(max_length=254)
-    first_name = forms.CharField(
-        max_length=30, required=True, label=_("First name")
-    )
-    last_name = forms.CharField(
-        max_length=30, required=True, label=_("Last name")
-    )
+    first_name = forms.CharField(max_length=30, required=True, label=_("First name"))
+    last_name = forms.CharField(max_length=30, required=True, label=_("Last name"))
     password1 = forms.CharField(
         label=_("Password"),
         strip=False,
@@ -53,7 +53,7 @@ class OrganisationCreationForm(ModelForm):
         exclude = ("created_by",)
 
     def __init__(self, *args, **kwargs):
-        super(OrganisationCreationForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["country"].initial = "FR"
         self.fields["name"].label = _("Name")
         self.fields["size"].label = _("Size")
@@ -74,10 +74,10 @@ class OrganisationEditionForm(ModelForm):
     class Meta:
         model = Organisation
         fields = [
-            'name',
-            'sector',
-            'size',
-            'country',
+            "name",
+            "sector",
+            "size",
+            "country",
         ]
 
     def __init__(self, *args, **kwargs):
@@ -85,7 +85,7 @@ class OrganisationEditionForm(ModelForm):
             organisation = kwargs.pop("organisation")
         else:
             organisation = None
-        super(OrganisationEditionForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         if organisation:
             self.fields["name"].initial = organisation.name
             self.fields["sector"].initial = organisation.sector
@@ -95,10 +95,18 @@ class OrganisationEditionForm(ModelForm):
         self.fields["size"].label = _("Size")
         self.fields["country"].label = _("Country")
         self.fields["sector"].label = _("Sector")
-        self.fields["size"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
-        self.fields["country"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
-        self.fields["sector"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
-        self.fields["name"].widget.attrs = {"class": "full-width center-select center margin-bottom-1em"}
+        self.fields["size"].widget.attrs = {
+            "class": "full-width center-select center margin-bottom-1em"
+        }
+        self.fields["country"].widget.attrs = {
+            "class": "full-width center-select center margin-bottom-1em"
+        }
+        self.fields["sector"].widget.attrs = {
+            "class": "full-width center-select center margin-bottom-1em"
+        }
+        self.fields["name"].widget.attrs = {
+            "class": "full-width center-select center margin-bottom-1em"
+        }
 
 
 class DataSettingsForm(ModelForm):
@@ -112,7 +120,7 @@ class DataSettingsForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop("user")
-        super(DataSettingsForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["first_name"].initial = user.first_name
         self.fields["last_name"].initial = user.last_name
         self.fields["language_preference"].initial = user.language_preference
@@ -135,9 +143,7 @@ class UserAdminCreationForm(forms.ModelForm):
     """
 
     password1 = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
-    password2 = forms.CharField(
-        label=_("Password confirmation"), widget=forms.PasswordInput
-    )
+    password2 = forms.CharField(label=_("Password confirmation"), widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -153,7 +159,7 @@ class UserAdminCreationForm(forms.ModelForm):
 
     def save(self, commit=True):
         # Save the provided password in hashed format
-        user = super(UserAdminCreationForm, self).save(commit=False)
+        user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
         if commit:
             user.save()
@@ -193,13 +199,16 @@ class PasswordResetForm_(PasswordResetForm):
         """
         email_field_name = UserModel.get_email_field_name()
         active_users = UserModel._default_manager.filter(
-            **{"%s__iexact" % email_field_name: email, "active": True, }
+            **{
+                "%s__iexact" % email_field_name: email,
+                "active": True,
+            }
         )
         return (
             u
             for u in active_users
             if u.has_usable_password()
-               and _unicode_ci_compare(email, getattr(u, email_field_name))
+            and _unicode_ci_compare(email, getattr(u, email_field_name))
         )
 
 
@@ -210,17 +219,18 @@ class DashboardUsersStatsTabFilterForm(forms.Form):
     """
     A form to filter users stats and graphs by user inscription date
     """
+
     Inscription_date = forms.DateField(
         widget=forms.widgets.DateInput(
             attrs={
-                'class': 'filter-field',
-                'type': 'date',
-                'min': '2020-01-01',
-                'value': '2020-01-01',
-                'id': 'user_date_filter'
+                "class": "filter-field",
+                "type": "date",
+                "min": "2020-01-01",
+                "value": "2020-01-01",
+                "id": "user_date_filter",
             }
         ),
-        label=_("Inscription date")
+        label=_("Inscription date"),
     )
 
 
@@ -228,14 +238,15 @@ class DashboardOrganisationsStatsTabFilterForm(forms.Form):
     """
     A form to filter organisations stats and graphs by organisation creation date
     """
+
     creation_date = forms.DateField(
         widget=forms.widgets.DateInput(
             attrs={
-                'class': 'filter-field',
-                'type': 'date',
-                'min': '2020-01-01',
-                'value': '2020-01-01',
-                'id': 'orga_date_filter'
+                "class": "filter-field",
+                "type": "date",
+                "min": "2020-01-01",
+                "value": "2020-01-01",
+                "id": "orga_date_filter",
             },
         ),
         label=_("Created from the"),
@@ -246,6 +257,7 @@ class DashboardEvaluationsStatsTabFilterForm(forms.Form):
     """
     A form to filter evaluations stats and graphs by evaluation creation date
     """
+
     All_sectors = _("all sectors")
     All_Sizes = _("all sizes")
     Sectors = Organisation.SECTOR
@@ -261,36 +273,26 @@ class DashboardEvaluationsStatsTabFilterForm(forms.Form):
     date = forms.DateField(
         widget=forms.widgets.DateInput(
             attrs={
-                'value': '2020-01-01',
-                'min': '2020-01-01',
-                'class': 'filter-field',
-                'type': 'date',
-                'id': 'eval_date_filter'
+                "value": "2020-01-01",
+                "min": "2020-01-01",
+                "class": "filter-field",
+                "type": "date",
+                "id": "eval_date_filter",
             }
         ),
-        label=_("Date")
+        label=_("Date"),
     )
     sectors = forms.ChoiceField(
         choices=Sectors_list,
         initial=Sectors_list[0],
-        widget=forms.Select(
-            attrs={
-                'class': 'filter-field',
-                'id': 'eval_sectors_filter'
-            }
-        ),
-        label=_("Sector")
+        widget=forms.Select(attrs={"class": "filter-field", "id": "eval_sectors_filter"}),
+        label=_("Sector"),
     )
     sizes = forms.ChoiceField(
         choices=Sizes_list,
         initial=Sizes_list[0],
-        widget=forms.Select(
-            attrs={
-                'class': 'filter-field',
-                'id': 'eval_sizes_filter'
-            }
-        ),
-        label=_("Size")
+        widget=forms.Select(attrs={"class": "filter-field", "id": "eval_sizes_filter"}),
+        label=_("Size"),
     )
 
 
@@ -303,9 +305,9 @@ class LabellingStatusForm(forms.Form):
         initial=status_choices[0],
         widget=forms.Select(
             attrs={
-                'class': 'filter-field',
-                'id': 'labelling_status_filter',
-                'onchange': "filterLabellingStatus('labelling-status-form')"
+                "class": "filter-field",
+                "id": "labelling_status_filter",
+                "onchange": "filterLabellingStatus('labelling-status-form')",
             }
         ),
         label=_("Status"),

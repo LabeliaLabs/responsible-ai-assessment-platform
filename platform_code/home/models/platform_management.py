@@ -9,14 +9,20 @@ class PlatformManagement(models.Model):
     The activate_multi_languages field manages the fact that we may want to do not activate the English version of the
     platform (because English assessment is not imported).
     """
+
     # Manage delivery and add a banner on the site
     platform_update = models.BooleanField(default=False)
     delivery_text_en = models.TextField(max_length=1000, default="Platform update ongoing")
-    delivery_text_fr = models.TextField(max_length=1000, default="Mise à jour de la plateforme en cours")
+    delivery_text_fr = models.TextField(
+        max_length=1000, default="Mise à jour de la plateforme en cours"
+    )
     # Manage the language
-    activate_multi_languages = models.BooleanField(default=False, help_text="This should not be activated if an "
-                                                                            "assessment does not exist both in French "
-                                                                            "and English")
+    activate_multi_languages = models.BooleanField(
+        default=False,
+        help_text="This should not be activated if an "
+        "assessment does not exist both in French "
+        "and English",
+    )
     labelling_threshold = models.FloatField(default=45)
 
     def __str__(self):
@@ -24,7 +30,7 @@ class PlatformManagement(models.Model):
 
     @classmethod
     def get_or_create(cls):
-        """"
+        """ "
         Get the object if it exists or creates it and return it
         """
         if cls.objects.first():
