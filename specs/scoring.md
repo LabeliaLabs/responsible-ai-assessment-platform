@@ -38,7 +38,7 @@ Les mécanismes suivants semblent pertinents pour répondre aux problématiques 
 
 1. On peut résumer ces mécanismes avec les formules suivantes :
 
-   Notations :  
+   Notations :
 
    - points(EdEc) : points possibles pour les **E**léments **d**'**E**valuation par lequel l'organisation est **c**oncernée
    - points_auto(EdEnc) : points automatiquement attribués pour les **E**léments **d**'**E**valuation par lesquels l'organisation **n**'est pas **c**oncernée

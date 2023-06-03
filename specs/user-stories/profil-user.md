@@ -11,7 +11,7 @@ L'objectif de cette section est de documenter les fonctionnalités utilisateurs 
 ## Principes
 
 - Le principe de minimisation de collecte des données personnelles sera appliqué.
-- Nous utiliserons les fonctionnalités d'autentification fournies par Django.  
+- Nous utiliserons les fonctionnalités d'autentification fournies par Django.
 
 ### Création / connexion à un compte
 
@@ -35,7 +35,7 @@ _Sécurité addtionnelle_ : si l'utilisateur entre 5 fois un mot de passe incorr
 #### Mot de passe oublié
 
 L'utilisateur a la possibilité de cliquer sur mot de passe oublié. Il entre alors son email.
-Un message lui indique qu'un mail pour réinitialiser son mot de passe a été envoyé sur le compte indiqué :  
+Un message lui indique qu'un mail pour réinitialiser son mot de passe a été envoyé sur le compte indiqué :
 
 - Si le compte est bien présent dans la base, un mail est envoyé contenant un lien pour réinitialiser son mot de passe.
 - Si le compte n'est pas présent dans la base, aucun email est envoyé mais le message est le même (pour des questions de sécurité).
