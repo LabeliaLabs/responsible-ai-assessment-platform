@@ -40,13 +40,13 @@ jobs:
 
       - name: Lint
         run: |
-          python manage.py check --deploy
+          python platform_code/manage.py check --deploy
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Set up Django
         run: |
-          python manage.py makemigrations
-          python manage.py migrate
+          python platform_code/manage.py makemigrations
+          python platform_code/manage.py migrate
 
       - name: Run Tests
         env:
@@ -54,4 +54,4 @@ jobs:
           DEBUG: "True"
           DATABASE_URL: "postgres://postgres:postgres@localhost:5432/postgres"
         run: |
-          python manage.py test
+          python platform_code/manage.py test
