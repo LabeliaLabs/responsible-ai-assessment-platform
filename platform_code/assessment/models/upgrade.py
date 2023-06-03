@@ -1,5 +1,5 @@
-from django.db.models import JSONField
 from django.db import models
+from django.db.models import JSONField
 
 from .assessment import Assessment
 
@@ -20,8 +20,8 @@ class Upgrade(models.Model):
 
     def __str__(self):
         return (
-                "Upgrade from V"
-                + str(self.origin_assessment.version)
-                + " to V"
-                + str(self.final_assessment.version)
+            "Upgrade from V"
+            + str(self.origin_assessment.version)
+            + " to V"
+            + str(self.final_assessment.version)
         )

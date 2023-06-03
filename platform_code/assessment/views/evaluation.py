@@ -1,20 +1,23 @@
 import logging
 
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect
-from django.utils.translation import gettext as _
-from django.contrib import messages
-from django.shortcuts import redirect, get_object_or_404, get_list_or_404
-from django.views.generic import DetailView, DeleteView, CreateView
-
 from assessment.forms import EvaluationForm
 from assessment.models import Evaluation, Section, get_last_assessment_created
-from assessment.views.utils.security_checks import membership_security_check, can_edit_security_check
+from assessment.views.utils.security_checks import (
+    can_edit_security_check,
+    membership_security_check,
+)
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_list_or_404, get_object_or_404, redirect
+from django.utils.translation import gettext as _
+from django.views.generic import CreateView, DeleteView, DetailView
 from home.models import Organisation
-from .utils.edit_evaluation_name import treat_evaluation_name_edition
-from .utils.utils import treat_evaluation_creation_valid_form, manage_missing_language
 
-logger = logging.getLogger('monitoring')
+from .utils.edit_evaluation_name import treat_evaluation_name_edition
+from .utils.utils import manage_missing_language, treat_evaluation_creation_valid_form
+
+logger = logging.getLogger("monitoring")
 
 
 class EvaluationView(LoginRequiredMixin, DetailView):
@@ -30,9 +33,11 @@ class EvaluationView(LoginRequiredMixin, DetailView):
         organisation = get_object_or_404(Organisation, id=organisation_id)
         # Check if the user is member of the orga, if not, return HttpResponseForbidden
         if not membership_security_check(request, organisation=organisation):
-            return redirect('home:homepage')
+            return redirect("home:homepage")
 
-        evaluation = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
+        evaluation = get_object_or_404(
+            Evaluation, id=kwargs.get("pk"), organisation=organisation
+        )
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
         manage_missing_language(request, evaluation)
@@ -43,11 +48,13 @@ class EvaluationView(LoginRequiredMixin, DetailView):
         )  # sort the list
         context["section_list"] = section_list
         context["organisation"] = organisation
-        context["evaluation_form_dic"] = {str(evaluation.id): EvaluationForm(name=evaluation.name)}
+        context["evaluation_form_dic"] = {
+            str(evaluation.id): EvaluationForm(name=evaluation.name)
+        }
         return self.render_to_response(context)
 
     def post(self, request, **kwargs):
-        if request.method == 'POST':
+        if request.method == "POST":
             organisation_id = kwargs.get("orga_id")
             organisation = get_object_or_404(Organisation, id=organisation_id)
             if not can_edit_security_check(request, organisation=organisation):
@@ -113,7 +120,6 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
     redirect_field_name = "home:homepage"
 
     def delete(self, request, *args, **kwargs):
-
         """
         Call the delete() method on the fetched object and then redirect to the
         success URL.
@@ -131,10 +137,17 @@ class DeleteEvaluation(LoginRequiredMixin, DeleteView):
             return redirect("assessment:orga-summary", organisation_id)
 
         # Add more security by checking the organisation than the method get_object() which just takes the 'pk'
-        self.object = get_object_or_404(Evaluation, id=kwargs.get("pk"), organisation=organisation)
+        self.object = get_object_or_404(
+            Evaluation, id=kwargs.get("pk"), organisation=organisation
+        )
 
-        logger.info(f"[evaluation_deletion] The user {request.user.email} deleted an evaluation {self.object.name}")
-        messages.success(request, _("The evaluation %(evaluation)s has been deleted.") % {"evaluation": self.object})
+        logger.info(
+            f"[evaluation_deletion] The user {request.user.email} deleted an evaluation {self.object.name}"
+        )
+        messages.success(
+            request,
+            _("The evaluation %(evaluation)s has been deleted.") % {"evaluation": self.object},
+        )
         self.object.delete()
 
         # Manage the redirection, if the user delete the evaluation from his profile, it redirect to his profile

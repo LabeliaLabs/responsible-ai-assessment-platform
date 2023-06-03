@@ -3,7 +3,7 @@ import logging
 
 from django.forms import widgets
 
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 class PrettyJSONWidget(widgets.Textarea):
@@ -16,5 +16,7 @@ class PrettyJSONWidget(widgets.Textarea):
             self.attrs["cols"] = min(max(max(row_lengths) + 2, 40), 120)
             return value
         except Exception as e:
-            logger.warning(f"[json_widget_error] There is an error with the format of the json widget, error {e}")
-            return super(PrettyJSONWidget, self).format_value(value)
+            logger.warning(
+                f"[json_widget_error] There is an error with the format of the json widget, error {e}"
+            )
+            return super().format_value(value)

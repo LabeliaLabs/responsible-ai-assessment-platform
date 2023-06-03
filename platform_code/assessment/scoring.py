@@ -47,7 +47,10 @@ def check_and_valid_scoring_json(*args, **kwargs):
                         f"The value {dict_data[numbering]} must be convertible into a float like '0.5', error {e}",
                     )
                 # If the master_choice sets conditions intra or inter, it must has not points associated
-                if master_choice.is_concerned_switch or master_choice.has_master_element_conditioned_on():
+                if (
+                    master_choice.is_concerned_switch
+                    or master_choice.has_master_element_conditioned_on()
+                ):
                     # TODO tests
                     # numbering should exist in dict_data
                     if float(dict_data[numbering]) != 0.0:

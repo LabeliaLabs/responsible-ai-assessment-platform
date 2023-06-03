@@ -1,5 +1,5 @@
-from django.db.models import JSONField
 from django.db import models
+from django.db.models import JSONField
 
 from .assessment import Assessment
 
@@ -16,10 +16,7 @@ class ScoringSystem(models.Model):
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     version = models.CharField(max_length=255, blank=True, null=True)
     organisation_type = models.CharField(
-        max_length=1000,
-        blank=True,
-        null=True,
-        default="entreprise"
+        max_length=1000, blank=True, null=True, default="entreprise"
     )  # todo change this field
     master_choices_weight_json = JSONField()
     # this coefficient is used to split the points for elements not applicable
@@ -39,8 +36,8 @@ class ScoringSystem(models.Model):
         :return: float
         """
         if (
-                master_choice.master_evaluation_element.master_section.assessment
-                == self.assessment
+            master_choice.master_evaluation_element.master_section.assessment
+            == self.assessment
         ):
             try:
                 choice_points = float(
@@ -49,11 +46,7 @@ class ScoringSystem(models.Model):
                 return choice_points
             except KeyError as e:
                 # todo logs
-                print(
-                    "Le choix n'est pas dans le dictionnaire du scoring, erreur {0}".format(
-                        e
-                    )
-                )
+                print(f"Le choix n'est pas dans le dictionnaire du scoring, erreur {e}")
         else:
             print(
                 "Erreur, le master choice n'appartient pas au même assessment que le scoring"

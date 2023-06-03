@@ -74,7 +74,7 @@ ssh -i ~/.ssh/preprod ubuntu@51.68.125.118 -p 22222
 You can also use this config to avoid some mistakes. When it is ready, you can simply use `ssh preprod` or `ssh prod`! Edit the `.ssh/config` file as follow:
 
 ```sh
-Host preprod 
+Host preprod
         HostName 51.68.125.118
         User ubuntu
         IdentityFile ~/.ssh/<KEY>
@@ -129,7 +129,7 @@ If there is no Docker update, use `update.sh` (see [Server Update](#monthly-serv
 If there is Docker updates:
 
 ```sh
-# Create a dump 
+# Create a dump
 make prod_backup
 
 # Save locally your db - file name to be adapted
@@ -138,10 +138,10 @@ scp ubuntu@prod:/home/ubuntu/platform_db_prod.dump ./
 # Stop Docker
 make prod_down
 
-# Update servers 
+# Update servers
 ./update.sh
 
-# Restart Docker 
+# Restart Docker
 make prod_buildupd
 
 # Check if everything is ok. If not, you can restore the DB
@@ -278,22 +278,22 @@ As of now, available applications:
 Displayed like this:
 
 ```sh
-sudo ufw status numbered 
+sudo ufw status numbered
 Status: active
 
      To                         Action      From
      --                         ------      ----
-[ 1] 22222                      ALLOW IN    Anywhere                  
-[ 2] 80/tcp                     ALLOW IN    Anywhere                  
-[ 3] 443/tcp                    ALLOW IN    Anywhere                  
-[ 4] 587                        ALLOW IN    Anywhere                  
+[ 1] 22222                      ALLOW IN    Anywhere
+[ 2] 80/tcp                     ALLOW IN    Anywhere
+[ 3] 443/tcp                    ALLOW IN    Anywhere
+[ 4] 587                        ALLOW IN    Anywhere
 [ 5] 587                        ALLOW OUT   Anywhere                   (out)
-[ 6] 22222 (v6)                 ALLOW IN    Anywhere (v6)             
-[ 7] 80/tcp (v6)                ALLOW IN    Anywhere (v6)             
-[ 8] 443/tcp (v6)               ALLOW IN    Anywhere (v6)             
-[ 9] 587 (v6)                   ALLOW IN    Anywhere (v6)             
+[ 6] 22222 (v6)                 ALLOW IN    Anywhere (v6)
+[ 7] 80/tcp (v6)                ALLOW IN    Anywhere (v6)
+[ 8] 443/tcp (v6)               ALLOW IN    Anywhere (v6)
+[ 9] 587 (v6)                   ALLOW IN    Anywhere (v6)
 [10] 587 (v6)                   ALLOW OUT   Anywhere (v6)              (out)
-      
+
 ```
 
 ### [not required] Port forward
@@ -350,7 +350,7 @@ curl -LO http://fr.archive.ubuntu.com/ubuntu/pool/universe/f/fail2ban/fail2ban_0
 
 sudo dpkg -i fail2ban_0.11.1-1_all.deb
 
-# Check service status 
+# Check service status
 sudo service fail2ban status
 
 # Logs
@@ -453,7 +453,7 @@ tail -f /var/log/syslog                       # server
 [optional] Before deploying, if you want to save locally the db, you can run the following commands:
 
 ```sh
-# Create a dump 
+# Create a dump
 make prod_backup
 
 # Save locally your db - file name to be adapted
@@ -496,31 +496,31 @@ docker-compose -f docker-compose.prod.yml exec python manage.py showmigrations #
 You may be required as a dev to deploy locally but also to perform some tests.
 
 ```sh
-# Switch to the branch you need 
+# Switch to the branch you need
 git fetch && git pull --rebase
 git checkout <branch>
 
 # Build your docker image
 make buildup
 
-# Create a super user to login to the platform: you will be requested an email and a password 
-make admin 
+# Create a super user to login to the platform: you will be requested an email and a password
+make admin
 
-# You have now access on your local machine to the platform: http://0.0.0.0:8080/  
+# You have now access on your local machine to the platform: http://0.0.0.0:8080/
 
 # Apply translations
 make trans-prep
 make translate
 
-# You can stop and start again if needed 
+# You can stop and start again if needed
 make down
-make up 
+make up
 
-# For Dev: run tests 
+# For Dev: run tests
 make tests
 
 # Delete your build
-make downv 
+make downv
 ```
 
 ## 2. Docker
@@ -537,7 +537,7 @@ If you want to use the *test* configuration (`debug=True`), please use:
 
 If you want to use the *production* configuration (`debug=False`), please use:
 
-- `docker-compose.prod.yaml`  
+- `docker-compose.prod.yaml`
 - [env_prod_template](./env_prod_template)
 
 Then, please follow the recommendations inside the relevant template:

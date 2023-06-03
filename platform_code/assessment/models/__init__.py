@@ -2,7 +2,7 @@ from .assessment import Assessment, get_last_assessment_created, is_language_act
 from .choice import Choice, MasterChoice
 from .element_change_log import ElementChangeLog
 from .evaluation import Evaluation
-from .evaluation_element import MasterEvaluationElement, EvaluationElement
+from .evaluation_element import EvaluationElement, MasterEvaluationElement
 from .evaluation_element_weight import EvaluationElementWeight
 from .evaluation_score import EvaluationScore
 from .external_link import ExternalLink
@@ -28,5 +28,5 @@ __all__ = [
     "ScoringSystem",
     "MasterSection",
     "Section",
-    "Upgrade"
+    "Upgrade",
 ]

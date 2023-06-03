@@ -5,14 +5,14 @@ from django.db import models
 from django.template.defaultfilters import slugify
 from django.urls import reverse
 from django.utils import timezone
-
 from home.models import Organisation
+
 from .assessment import Assessment, get_last_assessment_created
-from .upgrade import Upgrade
-from .section import Section
-from .evaluation_element import MasterEvaluationElement, EvaluationElement
-from .choice import MasterChoice, Choice
+from .choice import Choice, MasterChoice
+from .evaluation_element import EvaluationElement, MasterEvaluationElement
 from .evaluation_score import EvaluationScore
+from .section import Section
+from .upgrade import Upgrade
 
 
 class Evaluation(models.Model):
@@ -22,13 +22,15 @@ class Evaluation(models.Model):
     An evaluation is a dynamic object
     """
 
-    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE, related_name="evaluations")
+    assessment = models.ForeignKey(
+        Assessment, on_delete=models.CASCADE, related_name="evaluations"
+    )
     upgraded_from = models.ForeignKey(
         Assessment,
         on_delete=models.SET_NULL,
         null=True,
         default=None,
-        related_name="evaluations_upgraded_from"
+        related_name="evaluations_upgraded_from",
     )
     name = models.CharField(
         max_length=200,
@@ -61,7 +63,7 @@ class Evaluation(models.Model):
     def save(self, *args, **kwargs):
         if not self.id:
             self.slug = slugify(self.name)
-        super(Evaluation, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     @classmethod
     def create_evaluation(cls, name, assessment, user, organisation, upgraded_from=None):
@@ -101,7 +103,11 @@ class Evaluation(models.Model):
     def get_absolute_url(self):
         return reverse(
             "assessment:evaluation",
-            kwargs={"orga_id": self.organisation.id, "slug": self.slug, "pk": self.pk, },
+            kwargs={
+                "orga_id": self.organisation.id,
+                "slug": self.slug,
+                "pk": self.pk,
+            },
         )
 
     def is_upgradable(self):
@@ -133,7 +139,7 @@ class Evaluation(models.Model):
         list_all_elements = []
         for section in self.section_set.all().order_by("master_section__order_id"):
             for element in section.evaluationelement_set.all().order_by(
-                    "master_evaluation_element__order_id"
+                "master_evaluation_element__order_id"
             ):
                 list_all_elements.append(element)
         return list_all_elements
@@ -143,7 +149,7 @@ class Evaluation(models.Model):
         True if the evaluation has a labelling object associated, else Flase
         """
         # TODO tests
-        return hasattr(self, 'labelling')
+        return hasattr(self, "labelling")
 
     def get_labelling(self):
         # TODO tests
@@ -160,18 +166,18 @@ class Evaluation(models.Model):
         """
         # TODO tests
         if self.has_labelling():
-            return self.get_labelling().status == 'justification'
+            return self.get_labelling().status == "justification"
 
     def get_dict_sections_elements_choices(self):
         dict_sections_elements = {}
-        for section in self.section_set.all().order_by(
-                "master_section__order_id"):
+        for section in self.section_set.all().order_by("master_section__order_id"):
             dict_sections_elements[section] = {}
             for element in section.evaluationelement_set.all().order_by(
-                    "master_evaluation_element__order_id"
+                "master_evaluation_element__order_id"
             ):
-                dict_sections_elements[section][element] = \
-                    [choice for choice in element.choice_set.all().order_by("id")]
+                dict_sections_elements[section][element] = [
+                    choice for choice in element.choice_set.all().order_by("id")
+                ]
         return dict_sections_elements
 
     def create_evaluation_body(self):
@@ -267,8 +273,7 @@ class Evaluation(models.Model):
 
         # The final assessment must be more recent than the origin, this is check in the views
         upgrade = Upgrade.objects.get(
-            origin_assessment=origin_assessment,
-            final_assessment=final_assessment
+            origin_assessment=origin_assessment, final_assessment=final_assessment
         )
         upgrade_dic = upgrade.upgrade_json
 
@@ -306,21 +311,24 @@ class Evaluation(models.Model):
                 new_section.save()
 
             for new_element in new_section.evaluationelement_set.all():
-                new_element_number = (
-                    new_element.master_evaluation_element.get_numbering()
-                )
+                new_element_number = new_element.master_evaluation_element.get_numbering()
                 if upgrade_dic["elements"][new_element_number]["upgrade_status"] == "no_fetch":
                     new_element.fetch = False
                     new_element.save()
                 else:
                     # Two cases: "1" if it fetches itself, or "id" (ex "1.1") if it fetches an other EE
                     if upgrade_dic["elements"][new_element_number]["upgrade_status"] != 1:
-                        older_element_order_id = upgrade_dic["elements"][new_element_number]["upgrade_status"][-1]
-                        older_element_section_order_id = upgrade_dic["elements"][new_element_number]["upgrade_status"][
-                            -3]
+                        older_element_order_id = upgrade_dic["elements"][new_element_number][
+                            "upgrade_status"
+                        ][-1]
+                        older_element_section_order_id = upgrade_dic["elements"][
+                            new_element_number
+                        ]["upgrade_status"][-3]
                     else:
                         older_element_order_id = new_element.master_evaluation_element.order_id
-                        older_element_section_order_id = new_element.master_evaluation_element.master_section.order_id
+                        older_element_section_order_id = (
+                            new_element.master_evaluation_element.master_section.order_id
+                        )
                     older_element = EvaluationElement.objects.get(
                         master_evaluation_element__order_id=older_element_order_id,
                         section__master_section__order_id=older_element_section_order_id,
@@ -339,15 +347,24 @@ class Evaluation(models.Model):
                     else:
                         # Two cases: "1" if it fetches itself, or "id" (ex "1.1.a") if it fetches an other choice
                         if upgrade_dic["answer_items"][new_choice_number] != 1:
-                            older_choice_order_id = upgrade_dic["answer_items"][new_choice_number][-1]
-                            older_choice_element_order_id = upgrade_dic["answer_items"][new_choice_number][-3]
-                            older_choice_section_order_id = upgrade_dic["answer_items"][new_choice_number][-5]
+                            older_choice_order_id = upgrade_dic["answer_items"][
+                                new_choice_number
+                            ][-1]
+                            older_choice_element_order_id = upgrade_dic["answer_items"][
+                                new_choice_number
+                            ][-3]
+                            older_choice_section_order_id = upgrade_dic["answer_items"][
+                                new_choice_number
+                            ][-5]
                         else:
                             # Fetch self
                             older_choice_order_id = new_choice.master_choice.order_id
-                            older_choice_element_order_id = new_choice.master_choice.master_evaluation_element.order_id
-                            older_choice_section_order_id = \
+                            older_choice_element_order_id = (
+                                new_choice.master_choice.master_evaluation_element.order_id
+                            )
+                            older_choice_section_order_id = (
                                 new_choice.master_choice.master_evaluation_element.master_section.order_id
+                            )
                         older_choice = Choice.objects.get(
                             master_choice__order_id=older_choice_order_id,
                             evaluation_element__master_evaluation_element__order_id=older_choice_element_order_id,
@@ -416,14 +433,14 @@ class Evaluation(models.Model):
             name=f"{self.name}-duplication",
             assessment=self.assessment,
             user=self.created_by,
-            organisation=self.organisation
+            organisation=self.organisation,
         )
         new_evaluation.create_evaluation_body()
         # Cover all the objects of the original evaluation
         for section in self.section_set.all():
             new_section = Section.objects.get(
                 evaluation=new_evaluation,
-                master_section__order_id=section.master_section.order_id
+                master_section__order_id=section.master_section.order_id,
             )
             new_section.user_notes = section.user_notes
             new_section.save()
@@ -431,7 +448,7 @@ class Evaluation(models.Model):
                 new_element = EvaluationElement.objects.get(
                     section__evaluation=new_evaluation,
                     master_evaluation_element__order_id=evaluation_element.master_evaluation_element.order_id,
-                    section__master_section__order_id=section.master_section.order_id
+                    section__master_section__order_id=section.master_section.order_id,
                 )
                 new_element.user_notes = evaluation_element.user_notes
                 new_element.user_justification = evaluation_element.user_justification
@@ -443,9 +460,8 @@ class Evaluation(models.Model):
                         new_choice = Choice.objects.get(
                             evaluation_element__section__evaluation=new_evaluation,
                             master_choice__order_id=choice.master_choice.order_id,
-                            evaluation_element__master_evaluation_element__order_id=  # noqa
-                            evaluation_element.master_evaluation_element.order_id,
-                            evaluation_element__section__master_section__order_id=section.master_section.order_id
+                            evaluation_element__master_evaluation_element__order_id=evaluation_element.master_evaluation_element.order_id,  # noqa
+                            evaluation_element__section__master_section__order_id=section.master_section.order_id,
                         )
                         new_choice.set_choice_ticked()
                 new_element.set_status()
@@ -467,8 +483,9 @@ class Evaluation(models.Model):
         characteristic = kwargs.get("characteristic")
         probability_condition = kwargs.get("probability_condition", 0.3)
         for section in self.section_set.all():
-            for evaluation_element in \
-                    section.evaluationelement_set.all().order_by("master_evaluation_element__order_id"):
+            for evaluation_element in section.evaluationelement_set.all().order_by(
+                "master_evaluation_element__order_id"
+            ):
                 # Select randomly a choice not setting condition inter and ticked it and save it
                 evaluation_element.reset_choices()
                 if evaluation_element.is_applicable():
@@ -486,7 +503,9 @@ class Evaluation(models.Model):
                         probability = random.random()
                         if probability < probability_condition:
                             if evaluation_element.get_list_of_choices_with_conditions():
-                                evaluation_element.get_list_of_choices_with_conditions()[0].set_choice_ticked()
+                                evaluation_element.get_list_of_choices_with_conditions()[
+                                    0
+                                ].set_choice_ticked()
                             else:
                                 evaluation_element.tick_random_choices_no_condition()
 

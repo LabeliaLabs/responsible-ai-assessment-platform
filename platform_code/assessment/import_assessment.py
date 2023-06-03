@@ -1,18 +1,18 @@
 import re
 
-from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
 from .models import (
     Assessment,
-    MasterChoice,
-    MasterSection,
-    MasterEvaluationElement,
-    ExternalLink,
-    ScoringSystem,
+    ElementChangeLog,
     EvaluationElementWeight,
+    ExternalLink,
+    MasterChoice,
+    MasterEvaluationElement,
+    MasterSection,
+    ScoringSystem,
     Upgrade,
     get_last_assessment_created,
-    ElementChangeLog,
 )
 
 
@@ -86,9 +86,17 @@ class ImportAssessment:
         A success (boolean) is returned, init to false, and a message
         :return: tuple (boolean and string)
         """
-        keys_list = ["name_fr", "name_en", "sections", "version", "previous_assessment_version"]
+        keys_list = [
+            "name_fr",
+            "name_en",
+            "sections",
+            "version",
+            "previous_assessment_version",
+        ]
         if not test_keys_in_dic(dic=self.data_dic, keys_list=keys_list):
-            self.message = f"You have missing keys for the assessment data, please provide {keys_list}"
+            self.message = (
+                f"You have missing keys for the assessment data, please provide {keys_list}"
+            )
             raise Exception(self.message)
 
         version = get_version(self.data_dic["version"])
@@ -104,8 +112,10 @@ class ImportAssessment:
         try:
             float(version)
         except ValueError as e:
-            self.message = f"Error {e}. The version must not contain letters. It should be convertible into a float " \
-                           f"('0.5', '1.0', etc). The version you provided was '{version}'",
+            self.message = (
+                f"Error {e}. The version must not contain letters. It should be convertible into a float "
+                f"('0.5', '1.0', etc). The version you provided was '{version}'",
+            )
             raise Exception(self.message)
 
         if float(version) <= 0:
@@ -118,27 +128,35 @@ class ImportAssessment:
             try:
                 float(previous_version)
             except ValueError as e:
-                self.message = f"Error {e}. The previous version must not contain letters. It should be convertible" \
-                               f" into a float ('0.5', '1.0', etc). The previous version you provided was " \
-                               f"'{previous_version}'",
+                self.message = (
+                    f"Error {e}. The previous version must not contain letters. It should be convertible"
+                    f" into a float ('0.5', '1.0', etc). The previous version you provided was "
+                    f"'{previous_version}'",
+                )
                 raise Exception(self.message)
 
             if float(previous_version) <= 0:
-                self.message = "The previous version must be convertible into a positive number"
+                self.message = (
+                    "The previous version must be convertible into a positive number"
+                )
                 raise Exception(self.message)
 
             # If the previous version refers to a non-existing assessment raise an error
             if not list(Assessment.objects.filter(version=previous_version)):
-                self.message = "The previous version refers to a non-existing assessment. Please change it or upload" \
-                               "the corresponding assessment"
+                self.message = (
+                    "The previous version refers to a non-existing assessment. Please change it or upload"
+                    "the corresponding assessment"
+                )
                 raise Exception(self.message)
 
         if get_last_assessment_created():
             if float(version) < float(get_last_assessment_created().version):
-                self.message = f"The assessment version must not be smaller than the" \
-                               f" assessment versions already in the DB" \
-                               f"The new assessment version is {version} and the latest in th DB" \
-                               f" is {get_last_assessment_created().version}",
+                self.message = (
+                    f"The assessment version must not be smaller than the"
+                    f" assessment versions already in the DB"
+                    f"The new assessment version is {version} and the latest in th DB"
+                    f" is {get_last_assessment_created().version}",
+                )
                 raise Exception(self.message)
 
         for section in list(self.data_dic["sections"].keys()):
@@ -152,8 +170,16 @@ class ImportAssessment:
 
         and then call the check of the elements
         """
-        key_list = ["order_id", "name_fr", "name_en", "keyword_fr", "keyword_en",
-                    "description_fr", "description_en", "elements"]
+        key_list = [
+            "order_id",
+            "name_fr",
+            "name_en",
+            "keyword_fr",
+            "keyword_en",
+            "description_fr",
+            "description_en",
+            "elements",
+        ]
         if not test_keys_in_dic(section_data, keys_list=key_list):
             self.message = f"You have a section without the required keys {key_list}"
             raise Exception(self.message)
@@ -175,11 +201,25 @@ class ImportAssessment:
         and then call the tests for the choices and the resources
         """
         # Test that the keys are present in the dictionary
-        key_list = ["order_id", "name_fr", "name_en", "condition", "question_text_fr", "question_text_en",
-                    "question_type", "answer_items", "explanation_text_fr", "explanation_text_en",
-                    "risk_domain_fr", "risk_domain_en", "resources"]
+        key_list = [
+            "order_id",
+            "name_fr",
+            "name_en",
+            "condition",
+            "question_text_fr",
+            "question_text_en",
+            "question_type",
+            "answer_items",
+            "explanation_text_fr",
+            "explanation_text_en",
+            "risk_domain_fr",
+            "risk_domain_en",
+            "resources",
+        ]
         if not test_keys_in_dic(element_data, keys_list=key_list):
-            self.message = f"You have an element {element_data} without the required keys {key_list}"
+            self.message = (
+                f"You have an element {element_data} without the required keys {key_list}"
+            )
             raise Exception(self.message)
 
         # Test that the order id is a string convertible into a number
@@ -188,9 +228,13 @@ class ImportAssessment:
             raise Exception(self.message)
 
         # Test if there is a condition inter, that it does respect the format (ex "1.5.a")
-        if element_data.get("condition") != "n/a" and not test_choice_numbering(element_data.get("condition")):
-            self.message = f"You have a condition for a choice which the numbering is" \
-                           f" not respected {element_data.get('condition')}. Please follow th format '1.1.a'"
+        if element_data.get("condition") != "n/a" and not test_choice_numbering(
+            element_data.get("condition")
+        ):
+            self.message = (
+                f"You have a condition for a choice which the numbering is"
+                f" not respected {element_data.get('condition')}. Please follow th format '1.1.a'"
+            )
             raise Exception(self.message)
 
         for choice in list(element_data["answer_items"].keys()):
@@ -207,7 +251,9 @@ class ImportAssessment:
         key_list = ["order_id", "answer_text_fr", "answer_text_en", "is_concerned_switch"]
 
         if not test_keys_in_dic(choice_data, keys_list=key_list):
-            self.message = f"You have a choice {choice_data} without the required keys {key_list}"
+            self.message = (
+                f"You have a choice {choice_data} without the required keys {key_list}"
+            )
             raise Exception(self.message)
 
         if not test_order_id_letter(choice_data.get("order_id")):
@@ -215,11 +261,15 @@ class ImportAssessment:
             raise Exception(self.message)
 
         if not choice_data.get("is_concerned_switch") in [0, 1, "True", "False"]:
-            self.message = f"The choice has not a boolean value for is_concerned_switch {choice_data}"
+            self.message = (
+                f"The choice has not a boolean value for is_concerned_switch {choice_data}"
+            )
             raise Exception(self.message)
 
         if not test_condition_and_risk_domain(choice_data, element_data):
-            self.message = f"The element {element_data} has conditions inter but has no risk description"
+            self.message = (
+                f"The element {element_data} has conditions inter but has no risk description"
+            )
             raise Exception(self.message)
 
     def check_resource(self, resource_data):
@@ -228,7 +278,9 @@ class ImportAssessment:
         """
         key_list = ["resource_type", "resource_text_fr", "resource_text_en"]
         if not test_keys_in_dic(resource_data, keys_list=key_list):
-            self.message = f"You have a resource {resource_data} without the required keys {key_list}"
+            self.message = (
+                f"You have a resource {resource_data} without the required keys {key_list}"
+            )
             raise Exception(self.message)
 
     def manage_conditions_inter_elements(self, element_data):
@@ -251,15 +303,19 @@ class ImportAssessment:
                 # If the element setting conditions intra elements has no risk domain, breaks the import process
                 if not depends_on.master_evaluation_element.risk_domain:
                     self.success = False
-                    self.message = f"You have an element, {element_data}, setting conditions inter" \
-                                   f" but without risk domain"
+                    self.message = (
+                        f"You have an element, {element_data}, setting conditions inter"
+                        f" but without risk domain"
+                    )
                     self.assessment.delete()
                     return depends_on
 
             except (ObjectDoesNotExist, MultipleObjectsReturned) as e:
                 self.success = False
-                self.message = f"You have set a condition on a choice which does not exist or which is not " \
-                               f"before the evaluation element, error {e}. Choice {element_data.get('condition')}"
+                self.message = (
+                    f"You have set a condition on a choice which does not exist or which is not "
+                    f"before the evaluation element, error {e}. Choice {element_data.get('condition')}"
+                )
                 self.assessment.delete()
                 return depends_on
         return depends_on
@@ -271,25 +327,30 @@ class ImportAssessment:
         """
         if choice.get_numbering() in dic_choices:
             self.success = False
-            self.message = f"You have duplicate choice numbering so please verify your " \
-                           f"order_id {choice.get_numbering()}"
+            self.message = (
+                f"You have duplicate choice numbering so please verify your "
+                f"order_id {choice.get_numbering()}"
+            )
             self.assessment.delete()
 
     def create_assessment(self):
         if get_version(self.data_dic["previous_assessment_version"]):
             assessment = Assessment(
-                version=get_version(self.data_dic['version']),
-                previous_assessment=list(Assessment.objects.filter(
-                    version=get_version(self.data_dic["previous_assessment_version"])))[0],
+                version=get_version(self.data_dic["version"]),
+                previous_assessment=list(
+                    Assessment.objects.filter(
+                        version=get_version(self.data_dic["previous_assessment_version"])
+                    )
+                )[0],
                 name_fr=self.data_dic["name_fr"],
-                name_en=self.data_dic["name_en"]
+                name_en=self.data_dic["name_en"],
             )
             assessment.save()
         else:
             assessment = Assessment(
-                version=get_version(self.data_dic['version']),
+                version=get_version(self.data_dic["version"]),
                 name_fr=self.data_dic["name_fr"],
-                name_en=self.data_dic["name_en"]
+                name_en=self.data_dic["name_en"],
             )
             assessment.save()
 
@@ -392,9 +453,9 @@ def add_resources(element_data, element):
         for resource_data in list(resources_data_dic.values()):
             # If the resource already exists as it is in the import data
             if external_link_already_exist(
-                    resource_data.get("resource_text_fr"),
-                    resource_data.get("resource_text_en"),
-                    resource_data.get("resource_type")
+                resource_data.get("resource_text_fr"),
+                resource_data.get("resource_text_en"),
+                resource_data.get("resource_type"),
             ):
                 resource = ExternalLink.objects.get(
                     text_fr=resource_data.get("resource_text_fr"),
@@ -407,9 +468,9 @@ def add_resources(element_data, element):
 
                 # we check if we need to create the external links (doesnt exist either in French or English)
                 if not resource and not external_link_already_exist(
-                        resource_data.get("resource_text_fr"),
-                        resource_data.get("resource_text_en"),
-                        resource_data.get("resource_type")
+                    resource_data.get("resource_text_fr"),
+                    resource_data.get("resource_text_en"),
+                    resource_data.get("resource_type"),
                 ):
                     # Note that there is no condition on the resource type or resource text as
                     # it is only markdownify (no need to respect a format with a template tags)
@@ -429,9 +490,7 @@ def manage_update_resource_language(resource_data):
     resource = None
     # Elif it already exists in French, so we get it and update English part
     if external_link_already_exist_lang(
-            resource_data.get("resource_text_fr"),
-            resource_data.get("resource_type"),
-            "fr"
+        resource_data.get("resource_text_fr"), resource_data.get("resource_type"), "fr"
     ):
         resource = ExternalLink.objects.get(
             text_fr=resource_data.get("resource_text_fr"),
@@ -441,9 +500,7 @@ def manage_update_resource_language(resource_data):
         resource.save()
     # It already exists in English so we add the French text
     elif external_link_already_exist_lang(
-            resource_data.get("resource_text_en"),
-            resource_data.get("resource_type"),
-            "en"
+        resource_data.get("resource_text_en"), resource_data.get("resource_type"), "en"
     ):
         resource = ExternalLink.objects.get(
             text_en=resource_data.get("resource_text_en"),
@@ -507,15 +564,18 @@ def external_link_already_exist_lang(text, resource_type, lang):
         return list(ExternalLink.objects.filter(text_en=text, type=resource_type)) != []
 
 
-def external_link_already_exist(text_fr, text_en, resource_type, ):
+def external_link_already_exist(
+    text_fr,
+    text_en,
+    resource_type,
+):
     """
     Check if there is already a resource in the table ExternalLinks. Return boolean (True if it exists).
     """
-    return list(ExternalLink.objects.filter(
-        text_fr=text_fr,
-        text_en=text_en,
-        type=resource_type)
-    ) != []
+    return (
+        list(ExternalLink.objects.filter(text_fr=text_fr, text_en=text_en, type=resource_type))
+        != []
+    )
 
 
 def get_version(raw_version):
@@ -643,33 +703,46 @@ def check_element_change_logs(list_dic_diff):
         dic_diff = dic_diff[list(dic_diff.keys())[0]]
         for element_dic in dic_diff["elements"]:
             # check all keys are there
-            if not test_keys_in_dic(dic_diff["elements"][element_dic], key_list) or \
-                    len(dic_diff["elements"][element_dic].keys()) != 5:
+            if (
+                not test_keys_in_dic(dic_diff["elements"][element_dic], key_list)
+                or len(dic_diff["elements"][element_dic].keys()) != 5
+            ):
                 success = False
-                message = f"You have this element {element_dic} that's missing at least on of the required " \
-                          f"keys {key_list}"
+                message = (
+                    f"You have this element {element_dic} that's missing at least on of the required "
+                    f"keys {key_list}"
+                )
                 return success, message
 
             # check the value of the upgrade_status
-            if list(dic_diff["elements"][element_dic].values())[0] not in upgrade_status_values and \
-                    not check_upgrade_status_content(list(dic_diff["elements"][element_dic].values())[0]):
+            if list(dic_diff["elements"][element_dic].values())[
+                0
+            ] not in upgrade_status_values and not check_upgrade_status_content(
+                list(dic_diff["elements"][element_dic].values())[0]
+            ):
                 success = False
-                message = f"Possible values for upgrade_status are {upgrade_status_values} or of the format int.int " \
-                          f"instead {list(dic_diff['elements'][element_dic].values())[0]} was found"
+                message = (
+                    f"Possible values for upgrade_status are {upgrade_status_values} or of the format int.int "
+                    f"instead {list(dic_diff['elements'][element_dic].values())[0]} was found"
+                )
                 return success, message
 
             # check the value of the pastille
             # english pastilles
             if dic_diff["elements"][element_dic]["pastille_en"] not in english_pastilles:
                 success = False
-                message = f"Possible values for pastille_en are {english_pastilles}, " \
-                          f"instead {list(dic_diff['elements'][element_dic]['pastille_en'])} was found"
+                message = (
+                    f"Possible values for pastille_en are {english_pastilles}, "
+                    f"instead {list(dic_diff['elements'][element_dic]['pastille_en'])} was found"
+                )
                 return success, message
             # french pastilles
             if dic_diff["elements"][element_dic]["pastille_fr"] not in french_pastilles:
                 success = False
-                message = f"Possible values for pastille_fr are {french_pastilles}, " \
-                          f"instead {list(dic_diff['elements'][element_dic]['pastille_fr'])} was found"
+                message = (
+                    f"Possible values for pastille_fr are {french_pastilles}, "
+                    f"instead {list(dic_diff['elements'][element_dic]['pastille_fr'])} was found"
+                )
                 return success, message
 
     return success, message
@@ -713,13 +786,14 @@ def save_upgrade(dict_upgrade_data):
                         value["edito_fr"],
                         value["pastille_en"],
                         value["pastille_fr"],
-                        MasterEvaluationElement.objects.get(order_id=int(key[-1]),
-                                                            master_section=MasterSection.objects.get(
-                                                                order_id=int(key[-3]),
-                                                                assessment=final_assessment),
-                                                            ).get_numbering(),
+                        MasterEvaluationElement.objects.get(
+                            order_id=int(key[-1]),
+                            master_section=MasterSection.objects.get(
+                                order_id=int(key[-3]), assessment=final_assessment
+                            ),
+                        ).get_numbering(),
                         origin_assessment,
-                        final_assessment
+                        final_assessment,
                     )
 
         except ObjectDoesNotExist as e:
@@ -731,15 +805,24 @@ def save_upgrade(dict_upgrade_data):
     return success, message
 
 
-def create_element_change_log(edito_en, edito_fr, pastille_en, pastille_fr, eval_element_numbering,
-                              previous_assessment, new_assessment):
-    change_log = ElementChangeLog(edito_en=edito_en,
-                                  edito_fr=edito_fr,
-                                  pastille_en=pastille_en,
-                                  pastille_fr=pastille_fr,
-                                  eval_element_numbering=eval_element_numbering,
-                                  previous_assessment=previous_assessment,
-                                  assessment=new_assessment)
+def create_element_change_log(
+    edito_en,
+    edito_fr,
+    pastille_en,
+    pastille_fr,
+    eval_element_numbering,
+    previous_assessment,
+    new_assessment,
+):
+    change_log = ElementChangeLog(
+        edito_en=edito_en,
+        edito_fr=edito_fr,
+        pastille_en=pastille_en,
+        pastille_fr=pastille_fr,
+        eval_element_numbering=eval_element_numbering,
+        previous_assessment=previous_assessment,
+        assessment=new_assessment,
+    )
 
     change_log.save()
 
@@ -748,7 +831,7 @@ def check_upgrade_status_content(numbering):
     valid = False
     if isinstance(numbering, str):
         numbering_parts = numbering.split(".")
-        if(len(numbering_parts)) == 2:
+        if (len(numbering_parts)) == 2:
             try:
                 int(numbering_parts[0])
                 int(numbering_parts[1])

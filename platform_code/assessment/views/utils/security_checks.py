@@ -1,14 +1,12 @@
 import logging
 
-from django.utils.translation import gettext as _
 from django.contrib import messages
 from django.shortcuts import get_object_or_404
+from django.utils.translation import gettext as _
+from home.models import Organisation
 from sentry_sdk import capture_message
 
-from home.models import Organisation
-
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 def membership_security_check(request, *args, **kwargs):
@@ -25,8 +23,10 @@ def membership_security_check(request, *args, **kwargs):
     is_member = organisation.check_user_is_member(user=user)
     if not is_member:
         messages.warning(request, _("You don't have access to this content."))
-        capture_message(f"[forced_url] The user {request.user.email} tried to access to the organisation "
-                       f"{organisation} while not member")
+        capture_message(
+            f"[forced_url] The user {request.user.email} tried to access to the organisation "
+            f"{organisation} while not member"
+        )
     return is_member
 
 
@@ -56,5 +56,7 @@ def can_edit_security_check(request, *args, **kwargs):
     if organisation is None:
         organisation_id = kwargs.get("orga_id", None)
         organisation = get_object_or_404(Organisation, id=organisation_id)
-    is_member_allowed_to_edit = organisation.check_user_is_member_and_can_edit_evaluations(user=user)
+    is_member_allowed_to_edit = organisation.check_user_is_member_and_can_edit_evaluations(
+        user=user
+    )
     return is_member_allowed_to_edit

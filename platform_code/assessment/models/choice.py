@@ -2,7 +2,7 @@ import re
 
 from django.db import models
 
-from .evaluation_element import MasterEvaluationElement, EvaluationElement
+from .evaluation_element import EvaluationElement, MasterEvaluationElement
 
 
 class MasterChoice(models.Model):
@@ -12,7 +12,9 @@ class MasterChoice(models.Model):
     """
 
     master_evaluation_element = models.ForeignKey(
-        MasterEvaluationElement, blank=True, on_delete=models.CASCADE,
+        MasterEvaluationElement,
+        blank=True,
+        on_delete=models.CASCADE,
     )
     answer_text = models.TextField()
     order_id = models.CharField(blank=True, null=True, max_length=200)  # can be letters
@@ -34,22 +36,24 @@ class MasterChoice(models.Model):
         Get the numbering of the master choice, like 1.2.a for the section 1, evaluation element 2 and choice a
         """
         if (
-                self.master_evaluation_element.master_section.order_id
-                and self.master_evaluation_element.order_id
-                and self.order_id
+            self.master_evaluation_element.master_section.order_id
+            and self.master_evaluation_element.order_id
+            and self.order_id
         ):
             return (
-                    str(self.master_evaluation_element.master_section.order_id)
-                    + "."
-                    + str(self.master_evaluation_element.order_id)
-                    + "."
-                    + self.order_id
+                str(self.master_evaluation_element.master_section.order_id)
+                + "."
+                + str(self.master_evaluation_element.order_id)
+                + "."
+                + self.order_id
             )
         else:
-            print(f"You need to have an order id for the section "
-                  f"({self.master_evaluation_element.master_section.order_id}) "
-                  f", the evaluation element ({self.master_evaluation_element.order_id})"
-                  f" and the choice ({self.order_id})")
+            print(
+                f"You need to have an order id for the section "
+                f"({self.master_evaluation_element.master_section.order_id}) "
+                f", the evaluation element ({self.master_evaluation_element.order_id})"
+                f" and the choice ({self.order_id})"
+            )
             return ""
 
     def test_numbering(self):
@@ -98,11 +102,7 @@ class Choice(models.Model):
 
     def __str__(self):
         if self.master_choice.get_numbering() and self.master_choice.answer_text:
-            return (
-                    self.master_choice.get_numbering()
-                    + " "
-                    + self.master_choice.answer_text
-            )
+            return self.master_choice.get_numbering() + " " + self.master_choice.answer_text
         elif self.master_choice.get_numbering() and not self.master_choice.answer_text:
             return self.master_choice.get_numbering()
         else:

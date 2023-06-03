@@ -1,22 +1,21 @@
-from django.urls import path, re_path, include
+from django.urls import include, path, re_path
 
 from .views import (
-    EvaluationView,
-    EvaluationCreationView,
     DeleteEvaluation,
-    SummaryView,
+    EvaluationCreationView,
+    EvaluationView,
+    ResultsPDFView,
     ResultsView,
+    SectionView,
+    SummaryView,
+    duplicateView,
+    labellingAgainView,
+    labellingEnd,
+    labellingJustification,
+    labellingView,
     leave_organisation,
     upgradeView,
-    SectionView,
-    ResultsPDFView,
-    labellingView,
-    labellingAgainView,
-    labellingJustification,
-    labellingEnd,
-    duplicateView
 )
-
 
 app_name = "assessment"
 
@@ -45,20 +44,36 @@ urlpatterns = [
                             path("upgrade/", upgradeView, name="upgrade"),
                             path("duplicate/", duplicateView, name="duplicate"),
                             path("labelling/", labellingView, name="labelling"),
-                            path("labelling-again/", labellingAgainView, name="submit-labelling-again"),
-                            path("labelling/justification", labellingJustification, name="labelling-justification"),
-                            re_path(r"labelling/(?P<status>[a-z]{1,15})", labellingEnd, name="end-labelling"),
+                            path(
+                                "labelling-again/",
+                                labellingAgainView,
+                                name="submit-labelling-again",
+                            ),
+                            path(
+                                "labelling/justification",
+                                labellingJustification,
+                                name="labelling-justification",
+                            ),
+                            re_path(
+                                r"labelling/(?P<status>[a-z]{1,15})",
+                                labellingEnd,
+                                name="end-labelling",
+                            ),
                             re_path(
                                 r"^section/(?P<id>[0-9]{1,})/(?P<name>[-\w\W]+)/(?P<page>\d+)$",
                                 SectionView.as_view(),
                                 name="section",
                             ),
                             path(
-                                "results/", include([
-                                    path("", ResultsView.as_view(), name="results"),
-                                    path("pdf/", ResultsPDFView.as_view(), name="resultsPDF")
-                                ])
-
+                                "results/",
+                                include(
+                                    [
+                                        path("", ResultsView.as_view(), name="results"),
+                                        path(
+                                            "pdf/", ResultsPDFView.as_view(), name="resultsPDF"
+                                        ),
+                                    ]
+                                ),
                             ),
                         ]
                     ),

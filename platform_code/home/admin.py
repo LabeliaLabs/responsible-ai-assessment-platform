@@ -6,20 +6,24 @@ from .admin_utils.organisation_admin import OrganisationAdmin
 from .admin_utils.platform_management_admin import PlatformManagementAdmin
 from .admin_utils.user_admin import UserAdmin
 from .models import (
-    UserResources,
-    Organisation,
+    Footer,
     Membership,
-    User,
+    Organisation,
     PendingInvitation,
     PlatformManagement,
     ReleaseNote,
-    Footer,
+    User,
+    UserResources,
 )
 
 
 class MembershipAdmin(admin.ModelAdmin):
     list_display = ("pk", "user", "get_organisation_name", "role")
-    list_filter = ("role", "user", "organisation", )
+    list_filter = (
+        "role",
+        "user",
+        "organisation",
+    )
 
     @admin.display(description="Organisation")
     def get_organisation_name(self, instance):
@@ -27,8 +31,16 @@ class MembershipAdmin(admin.ModelAdmin):
 
 
 class PendingInvitationAdmin(admin.ModelAdmin):
-    list_display = ("pk", "email", "get_organisation_name", "role", )
-    list_filter = ("organisation", "role", )
+    list_display = (
+        "pk",
+        "email",
+        "get_organisation_name",
+        "role",
+    )
+    list_filter = (
+        "organisation",
+        "role",
+    )
 
     @admin.display(description="Organisation")
     def get_organisation_name(self, instance):
@@ -49,4 +61,4 @@ admin.site.unregister(Group)
 admin.site.register(ReleaseNote)
 admin.site.register(Footer, FooterAdmin)
 
-admin_dashboard = DashboardAdminSite(name='admin-monitoring')
+admin_dashboard = DashboardAdminSite(name="admin-monitoring")

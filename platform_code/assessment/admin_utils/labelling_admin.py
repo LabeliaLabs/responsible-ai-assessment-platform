@@ -5,6 +5,7 @@ class LabellingAdmin(admin.ModelAdmin):
     """
     Defines the admin panel for the labelling objects
     """
+
     list_display = (
         "evaluation",
         "get_organisation",

@@ -3,8 +3,7 @@ import logging
 
 from django.http import HttpResponse
 
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 def export_user_data(request):

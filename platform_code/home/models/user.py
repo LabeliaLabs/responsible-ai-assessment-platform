@@ -1,8 +1,8 @@
-from django.contrib.auth.base_user import BaseUserManager, AbstractBaseUser
+from django.conf import settings
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -13,7 +13,9 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_("Users must have an email address"))
 
-        user = self.model(email=self.normalize_email(email),)
+        user = self.model(
+            email=self.normalize_email(email),
+        )
 
         user.set_password(password)
         user.save(using=self._db)
@@ -23,7 +25,10 @@ class UserManager(BaseUserManager):
         """
         Creates and saves a staff user with the given email and password.
         """
-        user = self.create_user(email, password=password,)
+        user = self.create_user(
+            email,
+            password=password,
+        )
         user.staff = True
         user.save(using=self._db)
         return user
@@ -32,7 +37,10 @@ class UserManager(BaseUserManager):
         """
         Creates and saves a superuser with the given email and password.
         """
-        user = self.create_user(email, password=password,)
+        user = self.create_user(
+            email,
+            password=password,
+        )
         user.staff = True
         user.admin = True
         user.save(using=self._db)
@@ -47,6 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     case, the field wasn't caught. This issue forced me to overwrite some methods and class to reset the user password.
 
     """
+
     languages = settings.LANGUAGES
 
     email = models.EmailField(

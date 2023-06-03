@@ -1,12 +1,11 @@
-from django.utils.translation import activate
-
-from home.models import PlatformManagement, Footer
 from assessment.models import is_language_activation_allowed
+from django.utils.translation import activate
+from home.models import Footer, PlatformManagement
 
 
 def add_footer_list(request):
     return {
-        'footer_list': Footer.objects.all(),
+        "footer_list": Footer.objects.all(),
     }
 
 
@@ -21,6 +20,6 @@ def add_platform_management(request):
     if not platform_management.activate_multi_languages:
         activate("fr")
     return {
-        'platform_management': platform_management,
-        'is_language_activation_allowed': is_language_activation_allowed()
+        "platform_management": platform_management,
+        "is_language_activation_allowed": is_language_activation_allowed(),
     }

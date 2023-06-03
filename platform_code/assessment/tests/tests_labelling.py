@@ -1,12 +1,6 @@
-from django.test import TestCase, Client, RequestFactory
-
-from assessment.models import (
-    Assessment,
-    Evaluation,
-    Labelling,
-    EvaluationElement,
-)
-from home.models import User, Organisation, PlatformManagement
+from assessment.models import Assessment, Evaluation, EvaluationElement, Labelling
+from django.test import Client, RequestFactory, TestCase
+from home.models import Organisation, PlatformManagement, User
 from home.views.profile import ProfileView
 
 
@@ -14,6 +8,7 @@ class TestLabellingProcess(TestCase):
     """
     Test the labelling model and the synergy with the evaluation model.
     """
+
     def setUp(self):
         # Configure an user and organisation
         self.email = "admin@hotmail.com"
@@ -24,18 +19,20 @@ class TestLabellingProcess(TestCase):
             size=Organisation.SIZE[0][0],
             country="FR",
             sector=Organisation.SECTOR[0][0],
-            created_by=self.user
+            created_by=self.user,
         )
         self.client = Client()
         self.client.login(email=self.email, password=self.password)
-        scoring_file = open('assessment/tests/import_test_files/scoring_test_v1.json')
-        assessment_file = open('assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json')
+        scoring_file = open("assessment/tests/import_test_files/scoring_test_v1.json")
+        assessment_file = open(
+            "assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json"
+        )
         post_data = {
             "assessment_json_file": assessment_file,  # just the field need to not be empty
-            "scoring_json_file": scoring_file
+            "scoring_json_file": scoring_file,
         }
         # Create the assessment
-        self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
+        self.client.post("/fr/admin/assessment/assessment/upload-json/", post_data)
         self.assessment = Assessment.objects.first()
         # Create an evaluation
         self.evaluation = Evaluation.create_evaluation(
@@ -140,27 +137,32 @@ class TestLabellingProcess(TestCase):
         self.evaluation.duplicate_evaluation()
         self.evaluation_score = self.evaluation.evaluationscore_set.all().first()
         self.assertEqual(len(list(Evaluation.objects.all())), 2)
-        self.duplicated_evaluation = Evaluation.objects.filter(name="evaluation-duplication").first()
+        self.duplicated_evaluation = Evaluation.objects.filter(
+            name="evaluation-duplication"
+        ).first()
         self.assertIsNotNone(self.duplicated_evaluation)
-        self.duplicated_evaluation_score = self.duplicated_evaluation.evaluationscore_set.all().first()
+        self.duplicated_evaluation_score = (
+            self.duplicated_evaluation.evaluationscore_set.all().first()
+        )
         self.assertEqual(self.evaluation.is_finished, self.duplicated_evaluation.is_finished)
         self.assertEqual(self.evaluation_score.score, self.duplicated_evaluation_score.score)
 
     def test_evaluation_duplication_action_plan(self):
         evaluation_element = EvaluationElement.objects.filter(
-            master_evaluation_element__order_id="1",
-            section__master_section__order_id="1"
+            master_evaluation_element__order_id="1", section__master_section__order_id="1"
         ).first()
         evaluation_element.is_in_action_plan = True
         evaluation_element.save()
         self.evaluation.complete_evaluation(characteristic="normal")
         self.evaluation.duplicate_evaluation()
-        duplicated_evaluation = Evaluation.objects.filter(name="evaluation-duplication").first()
+        duplicated_evaluation = Evaluation.objects.filter(
+            name="evaluation-duplication"
+        ).first()
         self.assertIsNotNone(duplicated_evaluation)
         new_evaluation_element = EvaluationElement.objects.filter(
             master_evaluation_element__order_id="1",
             section__master_section__order_id="1",
-            section__evaluation=duplicated_evaluation
+            section__evaluation=duplicated_evaluation,
         ).first()
         self.assertIsNotNone(new_evaluation_element)
         self.assertTrue(new_evaluation_element.is_in_action_plan)
@@ -180,7 +182,7 @@ class TestLabellingProcess(TestCase):
         # The min for the test file is 60 so this should be set manually
         evaluation_score.score = 0
         evaluation_score.save()
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.evaluation.refresh_from_db()
         with self.assertRaises(Exception):
             self.evaluation.labelling
@@ -190,7 +192,7 @@ class TestLabellingProcess(TestCase):
         self.evaluation.complete_evaluation(characteristic="max")
         self.assertTrue(self.evaluation.is_finished)
         self.evaluation.evaluationscore_set.all().first().refresh_from_db()
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.evaluation.refresh_from_db()
         self.assertIsNotNone(self.evaluation.labelling)
         self.assertFalse(self.evaluation.is_editable)
@@ -204,27 +206,27 @@ class TestLabellingProcess(TestCase):
             - then validate the labellisation
         """
         self.evaluation.complete_evaluation(characteristic="max")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.evaluation.refresh_from_db()
         self.assertFalse(self.evaluation.is_editable)
         self.assertFalse(self.evaluation.is_deleteable)
         self.assertTrue(self.evaluation.has_labelling())
         labelling = self.evaluation.labelling
         self.assertEqual(labelling.status, "progress")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/justification')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/justification")
         labelling.refresh_from_db()
         self.evaluation.refresh_from_db()
         self.assertEqual(labelling.status, "justification")
         self.assertTrue(self.evaluation.is_editable)
         self.assertFalse(self.evaluation.is_deleteable)
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling-again/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling-again/")
         labelling.refresh_from_db()
         self.evaluation.refresh_from_db()
         self.assertEqual(labelling.status, "progress")
         self.assertFalse(self.evaluation.is_editable)
         self.assertFalse(self.evaluation.is_deleteable)
         self.assertEqual(labelling.counter, 2)
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/validation')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/validation")
         labelling.refresh_from_db()
         self.evaluation.refresh_from_db()
         self.assertEqual(labelling.status, "labelled")
@@ -242,7 +244,7 @@ class TestLabellingProcess(TestCase):
         self.evaluation.evaluationscore_set.all().first().refresh_from_db()
         evaluation_score = self.evaluation.evaluationscore_set.all().first()
         self.assertTrue(evaluation_score.score > platform_management.labelling_threshold)
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.evaluation.refresh_from_db()
         self.assertTrue(self.evaluation.has_labelling())
         labelling = self.evaluation.labelling
@@ -257,7 +259,7 @@ class TestLabellingProcess(TestCase):
         platform_management.set_labelling_threshold(99)
         platform_management.refresh_from_db()
         self.assertTrue(evaluation_score.score < platform_management.labelling_threshold)
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.assertFalse(self.evaluation.has_labelling())
 
     def test_user_editor_cannot_create_labelling(self):
@@ -271,7 +273,7 @@ class TestLabellingProcess(TestCase):
         self.organisation.add_user_to_organisation(user2, "editor")
         self.assertTrue(self.organisation.check_user_is_member_and_can_edit_evaluations(user2))
         self.evaluation.complete_evaluation(characteristic="max")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.assertFalse(self.evaluation.has_labelling())
 
     def test_labelling_justification_not_admin(self):
@@ -284,12 +286,12 @@ class TestLabellingProcess(TestCase):
         self.organisation.add_user_to_organisation(user2, "admin")
         self.assertTrue(self.organisation.check_user_is_member_and_can_edit_evaluations(user2))
         self.evaluation.complete_evaluation(characteristic="max")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.evaluation.refresh_from_db()
         self.assertTrue(self.evaluation.has_labelling())
         labelling = self.evaluation.labelling
         self.assertEqual(labelling.status, "progress")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/justification')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/justification")
         # Previous line not taken into consideration as the user is not an admin of the plateform
         labelling.refresh_from_db()
         self.assertEqual(labelling.status, "progress")
@@ -304,18 +306,18 @@ class TestLabellingProcess(TestCase):
         self.organisation.add_user_to_organisation(user2, "admin")
         self.assertTrue(self.organisation.check_user_is_member_and_can_edit_evaluations(user2))
         self.evaluation.complete_evaluation(characteristic="max")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.evaluation.refresh_from_db()
         self.assertTrue(self.evaluation.has_labelling())
         labelling = self.evaluation.labelling
         self.assertEqual(labelling.status, "progress")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/validation')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/validation")
         # Previous line not taken into consideration as the user is not an admin of the plateform
         labelling.refresh_from_db()
         self.assertEqual(labelling.status, "progress")
         # Connect the admin user to validate the labelling
         self.client.login(email=self.email, password=self.password)
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/validation')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/validation")
         labelling.refresh_from_db()
         self.assertEqual(labelling.status, "labelled")
 
@@ -325,21 +327,23 @@ class TestLabellingProcess(TestCase):
         cannot be submit again
         """
         self.evaluation.complete_evaluation(characteristic="max")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.evaluation.refresh_from_db()
         labelling = self.evaluation.labelling
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/justification')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/justification")
         labelling.refresh_from_db()
         self.evaluation.refresh_from_db()
         self.assertEqual(labelling.status, "justification")
         # Reset one evaluation element answer to set the evaluation "not finished"
         evaluation_element = self.evaluation.section_set.first().evaluationelement_set.first()
-        self.assertTrue(len(evaluation_element.get_list_choices_ticked()) >= 1)  # At least one choice ticked
+        self.assertTrue(
+            len(evaluation_element.get_list_choices_ticked()) >= 1
+        )  # At least one choice ticked
         evaluation_element.reset_choices()
         evaluation_element.section.set_progression()
         self.evaluation.set_finished()
         self.assertFalse(self.evaluation.is_finished)
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling-again/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling-again/")
         labelling.refresh_from_db()
         self.evaluation.refresh_from_db()
         self.assertNotEqual(labelling.status, "progress")
@@ -351,16 +355,16 @@ class TestLabellingProcess(TestCase):
         """
         # Test that when no labelling, no duplication of the evaluation
         self.assertEqual(len(list(Evaluation.objects.all())), 1)
-        self.client.get(f'{self.evaluation.get_absolute_url()}duplicate/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}duplicate/")
         self.assertEqual(len(list(Evaluation.objects.all())), 1)
         # Create the labelling
         self.evaluation.complete_evaluation(characteristic="max")
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.evaluation.refresh_from_db()
         self.assertTrue(self.evaluation.has_labelling())
         # Test that the duplication works when the labelling is created
         self.assertEqual(len(list(Evaluation.objects.all())), 1)
-        self.client.get(f'{self.evaluation.get_absolute_url()}duplicate/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}duplicate/")
         self.assertEqual(len(list(Evaluation.objects.all())), 2)
 
     def test_profile_view_add_labelable_evaluation(self):
@@ -369,7 +373,7 @@ class TestLabellingProcess(TestCase):
         is correct (ie score > labelling_threshold or that the evaluation has already a labelling)
         No evaluation case
         """
-        request = RequestFactory().get('accounts/profile/')
+        request = RequestFactory().get("accounts/profile/")
         request.user = self.user
         response = ProfileView.as_view()(request)
         self.assertEqual(response.status_code, 200)
@@ -384,7 +388,7 @@ class TestLabellingProcess(TestCase):
         """
         self.evaluation.complete_evaluation(characteristic="max")
         self.evaluation.refresh_from_db()
-        request = RequestFactory().get('accounts/profile/')
+        request = RequestFactory().get("accounts/profile/")
         request.user = self.user
         response = ProfileView.as_view()(request)
         self.assertEqual(response.status_code, 200)
@@ -399,7 +403,7 @@ class TestLabellingProcess(TestCase):
         """
         self.evaluation.complete_evaluation(characteristic="max")
         self.evaluation.refresh_from_db()
-        request = RequestFactory().get('accounts/profile/')
+        request = RequestFactory().get("accounts/profile/")
         request.user = self.user
         context = ProfileView.as_view()(request).context_data
         # Ok
@@ -412,7 +416,7 @@ class TestLabellingProcess(TestCase):
         evaluation_score.score = 80
         evaluation_score.save()
         self.assertTrue(platform_management.get_labelling_threshold() > evaluation_score.score)
-        request = RequestFactory().get('accounts/profile/')
+        request = RequestFactory().get("accounts/profile/")
         request.user = self.user
         context = ProfileView.as_view()(request).context_data
         self.assertEqual(context["labelable_evaluations"], [])
@@ -425,23 +429,25 @@ class TestLabellingProcess(TestCase):
         """
         self.evaluation.complete_evaluation(characteristic="max")
         self.evaluation.refresh_from_db()
-        request = RequestFactory().get('accounts/profile/')
+        request = RequestFactory().get("accounts/profile/")
         request.user = self.user
         response = ProfileView.as_view()(request)
         self.assertEqual(response.status_code, 200)
         context = response.context_data
         self.assertEqual(context["labelable_evaluations"], [self.evaluation])
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling-again/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling-again/")
         # Set not finished
         evaluation_element = self.evaluation.section_set.first().evaluationelement_set.first()
-        self.assertTrue(len(evaluation_element.get_list_choices_ticked()) >= 1)  # At least one choice ticked
+        self.assertTrue(
+            len(evaluation_element.get_list_choices_ticked()) >= 1
+        )  # At least one choice ticked
         evaluation_element.reset_choices()
         evaluation_element.section.set_progression()
         self.evaluation.set_finished()
         self.assertFalse(self.evaluation.is_finished)
         # Test that even if not finished the evaluation is still in the list as has_labelling()
-        request = RequestFactory().get('accounts/profile/')
+        request = RequestFactory().get("accounts/profile/")
         request.user = self.user
         context = ProfileView.as_view()(request).context_data
         self.assertEqual(context["labelable_evaluations"], [self.evaluation])
@@ -457,14 +463,14 @@ class TestLabellingProcess(TestCase):
         evaluation_score = self.evaluation.evaluationscore_set.all().first()
         evaluation_score.score = 80
         evaluation_score.save()
-        self.client.get(f'{self.evaluation.get_absolute_url()}labelling/')
+        self.client.get(f"{self.evaluation.get_absolute_url()}labelling/")
         self.assertTrue(self.evaluation.has_labelling())
         platform_management = PlatformManagement.get_or_create()
         platform_management.set_labelling_threshold(99)
         platform_management.refresh_from_db()
         # Labelling threshold higher than the evaluation score
         self.assertTrue(platform_management.get_labelling_threshold() > evaluation_score.score)
-        request = RequestFactory().get('accounts/profile/')
+        request = RequestFactory().get("accounts/profile/")
         request.user = self.user
         response = ProfileView.as_view()(request)
         self.assertEqual(response.status_code, 200)

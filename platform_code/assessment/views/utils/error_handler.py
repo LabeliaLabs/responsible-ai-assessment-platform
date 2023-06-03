@@ -1,24 +1,29 @@
 import logging
 
-from django.http import HttpResponseRedirect
-from django.utils.translation import gettext as _
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.utils.translation import gettext as _
 
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 VIEW_ERRORS = {
     404: {
         "title": _("404 - Page not found"),
         "content": _("Sorry, the page has not been found or does not exist !"),
     },
-    500: {"title": _("Internal error"), "content": _("An internal error occured"), },
+    500: {
+        "title": _("Internal error"),
+        "content": _("An internal error occured"),
+    },
     403: {
         "title": _("Permission denied"),
         "content": _("Sorry, you can not access this content"),
     },
-    400: {"title": _("Bad request"), "content": _("There is an error in the request"), },
+    400: {
+        "title": _("Bad request"),
+        "content": _("There is an error in the request"),
+    },
 }
 
 

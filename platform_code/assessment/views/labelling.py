@@ -1,22 +1,20 @@
 import logging
 import os
-from sentry_sdk import capture_message
-
-from django.shortcuts import get_object_or_404
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
-from django.contrib import messages
-from django.template.loader import render_to_string
-from django.shortcuts import redirect
-from django.utils.translation import gettext as _
-from django.conf import settings
 
 from assessment.models import Evaluation, Labelling
 from assessment.views.utils.security_checks import membership_admin_security_check
 from assessment.views.utils.utils import manage_missing_language
+from django.conf import settings
+from django.contrib import messages
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.shortcuts import get_object_or_404, redirect
+from django.template.loader import render_to_string
+from django.utils.translation import gettext as _
 from home.models import Organisation, PlatformManagement
+from sentry_sdk import capture_message
 
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 def labellingView(request, *args, **kwargs):
@@ -42,7 +40,10 @@ def labellingView(request, *args, **kwargs):
     evaluation = get_object_or_404(Evaluation, id=evaluation_id, organisation=organisation)
     manage_missing_language(request, evaluation)
     evaluation_score = evaluation.evaluationscore_set.all().first()  # TODO improve
-    if evaluation.is_finished and evaluation_score.score >= PlatformManagement.get_labelling_threshold():
+    if (
+        evaluation.is_finished
+        and evaluation_score.score >= PlatformManagement.get_labelling_threshold()
+    ):
         if not evaluation.has_labelling():
             Labelling.create_labelling(evaluation=evaluation)
 
@@ -52,11 +53,13 @@ def labellingView(request, *args, **kwargs):
             organisation=organisation,
             evaluation=evaluation,
             mail_subject=_("Initiation of the labelling process"),
-            html_template="labelling/start-labelling-email.html"
+            html_template="labelling/start-labelling-email.html",
         )
         evaluation.freeze_evaluation()  # Also done in create_labelling
-        logger.info(f"[labelling_initialization] The user {user.email} asked "
-                    f"to certificate his evaluation (id={evaluation.id})")
+        logger.info(
+            f"[labelling_initialization] The user {user.email} asked "
+            f"to certificate his evaluation (id={evaluation.id})"
+        )
         messages.success(request, _("The request to label your evaluation has been sent."))
     else:  # Evaluation not finished or score not > labelling_threshold
         messages.error(request, _("You cannot start the labelling for this evaluation."))
@@ -80,13 +83,18 @@ def labellingAgainView(request, *args, **kwargs):
     evaluation = get_object_or_404(Evaluation, id=evaluation_id, organisation=organisation)
     manage_missing_language(request, evaluation)
     if not evaluation.is_finished:
-        messages.warning(request, _("You need to complete the evaluation in order to submit again the labelling."))
+        messages.warning(
+            request,
+            _("You need to complete the evaluation in order to submit again the labelling."),
+        )
         return redirect("home:user-profile", "labelling")
 
     if not evaluation.has_labelling():
         messages.warning(request, _("We are sorry, the operation failed."))
-        capture_message(f"[labelling_again_failed] The user {request.user.email} tried to submit again the labelling "
-                       f"process for the evaluation (id: {evaluation_id}) but it failed - no labelling object.")
+        capture_message(
+            f"[labelling_again_failed] The user {request.user.email} tried to submit again the labelling "
+            f"process for the evaluation (id: {evaluation_id}) but it failed - no labelling object."
+        )
     else:
         labelling = evaluation.get_labelling()
         labelling.submit_again()  # Increment the counter, set the status to "progress" and freeze evaluation
@@ -96,7 +104,7 @@ def labellingAgainView(request, *args, **kwargs):
             organisation=organisation,
             evaluation=evaluation,
             mail_subject=_("Submit the labelling again after modifications"),
-            html_template="labelling/labelling-again-email.html"
+            html_template="labelling/labelling-again-email.html",
         )
         messages.success(request, _("The request has been sent."))
     return redirect("home:user-profile", "labelling")
@@ -118,7 +126,7 @@ def labellingJustification(request, *args, **kwargs):
     evaluation = get_object_or_404(Evaluation, id=evaluation_id, organisation=organisation)
     evaluation.labelling.set_justification_required()
     messages.success(request, _("The status of the labelling has been modified."))
-    return redirect('home:admin-dashboard', 'labelling')
+    return redirect("home:admin-dashboard", "labelling")
 
 
 def labellingEnd(request, *args, **kwargs):
@@ -136,19 +144,23 @@ def labellingEnd(request, *args, **kwargs):
 
     evaluation_id = kwargs.get("pk")
     evaluation = get_object_or_404(Evaluation, id=evaluation_id, organisation=organisation)
-    status = kwargs.get('status')
+    status = kwargs.get("status")
     if not status or (status != "rejection" and status != "validation"):
         messages.warning(
             request,
-            _("There is a technical issue with the action. Please contact the technical support.")
+            _(
+                "There is a technical issue with the action. Please contact the technical support."
+            ),
         )
     else:
         evaluation.labelling.set_final_status(status)
         messages.success(
             request,
-            _(f"The labelling has well been {'rejected' if status == 'rejection' else 'validated'}.")
+            _(
+                f"The labelling has well been {'rejected' if status == 'rejection' else 'validated'}."
+            ),
         )
-    return redirect('home:admin-dashboard', 'labelling')
+    return redirect("home:admin-dashboard", "labelling")
 
 
 def send_labelling_email(request, user, organisation, evaluation, mail_subject, html_template):
@@ -157,15 +169,16 @@ def send_labelling_email(request, user, organisation, evaluation, mail_subject, 
     user asked to certificate his evaluation
     """
     current_site = get_current_site(request)
-    message = render_to_string(f'assessment/{html_template}', {
-        'user': user,
-        'domain': current_site.domain,
-        'protocol': "http" if settings.DEBUG else "https",
-        'evaluation': evaluation,
-        'organisation': organisation,
-    })
-    to_email = os.environ.get("EMAIL_USER")
-    email = EmailMessage(
-        mail_subject, message, to=[to_email]
+    message = render_to_string(
+        f"assessment/{html_template}",
+        {
+            "user": user,
+            "domain": current_site.domain,
+            "protocol": "http" if settings.DEBUG else "https",
+            "evaluation": evaluation,
+            "organisation": organisation,
+        },
     )
+    to_email = os.environ.get("EMAIL_USER")
+    email = EmailMessage(mail_subject, message, to=[to_email])
     email.send()

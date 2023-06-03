@@ -1,18 +1,11 @@
+from assessment.models import Choice
+from assessment.utils import markdownify_bold, markdownify_italic, select_label_choice
 from ckeditor.widgets import CKEditorWidget
-
 from django import forms
-from django.forms import ModelForm
-from django.forms import widgets
+from django.forms import ModelForm, widgets
 from django.forms.renderers import get_default_renderer
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-
-from assessment.utils import (
-    markdownify_bold,
-    markdownify_italic,
-    select_label_choice
-)
-from assessment.models import Choice
 
 
 class ChoiceForm(ModelForm):
@@ -26,10 +19,9 @@ class ChoiceForm(ModelForm):
         fields = []
 
     def __init__(self, *args, **kwargs):
-
         # Catch the evaluation element
         evaluation_element = kwargs.pop("evaluation_element")
-        super(ChoiceForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # If the question_type of the evaluation element is a radio item
         if evaluation_element.master_evaluation_element.question_type == "radio":
@@ -69,9 +61,7 @@ class ChoiceForm(ModelForm):
                         "size": 100,
                         "width": "100%",
                         "class": "textarea textarea-empty",
-                        "placeholder": _(
-                            "Enter your notes on the evaluation element here."
-                        ),
+                        "placeholder": _("Enter your notes on the evaluation element here."),
                     }
                 ),
                 required=False,
@@ -102,7 +92,10 @@ class ChoiceForm(ModelForm):
         Used during the initialization of a class instance to add a new field in the form for the
         user_justification field of the evaluation_element class model.
         """
-        if evaluation_element.user_justification is None or evaluation_element.user_justification == "":
+        if (
+            evaluation_element.user_justification is None
+            or evaluation_element.user_justification == ""
+        ):
             justification = forms.CharField(
                 label=_("Answer justification"),
                 widget=CKEditorWidget(),

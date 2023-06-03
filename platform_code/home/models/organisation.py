@@ -1,14 +1,13 @@
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
-from django.db.models import Q
 
 from .membership import Membership
 from .user import User
 
 
 class Organisation(models.Model):
-
     TEN = "0-9"
     FIFTY = "10-49"
     HUNDRED = "50-99"
@@ -73,9 +72,7 @@ class Organisation(models.Model):
             name=name, size=size, country=country, sector=sector, created_by=created_by
         )
         organisation.save()
-        Membership.create_membership(
-            user=created_by, role="admin", organisation=organisation
-        )
+        Membership.create_membership(user=created_by, role="admin", organisation=organisation)
         # Give the admin right to all the platform staff to allow them to see the evaluations and edit them
         list_staff_platform = get_list_all_staff_admin_platform()
         for staff_user in list_staff_platform:
@@ -83,7 +80,10 @@ class Organisation(models.Model):
             # Hide membership
             if staff_user != created_by:
                 Membership.create_membership(
-                    user=staff_user, role="admin", organisation=organisation, hide_membership=True
+                    user=staff_user,
+                    role="admin",
+                    organisation=organisation,
+                    hide_membership=True,
                 )
         return organisation
 
@@ -108,9 +108,10 @@ class Organisation(models.Model):
         """
         # todo tests
         return list(
-            cls.objects.distinct()
-            .filter(Q(membership__user=user, membership__role="admin")
-                    | Q(membership__user=user, membership__role="editor"))
+            cls.objects.distinct().filter(
+                Q(membership__user=user, membership__role="admin")
+                | Q(membership__user=user, membership__role="editor")
+            )
         )
 
     def __str__(self):

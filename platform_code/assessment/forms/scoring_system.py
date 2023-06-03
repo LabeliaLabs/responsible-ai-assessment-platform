@@ -1,11 +1,10 @@
 from ast import literal_eval
 
+from assessment.models import ScoringSystem, get_last_assessment_created
+from assessment.scoring import check_and_valid_scoring_json
 from django import forms
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
-
-from assessment.models import ScoringSystem, get_last_assessment_created
-from assessment.scoring import check_and_valid_scoring_json
 
 
 class ScoringSystemForm(forms.ModelForm):
@@ -24,7 +23,7 @@ class ScoringSystemForm(forms.ModelForm):
         ]
 
     def __init__(self, *args, **kwargs):
-        super(ScoringSystemForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["json_file"].required = False
         self.fields["json_file"].help_text = _(
             "The json file has to contain the choice ids as keys ('1.1.a' for exemple) and the weight as value"
@@ -32,9 +31,7 @@ class ScoringSystemForm(forms.ModelForm):
         if get_last_assessment_created():
             self.fields["assessment"].initial = get_last_assessment_created()
             self.fields["version"].initial = get_last_assessment_created().version
-            self.fields["name"].initial = (
-                get_last_assessment_created().name + "_scoring"
-            )
+            self.fields["name"].initial = get_last_assessment_created().name + "_scoring"
         self.fields["assessment"].required = True
         self.fields["name"].required = True
         self.fields["attributed_points_coefficient"].disabled = True
@@ -69,8 +66,8 @@ class ScoringSystemForm(forms.ModelForm):
                     )
 
                 success, message = check_and_valid_scoring_json(
-                                        decoded_file=decoded_file, assessment=assessment
-                                    )
+                    decoded_file=decoded_file, assessment=assessment
+                )
                 if not success:
                     raise forms.ValidationError(
                         f"The format of the file is not correct, {message}"
@@ -95,9 +92,7 @@ class ScoringSystemForm(forms.ModelForm):
                     self.save_m2m = self._save_m2m
 
             else:
-                raise forms.ValidationError(
-                    "Incorrect file, you need a json."
-                )
+                raise forms.ValidationError("Incorrect file, you need a json.")
         # Case no file imported but the json modified
         else:
             try:
@@ -105,12 +100,16 @@ class ScoringSystemForm(forms.ModelForm):
                 json_before_changes = scoring.master_choices_weight_json
             except (ValueError, MultipleObjectsReturned, ObjectDoesNotExist) as e:
                 raise forms.ValidationError(f"The query to get the scoring failed, error {e}")
-            instance = super(ScoringSystemForm, self).save(commit=False)  # Commit False does not save the object
+            instance = super().save(commit=False)  # Commit False does not save the object
             # If there are changes in the json
             if json_before_changes and json_before_changes != modified_json:
-                success, message = check_and_valid_scoring_json(json=modified_json, assessment=assessment)
+                success, message = check_and_valid_scoring_json(
+                    json=modified_json, assessment=assessment
+                )
                 if not success:
-                    raise forms.ValidationError(f"The format of the file is not correct, {message}")
+                    raise forms.ValidationError(
+                        f"The format of the file is not correct, {message}"
+                    )
                 if success:
                     # Need to calculate again the max score
                     # So change the field need_to_set_max_points for every evaluation score associated
@@ -133,10 +132,14 @@ class ScoringSystemForm(forms.ModelForm):
                 evaluation_score.need_to_calculate = True
                 evaluation_score.save()
             elif evaluation.evaluationscore_set.count() == 0:
-                raise ObjectDoesNotExist(f"The evaluation score does not exist for the evaluation"
-                                         f" (id {evaluation.id}). "
-                                         f"This is not possible so please create one.")
+                raise ObjectDoesNotExist(
+                    f"The evaluation score does not exist for the evaluation"
+                    f" (id {evaluation.id}). "
+                    f"This is not possible so please create one."
+                )
             else:
-                raise MultipleObjectsReturned(f"The evaluation (id {evaluation.id}) has multiple "
-                                              f"evaluation score. "
-                                              f"This is not possible, so please clean it to keep only one.")
+                raise MultipleObjectsReturned(
+                    f"The evaluation (id {evaluation.id}) has multiple "
+                    f"evaluation score. "
+                    f"This is not possible, so please clean it to keep only one."
+                )

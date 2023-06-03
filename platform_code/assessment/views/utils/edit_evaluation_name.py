@@ -1,17 +1,16 @@
 import json
 import logging
 
+from assessment.forms import EvaluationForm
+from assessment.models import Evaluation
+from assessment.utils import get_client_ip
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext as _
+from home.models import Organisation
 from sentry_sdk import capture_message
 
-from assessment.utils import get_client_ip
-from assessment.forms import EvaluationForm
-from assessment.models import Evaluation
-from home.models import Organisation
-
-logger = logging.getLogger('monitoring')
+logger = logging.getLogger("monitoring")
 
 
 def treat_evaluation_name_edition(request):
@@ -28,12 +27,18 @@ def treat_evaluation_name_edition(request):
     if form.is_valid():
         name = form.cleaned_data.get("name")
         evaluation_id = int(request.POST.dict().get("evaluation_id"))
-        evaluation = get_object_or_404(Evaluation, id=evaluation_id)  # Check the organisation below
+        evaluation = get_object_or_404(
+            Evaluation, id=evaluation_id
+        )  # Check the organisation below
         # If the evaluation get by the POST is not one where user can edit (so user modified html)
-        if evaluation.organisation not in Organisation.get_list_organisations_user_can_edit(user):
-            capture_message(f"[html_forced] The user {user.email}, with IP address {get_client_ip(request)}"
-                           f" tried to modify the name of an evaluation"
-                           f" (id {evaluation_id} he should not be able to edit")
+        if evaluation.organisation not in Organisation.get_list_organisations_user_can_edit(
+            user
+        ):
+            capture_message(
+                f"[html_forced] The user {user.email}, with IP address {get_client_ip(request)}"
+                f" tried to modify the name of an evaluation"
+                f" (id {evaluation_id} he should not be able to edit"
+            )
             data_update["message"] = _("You cannot edit this evaluation.")
         else:
             evaluation.name = name
@@ -41,6 +46,8 @@ def treat_evaluation_name_edition(request):
             data_update["success"] = True
             data_update["message"] = _("The evaluation's name has been changed.")
             data_update["name"] = name
-            logger.info(f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
-                        f"evaluation (id: {evaluation_id})")
+            logger.info(
+                f"[evaluation_name_changed] The user {request.user.email} changed the named of the "
+                f"evaluation (id: {evaluation_id})"
+            )
     return HttpResponse(json.dumps(data_update), content_type="application/json")

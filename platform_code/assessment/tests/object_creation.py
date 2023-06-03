@@ -1,15 +1,15 @@
 from assessment.models import (
     Assessment,
-    Evaluation,
-    Section,
-    MasterSection,
-    MasterEvaluationElement,
-    EvaluationElement,
-    MasterChoice,
     Choice,
-    ExternalLink,
-    ScoringSystem,
     ElementChangeLog,
+    Evaluation,
+    EvaluationElement,
+    ExternalLink,
+    MasterChoice,
+    MasterEvaluationElement,
+    MasterSection,
+    ScoringSystem,
+    Section,
 )
 
 
@@ -20,17 +20,19 @@ def create_assessment(name, version, previous_assessment=None):
     :param version:
     :return:
     """
-    return Assessment.objects.create(name=name, version=version, previous_assessment=previous_assessment)
+    return Assessment.objects.create(
+        name=name, version=version, previous_assessment=previous_assessment
+    )
 
 
 def create_evaluation(
-        assessment,
-        name,
-        created_by=None,
-        organisation=None,
-        is_finished=False,
-        finished_at=None,
-        upgraded_from=None,
+    assessment,
+    name,
+    created_by=None,
+    organisation=None,
+    is_finished=False,
+    finished_at=None,
+    upgraded_from=None,
 ):
     """
     Create the evaluation, by default all the fields not required are set to None
@@ -65,17 +67,21 @@ def create_master_section(name, assessment, description, order_id, keyword):
     :return:
     """
     return MasterSection.objects.create(
-        name=name, assessment=assessment, description=description, order_id=order_id, keyword=keyword
+        name=name,
+        assessment=assessment,
+        description=description,
+        order_id=order_id,
+        keyword=keyword,
     )
 
 
 def create_section(
-        master_section,
-        evaluation,
-        user_progression=0,
-        points=0,
-        fetch=True,
-        user_notes=None,
+    master_section,
+    evaluation,
+    user_progression=0,
+    points=0,
+    fetch=True,
+    user_notes=None,
 ):
     """
     Create the section
@@ -98,15 +104,15 @@ def create_section(
 
 
 def create_master_evaluation_element(
-        name,
-        master_section,
-        order_id,
-        question_type=MasterEvaluationElement.RADIO,
-        question_text="",
-        explanation_text="",
-        depends_on=None,
-        *args,
-        **kwargs,
+    name,
+    master_section,
+    order_id,
+    question_type=MasterEvaluationElement.RADIO,
+    question_text="",
+    explanation_text="",
+    depends_on=None,
+    *args,
+    **kwargs,
 ):
     """
     Create the master evaluation element, some fields are initiated empty by default
@@ -135,12 +141,12 @@ def create_master_evaluation_element(
 
 
 def create_evaluation_element(
-        master_evaluation_element,
-        section,
-        user_notes=None,
-        points=0,
-        status=False,
-        fetch=True,
+    master_evaluation_element,
+    section,
+    user_notes=None,
+    points=0,
+    status=False,
+    fetch=True,
 ):
     """
     :param master_evaluation_element:
@@ -162,7 +168,7 @@ def create_evaluation_element(
 
 
 def create_master_choice(
-        master_evaluation_element, answer_text, order_id, is_concerned_switch=False
+    master_evaluation_element, answer_text, order_id, is_concerned_switch=False
 ):
     """
     :param is_concerned_switch:
@@ -206,7 +212,7 @@ def create_external_link(text, type_link="Web article"):
 
 
 def create_assessment_body(
-        version="1.0", resource_text="resource_text", previous_assessment=None
+    version="1.0", resource_text="resource_text", previous_assessment=None
 ):
     """
     This function creates an assessment with 2 master sections (one with the possibility to set order_id to none or
@@ -214,7 +220,9 @@ def create_assessment_body(
     for the master element 1 and 2 and 1 for the master element 3
     :return:
     """
-    assessment = create_assessment(name="assessment", version=version, previous_assessment=previous_assessment)
+    assessment = create_assessment(
+        name="assessment", version=version, previous_assessment=previous_assessment
+    )
     master_section1 = create_master_section(
         name="master_section1",
         assessment=assessment,
@@ -227,7 +235,7 @@ def create_assessment_body(
         assessment=assessment,
         description="",
         order_id="2",
-        keyword="Documentation des modèles"
+        keyword="Documentation des modèles",
     )
     # Create and get resources (External Link)
     resource = create_external_link(text=resource_text)
@@ -236,7 +244,7 @@ def create_assessment_body(
         name="master_element1",
         master_section=master_section1,
         order_id="1",
-        question_type=MasterEvaluationElement.CHECKBOX
+        question_type=MasterEvaluationElement.CHECKBOX,
     )
 
     master_choice_1 = create_master_choice(
@@ -310,13 +318,13 @@ def create_scoring(assessment, **kwargs):
 
 
 def create_element_change_log(
-        edito_en,
-        edito_fr,
-        pastille_en,
-        pastille_fr,
-        eval_element_numbering,
-        previous_assessment,
-        assessment
+    edito_en,
+    edito_fr,
+    pastille_en,
+    pastille_fr,
+    eval_element_numbering,
+    previous_assessment,
+    assessment,
 ):
     """
     :param

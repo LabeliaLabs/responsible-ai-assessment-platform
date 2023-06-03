@@ -1,20 +1,19 @@
+import calendar
 import json
 from datetime import datetime
-import calendar
 
-from django.views.generic import TemplateView
+from assessment.models import Assessment, Evaluation, Labelling
 from django.http import HttpResponse
-from django.utils.translation import gettext as _
 from django.shortcuts import redirect
-
-from home.models import Organisation, User, PlatformManagement
-from assessment.models import Evaluation, Assessment, Labelling
+from django.utils.translation import gettext as _
+from django.views.generic import TemplateView
 from home.forms import (
-    DashboardUsersStatsTabFilterForm,
-    DashboardOrganisationsStatsTabFilterForm,
     DashboardEvaluationsStatsTabFilterForm,
-    LabellingStatusForm
+    DashboardOrganisationsStatsTabFilterForm,
+    DashboardUsersStatsTabFilterForm,
+    LabellingStatusForm,
 )
+from home.models import Organisation, PlatformManagement, User
 
 
 class DashboardView(TemplateView):
@@ -22,6 +21,7 @@ class DashboardView(TemplateView):
     This class defines the admin dashboard page which is composed of several subpages (stats, labelling).
     It is accessible only for admin users.
     """
+
     template_name = "home/dashboard/dashboard-admin.html"
 
     users_form = DashboardUsersStatsTabFilterForm
@@ -65,13 +65,21 @@ class DashboardView(TemplateView):
         orgas_stats = self.get_number_organisations()
         sectors_list = [sector for sector, _ in orgas_stats["nb_orgas_per_sector"].items()]
         sizes_list = [size for size, _ in orgas_stats["nb_orgas_per_size"].items()]
-        orgas_count_per_sector = [orgas_count for _, orgas_count in orgas_stats["nb_orgas_per_sector"].items()]
-        orgas_count_per_size = [orgas_count for _, orgas_count in orgas_stats["nb_orgas_per_size"].items()]
+        orgas_count_per_sector = [
+            orgas_count for _, orgas_count in orgas_stats["nb_orgas_per_sector"].items()
+        ]
+        orgas_count_per_size = [
+            orgas_count for _, orgas_count in orgas_stats["nb_orgas_per_size"].items()
+        ]
 
         # evaluations
         evals_stats = self.get_evaluations_stats()
-        versions_list = [version_number for version_number, _ in evals_stats["versions_stats"].items()]
-        evals_count_per_version = [nb_evals for _, nb_evals in evals_stats["versions_stats"].items()]
+        versions_list = [
+            version_number for version_number, _ in evals_stats["versions_stats"].items()
+        ]
+        evals_count_per_version = [
+            nb_evals for _, nb_evals in evals_stats["versions_stats"].items()
+        ]
 
         # pass the stats as context
         # users
@@ -110,7 +118,6 @@ class DashboardView(TemplateView):
         self.dashboard_update.clear()
 
         if request.method == "POST" and request.is_ajax:
-
             if "Inscription_date" in request.POST:
                 self.update_stats_and_graphs(request, which_form=0)
 
@@ -121,12 +128,15 @@ class DashboardView(TemplateView):
                 self.update_stats_and_graphs(request, which_form=2)
             else:
                 self.dashboard_update["success"] = False
-                self.dashboard_update["message"] = _("An error has occurred, please check your input")
+                self.dashboard_update["message"] = _(
+                    "An error has occurred, please check your input"
+                )
 
-            return HttpResponse(json.dumps(self.dashboard_update), content_type="application/json")
+            return HttpResponse(
+                json.dumps(self.dashboard_update), content_type="application/json"
+            )
 
         else:
-
             return self.render_to_response(self.context)
 
     def update_stats_and_graphs(self, request, which_form):
@@ -139,82 +149,105 @@ class DashboardView(TemplateView):
             form = DashboardUsersStatsTabFilterForm(request.POST)
             self.dashboard_update["which_tab"] = which_form
             if form.is_valid():
-                self.users_filters["Inscription_date"] = form.cleaned_data.get("Inscription_date").strftime("%Y-%m-%d "
-                                                                                                            "%H:%M:%S")
+                self.users_filters["Inscription_date"] = form.cleaned_data.get(
+                    "Inscription_date"
+                ).strftime("%Y-%m-%d " "%H:%M:%S")
                 users_stats = self.get_users_stats()
 
                 self.dashboard_update["nb_users"] = users_stats["nb_users"]
-                self.dashboard_update["months"] = [month for month, nb_users in
-                                                   users_stats["one_year_users_count"].items()]
-                self.dashboard_update["users_count"] = [nb_users for month, nb_users in
-                                                        users_stats["one_year_users_count"].items()]
+                self.dashboard_update["months"] = [
+                    month for month, nb_users in users_stats["one_year_users_count"].items()
+                ]
+                self.dashboard_update["users_count"] = [
+                    nb_users for month, nb_users in users_stats["one_year_users_count"].items()
+                ]
                 self.dashboard_update["min_date"] = users_stats["min_date"]
                 self.dashboard_update["success"] = True
 
             else:
                 self.dashboard_update["success"] = False
-                self.dashboard_update["message"] = _("An error has occurred, please check your input")
+                self.dashboard_update["message"] = _(
+                    "An error has occurred, please check your input"
+                )
 
         # handle organisations filter form
         elif which_form == 1:
             form = DashboardOrganisationsStatsTabFilterForm(request.POST)
             self.dashboard_update["which_tab"] = which_form
             if form.is_valid():
-                self.organisations_filters["creation_date"] = form.cleaned_data.get("creation_date").strftime(
-                    "%Y-%m-%d "
-                    "%H:%M:%S")
+                self.organisations_filters["creation_date"] = form.cleaned_data.get(
+                    "creation_date"
+                ).strftime("%Y-%m-%d " "%H:%M:%S")
 
                 # get the stats and graphs updates
                 orgas_stats = self.get_number_organisations()
 
                 self.dashboard_update["nb_orgas"] = orgas_stats["nb_orgas"]
-                self.dashboard_update["sectors_list"] = [str(sector) for sector, nb_orgas in
-                                                         orgas_stats["nb_orgas_per_sector"].items()]
-                self.dashboard_update["sizes_list"] = [str(size) for size, nb_orgas in
-                                                       orgas_stats["nb_orgas_per_size"].items()]
-                self.dashboard_update["orgas_count_per_sector"] = [nb_orgas for sector, nb_orgas in
-                                                                   orgas_stats["nb_orgas_per_sector"].items()]
-                self.dashboard_update["orgas_count_per_size"] = [nb_orgas for size, nb_orgas in
-                                                                 orgas_stats["nb_orgas_per_size"].items()]
-                self.dashboard_update["creation_date"] = form.cleaned_data.get("creation_date").strftime(
-                    "%d-%m-%Y")
+                self.dashboard_update["sectors_list"] = [
+                    str(sector)
+                    for sector, nb_orgas in orgas_stats["nb_orgas_per_sector"].items()
+                ]
+                self.dashboard_update["sizes_list"] = [
+                    str(size) for size, nb_orgas in orgas_stats["nb_orgas_per_size"].items()
+                ]
+                self.dashboard_update["orgas_count_per_sector"] = [
+                    nb_orgas for sector, nb_orgas in orgas_stats["nb_orgas_per_sector"].items()
+                ]
+                self.dashboard_update["orgas_count_per_size"] = [
+                    nb_orgas for size, nb_orgas in orgas_stats["nb_orgas_per_size"].items()
+                ]
+                self.dashboard_update["creation_date"] = form.cleaned_data.get(
+                    "creation_date"
+                ).strftime("%d-%m-%Y")
                 self.dashboard_update["success"] = True
 
             else:
                 self.dashboard_update["success"] = False
-                self.dashboard_update["message"] = _("An error has occurred, please check your input")
+                self.dashboard_update["message"] = _(
+                    "An error has occurred, please check your input"
+                )
 
         # handle evaluations filter form
         elif which_form == 2:
             form = DashboardEvaluationsStatsTabFilterForm(request.POST)
             self.dashboard_update["which_tab"] = which_form
             if form.is_valid():
-
                 self.evaluations_filters["date"] = form.cleaned_data.get("date").strftime(
-                    "%Y-%m-%d "
-                    "%H:%M:%S")
+                    "%Y-%m-%d " "%H:%M:%S"
+                )
                 self.evaluations_filters["date_raw"] = form.cleaned_data.get("date")
                 self.evaluations_filters["sectors"] = form.cleaned_data.get("sectors")
                 self.evaluations_filters["sizes"] = form.cleaned_data.get("sizes")
 
                 evals_stats = self.get_evaluations_stats()
                 self.dashboard_update["total_nb_evals"] = evals_stats["total_nb_evals"]
-                self.dashboard_update["versions_list"] = [version_number for version_number, nb_evals in
-                                                          evals_stats["versions_stats"].items()]
+                self.dashboard_update["versions_list"] = [
+                    version_number
+                    for version_number, nb_evals in evals_stats["versions_stats"].items()
+                ]
 
-                self.dashboard_update["nb_evals_per_version"] = [nb_evals for version, nb_evals in
-                                                                 evals_stats["versions_stats"].items()]
-                self.dashboard_update["nb_completed_evals"] = evals_stats["nb_evaluations_completed"]
-                self.dashboard_update["nb_in_progress_evals"] = evals_stats["nb_evaluations_in_progress"]
+                self.dashboard_update["nb_evals_per_version"] = [
+                    nb_evals for version, nb_evals in evals_stats["versions_stats"].items()
+                ]
+                self.dashboard_update["nb_completed_evals"] = evals_stats[
+                    "nb_evaluations_completed"
+                ]
+                self.dashboard_update["nb_in_progress_evals"] = evals_stats[
+                    "nb_evaluations_in_progress"
+                ]
                 self.dashboard_update["eval_creation_date"] = evals_stats["eval_creation_date"]
                 self.dashboard_update["success"] = True
             else:
                 self.dashboard_update["success"] = False
-                self.dashboard_update["message"] = _("An error has occurred, please check your input")
+                self.dashboard_update["message"] = _(
+                    "An error has occurred, please check your input"
+                )
 
         else:
             self.dashboard_update["success"] = False
-            self.dashboard_update["message"] = _("An error has occurred, no relevant tabs were selected")
+            self.dashboard_update["message"] = _(
+                "An error has occurred, no relevant tabs were selected"
+            )
 
     def get_number_organisations(self):
         """
@@ -228,9 +261,9 @@ class DashboardView(TemplateView):
 
             # number of organisations per sector
             for sector_tuple in Organisation.SECTOR:
-                orgas_stats["nb_orgas_per_sector"][sector_tuple[1]] = Organisation.objects.filter(
-                    sector=sector_tuple[0]
-                ).count()
+                orgas_stats["nb_orgas_per_sector"][
+                    sector_tuple[1]
+                ] = Organisation.objects.filter(sector=sector_tuple[0]).count()
 
             # number of organisations per size
             for size_tuple in Organisation.SIZE:
@@ -247,14 +280,18 @@ class DashboardView(TemplateView):
 
             # number of organisations per sector
             for sector_tuple in Organisation.SECTOR:
-                orgas_stats["nb_orgas_per_sector"][sector_tuple[1]] = Organisation.objects.filter(
-                    sector=sector_tuple[0], created_at__gte=self.organisations_filters["creation_date"]
+                orgas_stats["nb_orgas_per_sector"][
+                    sector_tuple[1]
+                ] = Organisation.objects.filter(
+                    sector=sector_tuple[0],
+                    created_at__gte=self.organisations_filters["creation_date"],
                 ).count()
 
             # number of organisations per size
             for size_tuple in Organisation.SIZE:
                 orgas_stats["nb_orgas_per_size"][size_tuple[1]] = Organisation.objects.filter(
-                    size=size_tuple[1], created_at__gte=self.organisations_filters["creation_date"]
+                    size=size_tuple[1],
+                    created_at__gte=self.organisations_filters["creation_date"],
                 ).count()
 
         return orgas_stats
@@ -270,11 +307,12 @@ class DashboardView(TemplateView):
             users_stats["nb_users"] = User.object.all().count()
 
             min_date = datetime(2020, 1, 1)
-            users_stats["min_date"] = min_date.strftime('%d-%b-%Y')
+            users_stats["min_date"] = min_date.strftime("%d-%b-%Y")
             for i in range(12):
                 date_to_filter_by = take_n_month_steps(min_date, i)
-                users_stats["one_year_users_count"][date_to_filter_by.strftime('%B-%Y')] = (
-                    (User.object.filter(created_at__lte=date_to_filter_by).count()))
+                users_stats["one_year_users_count"][
+                    date_to_filter_by.strftime("%B-%Y")
+                ] = User.object.filter(created_at__lte=date_to_filter_by).count()
 
         else:
             # apply filter
@@ -282,16 +320,24 @@ class DashboardView(TemplateView):
                 created_at__gte=self.users_filters["Inscription_date"]
             ).count()
 
-            submitted_date = datetime.strptime(self.users_filters["Inscription_date"], '%Y-%m-%d %H:%M:%S')
-            users_stats["min_date"] = submitted_date.strftime('%d-%b-%Y')
-            submitted_date_end_month = datetime(int(submitted_date.year), int(submitted_date.month),
-                                                int(calendar.monthrange(submitted_date.year, submitted_date.month)[1]),
-                                                23, 59, 59)
+            submitted_date = datetime.strptime(
+                self.users_filters["Inscription_date"], "%Y-%m-%d %H:%M:%S"
+            )
+            users_stats["min_date"] = submitted_date.strftime("%d-%b-%Y")
+            submitted_date_end_month = datetime(
+                int(submitted_date.year),
+                int(submitted_date.month),
+                int(calendar.monthrange(submitted_date.year, submitted_date.month)[1]),
+                23,
+                59,
+                59,
+            )
 
             for i in range(12):
                 date_to_filter_by = take_n_month_steps(submitted_date_end_month, i)
-                users_stats["one_year_users_count"][date_to_filter_by.strftime('%B-%Y')] = (
-                    (User.object.filter(created_at__lte=date_to_filter_by).count()))
+                users_stats["one_year_users_count"][
+                    date_to_filter_by.strftime("%B-%Y")
+                ] = User.object.filter(created_at__lte=date_to_filter_by).count()
 
         return users_stats
 
@@ -305,108 +351,116 @@ class DashboardView(TemplateView):
         if not self.evaluations_filters:
             # no filters to apply, return the total number of evaluations
             # number of evaluations per status
-            evals_stats["nb_evaluations_completed"] = Evaluation.objects.filter(is_finished=True).count()
-            evals_stats["nb_evaluations_in_progress"] = Evaluation.objects.filter(is_finished=False).count()
+            evals_stats["nb_evaluations_completed"] = Evaluation.objects.filter(
+                is_finished=True
+            ).count()
+            evals_stats["nb_evaluations_in_progress"] = Evaluation.objects.filter(
+                is_finished=False
+            ).count()
 
             # number of evaluations per version
             for version in versions:
-                evals_stats["versions_stats"][version["version"]] = \
-                    Evaluation.objects.filter(assessment=Assessment.objects.get(version=version["version"])).count()
+                evals_stats["versions_stats"][version["version"]] = Evaluation.objects.filter(
+                    assessment=Assessment.objects.get(version=version["version"])
+                ).count()
             evals_stats["eval_creation_date"] = "01-01-2020"
 
         else:
             # apply the filters
-            evals_stats["eval_creation_date"] = self.evaluations_filters["date_raw"].strftime('%d-%m-%Y')
-            if (self.evaluations_filters["sectors"] == _("all sectors") and
-                    self.evaluations_filters["sizes"] == _("all sizes")):
-
+            evals_stats["eval_creation_date"] = self.evaluations_filters["date_raw"].strftime(
+                "%d-%m-%Y"
+            )
+            if self.evaluations_filters["sectors"] == _(
+                "all sectors"
+            ) and self.evaluations_filters["sizes"] == _("all sizes"):
                 # number of evaluations per version for all sectors and all sizes
                 for version in versions:
-                    evals_stats["versions_stats"][version["version"]] = Evaluation.objects.filter(
+                    evals_stats["versions_stats"][
+                        version["version"]
+                    ] = Evaluation.objects.filter(
                         assessment__version=version["version"],
-                        created_at__gte=self.evaluations_filters["date"]).count()
+                        created_at__gte=self.evaluations_filters["date"],
+                    ).count()
                 # number of evaluations per status for all sectors and all sizes
-                evals_stats["nb_evaluations_completed"] = \
-                    Evaluation.objects.filter(
-                        is_finished=True,
-                        created_at__gte=self.evaluations_filters["date"]
-                    ).count()
-                evals_stats["nb_evaluations_in_progress"] = \
-                    Evaluation.objects.filter(
-                        is_finished=False,
-                        created_at__gte=self.evaluations_filters["date"]
-                    ).count()
-            elif (self.evaluations_filters["sectors"] == _("all sectors")
-                  and self.evaluations_filters["sizes"] != _("all sizes")):
+                evals_stats["nb_evaluations_completed"] = Evaluation.objects.filter(
+                    is_finished=True, created_at__gte=self.evaluations_filters["date"]
+                ).count()
+                evals_stats["nb_evaluations_in_progress"] = Evaluation.objects.filter(
+                    is_finished=False, created_at__gte=self.evaluations_filters["date"]
+                ).count()
+            elif self.evaluations_filters["sectors"] == _(
+                "all sectors"
+            ) and self.evaluations_filters["sizes"] != _("all sizes"):
                 # number of evaluations per versions for all sectors but for a specified size
                 for version in versions:
-                    evals_stats["versions_stats"][version["version"]] = Evaluation.objects.filter(
+                    evals_stats["versions_stats"][
+                        version["version"]
+                    ] = Evaluation.objects.filter(
                         assessment__version=version["version"],
                         organisation__size=self.evaluations_filters["sizes"],
-                        created_at__gte=self.evaluations_filters["date"]).count()
+                        created_at__gte=self.evaluations_filters["date"],
+                    ).count()
                 # number of evaluations per status for all sectors but for a specified size
-                evals_stats["nb_evaluations_completed"] = \
-                    Evaluation.objects.filter(
-                        is_finished=True,
-                        created_at__gte=self.evaluations_filters["date"],
-                        organisation__size=self.evaluations_filters["sizes"]
-                    ).count()
-                evals_stats["nb_evaluations_in_progress"] = \
-                    Evaluation.objects.filter(
-                        is_finished=False,
-                        created_at__gte=self.evaluations_filters["date"],
-                        organisation__size=self.evaluations_filters["sizes"]
-                    ).count()
-            elif self.evaluations_filters["sectors"] != _("all sectors") and self.evaluations_filters["sizes"] == _(
-                    "all sizes"):
+                evals_stats["nb_evaluations_completed"] = Evaluation.objects.filter(
+                    is_finished=True,
+                    created_at__gte=self.evaluations_filters["date"],
+                    organisation__size=self.evaluations_filters["sizes"],
+                ).count()
+                evals_stats["nb_evaluations_in_progress"] = Evaluation.objects.filter(
+                    is_finished=False,
+                    created_at__gte=self.evaluations_filters["date"],
+                    organisation__size=self.evaluations_filters["sizes"],
+                ).count()
+            elif self.evaluations_filters["sectors"] != _(
+                "all sectors"
+            ) and self.evaluations_filters["sizes"] == _("all sizes"):
                 # number of evaluations per versions for all sizes but for a specified sector
                 for version in versions:
-                    evals_stats["versions_stats"][version["version"]] = \
-                        Evaluation.objects.filter(
-                            assessment__version=version["version"],
-                            organisation__sector=self.evaluations_filters["sectors"],
-                            created_at__gte=self.evaluations_filters["date"]
-                        ).count()
+                    evals_stats["versions_stats"][
+                        version["version"]
+                    ] = Evaluation.objects.filter(
+                        assessment__version=version["version"],
+                        organisation__sector=self.evaluations_filters["sectors"],
+                        created_at__gte=self.evaluations_filters["date"],
+                    ).count()
                 # number of evaluations per status for all sizes but for a specified sector
-                evals_stats["nb_evaluations_completed"] = \
-                    Evaluation.objects.filter(
-                        is_finished=True,
-                        created_at__gte=self.evaluations_filters["date"],
-                        organisation__sector=self.evaluations_filters["sectors"]
-                    ).count()
-                evals_stats["nb_evaluations_in_progress"] = \
-                    Evaluation.objects.filter(
-                        is_finished=False,
-                        created_at__gte=self.evaluations_filters["date"],
-                        organisation__sector=self.evaluations_filters["sectors"]
-                    ).count()
+                evals_stats["nb_evaluations_completed"] = Evaluation.objects.filter(
+                    is_finished=True,
+                    created_at__gte=self.evaluations_filters["date"],
+                    organisation__sector=self.evaluations_filters["sectors"],
+                ).count()
+                evals_stats["nb_evaluations_in_progress"] = Evaluation.objects.filter(
+                    is_finished=False,
+                    created_at__gte=self.evaluations_filters["date"],
+                    organisation__sector=self.evaluations_filters["sectors"],
+                ).count()
             else:
                 # number of evaluations per version for a specified sector and a size
                 for version in versions:
-                    evals_stats["versions_stats"][version["version"]] = \
-                        Evaluation.objects.filter(
-                            assessment__version=version["version"],
-                            organisation__sector=self.evaluations_filters["sectors"],
-                            organisation__size=self.evaluations_filters["sizes"],
-                            created_at__gte=self.evaluations_filters["date"]
-                        ).count()
+                    evals_stats["versions_stats"][
+                        version["version"]
+                    ] = Evaluation.objects.filter(
+                        assessment__version=version["version"],
+                        organisation__sector=self.evaluations_filters["sectors"],
+                        organisation__size=self.evaluations_filters["sizes"],
+                        created_at__gte=self.evaluations_filters["date"],
+                    ).count()
                 # number of evaluations per status for a specified sector and a size
-                evals_stats["nb_evaluations_completed"] = \
-                    Evaluation.objects.filter(
-                        is_finished=True,
-                        created_at__gte=self.evaluations_filters["date"],
-                        organisation__sector=self.evaluations_filters["sectors"],
-                        organisation__size=self.evaluations_filters["sizes"]
-                    ).count()
-                evals_stats["nb_evaluations_in_progress"] = \
-                    Evaluation.objects.filter(
-                        is_finished=False,
-                        created_at__gte=self.evaluations_filters["date"],
-                        organisation__sector=self.evaluations_filters["sectors"],
-                        organisation__size=self.evaluations_filters["sizes"]
-                    ).count()
-        evals_stats["total_nb_evals"] = \
-            (evals_stats["nb_evaluations_completed"] + evals_stats["nb_evaluations_in_progress"])
+                evals_stats["nb_evaluations_completed"] = Evaluation.objects.filter(
+                    is_finished=True,
+                    created_at__gte=self.evaluations_filters["date"],
+                    organisation__sector=self.evaluations_filters["sectors"],
+                    organisation__size=self.evaluations_filters["sizes"],
+                ).count()
+                evals_stats["nb_evaluations_in_progress"] = Evaluation.objects.filter(
+                    is_finished=False,
+                    created_at__gte=self.evaluations_filters["date"],
+                    organisation__sector=self.evaluations_filters["sectors"],
+                    organisation__size=self.evaluations_filters["sizes"],
+                ).count()
+        evals_stats["total_nb_evals"] = (
+            evals_stats["nb_evaluations_completed"] + evals_stats["nb_evaluations_in_progress"]
+        )
         return evals_stats
 
 
@@ -418,7 +472,21 @@ def take_n_month_steps(date, nb_steps):
     m, y = (date.month + nb_steps) % 12, date.year + (date.month + nb_steps - 1) // 12
     if not m:
         m = 12
-    d = min(date.day, [31,
-                       29 if y % 4 == 0 and (not y % 100 == 0 or y % 400 == 0) else 28,
-                       31, 30, 31, 30, 31, 31, 30, 31, 30, 31][m - 1])
+    d = min(
+        date.day,
+        [
+            31,
+            29 if y % 4 == 0 and (not y % 100 == 0 or y % 400 == 0) else 28,
+            31,
+            30,
+            31,
+            30,
+            31,
+            31,
+            30,
+            31,
+            30,
+            31,
+        ][m - 1],
+    )
     return date.replace(day=d, month=m, year=y)

@@ -1,24 +1,21 @@
 import json
 from ast import literal_eval
 
-from django.test import TestCase, Client
-
+from assessment.import_assessment import ImportAssessment
 from assessment.models import (
     Assessment,
-    Evaluation,
-    EvaluationScore,
-    Section,
-    EvaluationElement,
-    MasterChoice,
     Choice,
+    Evaluation,
+    EvaluationElement,
+    EvaluationScore,
+    MasterChoice,
     ScoringSystem,
+    Section,
 )
-
-from .object_creation import (
-    create_evaluation,
-)
-from assessment.import_assessment import ImportAssessment
+from django.test import Client, TestCase
 from home.models import User
+
+from .object_creation import create_evaluation
 
 """
 In this file, the scoring is tested: the class EvaluationScore, the calculation of the max score
@@ -34,7 +31,9 @@ class TestEvaluationScoreStatic(TestCase):
     """
 
     def setUp(self):
-        with open("assessment/tests/import_test_files/assessment_test_first_version.json") as json_file:
+        with open(
+            "assessment/tests/import_test_files/assessment_test_first_version.json"
+        ) as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
         self.set_test_objects()
@@ -52,10 +51,12 @@ class TestEvaluationScoreStatic(TestCase):
         self.scoring_system.master_choices_weight_json = self.dic_choices
         self.scoring_system.save()
         self.evaluation.create_evaluation_body()
-        self.section1 = Section.objects.get(master_section__order_id="1",
-                                            evaluation=self.evaluation)
-        self.section2 = Section.objects.get(master_section__order_id="2",
-                                            evaluation=self.evaluation)
+        self.section1 = Section.objects.get(
+            master_section__order_id="1", evaluation=self.evaluation
+        )
+        self.section2 = Section.objects.get(
+            master_section__order_id="2", evaluation=self.evaluation
+        )
         self.evaluation_element1 = EvaluationElement.objects.get(
             master_evaluation_element__order_id="1",
             section=self.section1,
@@ -80,10 +81,15 @@ class TestEvaluationScoreStatic(TestCase):
         """
         evaluation_test = create_evaluation(assessment=self.assessment, name="test")
         EvaluationScore.create_evaluation_score(evaluation=evaluation_test)
-        self.assertTrue(EvaluationScore.objects.get(evaluation=evaluation_test))  # Test object created
+        self.assertTrue(
+            EvaluationScore.objects.get(evaluation=evaluation_test)
+        )  # Test object created
         evaluation_score = EvaluationScore.objects.get(evaluation=evaluation_test)
         self.assertEqual(0, evaluation_score.max_points)  # No body so no points
-        self.assertEqual(evaluation_score.coefficient_scoring_system, self.scoring_system.attributed_points_coefficient)
+        self.assertEqual(
+            evaluation_score.coefficient_scoring_system,
+            self.scoring_system.attributed_points_coefficient,
+        )
 
     def test_evaluation_score_creation(self):
         """
@@ -91,7 +97,9 @@ class TestEvaluationScoreStatic(TestCase):
         """
         self.assertTrue(EvaluationScore.objects.get(evaluation=self.evaluation))
         evaluation_score = EvaluationScore.objects.get(evaluation=self.evaluation)
-        self.assertEqual(evaluation_score.max_points, 2.5)  # Max points possible with the scoring import file
+        self.assertEqual(
+            evaluation_score.max_points, 2.5
+        )  # Max points possible with the scoring import file
 
     def test_evaluation_score_set_coefficient_scoring_system(self):
         """
@@ -110,10 +118,14 @@ class TestEvaluationScoreStatic(TestCase):
 
     def test_evaluation_element_get_scoring(self):
         self.assertEqual(self.evaluation_element1.get_scoring_system(), self.scoring_system)
-        self.assertEqual(self.evaluation_element1.get_dic_weight_scoring_system(),
-                         self.scoring_system.master_choices_weight_json)
-        self.assertEqual(self.evaluation_element1.get_coeff_scoring(),
-                         self.scoring_system.attributed_points_coefficient)
+        self.assertEqual(
+            self.evaluation_element1.get_dic_weight_scoring_system(),
+            self.scoring_system.master_choices_weight_json,
+        )
+        self.assertEqual(
+            self.evaluation_element1.get_coeff_scoring(),
+            self.scoring_system.attributed_points_coefficient,
+        )
 
     def test_evaluation_element_set_max_points(self):
         self.assertEqual(self.evaluation_element1.max_points, 1)
@@ -125,12 +137,18 @@ class TestEvaluationScoreStatic(TestCase):
         Change the weight of choices for the scoring
         Note that element 3 is a radio while the 1 and 2 are checkboxes
         """
-        self.assertEqual(self.evaluation_element1.max_points, 1)  # Before setting the max points
-        self.assertEqual(self.evaluation_element3.max_points, 1)  # Before setting the max points
+        self.assertEqual(
+            self.evaluation_element1.max_points, 1
+        )  # Before setting the max points
+        self.assertEqual(
+            self.evaluation_element3.max_points, 1
+        )  # Before setting the max points
         kwargs = {"1.1.a": "3", "2.1.a": "1.5"}
         self.change_weight_choices(**kwargs)
         self.assertEqual(self.evaluation_element1.max_points, 4)  # Sum of the choices (3+1)
-        self.assertEqual(self.evaluation_element3.max_points, 1.5)  # Not the sum of the choices (2.5) but the max (1.5)
+        self.assertEqual(
+            self.evaluation_element3.max_points, 1.5
+        )  # Not the sum of the choices (2.5) but the max (1.5)
 
     def test_section_max_points(self):
         self.assertEqual(self.section1.max_points, 1.5)
@@ -170,7 +188,9 @@ class TestEvaluationScoreStatic(TestCase):
 
 class TestScoreValues(TestCase):
     def setUp(self):
-        with open("assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json") as json_file:
+        with open(
+            "assessment/tests/import_test_files/assessment_test_v1_no_previous_version.json"
+        ) as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
         self.set_test_objects()
@@ -186,10 +206,12 @@ class TestScoreValues(TestCase):
         self.scoring_system.save()
         self.evaluation.create_evaluation_body()
         self.evaluation_score = EvaluationScore.objects.get(evaluation=self.evaluation)
-        self.section1 = Section.objects.get(master_section__order_id="1",
-                                            evaluation=self.evaluation)
-        self.section2 = Section.objects.get(master_section__order_id="2",
-                                            evaluation=self.evaluation)
+        self.section1 = Section.objects.get(
+            master_section__order_id="1", evaluation=self.evaluation
+        )
+        self.section2 = Section.objects.get(
+            master_section__order_id="2", evaluation=self.evaluation
+        )
         self.evaluation_element1 = EvaluationElement.objects.get(
             master_evaluation_element__order_id="1",
             section=self.section1,
@@ -214,9 +236,11 @@ class TestScoreValues(TestCase):
         self.evaluation_element3.reset_choices()
         for numbering in args:
             order_id_list = numbering.split(".")
-            choice = Choice.objects.get(master_choice__order_id=order_id_list[2],
-                                        evaluation_element__master_evaluation_element__order_id=order_id_list[1],
-                                        evaluation_element__section__master_section__order_id=order_id_list[0])
+            choice = Choice.objects.get(
+                master_choice__order_id=order_id_list[2],
+                evaluation_element__master_evaluation_element__order_id=order_id_list[1],
+                evaluation_element__section__master_section__order_id=order_id_list[0],
+            )
             if isinstance(choice, Choice):
                 choice.set_choice_ticked()
         self.evaluation_element1.set_status()
@@ -314,11 +338,17 @@ class TestScoreValues(TestCase):
         self.assertEqual(self.section1.calculate_score_per_section(), 4)
 
     def test_evaluation_element_calculate_points_not_concerned_no_conditions(self):
-        self.assertEqual(self.evaluation_element1.calculate_points_not_concerned(), 0)  # No choice ticked
+        self.assertEqual(
+            self.evaluation_element1.calculate_points_not_concerned(), 0
+        )  # No choice ticked
         self.set_progression_evaluation("1.1.b")
-        self.assertEqual(self.evaluation_element1.calculate_points_not_concerned(), 0)  # 1.1.b has no conditions
+        self.assertEqual(
+            self.evaluation_element1.calculate_points_not_concerned(), 0
+        )  # 1.1.b has no conditions
         self.set_progression_evaluation("1.2.b")
-        self.assertEqual(self.evaluation_element2.calculate_points_not_concerned(), 0)  # 1.2.b has no conditions
+        self.assertEqual(
+            self.evaluation_element2.calculate_points_not_concerned(), 0
+        )  # 1.2.b has no conditions
 
     def test_evaluation_element_calculate_points_not_concerned_conditions_intra(self):
         self.set_progression_evaluation("1.2.a")
@@ -327,7 +357,10 @@ class TestScoreValues(TestCase):
         self.change_weight_choices(**kwargs)
         self.set_progression_evaluation("1.2.a")
         self.assertEqual(self.evaluation_element2.calculate_points_not_concerned(), 5.58)
-        self.assertEqual(self.evaluation_element2.calculate_points_not_concerned(), self.evaluation_element2.max_points)
+        self.assertEqual(
+            self.evaluation_element2.calculate_points_not_concerned(),
+            self.evaluation_element2.max_points,
+        )
 
     def test_evaluation_element_calculate_points_not_concerned_conditions_inter(self):
         self.set_progression_evaluation("1.1.a")
@@ -336,7 +369,10 @@ class TestScoreValues(TestCase):
         self.change_weight_choices(**kwargs)
         self.set_progression_evaluation("1.1.a")
         self.assertEqual(self.evaluation_element2.calculate_points_not_concerned(), 5.58)
-        self.assertEqual(self.evaluation_element2.calculate_points_not_concerned(), self.evaluation_element2.max_points)
+        self.assertEqual(
+            self.evaluation_element2.calculate_points_not_concerned(),
+            self.evaluation_element2.max_points,
+        )
 
     def test_evaluation_score_set_points_not_concerned_no_condition(self):
         self.evaluation_score.set_points_not_concerned()
@@ -363,9 +399,11 @@ class TestScoreValues(TestCase):
         self.assertEqual(self.evaluation_score.points_not_concerned, 5.58)
 
     def test_evaluation_score_set_points_not_concerned_multiple_conditions(self):
-        master_choice_1 = MasterChoice.objects.get(order_id="a",
-                                                   master_evaluation_element__order_id="1",
-                                                   master_evaluation_element__master_section__order_id="1")
+        master_choice_1 = MasterChoice.objects.get(
+            order_id="a",
+            master_evaluation_element__order_id="1",
+            master_evaluation_element__master_section__order_id="1",
+        )
         master_choice_1.is_concerned_switch = 1
         master_choice_1.save()
         choice1 = Choice.objects.get(
@@ -373,7 +411,9 @@ class TestScoreValues(TestCase):
             evaluation_element=self.evaluation_element1,
         )
         choice1.save()
-        self.set_progression_evaluation("1.1.a")  # Condition inter on 1.1.a and condition intra on 1.1.a
+        self.set_progression_evaluation(
+            "1.1.a"
+        )  # Condition inter on 1.1.a and condition intra on 1.1.a
         self.assertEqual(self.evaluation_element1.calculate_points_not_concerned(), 1)
         self.assertEqual(self.evaluation_element2.calculate_points_not_concerned(), 0.5)
         self.evaluation_score.set_points_not_concerned()
@@ -397,7 +437,9 @@ class TestScoreValues(TestCase):
         self.evaluation_score.set_points_not_concerned()
         self.evaluation_score.set_points_obtained()
         self.assertEqual(self.evaluation_score.points_not_concerned, 0.5)
-        self.assertEqual(self.evaluation_score.coefficient_scoring_system, 0.5)  # To explain the result, 1+0.5*0.5
+        self.assertEqual(
+            self.evaluation_score.coefficient_scoring_system, 0.5
+        )  # To explain the result, 1+0.5*0.5
         self.assertEqual(self.evaluation_score.points_obtained, 1.25)
 
     def test_evaluation_score_set_points_obtained_conditions_inter(self):
@@ -410,9 +452,11 @@ class TestScoreValues(TestCase):
         self.assertEqual(self.evaluation_score.points_obtained, 3.5)
 
     def test_evaluation_score_set_points_obtained_multiple_conditions(self):
-        master_choice_1 = MasterChoice.objects.get(order_id="a",
-                                                   master_evaluation_element__order_id="1",
-                                                   master_evaluation_element__master_section__order_id="1")
+        master_choice_1 = MasterChoice.objects.get(
+            order_id="a",
+            master_evaluation_element__order_id="1",
+            master_evaluation_element__master_section__order_id="1",
+        )
         master_choice_1.is_concerned_switch = 1
         master_choice_1.save()
         choice1 = Choice.objects.get(
@@ -420,7 +464,9 @@ class TestScoreValues(TestCase):
             evaluation_element=self.evaluation_element1,
         )
         choice1.save()
-        self.set_progression_evaluation("1.1.a", "2.1.b")  # Condition inter on 1.1.a and condition intra on 1.1.a
+        self.set_progression_evaluation(
+            "1.1.a", "2.1.b"
+        )  # Condition inter on 1.1.a and condition intra on 1.1.a
         self.evaluation_score.set_points_not_concerned()
         self.evaluation_score.set_points_obtained()
         self.assertEqual(self.evaluation_score.points_not_concerned, 1.5)
@@ -458,7 +504,9 @@ class TestScoreValues(TestCase):
         self.change_weight_choices(**kwargs)
         self.evaluation_score.set_max_points()
         self.set_progression_evaluation("1.1.a", "1.1.b", "2.1.a")
-        self.evaluation_score.evaluation = Evaluation.objects.get(name="evaluation")  # Need to reload the evaluation
+        self.evaluation_score.evaluation = Evaluation.objects.get(
+            name="evaluation"
+        )  # Need to reload the evaluation
         self.evaluation_score.process_score_calculation()
         self.assertEqual(self.evaluation_score.score, 67.9)
 
@@ -480,17 +528,28 @@ class TestScoreValues(TestCase):
         self.evaluation_score.save()
         self.assertTrue(self.evaluation_score.need_to_set_max_points)
         self.evaluation_score.calculate_max_points()
-        self.assertEqual(self.evaluation_score.max_points, max_points_before)  # Nothing has changed so the same
-        self.assertFalse(self.evaluation_score.need_to_set_max_points)  # Test the method changes the field
+        self.assertEqual(
+            self.evaluation_score.max_points, max_points_before
+        )  # Nothing has changed so the same
+        self.assertFalse(
+            self.evaluation_score.need_to_set_max_points
+        )  # Test the method changes the field
 
     def test_evaluation_score_calculate_max_points_blank_evaluation(self):
-        kwargs = {"1.2.b": "5", "no_change_max_points": True}  # To do not set the max points in change_weight_choices()
+        kwargs = {
+            "1.2.b": "5",
+            "no_change_max_points": True,
+        }  # To do not set the max points in change_weight_choices()
         self.change_weight_choices(**kwargs)
-        self.assertEqual(self.evaluation_score.max_points, 2.5)  # To test it has not been changed
+        self.assertEqual(
+            self.evaluation_score.max_points, 2.5
+        )  # To test it has not been changed
         self.evaluation_score.need_to_set_max_points = True
         self.evaluation_score.save()
         self.evaluation_score.calculate_max_points()
-        self.section1 = Section.objects.get(master_section__order_id="1", evaluation=self.evaluation)
+        self.section1 = Section.objects.get(
+            master_section__order_id="1", evaluation=self.evaluation
+        )
 
         self.evaluation_element2 = EvaluationElement.objects.get(
             master_evaluation_element__order_id="2",
@@ -503,10 +562,14 @@ class TestScoreValues(TestCase):
     def test_evaluation_score_calculate_max_points_evaluation_finished(self):
         self.set_progression_evaluation("1.1.b", "1.2.b", "2.1.b")
         self.evaluation_score.process_score_calculation()
-        self.assertEqual(self.evaluation_score.points_obtained, 2.5)  # Before changing the scoring
+        self.assertEqual(
+            self.evaluation_score.points_obtained, 2.5
+        )  # Before changing the scoring
         kwargs = {"1.2.b": "5", "2.1.b": "3", "no_change_max_points": True}
         self.change_weight_choices(**kwargs)
-        self.assertEqual(self.evaluation_score.max_points, 2.5)  # To test it has not been changed
+        self.assertEqual(
+            self.evaluation_score.max_points, 2.5
+        )  # To test it has not been changed
         # Just need "no_change_max_points" in kwargs
         self.set_progression_evaluation("1.1.b", "1.2.b", "2.1.b", **kwargs)
         self.assertEqual(self.evaluation_element2.points, 0.5)  # To test it has not changed
@@ -514,10 +577,12 @@ class TestScoreValues(TestCase):
         self.evaluation_score.save()
         self.evaluation_score.calculate_max_points()
         # Need to get the objects again as they have been modified and not saved in this method
-        self.section1 = Section.objects.get(master_section__order_id="1",
-                                            evaluation=self.evaluation)
-        self.section2 = Section.objects.get(master_section__order_id="2",
-                                            evaluation=self.evaluation)
+        self.section1 = Section.objects.get(
+            master_section__order_id="1", evaluation=self.evaluation
+        )
+        self.section2 = Section.objects.get(
+            master_section__order_id="2", evaluation=self.evaluation
+        )
         self.evaluation_element1 = EvaluationElement.objects.get(
             master_evaluation_element__order_id="1",
             section=self.section1,
@@ -550,7 +615,9 @@ class TestScoreValues(TestCase):
         self.set_progression_evaluation("1.1.b", "1.2.b", "2.1.b")
         self.evaluation_score.set_exposition_dic()
         self.assertEqual(len(self.evaluation_score.exposition_dic), 2)
-        self.assertIn("description e1", list(self.evaluation_score.exposition_dic.items())[0][0])
+        self.assertIn(
+            "description e1", list(self.evaluation_score.exposition_dic.items())[0][0]
+        )
         self.assertIn(", e2", list(self.evaluation_score.exposition_dic.items())[1][0])
 
     def test_set_exposition_dic_bis(self):
@@ -575,15 +642,17 @@ class TestEvaluationCompletion(TestCase):
         self.user = User.object.create_superuser(email=self.email, password=self.password)
         self.client = Client()
         self.client.login(email=self.email, password=self.password)
-        scoring_file = open('assessment/tests/import_test_files/scoring_test_v2.json')
-        assessment_file = open('assessment/tests/import_test_files/assessment_test_v2_no_previous_version.json')
+        scoring_file = open("assessment/tests/import_test_files/scoring_test_v2.json")
+        assessment_file = open(
+            "assessment/tests/import_test_files/assessment_test_v2_no_previous_version.json"
+        )
         post_data = {
             "assessment_json_file": assessment_file,  # just the field need to not be empty
-            "scoring_json_file": scoring_file
+            "scoring_json_file": scoring_file,
         }
         # Create the assessment
-        self.client.post('/fr/admin/assessment/assessment/upload-json/', post_data)
-        self.client.get('/fr/admin/')  # To pop the messages of the first import
+        self.client.post("/fr/admin/assessment/assessment/upload-json/", post_data)
+        self.client.get("/fr/admin/")  # To pop the messages of the first import
         self.evaluation = Evaluation(name="Evaluation", assessment=Assessment.objects.first())
         self.evaluation.save()
         self.evaluation.create_evaluation_body()

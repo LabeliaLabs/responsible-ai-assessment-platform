@@ -1,19 +1,14 @@
-from django.test import TestCase
-
 from assessment.models import (
     Assessment,
-    Evaluation,
-    Section,
-    MasterSection,
-    EvaluationElement,
     Choice,
+    Evaluation,
+    EvaluationElement,
+    MasterSection,
+    Section,
 )
+from django.test import TestCase
 
-from .object_creation import (
-    create_evaluation,
-    create_assessment_body,
-    create_scoring,
-)
+from .object_creation import create_assessment_body, create_evaluation, create_scoring
 
 """
 In this file, we test the evaluation progression and the methods related to it in the different classes.
@@ -28,14 +23,16 @@ class EvaluationProgressionTestCase(TestCase):
         self.assessment = Assessment.objects.get(version="1.0")
         create_scoring(assessment=self.assessment)
         # Create the evaluation object linked to the assessment but without body yet
-        self.evaluation = create_evaluation(
-            assessment=self.assessment, name="evaluation"
-        )
+        self.evaluation = create_evaluation(assessment=self.assessment, name="evaluation")
         self.evaluation.create_evaluation_body()
         self.master_section1 = MasterSection.objects.get(name="master_section1")
-        self.section1 = Section.objects.get(master_section=self.master_section1, evaluation=self.evaluation)
+        self.section1 = Section.objects.get(
+            master_section=self.master_section1, evaluation=self.evaluation
+        )
         self.master_section2 = MasterSection.objects.get(name="master_section2")
-        self.section2 = Section.objects.get(master_section=self.master_section2, evaluation=self.evaluation)
+        self.section2 = Section.objects.get(
+            master_section=self.master_section2, evaluation=self.evaluation
+        )
         self.evaluation_element1 = EvaluationElement.objects.get(
             master_evaluation_element__order_id="1",
             section__master_section__order_id="1",
@@ -98,7 +95,9 @@ class EvaluationProgressionTestCase(TestCase):
         self.assertFalse(self.evaluation_element1.status)
         self.choice1.set_choice_ticked()
         self.evaluation_element1.set_status()
-        self.assertTrue(self.evaluation_element1.status)  # EE1 has status to True when C1 is ticked
+        self.assertTrue(
+            self.evaluation_element1.status
+        )  # EE1 has status to True when C1 is ticked
         self.choice1.delete()
         self.evaluation_element1.set_status()
         self.assertFalse(self.evaluation_element1.status)
@@ -109,7 +108,9 @@ class EvaluationProgressionTestCase(TestCase):
         self.choice3.set_choice_ticked()
         self.assertEqual([self.choice3], self.evaluation_element2.get_list_choices_ticked())
         self.choice4.set_choice_ticked()
-        self.assertEqual([self.choice3, self.choice4], self.evaluation_element2.get_list_choices_ticked())
+        self.assertEqual(
+            [self.choice3, self.choice4], self.evaluation_element2.get_list_choices_ticked()
+        )
         self.choice3.set_choice_unticked()
         self.assertEqual([self.choice4], self.evaluation_element2.get_list_choices_ticked())
 
@@ -136,10 +137,16 @@ class EvaluationProgressionTestCase(TestCase):
         # C3 is_concerned_switch is True so C3 and C4 cannot be both ticked
         # The method only compare the choices in the list it takes in argument
         self.assertTrue(self.evaluation_element2.are_conditions_between_choices_satisfied([]))
-        self.assertTrue(self.evaluation_element2.are_conditions_between_choices_satisfied([str(self.choice3)]))
+        self.assertTrue(
+            self.evaluation_element2.are_conditions_between_choices_satisfied(
+                [str(self.choice3)]
+            )
+        )
         self.assertTrue(self.evaluation_element2.has_condition_between_choices())
-        self.assertFalse(self.evaluation_element2.are_conditions_between_choices_satisfied(
-            [str(self.choice3), str(self.choice4)])
+        self.assertFalse(
+            self.evaluation_element2.are_conditions_between_choices_satisfied(
+                [str(self.choice3), str(self.choice4)]
+            )
         )
 
     def test_evaluation_element_is_applicable(self):

@@ -7,15 +7,15 @@ from django.db import models
 # Do not register 'risk_domain' field of MasterEvaluationElement
 TRANSLATED_FIELDS = {
     "assessment": ["name"],
-    "master_section": ['name', 'description', 'keyword'],
-    "master_evaluation_element": ['name', 'question_text', 'explanation_text'],
+    "master_section": ["name", "description", "keyword"],
+    "master_evaluation_element": ["name", "question_text", "explanation_text"],
     "master_choice": ["answer_text"],
-    "external_link": ["text"]
+    "external_link": ["text"],
 }
 
 
 def get_last_assessment_created():
-    """ Get the last assessment created - If no assessment in DB, returns None """
+    """Get the last assessment created - If no assessment in DB, returns None"""
 
     if len(list(Assessment.objects.all().order_by("-created_at"))) > 0:
         return list(Assessment.objects.all().order_by("-created_at"))[0]
@@ -24,24 +24,22 @@ def get_last_assessment_created():
 
 
 class Assessment(models.Model):
-    """ The class Assessment represents the object assessment with
-        an ID, a name, a version and a date of creation and a date of last update
-        This class stores the static information concerning the assessment (version)
+    """The class Assessment represents the object assessment with
+    an ID, a name, a version and a date of creation and a date of last update
+    This class stores the static information concerning the assessment (version)
     """
 
     name = models.CharField(max_length=100)
     version = models.CharField(max_length=200, default="mvp", unique=True)
-    previous_assessment = models.ForeignKey('self',
-                                            on_delete=models.SET_NULL,
-                                            null=True,
-                                            blank=True,
-                                            default=None)
+    previous_assessment = models.ForeignKey(
+        "self", on_delete=models.SET_NULL, null=True, blank=True, default=None
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         if self.name and self.version:
-            return f'{self.name} - V{str(self.version)}'
+            return f"{self.name} - V{str(self.version)}"
         else:
             return f"Assessment {str(self.pk)}"
 
@@ -52,11 +50,11 @@ class Assessment(models.Model):
         """
         list_all_choices = []
         for master_section in self.mastersection_set.all().order_by("order_id"):
-            for (
-                    master_element
-            ) in master_section.masterevaluationelement_set.all().order_by("order_id"):
+            for master_element in master_section.masterevaluationelement_set.all().order_by(
+                "order_id"
+            ):
                 for master_choice in master_element.masterchoice_set.all().order_by(
-                        "order_id"
+                    "order_id"
                 ):
                     list_all_choices.append(master_choice.get_numbering())
         return list_all_choices
@@ -69,8 +67,11 @@ class Assessment(models.Model):
         Count all the risk domains defined in the assessment
         """
         list_risks = [
-            [master_element.risk_domain_fr for master_element in master_section.masterevaluationelement_set.all()
-             if master_element.risk_domain]
+            [
+                master_element.risk_domain_fr
+                for master_element in master_section.masterevaluationelement_set.all()
+                if master_element.risk_domain
+            ]
             for master_section in self.mastersection_set.all()
         ]
         flatten_list = list(itertools.chain.from_iterable(list_risks))
@@ -108,8 +109,10 @@ class Assessment(models.Model):
                     return False
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
                 for field in dic["master_evaluation_element"]:
-                    if not getattr(master_evaluation_element, field + "_" + language) and \
-                            master_evaluation_element.get_numbering() != "2.2":
+                    if (
+                        not getattr(master_evaluation_element, field + "_" + language)
+                        and master_evaluation_element.get_numbering() != "2.2"
+                    ):
                         return False
                 for master_choice in master_evaluation_element.masterchoice_set.all():
                     for field in dic["master_choice"]:
@@ -142,8 +145,10 @@ class Assessment(models.Model):
                     dic_fields[master_section] = field + "_" + language
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
                 for field in dic["master_evaluation_element"]:
-                    if not getattr(master_evaluation_element, field + "_" + language) and \
-                            master_evaluation_element.get_numbering() != "2.2":
+                    if (
+                        not getattr(master_evaluation_element, field + "_" + language)
+                        and master_evaluation_element.get_numbering() != "2.2"
+                    ):
                         dic_fields[master_evaluation_element] = field + "_" + language
                 for master_choice in master_evaluation_element.masterchoice_set.all():
                     for field in dic["master_choice"]:
@@ -179,7 +184,9 @@ class Assessment(models.Model):
         for master_section in self.mastersection_set.all():
             delete_language_translation_field(master_section, "master_section", language)
             for master_evaluation_element in master_section.masterevaluationelement_set.all():
-                delete_language_translation_field(master_evaluation_element, "master_evaluation_element", language)
+                delete_language_translation_field(
+                    master_evaluation_element, "master_evaluation_element", language
+                )
                 for master_choice in master_evaluation_element.masterchoice_set.all():
                     delete_language_translation_field(master_choice, "master_choice", language)
                 for resource in master_evaluation_element.external_links.all():
@@ -202,8 +209,10 @@ def delete_language_translation_field(obj, obj_name, lang):
                 setattr(obj, fields + "_" + lang, None)
             obj.save()
         else:
-            raise KeyError(f"The obj_name {obj_name} is not a key of the dictionary of translated fields,"
-                           f"available keys: {dic_translated_fields.keys()}")
+            raise KeyError(
+                f"The obj_name {obj_name} is not a key of the dictionary of translated fields,"
+                f"available keys: {dic_translated_fields.keys()}"
+            )
 
 
 def get_available_languages():

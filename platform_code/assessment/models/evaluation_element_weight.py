@@ -1,5 +1,5 @@
-from django.db.models import JSONField
 from django.db import models
+from django.db.models import JSONField
 
 from .assessment import Assessment
 
@@ -17,10 +17,7 @@ class EvaluationElementWeight(models.Model):
     name = models.CharField(max_length=500)
     assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
     organisation_type = models.CharField(
-        max_length=1000,
-        blank=True,
-        null=True,
-        default="entreprise"
+        max_length=1000, blank=True, null=True, default="entreprise"
     )
     # todo change organisation_type field
     master_evaluation_element_weight_json = JSONField()

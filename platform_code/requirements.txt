@@ -14,4 +14,4 @@ pyjwt==1.7.1
 plotly==4.13.0
 pillow==8.1.0
 reportlab==3.5.59
-
+pre-commit==2.20.0

@@ -1,7 +1,6 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-
 element_feedback_list = [
     ["element_fit", _("No evaluation element fits to my case")],
     ["element_formulation", _("This evaluation element is poorly formulated")],
@@ -44,7 +43,7 @@ class ElementFeedbackForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        super(ElementFeedbackForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["element_feedback_type"].widget.attrs[
             "class"
         ] = "select select-feedback-popin"
@@ -71,7 +70,7 @@ class SectionFeedbackForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
-        super(SectionFeedbackForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.fields["section_feedback_type"].widget.attrs[
             "class"
         ] = "select select-feedback-popin"

@@ -1,17 +1,16 @@
 import json
 
-from django.test import TestCase
-from django.utils.translation import activate
-
+from assessment.import_assessment import ImportAssessment
 from assessment.models import (
     Assessment,
-    MasterSection,
-    is_language_activation_allowed,
+    ExternalLink,
     MasterChoice,
     MasterEvaluationElement,
-    ExternalLink,
+    MasterSection,
+    is_language_activation_allowed,
 )
-from assessment.import_assessment import ImportAssessment
+from django.test import TestCase
+from django.utils.translation import activate
 
 
 def create_translated_fields():
@@ -25,9 +24,11 @@ def create_translated_fields():
     ]
     for tuple_class in classes_with_translated_fields:
         class_name = tuple_class[0]
-        dic_translated_fields[tuple_class[1]] = \
-            [field.name[:-3] for field in class_name._meta.get_fields()
-             if field.name[-3:] == "_en" and field.name[:4] != "risk"]
+        dic_translated_fields[tuple_class[1]] = [
+            field.name[:-3]
+            for field in class_name._meta.get_fields()
+            if field.name[-3:] == "_en" and field.name[:4] != "risk"
+        ]
     return dic_translated_fields
 
 
@@ -37,14 +38,12 @@ class ImportAssessmentLanguageTestCase(TestCase):
     """
 
     def setUp(self):
-        with open(
-                "assessment/tests/import_test_files/assessment_test_v1.json"
-        ) as json_file:
+        with open("assessment/tests/import_test_files/assessment_test_v1.json") as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
 
         with open(
-                "assessment/tests/import_test_files/assessment_test_first_version.json"
+            "assessment/tests/import_test_files/assessment_test_first_version.json"
         ) as json_file_2:
             self.assessment_data_2 = json.load(json_file_2)
         json_file_2.close()
@@ -77,7 +76,7 @@ class ImportAssessmentLanguageTestCase(TestCase):
         master_section1 = MasterSection.objects.first()
         # self.assertEqual(master_section1.name, "section 1 fr")
         self.assertEqual(master_section1.keyword, "Protection des données")
-        activate('en')
+        activate("en")
         self.assertEqual("assessment en", assessment.name)
         # self.assertEqual(master_section1.name, "section 1 en")
         self.assertEqual(master_section1.keyword, "Data protection")
@@ -120,14 +119,12 @@ class AssessmentLanguageTestCase(TestCase):
     """
 
     def setUp(self):
-        with open(
-                "assessment/tests/import_test_files/assessment_test_v1.json"
-        ) as json_file:
+        with open("assessment/tests/import_test_files/assessment_test_v1.json") as json_file:
             self.assessment_data = json.load(json_file)
         json_file.close()
 
         with open(
-                "assessment/tests/import_test_files/assessment_test_first_version.json"
+            "assessment/tests/import_test_files/assessment_test_first_version.json"
         ) as json_file_2:
             self.assessment_data_2 = json.load(json_file_2)
         json_file_2.close()

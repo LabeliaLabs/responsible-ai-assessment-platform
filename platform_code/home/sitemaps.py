@@ -3,10 +3,9 @@ from django.urls import reverse
 
 
 class StaticViewsSitemap(Sitemap):
-
     def items(self):
         return [
-            'home:homepage',
+            "home:homepage",
         ]
 
     def location(self, item):

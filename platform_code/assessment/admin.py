@@ -1,31 +1,32 @@
-from django.contrib import admin
-
 from assessment.admin_utils.assessment_import import JsonUploadAssessmentAdmin
-from assessment.admin_utils.evaluation_admin import EvaluationElementWeightAdmin, EvaluationAdmin
+from assessment.admin_utils.element_change_log_admin import ElementChangeLogAdmin
+from assessment.admin_utils.evaluation_admin import (
+    EvaluationAdmin,
+    EvaluationElementWeightAdmin,
+)
+from assessment.admin_utils.labelling_admin import LabellingAdmin
 from assessment.admin_utils.master_choice_admin import MasterChoiceAdmin
 from assessment.admin_utils.master_element_admin import MasterEvaluationElementAdmin
-from assessment.admin_utils.element_change_log_admin import ElementChangeLogAdmin
 from assessment.admin_utils.master_section_admin import MasterSectionAdmin
 from assessment.admin_utils.scoring_import import ScoringAdmin
-from assessment.admin_utils.labelling_admin import LabellingAdmin
-
 from assessment.models import (
-    Evaluation,
     Assessment,
     Choice,
-    EvaluationElement,
-    Section,
-    ScoringSystem,
-    MasterChoice,
-    MasterSection,
-    MasterEvaluationElement,
-    ExternalLink,
-    EvaluationElementWeight,
-    Upgrade,
-    EvaluationScore,
-    Labelling,
     ElementChangeLog,
+    Evaluation,
+    EvaluationElement,
+    EvaluationElementWeight,
+    EvaluationScore,
+    ExternalLink,
+    Labelling,
+    MasterChoice,
+    MasterEvaluationElement,
+    MasterSection,
+    ScoringSystem,
+    Section,
+    Upgrade,
 )
+from django.contrib import admin
 
 admin.site.register(MasterSection, MasterSectionAdmin)
 admin.site.register(MasterEvaluationElement, MasterEvaluationElementAdmin)

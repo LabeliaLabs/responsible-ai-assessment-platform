@@ -42,4 +42,4 @@ def url_target_blank(text):
     """
     This function adds the target="_blank" attribute to <a></a> tag
     """
-    return mark_safe(text.replace('<a ', '<a target="_blank" '))
+    return mark_safe(text.replace("<a ", '<a target="_blank" '))

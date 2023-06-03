@@ -1,40 +1,34 @@
 import logging
-from sentry_sdk import capture_message
 
+from assessment.forms import EvaluationForm, EvaluationMutliOrgaForm
+from assessment.models import Evaluation, EvaluationElement
+from assessment.views.utils.edit_evaluation_name import treat_evaluation_name_edition
+from assessment.views.utils.error_handler import error_400_view_handler, error_500_view_handler
+from assessment.views.utils.treat_feedback_and_resources import treat_resources
+from assessment.views.utils.utils import (
+    manage_evaluation_max_points,
+    manage_evaluation_score,
+    manage_missing_language,
+    treat_action_plan,
+    treat_archive_note,
+    treat_delete_note,
+    treat_evaluation_creation_valid_form,
+)
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import MultipleObjectsReturned
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.views import generic
-
-from home.views.utils import get_all_change_logs
-from assessment.forms import EvaluationMutliOrgaForm, EvaluationForm
-from assessment.models import (
-    Evaluation,
-    EvaluationElement,
-)
-from assessment.views.utils.edit_evaluation_name import treat_evaluation_name_edition
-from assessment.views.utils.error_handler import (
-    error_500_view_handler,
-    error_400_view_handler,
-)
-from assessment.views.utils.treat_feedback_and_resources import treat_resources
-from assessment.views.utils.utils import (
-    manage_evaluation_max_points,
-    manage_evaluation_score,
-    treat_evaluation_creation_valid_form,
-    treat_delete_note,
-    manage_missing_language,
-    treat_archive_note,
-    treat_action_plan,
-)
 from home.forms import OrganisationCreationForm
-from home.models import User, Membership, PlatformManagement, Organisation
+from home.models import Membership, Organisation, PlatformManagement, User
+from home.views.utils import get_all_change_logs
+from sentry_sdk import capture_message
+
 from .utils import (
-    organisation_creation,
-    manage_user_resource,
     add_last_version_last_assessment_dictionary,
     add_resources_dictionary,
+    manage_user_resource,
+    organisation_creation,
 )
 
 logger = logging.getLogger("monitoring")
@@ -48,7 +42,6 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
     context = {}
 
     def get(self, request, *args, **kwargs):
-
         user = request.user
         self.object = user
         self.context = self.get_context_data(object=user)
@@ -59,7 +52,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             error_500_view_handler(request, exception=MultipleObjectsReturned())
 
         # Manage the tab of the profile page which is displayed, called in the url, default "evaluations"
-        self.context['tab'] = kwargs.get("tab", "evaluations")
+        self.context["tab"] = kwargs.get("tab", "evaluations")
 
         # Add resources to context
         self.context = add_resources_dictionary(self.context, user, user_resources)
@@ -70,7 +63,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         # This can be modified if we want all the evaluations of the organisations the user belong to
         # Can be empty
         self.add_evaluations_context(user)
-        for evaluation in self.context['evaluations']:
+        for evaluation in self.context["evaluations"]:
             manage_missing_language(request, evaluation)
         # Get user notes on evaluations from the organizations to which the user belongs
         self.add_notes_context(user)
@@ -118,9 +111,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
             # If organisation-creation-name, it means it is the organisation creation form, else evaluation creation
             if "organisation-creation-name" in request.POST:
                 # create a form instance and populate it with data from the request:
-                form = OrganisationCreationForm(
-                    request.POST, prefix="organisation-creation"
-                )
+                form = OrganisationCreationForm(request.POST, prefix="organisation-creation")
                 # check whether it's valid:
                 if form.is_valid():
                     organisation = organisation_creation(request, form)
@@ -131,13 +122,20 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
 
             # If there is "organisation" in the form, it is a Evaluation creation form
             elif "evaluation-creation-name" in request.POST:
-
                 # If the user belongs to multiple organisation, it is a form with a field organisation
                 if (
-                        len(Organisation.get_list_organisations_where_user_as_role(user=user, role="admin"))
-                        >= 1
-                        or len(Organisation.get_list_organisations_where_user_as_role(user=user, role="editor"))
-                        >= 1
+                    len(
+                        Organisation.get_list_organisations_where_user_as_role(
+                            user=user, role="admin"
+                        )
+                    )
+                    >= 1
+                    or len(
+                        Organisation.get_list_organisations_where_user_as_role(
+                            user=user, role="editor"
+                        )
+                    )
+                    >= 1
                 ):
                     form = EvaluationMutliOrgaForm(
                         request.POST, user=user, prefix="evaluation-creation"
@@ -163,9 +161,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                 return treat_resources(request)
 
             # If the user edits the name of the evaluation
-            elif (
-                    "name" in request.POST.dict() and "evaluation_id" in request.POST.dict()
-            ):
+            elif "name" in request.POST.dict() and "evaluation_id" in request.POST.dict():
                 return treat_evaluation_name_edition(request)
 
             elif "delete_note_id" in request.POST.dict():
@@ -235,10 +231,16 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         """
 
         self.context["labelable_evaluations"] = [
-            evaluation for evaluation in self.context["evaluations"]
-            if (evaluation.is_finished and
-                (self.context["evaluation_score_dic"][evaluation.id] >=
-                 PlatformManagement.get_labelling_threshold() or evaluation.has_labelling()))
+            evaluation
+            for evaluation in self.context["evaluations"]
+            if (
+                evaluation.is_finished
+                and (
+                    self.context["evaluation_score_dic"][evaluation.id]
+                    >= PlatformManagement.get_labelling_threshold()
+                    or evaluation.has_labelling()
+                )
+            )
             or evaluation.has_labelling()
         ]
 
@@ -249,7 +251,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         These notes will be displayed on profileView
         """
         elements = (
-            EvaluationElement.objects.exclude(user_notes__isnull=True).filter(
+            EvaluationElement.objects.exclude(user_notes__isnull=True)
+            .filter(
                 Q(
                     section__evaluation__organisation__membership__user=user,
                     section__evaluation__organisation__membership__role="admin",
@@ -258,7 +261,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                     section__evaluation__organisation__membership__user=user,
                     section__evaluation__organisation__membership__role="editor",
                 )
-            ).order_by("id")
+            )
+            .order_by("id")
         )
         user_notes_dict = {}
         for element in elements:
@@ -268,9 +272,7 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                 user_notes_dict[evaluation] = {}
             if section not in user_notes_dict[evaluation]:
                 user_notes_dict[evaluation][section] = {}
-            user_notes_dict[evaluation][section][
-                element
-            ] = element.user_notes
+            user_notes_dict[evaluation][section][element] = element.user_notes
         self.context["user_notes_dict"] = user_notes_dict
 
     def add_action_plans(self, user):
@@ -278,7 +280,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         Create a dictionary for the evaluations which have an action plan
         """
         elements = (
-            EvaluationElement.objects.exclude(is_in_action_plan=False).filter(
+            EvaluationElement.objects.exclude(is_in_action_plan=False)
+            .filter(
                 Q(
                     section__evaluation__organisation__membership__user=user,
                     section__evaluation__organisation__membership__role="admin",
@@ -287,7 +290,8 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                     section__evaluation__organisation__membership__user=user,
                     section__evaluation__organisation__membership__role="editor",
                 )
-            ).order_by("id")
+            )
+            .order_by("id")
         )
         user_action_plans_dic = {}
         for element in elements:
@@ -297,7 +301,5 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
                 user_action_plans_dic[evaluation] = {}
             if section not in user_action_plans_dic[evaluation]:
                 user_action_plans_dic[evaluation][section] = {}
-            user_action_plans_dic[evaluation][section][
-                element
-            ] = element
+            user_action_plans_dic[evaluation][section][element] = element
         self.context["user_action_plans_dic"] = user_action_plans_dic

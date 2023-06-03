@@ -1,24 +1,30 @@
 import logging
 
+from assessment.views.utils.error_handler import error_500_view_handler
+from assessment.views.utils.treat_feedback_and_resources import treat_resources
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import MultipleObjectsReturned
 from django.views import generic
-
 from home.models import User
-from assessment.views.utils.error_handler import error_500_view_handler
-from assessment.views.utils.treat_feedback_and_resources import treat_resources
-from .utils import manage_user_resource, add_last_version_last_assessment_dictionary, add_resources_dictionary
 
-logger = logging.getLogger('monitoring')
+from .utils import (
+    add_last_version_last_assessment_dictionary,
+    add_resources_dictionary,
+    manage_user_resource,
+)
+
+logger = logging.getLogger("monitoring")
 
 
 class ResourcesView(LoginRequiredMixin, generic.DetailView):
-    """ This CBV is used to define the content of the resource page, accessible from the nav bar.
-     This page is different from the resource page of the user dashboard although the template is almost the same"""
+    """This CBV is used to define the content of the resource page, accessible from the nav bar.
+    This page is different from the resource page of the user dashboard although the template is almost the same
+    """
+
     model = User
-    template_name = 'home/resources.html'
-    login_url = 'home:homepage'
-    redirect_field_name = 'home:homepage'
+    template_name = "home/resources.html"
+    login_url = "home:homepage"
+    redirect_field_name = "home:homepage"
 
     def get(self, request, *args, **kwargs):
         user = request.user
