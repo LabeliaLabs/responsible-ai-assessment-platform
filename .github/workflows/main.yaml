@@ -39,11 +39,15 @@ jobs:
           pip install -r platform_code/requirements.txt
 
       - name: Lint
+        env:
+            SECRET_KEY: "test"
         run: |
           python platform_code/manage.py check --deploy
           pre-commit run --all-files --show-diff-on-failure
 
       - name: Set up Django
+        env:
+          SECRET_KEY: "test"
         run: |
           python platform_code/manage.py makemigrations
           python platform_code/manage.py migrate
