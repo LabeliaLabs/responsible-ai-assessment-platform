@@ -9,13 +9,13 @@
         {{section_notes_form}}
         <div class="wrapper">
             {% if evaluation|user_can_edit_evaluation:user %}
-                <button class="btn btn-primary same-size-220 margin-10"
+                <button class="btn btn-secondary same-size-220 margin-10"
                         onclick="submitSectionNotes('sectionNotes{{section.id}}', '{{section.id}}')"
                         title="{% trans 'Save the notes' %}"
                         type="button">{% trans "Save" %}
                 </button>
             {% else %}
-                <button class="btn btn-primary same-size-220" disabled
+                <button class="btn btn-secondary same-size-220" disabled
                         title="{% if not evaluation.is_editable %} {% trans 'You cannot edit this evaluation' %} {% else %}
                         {% trans 'You do not have the right to do this action' %} {% endif %}"
                         type="button">{% trans "Save" %}

@@ -95,3 +95,11 @@ def get_client_ip(request):
     else:
         ip = request.META.get("REMOTE_ADDR")
     return ip
+
+
+def convert_color_to_reportlab(color):
+        """
+        Convert a color in hexadecimal format (e.g., #RRGGBB) to a tuple of 3 floats between 0 and 1
+        """
+        color = color.lstrip("#")
+        return tuple(int(color[i : i + 2], 16) / 255 for i in (0, 2, 4))

@@ -6,7 +6,7 @@
 
 {% if evaluations %}
 <div class="larger-large-screen-50-top margin-bot-30">
-    <a class="btn btn-primary " data-target="#modal-create-eval" data-toggle="modal"
+    <a class="btn btn-secondary " data-target="#modal-create-eval" data-toggle="modal"
        href="#">{% trans "Create a new evaluation" %}</a>
 </div>
 
@@ -73,10 +73,10 @@
                 <td class="case-array last-case-array">
                     <!-- Special case when labelling at status justification as eval completed but no result button -->
                     {% if evaluation.labelling.status == "justification" %}
-                        <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                        <a class="btn btn-primary medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
                             {% trans "Modify" %}
                         </a>
-                    <a class="btn btn-primary medium-button margin-10" onclick="duplicate"
+                    <a class="btn btn-secondary medium-button margin-10" onclick="duplicate"
                            data-target="#modal-duplicate-eval{{evaluation.id}}" data-toggle="modal" href="#">
                         {% trans "Duplicate" %}
                     </a>
@@ -84,7 +84,7 @@
                         {% if evaluation.is_editable %}
                             <!-- Actions buttons -->
                             {% if evaluation.is_upgradable %}
-                            <a class="btn btn-primary medium-button margin-10"
+                            <a class="btn btn-secondary medium-button margin-10"
                                data-target="#modal-upgrade-eval{{evaluation.id}}"
                                data-toggle="modal"
                                href="#">
@@ -98,11 +98,11 @@
                                name="resultat-no-modif">
                                 {% trans "Results" %}
                             </a>
-                            <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                            <a class="btn btn-primary medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
                                 {% trans "Modify" %}
                             </a>
                             {% else %}
-                            <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                            <a class="btn btn-primary medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
                                 {% trans "Continue" %}
                             </a>
                             {% endif %}
@@ -115,7 +115,7 @@
                                     {% trans "Results" %}
                                 </a>
                             {% endif %}
-                            <a class="btn btn-primary medium-button margin-10"
+                            <a class="btn btn-secondary medium-button margin-10"
                                onclick="duplicate"
                                data-target="#modal-duplicate-eval{{evaluation.id}}"
                                data-toggle="modal"
@@ -149,7 +149,7 @@
                 <!-- Hidden case for edit the name and delete the evaluation -->
                 {% if evaluation.is_editable and evaluation.is_deleteable %}
                     <td class="div-hidden-icons center" id="div-hidden-icons{{evaluation.id}}">
-                        <button class="btn btn-primary small-btn" data-target="#modal-edit{{evaluation.id}}"
+                        <button class="btn btn-secondary small-btn" data-target="#modal-edit{{evaluation.id}}"
                                 data-toggle="modal">
                             <i class="fa fa-edit"></i>
                         </button>
@@ -194,10 +194,10 @@
 
         <div class="card-body">
             {% if organisations %}
-            <a class="btn btn-primary card-button" data-target="#modal-create-eval"
+            <a class="btn btn-secondary card-button" data-target="#modal-create-eval"
                data-toggle="modal">{% trans "Create my evaluation" %}</a>
             {% else %}
-            <a class="btn btn-primary card-button"
+            <a class="btn btn-secondary card-button"
                href="{% url 'home:orga-creation' %}">{% trans "Create my evaluation" %}</a>
             {% endif %}
 

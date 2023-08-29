@@ -22,10 +22,10 @@
 <script>
 if (screen.width > 1300) {
     var currentSectionLink = document.getElementById("sidebar-section-" + {{section_order_id}});
-    currentSectionLink.style.color = "#5550ff";
+    currentSectionLink.classList.add('primary-color');
 } else if (screen.width > 768) {
     var currentSectionLink = document.getElementById("small-sidebar-section-" + {{section_order_id}});
-    currentSectionLink.style.color = "#5550ff";
+    currentSectionLink.classList.add('primary-color');
 }
 
 </script>

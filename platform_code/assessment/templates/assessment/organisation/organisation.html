@@ -67,20 +67,20 @@
 
 <div class="row bottom-page-button margin-70">
     <form action="{% url 'home:user-profile'  %}" class="margin-auto">
-        <input class="btn btn-primary same-size-280 " type="submit"
+        <input class="btn btn-secondary same-size-280 " type="submit"
                value="{% trans 'Back to your dashboard' %}"/>
     </form>
     {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor"%}
     {% if last_version %}
     <!-- Button to Open the Modal -->
-    <button class="btn btn-primary float-right same-size-280 margin-auto margin-10-new-eval-button"
+    <button class="btn btn-secondary float-right same-size-280 margin-auto margin-10-new-eval-button"
             data-target="#modal-create-eval"
             data-toggle="modal"
             type="button">
         {% trans "Start a new evaluation" %}
     </button>
     {% else %}
-    <button class="btn btn-primary float-right same-size-280 margin-auto margin-10-new-eval-button"
+    <button class="btn btn-secondary float-right same-size-280 margin-auto margin-10-new-eval-button"
             disabled
             title="{% trans 'We are sorry, there is no assessment available yet.' %}"
             type="button">
@@ -88,7 +88,7 @@
     </button>
     {% endif %}
     {% else %}
-    <button class="btn btn-primary float-right same-size-280 margin-auto margin-10-new-eval-button"
+    <button class="btn btn-secondary float-right same-size-280 margin-auto margin-10-new-eval-button"
             disabled
             title="{% trans 'You do not have the right to do this action' %}"
             type="button">

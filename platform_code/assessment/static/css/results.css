@@ -90,12 +90,12 @@
 
 .results h2{
     margin-bottom: 50px;
-    color: #5550FF;
+    /* color: #5550FF; */
 
 }
 
 .result-point{
-    color: #5550FF;
+    /* color: #5550FF; */
     font-size:10px;
     float:left;
     margin-right:10px;
@@ -109,9 +109,3 @@
 .not-selected-choice{
     width:95%;
 }
-
-/*
-div.h4 {
-  line-height: 1rem;
-}
-*/

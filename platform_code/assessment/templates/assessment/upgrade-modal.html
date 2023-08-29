@@ -18,7 +18,7 @@
 <div class="modal-footer self-center">
         <form action="{% url 'assessment:upgrade' evaluation.organisation.id evaluation.slug evaluation.id %}"
               id="upgrade_form{{evaluation.id}}" method="get" class="margin-auto">
-            <button class="btn btn-primary upgrade-button-width margin-auto"
+            <button class="btn btn-secondary upgrade-button-width margin-auto"
                     onclick="upgrade('modal-upgrade-eval{{evaluation.id}}', 'upgrade_form{{evaluation.id}}', '{{evaluation.id}}')"
                     type="submit"
             >{% trans 'Yes' %}

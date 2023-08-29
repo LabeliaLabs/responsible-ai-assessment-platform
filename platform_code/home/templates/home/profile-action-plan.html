@@ -86,7 +86,7 @@
                             {% endif %}
                             <div class="center margin-40" id="element-footer{{element.id}}">
                                  <a
-                                    class="btn btn-modify"
+                                    class="btn btn-primary"
                                     href="{% url 'assessment:orga-summary' evaluation.organisation.id %}{{evaluation.name|slugify}}/{{evaluation.id}}/section/{{section.id}}/{{section.master_section.keyword|slugify}}/{{section.master_section.order_id}}?element={{element.master_evaluation_element.order_id}}"
                                  >
                                     {% trans "Go to the element" %}

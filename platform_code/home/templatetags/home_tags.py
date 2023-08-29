@@ -1,5 +1,6 @@
 from django import template
 from django.utils.safestring import mark_safe
+from home.models import PlatformManagement
 
 register = template.Library()
 
@@ -43,3 +44,21 @@ def url_target_blank(text):
     This function adds the target="_blank" attribute to <a></a> tag
     """
     return mark_safe(text.replace("<a ", '<a target="_blank" '))
+
+
+@register.filter
+def get_color(platform_management, color):
+    """
+    This function returns the main color of the platform
+    """
+    if not hasattr(platform_management, color):
+        return ""
+    return f"#{getattr(platform_management, color)}"
+
+
+@register.filter
+def get_platform_logo(platform_management):
+    """
+    This function returns the logo of the platform
+    """
+    return platform_management.logo
