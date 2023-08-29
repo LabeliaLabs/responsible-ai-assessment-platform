@@ -483,6 +483,39 @@ function upgrade(modal_id, form_id, evaluation_id){
     manageAjaxRequest(ajax, form);
 }
 
+function duplicate(event, evaluationId, formId) {
+    event.preventDefault();
+    var form = document.getElementById(formId);
+    document.body.style.cursor='wait';
+    var message = document.getElementById("duplicate-message"+evaluationId);
+    message.classList.remove("display-none");
+    var buttons = document.getElementsByTagName('button');
+    for (var button of buttons) {
+        button.disabled = true;
+        button.classList.add("waiting-cursor");
+    }
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function() {
+        if (ajax.readyState == 4 && ajax.status == 200 ) {
+            var response = JSON.parse(ajax.response);
+            document.body.style.cursor='default';
+            if (response['success']) {
+                // reload to user-profile/evaluation page
+                document.location.href = "evaluations"
+            } else {
+                for (var button of buttons) {
+                    button.disabled = false;
+                    button.classList.remove("waiting-cursor");
+                }
+                message.classList.replace("alert-warning", "alter-danger");
+                message.textContent = response["message"]
+                setTimeout(location.reload.bind(location), 3000);
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form);
+}
+
 function sendInvitation(form_id) {
 // Function to add a member to the organisation, the action triggered either invites the user if it exists
 // or sends an email to signup
@@ -689,6 +722,20 @@ function filterDashboardGraphs(formId){
 }
 
 
+function filterLabellingStatus(formId) {
+    var form = document.getElementById(formId);
+    var statusValue = form.status.value;
+    var labellings = Array.from(document.querySelectorAll("[name=labelling-status]"));
+    labellings.forEach((item) => {
+        var classList = item.closest("tr").classList;
+        var status = item.textContent;
+        statusValue == "All status" || statusValue == status ?
+            classList.remove("display-none") : classList.add("display-none");
+    })
+
+}
+
+
 function submitOrganisationForm(formId, organisation_id) {
     var form = document.getElementById(formId);
     var ajax = new XMLHttpRequest();
@@ -752,6 +799,36 @@ function submitSectionNotes(form_id, section_id){
     }
     // Ajax post with headers, data of the form plus notes_section_id
     manageAjaxRequest(ajax, form, "notes_section_id=" + section_id);
+}
+
+function displayElementCard(cardHeaderButtonId, cardContentId) {
+// Function which open the element card by simulating a click on the card headers
+// when the user hover the pastille tooltip
+    cardContent = document.getElementById(cardContentId);
+    cardHeaderButton = document.getElementById(cardHeaderButtonId)
+
+    if (!cardContent.classList.contains('show')) {
+        cardHeaderButton.setAttribute("data-opened-with-pastille", "yes")
+        cardHeaderButton.click();
+    }
+}
+
+function hideElementCard(cardHeaderButtonId, cardContentId) {
+// Function which closes the element card by simulating a click on the card headers
+// when the user moves the cursor away from the pastille (onmouseleave)
+
+  cardContent = document.getElementById(cardContentId);
+  cardHeaderButton = document.getElementById(cardHeaderButtonId)
+  opened_with_pastille = cardHeaderButton.getAttribute("data-opened-with-pastille")
+  if (opened_with_pastille == "yes"){
+      if (cardContent.classList.contains('show')) {
+            cardHeaderButton.click();
+            cardHeaderButton.setAttribute("data-opened-with-pastille", "no")
+
+        }
+
+  }
+
 }
 
 function changeIconResource(divHeader) {
@@ -896,6 +973,7 @@ function archiveNote(note_element_id, notif_div) {
         })
 }
 
+
 //this function is used in the evaluation to remove a note
 function removeNoteEvaluation(note_element_id, notification_div_id) {
     ajaxRequestAndNotify("form-delete-element-", note_element_id, notification_div_id,
@@ -947,6 +1025,76 @@ function removeNoteProfile(note_element_id, notification_div_id) {
                 }, 4000);
             }
         });
+}
+
+
+function actionPlan(elementId, messageDiv) {
+    var form = document.getElementById("form-action-plan-" + elementId);
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+            var response = JSON.parse(ajax.response);
+            var parentMessage = document.getElementById(messageDiv + elementId);
+            addMessage(parentMessage, response['message'], response["message_type"]);
+            parentMessage.classList.remove("hidden-div");
+            var actionPlanButton = document.getElementById(`action_plan-btn${elementId}`);
+            var icon = actionPlanButton.querySelector("i");
+            if (response["added_action_plan"]) {
+                icon.classList.remove("fa-square-o");
+                icon.classList.add("fa-check-square-o");
+            } else {
+                icon.classList.remove("fa-check-square-o");
+                icon.classList.add("fa-square-o");
+            }
+            //remove the notification after 4 secondes
+            setTimeout(function () {
+                parentMessage.classList.add("hidden-div");
+                parentMessage.textContent = '';
+            }, 4000);
+        }
+    }
+    manageAjaxRequest(ajax, form, "action_plan_element_id=" + elementId);
+}
+
+function removeElementActionPlan(elementId, messageDiv) {
+    var form = document.getElementById("remove-element-action-plan-form" + elementId);
+    var ajax = new XMLHttpRequest();
+    ajax.onreadystatechange = function () {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+            var response = JSON.parse(ajax.response);
+            var parentMessage = document.getElementById(messageDiv + elementId);
+            addMessage(parentMessage, response['message'], response["message_type"]);
+            parentMessage.classList.remove("hidden-div");
+            setTimeout(function () {
+                parentMessage.classList.add("hidden-div");
+                parentMessage.textContent = '';
+            }, 4000);
+
+            if (response['success']) {
+                document.getElementById("element-footer" + elementId).textContent = '';
+                setTimeout(function () {
+                    var elementCard = document.getElementById(`action-plan-element-${elementId}`);
+                    var sectionDiv = elementCard.parentElement;
+                    elementCard.remove();
+                    if (sectionDiv.childElementCount === 0) {
+                        var sectionCard = document.getElementById(`action-plan-section-${response["section_id"]}`);
+                        var evaluationDiv = document.getElementById("evaluation-action-plan-" + response["evaluation_id"]);
+                        sectionCard.remove();
+                        if (evaluationDiv.childElementCount === 0) {
+                            var evaluationCard = document.getElementById("accordion-evaluation-action-plan-" + response["evaluation_id"]);
+                            evaluationCard.remove();
+                            var childCount = document.querySelectorAll("#action-plans-wrapper > div").length;
+                            if (childCount === 0) {
+                                document.getElementById("no-action-plan").removeAttribute("hidden");
+                            }
+                        }
+
+                    }
+                }, 4000);
+            }
+        }
+    }
+    manageAjaxRequest(ajax, form, "action_plan_remove_element_id=" + elementId);
 }
 
 function changeIconRelease(divHeader) {

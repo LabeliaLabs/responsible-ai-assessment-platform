@@ -28,7 +28,7 @@ h1{
     width: 95%;
     text-align: center;
     margin: 0 auto;
-    color: #5550FF;
+    /* color: #5550FF; */
 }
 
 .modal-dialog{
@@ -87,7 +87,8 @@ h1{
     margin: auto;
     border-top: 0;
     border: 0px;
-
+    font-size: 16px;
+    padding: 5px;
 }
 
 .col-array {
@@ -112,10 +113,10 @@ h1{
 
 .row-array:hover .div-hidden-icons {
     visibility: visible;
+    background-color: white;
 }
 
-.div-hidden-icons{
+.div-hidden-icons {
     visibility: hidden;
-    border-top:0px;
+    border-top: 0px;
 }
-

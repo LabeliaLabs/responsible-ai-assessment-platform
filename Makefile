@@ -48,6 +48,9 @@ translate:
 backup:
 	./dump/dump_db.sh
 
+exec:
+	docker-compose exec web ./manage.py $(filter-out $@,$(MAKECMDGOALS))
+
 ############
 # PRODLIKE #
 ############
