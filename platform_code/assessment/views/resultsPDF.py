@@ -7,7 +7,12 @@ from html import unescape
 
 import reportlab
 from assessment.models import Evaluation
-from assessment.utils import get_client_ip, remove_markdown_bold, remove_markdownify_italic
+from assessment.utils import (
+    convert_color_to_reportlab,
+    get_client_ip,
+    remove_markdown_bold,
+    remove_markdownify_italic,
+)
 from assessment.views.utils.security_checks import membership_security_check
 from assessment.views.utils.utils import (
     manage_evaluation_exposition_score,
@@ -21,7 +26,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext as _
 from django.views.generic import DetailView
-from home.models import Organisation
+from home.models import Organisation, PlatformManagement
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
@@ -30,8 +35,6 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Paragraph, Table, TableStyle
 from sentry_sdk import capture_message
-from home.models import PlatformManagement
-from assessment.utils import convert_color_to_reportlab
 
 logger = logging.getLogger("monitoring")
 
@@ -81,7 +84,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         self.page_num = 1
         self.platform_management = PlatformManagement.get_or_create()
         self.COLOR_TITLE = convert_color_to_reportlab(self.platform_management.primary_color)
-    
+
     def print_pdf(self, context):
         """
         This method sets the metadata for the pdf and prints the header and sections on the buffer.
