@@ -34,7 +34,7 @@ class PlatformManagement(models.Model):
     tertiary_color = models.CharField(max_length=7, default="91D3FF")
     tertiary_color_light = models.CharField(max_length=7, default="B8DFFA")
     text_color = models.CharField(max_length=7, default="4D566B")
-    text_color_light = models.CharField(max_length=7, default="70788B;")
+    text_color_light = models.CharField(max_length=7, default="70788B")
     app_logo = models.ImageField(upload_to="app_logo", null=True, blank=True)
 
     def __str__(self):
