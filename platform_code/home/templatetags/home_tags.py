@@ -53,11 +53,3 @@ def get_color(platform_management, color):
     if not hasattr(platform_management, color):
         return ""
     return f"#{getattr(platform_management, color)}"
-
-
-@register.filter
-def get_platform_logo(platform_management):
-    """
-    This function returns the logo of the platform
-    """
-    return platform_management.logo

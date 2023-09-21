@@ -51,6 +51,9 @@ backup:
 exec:
 	docker compose exec web ./manage.py $(filter-out $@,$(MAKECMDGOALS))
 
+restart:
+	docker compose stop web && docker compose up -d web
+
 ############
 # PRODLIKE #
 ############
