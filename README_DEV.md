@@ -2,34 +2,6 @@
 
 > Reminder: No deploy friday!
 
-- [Dev Setup](#dev-setup)
-  - [1. Docker](#2-docker)
-    - [Environments & environment variables](#environments--environment-variables)
-    - [Run in detached mode and follow docker logs](#run-in-detached-mode-and-follow-docker-logs)
-  - [2. Django](#3-django)
-    - [Python Recommended tools](#python-recommended-tools)
-    - [Django settings](#django-settings)
-    - [Start a django shell in the django container](#start-a-django-shell-in-the-django-container)
-    - [Translation](#translation)
-    - [Tests](#tests)
-    - [Reset migrations](#reset-migrations)
-    - [Django logs](#django-logs)
-    - [Django check](#django-check)
-    - [Django admin](#django-admin)
-  - [3. Postgresql](#4-postgresql)
-    - [Start a postgresql shell](#start-a-postgresql-shell)
-    - [Debugger (pdb, ipdb)](#debugger-pdb-ipdb)
-    - [Get the postgresql container id](#get-the-postgresql-container-id)
-    - [Dump full db](#dump-full-db)
-    - [Restaure full db](#restaure-full-db)
-    - [Dump tables](#dump-tables)
-    - [List tables](#list-tables)
-  - [4. Monthly routines](#5-monthly-routines)
-  - [5. Tips](#6-tips)
-    - [Utils](#utils)
-    - [SEO](#seo)
-    - [Debug & logs](#debug--logs)
-
 ## 1. Linux
 
 > Warning: Treat with caution ssh keys and if you find some viruses on your machine, please let other members of the team know and update your keys once the issue is solved.
@@ -177,47 +149,27 @@ sudo nginx -t && sudo nginx -s reload
 sudo nginx -T
 ```
 
-### [not required] Install Certbot
-
-> This part is not required anymore as the project is using an ssl certicate issued by Gandi, but it is still a good source of knowledge.
-
-```sh
-# Ubuntu snap install, as advised on certbot website
-# https://certbot.eff.org/lets-encrypt/ubuntufocal-nginx
-sudo snap install --classic certbot
-
-# First config
-sudo certbot --nginx
-
-# Test renew
-sudo certbot renew --dry-run
-sudo certbot renew --dry-run --verbose
-# Renew
-sudo certbot renew
-```
-
-### Certificate Renewal
+### SSL Certificate installation and renewal
 
 > Note: Use the wildcard domain to catch all sub-domains `*.labelia.org`
->
-> Validation method email: admin@labelia.org
 
-#### Resources
+#### New instructions for certificate renewal
 
-- Follow Gandi CSR doc: <https://docs.gandi.net/en/ssl/common_operations/csr.html>
-- <https://nicolas.perriault.net/code/2012/gandi-standard-ssl-certificate-nginx/>
-- <https://jlecour.github.io/ssl-gandi-nginx-debian/>
+1. Local preparation: Generate a CSR and a private key with an openssl command provided by the web provider (e.g. Gandi), typically:
+  `openssl req -nodes -new -newkey rsa:2048 -sha256 -keyout 'labeliadotorg.key' -out 'labeliadotorg.csr' -subj '/CN=*.labelia.org' -utf8`
+1. Generate the certificate via the web provider interface
+1. Local preparation: Append the provider intermediary certificate (`cat GandiStandardSSLCA2.pem >> labelia.org.crt` or simply by copy-pasting it within the file)
+1. On the server: replace the certificate file `labelia.org.crt` and the private key `labeliadotorg.key` that was used to generate the certificate. They should be located in the `/ssl` folder (in the home folder of the user Ubuntu)
+1. Pay attention to the filenames indicated, as they might be referenced in the nginx configuration
 
-```sh
-openssl req -nodes -newkey rsa:2048 -sha256 -keyout myserver.key -out server.csr
-```
+#### Details on the above commands
 
-- `newkey rsa:2048` - Generates a CSR request and a private key using RSA with 2048 bits. If you use the certificate with our Simple Hosting offer, your key can only be 2048 bits.
-- `sha256` - Use the SHA-2, SHA256 hash algorithm. Due to the deprecation of the SHA1 certificates, our partner, Sectigo, will automatically deliver a SHA2 certificate.
-- `keyout myserver.key`: Save the private key in the file “myserver.key” in the folder where the command was executed.
-- `out server.csr`: Save the CSR in the file “server.csr” in the folder where the command was executed.
+- `-newkey rsa:2048` - Generates a CSR request and a private key using RSA with 2048 bits
+- `-sha256` - Use the SHA-2, SHA256 hash algorithm
+- `-keyout myserver.key`: Save the private key in the file myserver.key in the folder where the command was executed.
+- `-out server.csr`: Save the CSR in the file server.csr in the folder where the command was executed.
 
-#### Input
+When creating a new CSR the openssl command execution might lead to requesting the following inputs:
 
 - `Country name`: Provide the two letter code of your country.
 - `State or Province Name`: Write out the name of your state or province; do not use an abbreviation.
@@ -228,15 +180,6 @@ openssl req -nodes -newkey rsa:2048 -sha256 -keyout myserver.key -out server.csr
 - `Email Address`: Provide your email address. The email address is **not mandatory**, but is recommended.
 - `A challenge password`: This is a rarely used and optional feature. We recommend you leave this blank.
 - `An optional company name`: We also recommend leaving this option blank.
-
-#### Required
-
-```sh
-# Append the key to your certificate
-cat GandiStandardSSLCA2.pem >> labelia.org.crt
-```
-
-Then refer to the `docker-compose` file to load the certificate into the containerized nginx.
 
 ### UFW: Uncomplicated FireWall
 
