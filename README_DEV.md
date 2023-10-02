@@ -169,6 +169,9 @@ sudo nginx -T
 1. Local preparation: Append the provider intermediary certificate (`cat GandiStandardSSLCA2.pem >> labelia.org.crt` or simply by copy-pasting it within the file)
 1. On the server: replace the certificate file `labelia.org.crt` and the private key `labeliadotorg.key` that was used to generate the certificate. They should be located in the `/ssl` folder (in the home folder of the user Ubuntu)
 1. Pay attention to the filenames indicated, as they might be referenced in the nginx configuration
+1. Stop and relaunch the application so that the new files can be taken into account:
+   1. First: `make down` (or `docker-compose down`)
+   1. Then: `make buildupd` (or `docker-compose up --build -d`)
 
 #### Details on the above commands
 
@@ -896,7 +899,7 @@ For these types of interventions, the typical sequence of actions is the followi
 1. Backup: `./dump/dump_db.sh`
 1. Down: `docker-compose down` (or `make down`)
 1. Perform specific action (e.g. server updates, certificate renewal, new release, etc.)
-1. Build & up : `docker-compose up --build` (or `make buildupd`)
+1. Build & up : `docker-compose up --build -d` (or `make buildupd`)
 
 And in case of changes in the application code:
 
