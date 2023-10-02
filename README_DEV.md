@@ -1,6 +1,14 @@
-# Dev Setup
+# README for developers
 
 > Reminder: No deploy friday!
+
+Quick access:
+1. [Linux](#1-linux)
+1. [Docker](#2-docker)
+1. [Django](#3-django)
+1. [Postgresql](#4-postgresql)
+1. [Monthly routines](#5-monthly-routines)
+1. [Tips](#6-tips)
 
 ## 1. Linux
 
@@ -506,7 +514,7 @@ docker-compose exec web watch cat dev.log
 docker-compose exec web sh
 ```
 
-## 2. Django
+## 3. Django
 
 ### Python Recommended tools
 
@@ -750,7 +758,7 @@ django-admin testserver                  # Runs a development server with data f
 django-admin version                     # display the current django version
 ```
 
-## 3. Postgresql
+## 4. Postgresql
 
 ### Start a postgresql shell
 
@@ -872,14 +880,14 @@ home_userresources
 home_userresources_resources
 ```
 
-## 4. Monthly routines
+## 5. Monthly routines
 
 Once a month:
 
 - Check [antivirus](#install-antivirus). In doubt, scan the whole system with `clamscan -r -i /`, but it will be long...
 - Check [server updates](#monthly-server-update), including [Docker updates](#monthly-docker-update)
 
-## 5. Tips
+## 6. Tips
 
 ### Utils
 
