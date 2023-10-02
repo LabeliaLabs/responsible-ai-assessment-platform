@@ -7,7 +7,7 @@ Quick access:
 1. [Docker](#2-docker)
 1. [Django](#3-django)
 1. [Postgresql](#4-postgresql)
-1. [Monthly routines](#5-monthly-routines)
+1. [Monthly routines](#5-monthly--yearly-routines)
 1. [Tips](#6-tips)
 
 ## 1. Linux
@@ -880,12 +880,32 @@ home_userresources
 home_userresources_resources
 ```
 
-## 5. Monthly routines
+## 5. Monthly & Yearly routines
 
 Once a month:
 
 - Check [antivirus](#install-antivirus). In doubt, scan the whole system with `clamscan -r -i /`, but it will be long...
 - Check [server updates](#monthly-server-update), including [Docker updates](#monthly-docker-update)
+
+Once a year:
+
+- [Renew SSL certificate](#new-instructions-for-certificate-renewal)
+
+For these types of interventions, the typical sequence of actions is the following:
+
+1. Backup: `./dump/dump_db.sh`
+1. Down: `docker-compose down` (or `make down`)
+1. Perform specific action (e.g. server updates, certificate renewal, new release, etc.)
+1. Build & up : `docker-compose up --build` (or `make buildupd`)
+
+And in case of changes in the application code:
+
+1. Migrations : `make migr` (or see the 2 associated commands)
+1. Static : `docker-compose exec web python manage.py collectstatic --no-input --clear` (or `make static`)
+
+And in case of recreation of the database:
+
+1. Superuser : `docker-compose -d docker-compose.preprod.yml exec web ./manage.py createsuperuser` (or `make admin`)
 
 ## 6. Tips
 
