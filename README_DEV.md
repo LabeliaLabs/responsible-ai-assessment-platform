@@ -36,22 +36,22 @@ Generate a dedicated ssh key (RSA 4096 bit key with email as a comment):
 
 ```sh
 # OVH needs a rsa key if you want to add it from web interface
-ssh-keygen -t rsa -b 4096 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY>
+ssh-keygen -t rsa -b 4096 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY_NAME_CHANGE_ME>
 # if possible use ed25519
-ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY>
+ssh-keygen -o -a 100 -t ed25519 -f ~/.ssh/id_ed25519 -C "<<EMAIL_CHANGE_ME>>" -f ~/.ssh/<KEY_NAME_CHANGE_ME>
 ```
 
-Use the OVH web interface for first login, then you will be authorized to append this ssh key to `.ssh/authorized_keys` or with `ssh-copy-id`. When it's done you can connect to preprod server.
+Use the OVH web interface for first login, then you will be authorized to append this ssh key to `.ssh/authorized_keys` or with `ssh-copy-id`. When it's done you can connect to the server you created.
 
 #### Connection
 
 ```sh
 ssh -i ~/.ssh/<PRIVATE_KEY> <UNIX_USER>@<IP> -p <PORT>
-# For example, to connect preprod
+# For example, to connect to the assessment preprod server
 ssh -i ~/.ssh/preprod ubuntu@51.68.125.118 -p 22222
 ```
 
-You can also use this config to avoid some mistakes. When it is ready, you can simply use `ssh preprod` or `ssh prod`! Edit the `.ssh/config` file as follow:
+You can also use this config to avoid some mistakes. When it is ready, you can simply use `ssh preprod` or `ssh prod`! For that edit your `.ssh/config` file as follow:
 
 ```sh
 Host preprod
@@ -134,29 +134,6 @@ docker exec -i -u postgres $(docker ps | grep postgres | awk '{print $1}') pg_re
 2. Don't forget to `sudo usermod -aG docker $USER`
 3. [docker-compose](https://docs.docker.com/compose/install/)
 
-### Nginx
-
-> Nginx is dockerized, so the following is not required, but it is still a good source of knowledge. Configuration files are located in the `nginx` folder.
-
-```sh
-# Ubuntu install
-sudo apt install nginx
-
-# [only once] Dereference default conf from enabled websites
-sudo unlink /etc/nginx/sites-enabled/default
-
-# Edit your config with the one located in data/nginx/nginx.conf
-sudo vi /etc/nginx/sites-available/preprod.assessment.labelia.org
-# [temp] use this path for statics: "/home/ubuntu/pf-assessment-dsrc/platform_code/assessment/static/;"
-
-# Link it to the enabled websites
-sudo ln -s /etc/nginx/sites-available/preprod.assessment.labelia.org /etc/nginx/sites-enabled
-
-# Test config & reload nginx: will provide feedbacks in case of errors
-sudo nginx -t && sudo nginx -s reload
-sudo nginx -T
-```
-
 ### SSL Certificate installation and renewal
 
 > Note: Use the wildcard domain to catch all sub-domains `*.labelia.org`
@@ -170,8 +147,8 @@ sudo nginx -T
 1. On the server: replace the certificate file `labelia.org.crt` and the private key `labeliadotorg.key` that was used to generate the certificate. They should be located in the `/ssl` folder (in the home folder of the user Ubuntu)
 1. Pay attention to the filenames indicated, as they might be referenced in the nginx configuration
 1. Stop and relaunch the application so that the new files can be taken into account:
-   1. First: `make down` (or `docker-compose down`)
-   1. Then: `make buildupd` (or `docker-compose up --build -d`)
+   1. First: `make <env>_down`
+   1. Then: `make <env>_buildupd`
 
 #### Details on the above commands
 
@@ -248,30 +225,6 @@ Status: active
 [ 9] 587 (v6)                   ALLOW IN    Anywhere (v6)
 [10] 587 (v6)                   ALLOW OUT   Anywhere (v6)              (out)
 
-```
-
-### [not required] Port forward
-
-> This is required anymore, but it's a good piece of knowledge
-
-Enable `sysctl net.ipv4.forward` by editing `/etc/sysctl.conf` & `/etc/ufw/sysctl.conf` and running `sysctl -p`.
-
-Ufw: `/etc/ufw/before.rules`:
-
-```sh
-*nat
-:PREROUTING ACCEPT [0:0]
--A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8000
-COMMIT
-```
-
-And reload `ufw`
-
-```sh
-sudo ufw disable && sudo ufw enable
-sudo service ufw restart
-sudo ufw reload
-sudo systemctl restart ufw
 ```
 
 ### Install Antivirus
@@ -544,7 +497,7 @@ docker-compose exec web django-admin shell
 Note that all the content should be written in english. Currently, the languages accepted are
 French and English. The site is deployed in French. To realize the translation (refer to the
  [django documentation](https://docs.djangoproject.com/en/3.1/topics/i18n/translation/)
-to implement it ), you need to use `gettext_lazy` or `i18n` or even `ngettext` to manage plural.
+to implement it), you need to use `gettext_lazy` or `i18n` or even `ngettext` to manage plural.
 
 For example, in Python files, use the syntax: `_("English message to translate in French")` with the **underscore** for `gettext_lazy`.
 
@@ -896,19 +849,19 @@ Once a year:
 
 For these types of interventions, the typical sequence of actions is the following:
 
-1. Backup: `./dump/dump_db.sh`
-1. Down: `docker-compose down` (or `make down`)
+1. Backup: `./dump/dump_<env db>.sh` (or `make <env>_backup`)
+1. Down: `make <env>_down`
 1. Perform specific action (e.g. server updates, certificate renewal, new release, etc.)
-1. Build & up : `docker-compose up --build -d` (or `make buildupd`)
+1. Build & up : `make <env>_buildupd`
 
 And in case of changes in the application code:
 
-1. Migrations : `make migr` (or see the 2 associated commands)
-1. Static : `docker-compose exec web python manage.py collectstatic --no-input --clear` (or `make static`)
+1. Migrations : `make <env>_migr` (or see the 2 associated commands)
+1. Static : `make <env>_static`
 
 And in case of recreation of the database:
 
-1. Superuser : `docker-compose -d docker-compose.preprod.yml exec web ./manage.py createsuperuser` (or `make admin`)
+1. Superuser : `make <env>_admin`
 
 ## 6. Tips
 
@@ -952,4 +905,51 @@ docker logs -f web
 # nginx logs path (inside the nginx container)
 tail -f /var/log/nginx/access.log
 tail -f /var/log/nginx/error.log
+```
+
+### [not required] Nginx
+
+> Nginx is dockerized, so the following is not required, but it is still a good source of knowledge. Configuration files are located in the `nginx` folder.
+
+```sh
+# Ubuntu install
+sudo apt install nginx
+
+# [only once] Dereference default conf from enabled websites
+sudo unlink /etc/nginx/sites-enabled/default
+
+# Edit your config with the one located in data/nginx/nginx.conf
+sudo vi /etc/nginx/sites-available/preprod.assessment.labelia.org
+# [temp] use this path for statics: "/home/ubuntu/pf-assessment-dsrc/platform_code/assessment/static/;"
+
+# Link it to the enabled websites
+sudo ln -s /etc/nginx/sites-available/preprod.assessment.labelia.org /etc/nginx/sites-enabled
+
+# Test config & reload nginx: will provide feedbacks in case of errors
+sudo nginx -t && sudo nginx -s reload
+sudo nginx -T
+```
+
+### [not required] Port forward
+
+> This is required anymore, but it's a good piece of knowledge
+
+Enable `sysctl net.ipv4.forward` by editing `/etc/sysctl.conf` & `/etc/ufw/sysctl.conf` and running `sysctl -p`.
+
+Ufw: `/etc/ufw/before.rules`:
+
+```sh
+*nat
+:PREROUTING ACCEPT [0:0]
+-A PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8000
+COMMIT
+```
+
+And reload `ufw`
+
+```sh
+sudo ufw disable && sudo ufw enable
+sudo service ufw restart
+sudo ufw reload
+sudo systemctl restart ufw
 ```
