@@ -854,7 +854,7 @@ For these types of interventions, the typical sequence of actions is the followi
 1. Perform specific action (e.g. server updates, certificate renewal, new release, etc.)
 1. Build & up : `make <env>_buildupd`
 
-And in case of changes in the application code:
+And in case of changes in the application code, add the below commands (or use the deployment script which packages all required commands in that case, see [here](#deploy-a-new-release-aka-deploy-on-prod))
 
 1. Migrations : `make <env>_migr` (or see the 2 associated commands)
 1. Static : `make <env>_static`
