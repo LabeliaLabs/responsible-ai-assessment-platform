@@ -1,0 +1,11 @@
+[
+  {
+    "model": "home.platformtext",
+    "pk": 1,
+    "fields": {
+      "homepage_text": "<p class=\"width-70\">Cette plateforme gratuite et en libre accès permet aux organisations d'évaluer le niveau de maturité de leur activité IA au regard du <a href=\"https://github.com/LabeliaLabs/referentiel-evaluation-dsrc\" target=\"_blank\">référentiel cadre</a> \"data science responsable et de confiance\". Une évaluation complète se traduit par un score entre 0 et 100, décomposé sur les 6 sections du référentiel.<br>Une organisation obtenant un score &gt;= 45 ou &gt;= 55 est éligible au <a target=\"_blank\" href=\"https://www.labelia.org/fr/home\">label Labelia</a>, respectivement niveau intermédiaire ou niveau avancé.\r\n    </p>",
+      "homepage_text_en": "<p class=\"width-70\">This free and open access platform allows organizations to assess the level of maturity of their AI activity against the \"responsible and trusted data science\" <a href=\"https://github.com/LabeliaLabs/referentiel-evaluation-dsrc\" target=\"_blank\">framework</a>. A complete evaluation results in a score between 0 and 100, broken down over the 6 sections of the framework. <br> An organization obtaining a score &gt;= 45 or &gt;= 55 is eligible for the <a target=\"_blank\" href=\"https://www.labelia.org/en/home\">Labelia label</a>, respectively intermediate or advanced level.\r\n    </p>",
+      "homepage_text_fr": "<p class=\"width-70\">Cette plateforme gratuite et en libre accès permet aux organisations d'évaluer le niveau de maturité de leur activité IA au regard du <a href=\"https://github.com/LabeliaLabs/referentiel-evaluation-dsrc\" target=\"_blank\">référentiel cadre</a> \"data science responsable et de confiance\". Une évaluation complète se traduit par un score entre 0 et 100, décomposé sur les 6 sections du référentiel.<br>Une organisation obtenant un score &gt;= 45 ou &gt;= 55 est éligible au <a target=\"_blank\" href=\"https://www.labelia.org/fr/home\">label Labelia</a>, respectivement niveau intermédiaire ou niveau avancé.\r\n    </p>"
+    }
+  }
+]

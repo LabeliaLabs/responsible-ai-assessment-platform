@@ -18,7 +18,8 @@
   <row class="form-center">
     <h1 class="margin-30">{% trans "Assessment platform" %}</h1>
     <h4 class="margin-10">{% trans "Labelia assessment - Responsible and Trustworthy AI" %}</h4>
-    <p class="width-70">{% blocktrans trimmed %}
+    {{ platform_text.homepage_text|safe }}
+    <!-- <p class="width-70">{% blocktrans trimmed %}
       This free and open access platform allows organizations to assess the level of maturity of their AI activity 
       against the "responsible and trusted data science" 
       <a href="https://github.com/LabeliaLabs/referentiel-evaluation-dsrc" target="_blank">framework</a>. 
@@ -28,7 +29,7 @@
       <a target="_blank" href="https://www.labelia.org/en/home">Labelia label</a>, 
       respectively intermediate or advanced level.
       {% endblocktrans %}
-    </p>
+    </p> -->
   </row>
   <row>
   {% if user.is_authenticated %}
