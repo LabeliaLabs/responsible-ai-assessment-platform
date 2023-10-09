@@ -81,6 +81,7 @@ TEMPLATES = [
                 "django.contrib.messages.context_processors.messages",
                 "home.context_processors.add_footer_list",
                 "home.context_processors.add_platform_management",
+                "home.context_processors.add_platform_text",
                 "django.template.context_processors.i18n",
             ],
         },

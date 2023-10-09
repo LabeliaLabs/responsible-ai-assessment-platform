@@ -6,7 +6,6 @@ from assessment.models import (
     MasterEvaluationElement,
     MasterSection,
 )
-from home.models import ReleaseNote
 from modeltranslation.translator import TranslationOptions, register
 
 
@@ -42,12 +41,6 @@ class MasterChoiceTranslationOptions(TranslationOptions):
 class ExternalLinkTranslationOptions(TranslationOptions):
     # Add new fields to TRANSLATED_FIELDS in models/assessment
     fields = ("text",)
-
-
-@register(ReleaseNote)
-class ReleaseNoteTranslationOptions(TranslationOptions):
-    fields = ("text",)
-    required_languages = {"default": ("text",)}
 
 
 @register(ElementChangeLog)

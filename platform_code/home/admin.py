@@ -3,6 +3,7 @@ from django.contrib.auth.models import Group
 
 from .admin_utils.dashboard_admin import DashboardAdminSite
 from .admin_utils.organisation_admin import OrganisationAdmin
+from .admin_utils.platfom_text_admin import PlatformTextAdmin
 from .admin_utils.platform_management_admin import PlatformManagementAdmin
 from .admin_utils.user_admin import UserAdmin
 from .models import (
@@ -11,6 +12,7 @@ from .models import (
     Organisation,
     PendingInvitation,
     PlatformManagement,
+    PlatformText,
     ReleaseNote,
     User,
     UserResources,
@@ -60,5 +62,6 @@ admin.site.register(User, UserAdmin)
 admin.site.unregister(Group)
 admin.site.register(ReleaseNote)
 admin.site.register(Footer, FooterAdmin)
+admin.site.register(PlatformText, PlatformTextAdmin)
 
 admin_dashboard = DashboardAdminSite(name="admin-monitoring")
