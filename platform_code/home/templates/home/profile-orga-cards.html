@@ -5,7 +5,7 @@
 
 
 <div class="larger-large-screen-50-top margin-bot-30 center-max-1130">
-    <a class="btn btn-primary card-button" data-target="#modal-create-orga" data-toggle="modal"
+    <a class="btn btn-secondary card-button" data-target="#modal-create-orga" data-toggle="modal"
        href="{% url 'home:orga-creation' %}">{% trans "Create a new organisation" %}
     </a>
 </div>
@@ -21,7 +21,7 @@
                 {{organisation.evaluation_set.all|eval_not_finished}} </p>
             <p class="card-text">{% trans "Number of completed evaluations: "%}
                 {{organisation.evaluation_set.all|eval_finished}} </p>
-            <a class="btn btn-primary card-button"
+            <a class="btn btn-secondary card-button"
                href="{% url 'assessment:orga-summary' organisation.id %}">{% trans "Go to the organisation" %}</a>
         </div>
     </article>

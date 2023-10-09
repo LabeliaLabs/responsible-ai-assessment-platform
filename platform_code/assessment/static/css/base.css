@@ -14,12 +14,11 @@ The media are mainly stored in media.css even if some may remain in this file.
 
 body{
     margin: 0 0 0 0;
-    font-family: Ubuntu;
     font-weight: 400;
     font-style: normal;
     font-size: 18px;
     line-height: 1.2em;
-    color :  #4D566B;
+    /* color :  #4D566B; */
     position: relative;
     height: 100vh;
     display: flex;
@@ -74,7 +73,7 @@ body{
 h1 {
     text-align: center;
     margin: 0 auto;
-    color: #5550FF;
+    /* color: #5550FF; */
     position:relative;
     font-size: 2rem;
 }
@@ -82,7 +81,7 @@ h1 {
 .h-big{
     text-align: center;
     margin: 0 auto;
-    color: #5550FF;
+    /* color: #5550FF; */
     position:relative;
     font-size: 2rem;
     font-weight: bold;
@@ -92,7 +91,7 @@ h1 {
 .h-small{
     text-align: center;
     margin: 0 auto;
-    color: #5550FF;
+    /* color: #5550FF; */
     position:relative;
     font-size: 1rem;
 }
@@ -113,21 +112,21 @@ input {
     max-width: -webkit-fill-available;
 }
 
-a {
+/* a {
     color: #5550ff;
-}
+} */
 
 a:hover {
-    color: #8985FF;
+    /* color: #8985FF; */
     text-decoration: underline;
 }
 
-.a-re-init-btn {
-color: #4D566B;
-}
+/* .a-re-init-btn {
+    color: #4D566B;
+} */
 
 .a-re-init-btn:hover {
- color: #8985FF;
+ /* color: #8985FF; */
  text-decoration: underline;
 }
 
@@ -494,12 +493,10 @@ li {
 /******************************************** LINK ***********************************************************/
 
 /* Need to create special class for the sections in the resource list because no href to not reload the page */
-.fake-link {
-    color: #5752ff;
-}
+.fake-link {}
 
 .fake-link:hover {
-    color: #8985FF;
+    /* color: #8985FF; */
     text-decoration: underline;
     cursor: pointer;
 }
@@ -517,28 +514,28 @@ li {
     padding-bottom: 3px;
 }
 
+.btn-secondary{
+    /* background-color : #FCE180;
+    border-color: #FCE180; */
+    /* color: #4D566B; */
+}
+
+.btn-secondary:hover {
+    /* background-color: #FAE8A7;
+    border-color: #FAE8A7; */
+    /* color: #70788B; */
+}
+
 .btn-primary{
-    background-color : #FCE180;
-    border-color: #FCE180;
-    color: #4D566B;
-}
-
-.btn-primary:hover {
-    background-color: #FAE8A7;
-    border-color: #FAE8A7;
-    color: #70788B;
-}
-
-.btn-modify{
-    background-color: #5550FF;
-    border-color: #5550FF;
+    /* background-color: #5550FF;
+    border-color: #5550FF; */
     color: white;
 }
 
-.btn-modify:hover{
+.btn-primary:hover{
     color: white;
-    background-color: #726EF5;
-    border-color: #726EF5;
+    /* background-color: #726EF5;
+    border-color: #726EF5; */
 }
 
 .btn-results{
@@ -558,14 +555,14 @@ li {
     color: #34453B;
 }
 
-.btn-primary:active{
-    background-color: #5550FF;
+.btn-secondary:active{
+    /* background-color: #5550FF; */
 }
 
-.btn-primary:disabled{
-    background-color: #FAE8A7;
+.btn-secondary:disabled{
+    /* background-color: #FAE8A7;
     border-color: #FAE8A7;
-    color: #70788B;
+    color: #70788B; */
 }
 
 .bottom-page-button{
@@ -595,23 +592,23 @@ li {
 
 /* button in the profile and the organisation column */
 .profile-column{
-    background-color: #FCE180;
+    /* background-color: #FCE180;
     border-color: #FCE180;
-    color: #4D566B;
+    color: #4D566B; */
     padding: 20px;
     border-radius: .10rem;
 }
 
 a[name="column-button"].nav-link.active{
-    background-color: #91D3FF;
+    /* background-color: #91D3FF;
     border-color: #91D3FF;
-    color: #4D566B;
+    color: #4D566B; */
 }
 
 a[name="column-button"]:hover{
-    background-color: #FAE8A7;
+    /* background-color: #FAE8A7;
     border-color: #FAE8A7;
-    color: #4D566B;
+    color: #4D566B; */
 }
 
 .btn-new{
@@ -1058,7 +1055,7 @@ h1 img {
 
 .box-release-note{
     float: left;
-    border-left: 3px solid #5550FF;
+    /* border-left: 3px solid #5550FF; */
     position: relative;
     width: 83%;
     margin: 0 3%;
@@ -1067,7 +1064,7 @@ h1 img {
 
 .circle-release-note{
     background-color: #fff;
-    border: 3px solid #5550FF;
+    /* border: 3px solid #5550FF; */
     border-radius: 50%;
     width: 22px;
     height: 22px;
@@ -1081,7 +1078,7 @@ h1 img {
     position: absolute;
     top: 1em;
     left: 0.8em;
-    color: #5550FF;
+    /* color: #5550FF; */
     font-size: 2em;
 }
 
@@ -1108,7 +1105,7 @@ h1 img {
 
 .homepage-banner{
     color: white;
-    background-color: #5550FF;
+    /* background-color: #5550FF; */
     padding: 15px;
     text-align: center;
     width: 100%;
@@ -1174,7 +1171,7 @@ h1 img {
 }
 
 .navbar-item a{
-    color: #5550FF;
+    /* color: #5550FF; */
     font-size: 16px;
 }
 
@@ -1213,14 +1210,14 @@ body.navbar-is-fixed-top {
 }
 
 .fa-bars{
-    color: #5550ff;
+    /* color: #5550ff; */
 }
 
 .select-language-navbar{
     background-color: white;
     font-family: Ubuntu;
     font-size: 15px;
-    color: #5550FF;
+    /* color: #5550FF; */
 }
 
 .language-options{
@@ -1243,7 +1240,7 @@ body.navbar-is-fixed-top {
 
 .footer {
     flex-shrink: 0;
-    background-color: #5550FF;
+    /* background-color: #5550FF; */
     text-align: center;
 }
 
@@ -1319,7 +1316,7 @@ body.navbar-is-fixed-top {
     font-size: 15px;
 }
 
-.button-language-footer {
+/* .button-language-footer {
     background-color: #5550FF;
     border-color: #5550FF;
     color: white;
@@ -1337,11 +1334,11 @@ body.navbar-is-fixed-top {
 .button-language-footer:hover {
     background-color: #5550FF;
     color: white;
-}
+} */
 
-.button-language-footer:focus {
+/* .button-language-footer:focus {
     box-shadow: none;
-}
+} */
 
 /************************************************* END FOOTER ***********************************************/
 
@@ -1352,7 +1349,7 @@ body.navbar-is-fixed-top {
     width: 100%;
     bottom: 0;
     z-index: 5000;
-    background-color: #5550FF;
+    /* background-color: #5550FF; */
     color: white;
     padding: 10px 10px 10px 30px;
 }
@@ -1401,11 +1398,11 @@ body.navbar-is-fixed-top {
 }
 
 .active-breadcrumb{
-    color: #8985FF;
+    /* color: #8985FF; */
 }
 
 .active-breadcrumb:hover{
-    color: #8985FF;
+    /* color: #8985FF; */
     text-decoration: none;
 }
 
@@ -1450,7 +1447,7 @@ body.navbar-is-fixed-top {
 }
 
 a[name="menu-button"].nav-link.active {
-    background-color: #5550ff;
+    /* background-color: #5550ff; */
     color: white;
 }
 
@@ -1463,7 +1460,7 @@ a[name="menu-button"].nav-link.active {
     background: none!important;
     border: none;
     padding: 0!important;
-    color: #FFBE3C;
+    /* color: #FFBE3C; */
     cursor: pointer;
 }
 
@@ -1484,7 +1481,7 @@ a[name="menu-button"].nav-link.active {
 }
 
 .dash-stats-table td, .dash-stats-table th {
-  border: 2px solid #5550FF;
+  /* border: 2px solid #5550FF; */
   padding: 8px;
   width: 50%;
 }
@@ -1492,7 +1489,7 @@ a[name="menu-button"].nav-link.active {
 .dash-stats-table th {
   padding-top: 12px;
   padding-bottom: 12px;
-  background-color: #5550FF;
+  /* background-color: #5550FF; */
   color: white;
   text-align: center;
 }
@@ -1504,7 +1501,7 @@ a[name="menu-button"].nav-link.active {
 .indicator{
     text-align: center;
     margin: 0 auto;
-    color: #5550FF;
+    /* color: #5550FF; */
     position:relative;
     font-size: 1rem;
 }
@@ -1519,10 +1516,10 @@ a[name="menu-button"].nav-link.active {
 
 /*********************************************** HELP TIP **************************************************/
 
-.help-tip{
+.help-tip {
     right: 18px;
     text-align: center;
-    background-color: #5550FF;
+    /* background-color: #5550FF; */
     border-radius: 50%;
     width: 24px;
     height: 24px;

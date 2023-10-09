@@ -69,7 +69,7 @@
                 {% if evaluation.has_labelling %}
                     {% if evaluation.need_justification %}
                     <td class="case-array last-case-array">
-                        <a class="btn btn-modify large-button margin-10"
+                        <a class="btn btn-primary large-button margin-10"
                            href="{{ evaluation.get_absolute_url}}">
                             {% trans "Modify" %}
                         </a>
@@ -90,7 +90,7 @@
                     {% endif %}
                 {% else %}
                 <td class="case-array last-case-array">
-                    <a class="btn btn-primary btn-labelling large-button margin-10"
+                    <a class="btn btn-secondary btn-labelling large-button margin-10"
                        data-target="#modal-start-label-eval{{evaluation.id}}"
                        data-toggle="modal"
                        href="#">

@@ -43,3 +43,13 @@ def url_target_blank(text):
     This function adds the target="_blank" attribute to <a></a> tag
     """
     return mark_safe(text.replace("<a ", '<a target="_blank" '))
+
+
+@register.filter
+def get_color(platform_management, color):
+    """
+    This function returns the main color of the platform
+    """
+    if not hasattr(platform_management, color):
+        return ""
+    return f"#{getattr(platform_management, color)}"

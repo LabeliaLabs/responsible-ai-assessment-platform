@@ -4,7 +4,7 @@
     margin-bottom: 25px; /* Added */
     margin-bottom: 25px;
     position: relative;
-    border-radius: 0.5em;
+    /* border-radius: 0.5em; */
 
 }
 
@@ -35,16 +35,7 @@
 }
 
 
-.card_title {
-}
-
-div.evaluation-title: h1 {
-    text-align: center;
-    margin: 0 auto;
-    position:absolute;
-}
-
-div.evaluation-title: h3 {
+div.evaluation-title > h3 {
     text-align: center;
     margin: 0 auto;
     margin-bottom: 20px;
@@ -152,12 +143,6 @@ div.evaluation-title: h3 {
     color: #4D566B;
 }
 
-.btn-primary{
-    background-color: #FFBE3C;
-    border-color: #FFBE3C;
-
-}
-
 .collapsible-resource{
   background-color: #FFFFFF;
   margin-top: 10px;
@@ -218,7 +203,7 @@ div.evaluation-title: h3 {
 }
 
 .resource-section-icon {
-    color: #5550FF;
+    /* color: #5550FF; */
     margin-right: 20px;
     float: left;
     margin-top: auto;
@@ -237,7 +222,7 @@ div.evaluation-title: h3 {
   top: 25%;
   left: 0;
   overflow-x: hidden;
-  padding-top: 20px;
+  /*padding-top: 20px;*/
 }
 
 .title-sidenav {
@@ -245,7 +230,7 @@ div.evaluation-title: h3 {
   text-decoration: none;
   font-size: 16px;
   display: block;
-  color: #848482;
+  /* color: #848482; */
   overflow: hidden;
   height: 3em;
   text-overflow: ellipsis;
@@ -255,7 +240,7 @@ div.evaluation-title: h3 {
 }
 
 .sidenav a:hover {
-  color: #000066;
+  /* color: #000066; */
 }
 
 .collapsible-section{

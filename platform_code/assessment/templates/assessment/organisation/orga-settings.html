@@ -30,7 +30,7 @@
     </p>
 
     {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor" %}
-        <button class="btn btn-primary" id="edit-organisation-settings">{% trans "Edit" %}</button>
+        <button class="btn btn-secondary" id="edit-organisation-settings">{% trans "Edit" %}</button>
     {% endif %}
 </div>
 
@@ -43,7 +43,7 @@
             {{ edit_organisation_form }}
         </div>
         <div class="center">
-            <input class="btn btn-modify margin-10 margin-bot-30 center"
+            <input class="btn btn-primary margin-10 margin-bot-30 center"
                    onclick="submitOrganisationForm('editOrganisationSettings{{organisation.id}}', {{organisation.id}})"
                    value="{% trans 'Modify' %}"
                    type="button"

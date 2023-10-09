@@ -25,6 +25,19 @@ class PlatformManagement(models.Model):
     )
     labelling_threshold = models.FloatField(default=45)
 
+    primary_color = models.CharField(
+        max_length=7, default="5550FF"
+    )  # Store background color in hexadecimal format (e.g., #RRGGBB)
+    primary_color_light = models.CharField(max_length=7, default="726EF5")
+    secondary_color = models.CharField(max_length=7, default="FCE180")
+    secondary_color_light = models.CharField(max_length=7, default="FAE8A7")
+    tertiary_color = models.CharField(max_length=7, default="91D3FF")
+    tertiary_color_light = models.CharField(max_length=7, default="B8DFFA")
+    text_color = models.CharField(max_length=7, default="4D566B")
+    text_color_light = models.CharField(max_length=7, default="70788B")
+    app_logo = models.ImageField(upload_to="app_logo", null=True, blank=True)
+    font_family = models.CharField(max_length=100, default="Ubuntu")
+
     def __str__(self):
         return "Platform management"
 

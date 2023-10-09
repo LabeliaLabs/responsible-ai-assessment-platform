@@ -47,14 +47,14 @@
                 <!-- If the evaluation is upgradable, which means a new assessment version exists-->
                 {% if evaluation.is_upgradable %}
                 {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor" %}
-                <a class="btn btn-primary medium-button margin-10"
+                <a class="btn btn-secondary medium-button margin-10"
                    data-target="#modal-upgrade-eval{{evaluation.id}}"
                    data-toggle="modal"
                    href="#"
                 >{% trans "Upgrade" %}</a>
                 <!-- If the user is not an admin of the organisation, he can not upgrade the evaluation   -->
                 {% else %}
-                <button class="btn btn-primary medium-button margin-10" disabled
+                <button class="btn btn-secondary medium-button margin-10" disabled
                         title="{% trans 'You do not have the right to do this action' %}">{% trans "Upgrade" %}
                 </button>
                 <!-- endif role user -->
@@ -69,20 +69,20 @@
                 >{% trans "Results" %}
                 </a>
                 {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor" %}
-                <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                <a class="btn btn-primary medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
                     {% trans "Modify" %}
                 </a>
                 {% else %}
-                <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}"
+                <a class="btn btn-primaryy medium-button margin-10" href="{{ evaluation.get_absolute_url}}"
                 >{% trans "Browse" %}</a>
                 {% endif %}
                 {% else %}
                 {% if organisation|get_role:user == "admin" or organisation|get_role:user == "editor" %}
-                <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
+                <a class="btn btn-primary medium-button margin-10" href="{{ evaluation.get_absolute_url}}">
                     {% trans "Continue" %}
                 </a>
                 {% else %}
-                <a class="btn btn-modify medium-button margin-10" href="{{ evaluation.get_absolute_url}}"
+                <a class="btn btn-primary medium-button margin-10" href="{{ evaluation.get_absolute_url}}"
                 >{% trans "Browse" %}</a>
                 {% endif %}
                 {% endif %}

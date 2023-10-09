@@ -15,7 +15,7 @@
         <form action="{% url 'assessment:leave-organisation' organisation.id %}"
               id="leaveOrganisation{{member.id}}" method="post">
             {% csrf_token %}
-            <button class="btn btn-primary adapted-button-size-250 margin-auto"
+            <button class="btn btn-secondary adapted-button-size-250 margin-auto"
                     type="submit">
                 {% trans 'Yes' %}
             </button>

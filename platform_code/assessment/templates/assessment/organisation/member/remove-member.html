@@ -23,7 +23,7 @@
               class="tablet-max-center"
               method="post">
             {% csrf_token %}
-            <button class="btn btn-primary adapted-button-size-250 margin-auto"
+            <button class="btn btn-secondary adapted-button-size-250 margin-auto"
                     onclick="removeMember('removeMember{{member.id}}', '{{member.id}}', false)"
                     type="button">
                 {% trans 'Yes' %}

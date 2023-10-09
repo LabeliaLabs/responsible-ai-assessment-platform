@@ -172,14 +172,14 @@
                                 {% endif %}
                                 {% if evaluation|user_can_edit_evaluation:user %}
                                     {% if element.has_condition_on and element|is_not_applicable %}
-                                        <button class="btn btn-primary validation-button adapted-button-size-250"
+                                        <button class="btn btn-secondary validation-button adapted-button-size-250"
                                                 disabled
                                                 id="validate_{{element.id}}"
                                                 type="button">
                                             {% trans "Validate" %}
                                         </button>
                                     {% else %}
-                                        <button class="btn btn-primary validation-button adapted-button-size-250"
+                                        <button class="btn btn-secondary validation-button adapted-button-size-250"
                                                 id="validate{{element.id}}"
                                                 onclick="submitForm('form{{element.id}}', {{element.id}})" type="button">
                                             {% if element.status %}
@@ -190,7 +190,7 @@
                                         </button>
                                     {% endif %}
                                 {% else %}
-                                    <button class="btn btn-primary validation-button adapted-button-size-250"
+                                    <button class="btn btn-secondary validation-button adapted-button-size-250"
                                             disabled
                                             title="{% if not evaluation.is_editable %}
                                                 {% trans 'You cannot edit this evaluation' %}

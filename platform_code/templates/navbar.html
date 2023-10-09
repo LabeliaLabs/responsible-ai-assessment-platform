@@ -5,7 +5,13 @@
 
 <div class="container">
     <a class="navbar-brand white-color" href="{% url 'home:homepage' %}" title="home">
-        <img class="logo-navbar" src="{% static 'image/labelia_dry.png' %}">
+        
+            
+        {% if platform_management.app_logo %}
+            <img class="logo-navbar" src="{{ platform_management.app_logo.url }}">
+        {% else %}
+            <img class="logo-navbar" src="{% static 'image/labelia_dry.png' %}">
+        {% endif %}
     </a>
     <button aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
         class="navbar-toggler icon-navbar" data-target="#navbarResponsive" data-toggle="collapse"

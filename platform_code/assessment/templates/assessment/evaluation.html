@@ -35,7 +35,7 @@
             <h1 class="h1-section h1-margin-breadcrumbs flex object-linked margin-bottom-smartphone-30 overflow-auto"
                 id="evaluationName">
                 <div id="evaluation-name">{{ evaluation.name }}</div>
-                <button class="btn btn-primary small-btn hidden-div remove-smartphone-screen margin-left-em"
+                <button class="btn btn-secondary small-btn hidden-div remove-smartphone-screen margin-left-em"
                         data-target="#modal-edit{{evaluation.id}}"
                         data-toggle="modal" id="hiddenButton">
                     <i class="fa fa-edit"></i>
@@ -107,7 +107,7 @@
 </div>
 <form action="{% url 'assessment:orga-summary' organisation.id %}"
       class="center-smartphone-screen">
-    <input class="btn btn-primary float-left-larger-tablet bottom-page-button" type="submit"
+    <input class="btn btn-secondary float-left-larger-tablet bottom-page-button" type="submit"
            value="{% trans 'Back to the organisation' %}"/>
 </form>
 

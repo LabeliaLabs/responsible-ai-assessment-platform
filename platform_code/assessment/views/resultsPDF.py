@@ -7,7 +7,12 @@ from html import unescape
 
 import reportlab
 from assessment.models import Evaluation
-from assessment.utils import get_client_ip, remove_markdown_bold, remove_markdownify_italic
+from assessment.utils import (
+    convert_color_to_reportlab,
+    get_client_ip,
+    remove_markdown_bold,
+    remove_markdownify_italic,
+)
 from assessment.views.utils.security_checks import membership_security_check
 from assessment.views.utils.utils import (
     manage_evaluation_exposition_score,
@@ -21,7 +26,7 @@ from django.http import FileResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.utils.translation import gettext as _
 from django.views.generic import DetailView
-from home.models import Organisation
+from home.models import Organisation, PlatformManagement
 from reportlab.lib import colors
 from reportlab.lib.styles import ParagraphStyle
 from reportlab.pdfbase import pdfmetrics
@@ -59,7 +64,6 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
     LINE_JUMP = 25
 
     COLOR_TEXT = 0.3, 0.34, 0.42
-    COLOR_TITLE = 0.33, 0.31, 1
     COLOR_FILL_CONCERN_NOTE = 1, 0.95, 0.8
     COLOR_TEXT_CONCERN_NOTE = 0.52, 0.39, 0
     COLOR_ELEMENT_RECTANGLE_FILL = 0.94, 0.94, 0.94
@@ -78,6 +82,8 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         self.pdf = canvas.Canvas(self.buffer)
         self.cursor = self.PAGE_HEIGHT
         self.page_num = 1
+        self.platform_management = PlatformManagement.get_or_create()
+        self.COLOR_TITLE = convert_color_to_reportlab(self.platform_management.primary_color)
 
     def print_pdf(self, context):
         """
@@ -813,7 +819,7 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
             r'<font  backcolor="\1">\2</font>',
             text,
         )
-        text = text.replace("<a", '<a color="#5550ff"')
+        text = text.replace("<a", f'<a color="#{self.COLOR_TITLE}"')
         text = text.replace("<em", '<font name="UbuntuItalic"').replace("</em", "</font")
         text = text.replace("<strong", '<font name="UbuntuBold"').replace("</strong", "</font")
         text = text.replace("<s>", "<strike>").replace("</s>", "</strike>")

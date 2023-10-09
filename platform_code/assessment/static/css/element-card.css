@@ -143,12 +143,6 @@ div.evaluation-title > h3 {
     color: #4D566B;
 }
 
-.btn-primary{
-    background-color: #FFBE3C;
-    border-color: #FFBE3C;
-
-}
-
 .collapsible-resource{
   background-color: #FFFFFF;
   margin-top: 10px;
@@ -209,7 +203,7 @@ div.evaluation-title > h3 {
 }
 
 .resource-section-icon {
-    color: #5550FF;
+    /* color: #5550FF; */
     margin-right: 20px;
     float: left;
     margin-top: auto;
@@ -236,7 +230,7 @@ div.evaluation-title > h3 {
   text-decoration: none;
   font-size: 16px;
   display: block;
-  color: #848482;
+  /* color: #848482; */
   overflow: hidden;
   height: 3em;
   text-overflow: ellipsis;
@@ -246,7 +240,7 @@ div.evaluation-title > h3 {
 }
 
 .sidenav a:hover {
-  color: #000066;
+  /* color: #000066; */
 }
 
 .collapsible-section{

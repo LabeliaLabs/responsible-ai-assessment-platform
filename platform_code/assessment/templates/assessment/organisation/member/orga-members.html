@@ -9,7 +9,7 @@
 
 {% if organisation|get_role:user == "admin" %}
 <div class="margin-bot-top-20 small-screen-max-center">
-    <button class="btn btn-primary" data-target="#modal-add-member"
+    <button class="btn btn-secondary" data-target="#modal-add-member"
             data-toggle="modal"
             title="{% trans 'Add a member to your organisation' %}"
             type="button">
@@ -70,7 +70,7 @@
 <!--         If the user is admin member and the member displayed is not admin       -->
             {% if organisation|get_role:user == "admin" and not member.role == "admin" %}
             <td class="div-hidden-icons" id="member{{member.id}}">
-                <button class="btn btn-primary small-btn small-screen-max-float-left margin-btn-orga-members"
+                <button class="btn btn-secondary small-btn small-screen-max-float-left margin-btn-orga-members"
                         data-target="#modal-edit-role{{member.id}}"
                         data-toggle="modal">
                     <i class="fa fa-edit"></i>
@@ -112,7 +112,7 @@
             {% if organisation|get_role:user == "admin" %}
             <td class="div-hidden-icons background-white"
                 id="pendingMember{{pending_member.id}}">
-                <button class="btn btn-primary small-btn small-screen-max-float-left margin-btn-orga-members"
+                <button class="btn btn-secondary small-btn small-screen-max-float-left margin-btn-orga-members"
                         data-target="#modal-edit-role-pending{{pending_member.id}}"
                         data-toggle="modal">
                     <i class="fa fa-edit"></i>

@@ -2,6 +2,7 @@
 {% load static %}
 {% load home_tags %}
 {% load i18n %}
+{% with primary_color=platform_management|get_color:'primary_color' secondary_color=platform_management|get_color:'secondary_color' tertiary_color=platform_management|get_color:'tertiary_color' text_color=platform_management|get_color:'text_color' primary_color_light=platform_management|get_color:'primary_color_light' text_color_light=platform_management|get_color:'text_color_light' secondary_color_light=platform_management|get_color:'secondary_color_light' tertiary_color_light=platform_management|get_color:'tertiary_color_light' %}
 <html lang="fr">
 
 <head>
@@ -9,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="google-site-verification" content="VF_97-O0owZKL4JhutS6RoGExraIN1eL8nulwWPzbL0" />
     <title>Labelia Assessment</title>
-    <meta name=keywords"
+    <meta name="keywords"
           content="{% blocktrans trimmed %}
           labelia, assessment, data science, trustworthy, responsible, resources, evaluation, label, association
           {% endblocktrans %}"
@@ -163,3 +164,194 @@ function adaptMarginFooter() {
 adaptMarginFooter();
 
 </script>
+
+<style>
+
+body {
+    color: {{ text_color }};
+    font-family: {{ platform_management.font_family }};
+}
+
+h1 {
+    color: {{ primary_color }};
+}
+
+.h-big {
+    color: {{ primary_color }};
+}
+
+.primary-color {
+    color: {{ primary_color }}!important;
+}
+
+.h-small {
+    color: {{ primary_color }};
+}
+
+a {
+    color: {{ primary_color }};
+}
+
+a:hover {
+    color: {{ primary_color_light }};
+}
+
+.a-re-init-btn {
+    color: {{ text_color }};
+}
+
+.a-re-init-btn:hover {
+    color: {{ primary_color_light }};
+}
+
+.fake-link {
+    color: {{ primary_color }};
+}
+
+.fake-link:hover {
+    color: {{ primary_color_light }};
+}
+
+.btn-primary {
+    background-color : {{ primary_color }};
+    border-color: {{ primary_color }};
+}
+
+.btn-primary:hover {
+    background-color : {{ primary_color_light }};
+    border-color: {{ primary_color_light }};
+}
+
+.btn-primary:active {
+    background-color: {{ primary_color }};
+}
+
+.btn-secondary {
+    background-color : {{ secondary_color }};
+    border-color: {{ secondary_color }};
+    color: {{ text_color }};
+}
+
+.btn-secondary:hover {
+    background-color: {{ secondary_color_light }};
+    border-color: {{ secondary_color_light }};
+    color: {{ text_color_light }};
+}
+
+.btn-secondary:disabled {
+    background-color: {{ secondary_color_light }};
+    border-color: {{ secondary_color_light }};
+    color: {{ text_color_light }};
+}
+
+.profile-column {
+    background-color: {{ secondary_color }};
+    border-color: {{ secondary_color }};
+    color: {{ text_color }};
+}
+
+a[name="column-button"].nav-link.active {
+    background-color: {{ tertiary_color }};
+    border-color: {{ tertiary_color }};
+    color: {{ text_color }};
+}
+
+a[name="column-button"]:hover {
+    background-color: {{ secondary_color_light }};
+    border-color: {{ secondary_color_light }};
+    color: {{ text_color }};
+}
+
+
+.box-release-note {
+    border-left: 3px solid {{ primary_color }};
+}
+
+.circle-release-note {
+    border: 3px solid {{ primary_color }};
+}
+
+.arrow-release-note {
+    color: {{ primary_color }};
+}
+
+.homepage-banner {
+    background-color: {{ primary_color }};
+}
+
+
+.navbar-item a{
+    color: {{ primary_color }};
+}
+
+.fa-bars{
+    color: {{ primary_color }};
+}
+
+.select-language-navbar{
+    color: {{ primary_color }};
+}
+
+.footer {
+    background-color: {{ primary_color }};
+}
+
+.cookie-banner {
+    background-color: {{ primary_color }};
+}
+
+.active-breadcrumb .active-breadcrumb:hover {
+    color: {{ primary_color_light }};
+}
+
+a[name="menu-button"].nav-link.active {
+    background-color: {{ primary_color }};
+}
+
+.reset-filter-btn {
+    color: {{ secondary_color }};
+}
+
+.dash-stats-table td, .dash-stats-table th {
+  border: 2px solid {{ primary_color }};
+}
+
+.dash-stats-table th {
+  background-color: {{ primary_color }};
+}
+
+.indicator {
+    color: {{ primary_color }};
+}
+
+.help-tip {
+    background-color: {{ primary_color }};
+}
+
+.resource-section-icon {
+    color: {{ primary_color }};
+}
+
+.title-sidenav {
+    color: {{ text_color_light }};
+}
+
+.sidenav a:hover {
+    color: {{ text_color }};
+}
+
+.results h2{
+    color: {{ primary_color }};
+}
+
+.result-point{
+    color: {{ primary_color }};
+}
+
+.modal-title{
+    color: {{ primary_color }};
+}
+
+</style>
+
+{% endwith %}

@@ -67,7 +67,7 @@
                 <td class="case-array">{{ labelling.justification_request_date|format_date_calendar }}</td>
                 <td class="case-array">
                     {% if labelling.status == "progress" %}
-                        <a class="btn btn-modify large-button margin-10"
+                        <a class="btn btn-primary large-button margin-10"
                            title="This do not send an email to the user"
                            href="{% url 'assessment:labelling-justification' labelling.evaluation.organisation.id labelling.evaluation.slug labelling.evaluation.id %}">
                             {% trans "Justifications" %}
