@@ -1,21 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "services": {
-    "app": {
-      "root": ".",
-      "runtime": "python"
-    },
-    "platform_code": {
-      "root": "platform_code",
-      "framework": "django"
-    }
-  },
-  "rewrites": [
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": {
-        "service": "app"
-      }
+      "src": "platform_code/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "platform_code/wsgi.py"
     }
   ]
 }
