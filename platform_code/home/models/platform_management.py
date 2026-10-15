@@ -23,7 +23,8 @@ class PlatformManagement(models.Model):
         "assessment does not exist both in French "
         "and English",
     )
-    labelling_threshold = models.FloatField(default=45)
+    labelling_threshold = models.FloatField(default=50)
+    advanced_labelling_threshold = models.FloatField(default=60)
 
     primary_color = models.CharField(
         max_length=7, default="5550FF"
@@ -60,10 +61,25 @@ class PlatformManagement(models.Model):
         """
         return cls.get_or_create().labelling_threshold
 
+    @classmethod
+    def get_advanced_labelling_threshold(cls):
+        """
+        Get the advanced labelling threshold of the platform management object.
+        """
+        return cls.get_or_create().advanced_labelling_threshold
+
     def set_labelling_threshold(self, value):
         """
         Set the labelling_threshold field if value is a float
         """
         if value and (isinstance(value, float) or isinstance(value, int)):
             self.labelling_threshold = value
+            self.save()
+
+    def set_advanced_labelling_threshold(self, value):
+        """
+        Set the advanced_labelling_threshold field if value is a float.
+        """
+        if value and (isinstance(value, float) or isinstance(value, int)):
+            self.advanced_labelling_threshold = value
             self.save()

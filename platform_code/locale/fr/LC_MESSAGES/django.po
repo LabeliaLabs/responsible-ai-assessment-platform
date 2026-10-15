@@ -923,16 +923,17 @@ msgstr "Explications"
 #: platform_code/assessment/templates/assessment/results.html:116
 #: platform_code/assessment/views/resultsPDF.py:214
 msgid ""
-"The synthetic score is on a total of 100 theoretical maximum points for your "
-"full assessment. It provides an indication of the organization maturity "
-"level concerning a responsible and trustworthy data science. At the end of "
-"2020, the 50/100 threshold can be considered a very advanced maturity level."
+"The synthetic score is based on a theoretical maximum of 100 points for the full "
+"assessment. It indicates the organization's maturity in taking a responsible and "
+"trustworthy approach to data science and artificial intelligence. In 2020, a score "
+"of 50/100 was considered very advanced; since 2026, it has been the minimum "
+"threshold for submitting a labelling application."
 msgstr ""
-"Le score synthétique est sur un total de 100 points maximum théoriques pour "
-"l'ensemble de l'évaluation. Il offre une indication sur le niveau de "
-"maturité de l'organisation quant à une approche responsable et de confiance "
-"de la data science. À fin 2020, le seuil de 50/100 peut être considéré comme "
-"un niveau de maturité très avancé."
+"Cette évaluation donne une indication du niveau de maturité de l'organisation "
+"dans son approche de la data science et de l'intelligence artificielle "
+"responsables et de confiance. Alors qu'un score de 50/100 était considéré "
+"comme très avancé en 2020, il est depuis 2026 le seuil minimal pour déposer "
+"une demande de labellisation."
 
 #: platform_code/assessment/templates/assessment/results.html:123
 #: platform_code/assessment/views/resultsPDF.py:232
@@ -1974,8 +1975,8 @@ msgid "Labelling"
 msgstr "Labellisation"
 
 #: platform_code/home/templates/home/dashboard/dashboard-labelling.html:6
-msgid "Current labelling threshold:"
-msgstr "Seuil actuel de labellisation"
+msgid "Current labelling thresholds:"
+msgstr "Seuils actuels de labellisation"
 
 #: platform_code/home/templates/home/dashboard/dashboard-labelling.html:33
 #: platform_code/home/templates/home/profile-labelling.html:20
@@ -2043,9 +2044,10 @@ msgid ""
 "science\" <a href=\"https://github.com/LabeliaLabs/referentiel-evaluation-"
 "dsrc\" target=\"_blank\">framework</a>. A complete evaluation results in a "
 "score between 0 and 100, broken down over the 6 sections of the framework. "
-"<br> An organization obtaining a score >= 45 or >= 55 is eligible for the <a "
-"target=\"_blank\" href=\"https://www.labelia.org/en/home\">Labelia label</"
-"a>, respectively intermediate or advanced level."
+"<br> An organization obtaining a score >= %(labelling_threshold)s or >= "
+"%(advanced_labelling_threshold)s is eligible for the <a target=\"_blank\" "
+"href=\"https://www.labelia.org/en/home\">Labelia label</a>, respectively "
+"intermediate or advanced level."
 msgstr ""
 "Cette plateforme gratuite et en libre accès permet aux organisations "
 "d'évaluer le niveau de maturité de leur activité IA au regard du <a href="
@@ -2053,9 +2055,9 @@ msgstr ""
 "\"_blank\">référentiel cadre</a> \"data science responsable et de confiance"
 "\". Une évaluation complète se traduit par un score entre 0 et 100, "
 "décomposé sur les 6 sections du référentiel.<br>Une organisation obtenant un "
-"score >= 45 ou >= 55 est éligible au <a target=\"_blank\" href=\"https://www."
-"labelia.org/fr/home\">label Labelia</a>, respectivement niveau intermédiaire "
-"ou niveau avancé."
+"score >= %(labelling_threshold)s ou >= %(advanced_labelling_threshold)s est "
+"éligible au <a target=\"_blank\" href=\"https://www.labelia.org/fr/home\">"
+"label Labelia</a>, respectivement niveau intermédiaire ou niveau avancé."
 
 #: platform_code/home/templates/home/homepage.html:37
 #: platform_code/home/templates/home/profile.html:14

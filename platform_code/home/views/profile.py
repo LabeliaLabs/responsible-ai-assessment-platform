@@ -89,6 +89,9 @@ class ProfileView(LoginRequiredMixin, generic.DetailView):
         # Get the labelable evaluations
         self.add_labelable_evaluation()
         self.context["labelling_threshold"] = PlatformManagement.get_labelling_threshold()
+        self.context["advanced_labelling_threshold"] = (
+            PlatformManagement.get_advanced_labelling_threshold()
+        )
 
         self.context = add_last_version_last_assessment_dictionary(self.context)
         self.context["change_logs"] = get_all_change_logs()

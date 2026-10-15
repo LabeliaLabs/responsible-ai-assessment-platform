@@ -399,3 +399,5 @@ class TestPlatformManagement(TestCase):
     def test_platform_management_name(self):
         platform_management = PlatformManagement.get_or_create()
         self.assertEqual(str(platform_management), "Platform management")
+        self.assertEqual(platform_management.labelling_threshold, 50)
+        self.assertEqual(platform_management.advanced_labelling_threshold, 60)

@@ -214,10 +214,11 @@ class ResultsPDFView(LoginRequiredMixin, DetailView):
         self.pdf.setFont("UbuntuRegular", 12)
         self.draw_string_on_pdf(
             _(
-                "The synthetic score is on a total of 100 theoretical maximum points for your "
-                "full assessment. It provides an indication of the organization maturity "
-                "level concerning a responsible and trustworthy data science. At the end of "
-                "2020, the 50/100 threshold can be considered a very advanced maturity level."
+                "The synthetic score is based on a theoretical maximum of 100 points for the full "
+                "assessment. It indicates the organization's maturity in taking a responsible and "
+                "trustworthy approach to data science and artificial intelligence. In 2020, a score "
+                "of 50/100 was considered very advanced; since 2026, it has been the minimum "
+                "threshold for submitting a labelling application."
             ),
             self.MARGIN_BASE,
         )
