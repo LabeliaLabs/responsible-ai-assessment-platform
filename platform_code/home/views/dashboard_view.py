@@ -103,6 +103,9 @@ class DashboardView(TemplateView):
         # Manage the labellings
         self.context["labellings"] = [labelling for labelling in Labelling.objects.all()]
         self.context["labelling_threshold"] = PlatformManagement.get_labelling_threshold()
+        self.context["advanced_labelling_threshold"] = (
+            PlatformManagement.get_advanced_labelling_threshold()
+        )
         self.context["labelling_status_form"] = LabellingStatusForm()
 
         return self.render_to_response(self.context)
